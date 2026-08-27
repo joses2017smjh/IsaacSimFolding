@@ -1,0 +1,42 @@
+# Environment artifacts live outside the tree, but guard against strays.
+.venv/
+venv/
+venv-lehome/
+.uv-cache/
+.uv-python/
+.cache/
+.home/
+
+# Container image is a build product of container/lehome.def
+*.sif
+
+# LeHome assets and datasets are large HuggingFace downloads, not source.
+# Assets/  ~= garment USD + textures;  Datasets/ ~= 265k frames of RGB video.
+Assets/
+Datasets/
+external/lehome-challenge/Assets/
+external/lehome-challenge/Datasets/
+
+# Training output
+outputs/
+logs/
+runs/
+checkpoints/
+*.pt
+*.safetensors
+*.onnx
+
+# Results: keep aggregated CSV + probe verdicts + plots, drop raw per-step dumps
+results/raw/
+results/**/*.npz
+results/eval_videos/
+results/**/*.mp4
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
+
+# Editor / IDE workspace state -- local to whoever opened the repo.
+.vscode/
+*.code-workspace

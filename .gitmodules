@@ -1,0 +1,3 @@
+[submodule "external/lehome-challenge"]
+	path = external/lehome-challenge
+	url = https://github.com/lehome-official/lehome-challenge.git

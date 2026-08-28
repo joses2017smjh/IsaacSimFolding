@@ -91,6 +91,61 @@ def success_rate(text: str) -> tuple[float, int]:
     return sum(e.success for e in eps) / len(eps), len(eps)
 
 
+class Truncated(RuntimeError):
+    """The log's own two accounts of the run disagree."""
+
+
+def cross_check(text: str) -> dict:
+    """Reconcile the per-episode lines against the per-garment summary.
+
+    The evaluator prints the same run twice: once per episode, once aggregated
+    per garment. If those disagree, the log was truncated, interleaved by
+    another writer, or tailed -- and the aggregate is the half that still looks
+    plausible while being wrong.
+
+    This exists because reading a number off a tailed log has burned this
+    project before. Parsing is unavoidable here (the official evaluator
+    persists nothing machine-readable, and forking it would mean a different
+    scorer), so the parser is made to prove the log is whole instead.
+    """
+    eps = parse_episodes(text)
+    gar = parse_garments(text)
+    if not eps:
+        raise NoEpisodes("no episode lines to cross-check")
+
+    # Every episode line carries the run's total; they must all agree, and the
+    # number of lines must equal that total.
+    totals = {e.total for e in eps}
+    complete = len(totals) == 1 and len(eps) == next(iter(totals)) * max(len(gar), 1)
+    per_garment_ok = True
+    if gar:
+        expected = next(iter(totals)) if len(totals) == 1 else None
+        if expected:
+            from_eps = sum(e.success for e in eps) / len(eps)
+            from_gar = sum(g.success_rate for g in gar) / len(gar)
+            # Per-garment rates are printed to 2 decimals, so allow rounding.
+            per_garment_ok = abs(from_eps - from_gar) <= 0.01 + 0.5 / len(eps)
+    return {
+        "n_episodes": len(eps),
+        "declared_total": sorted(totals),
+        "n_garments": len(gar),
+        "complete": bool(complete),
+        "aggregates_agree": bool(per_garment_ok),
+    }
+
+
+def success_rate_checked(text: str) -> tuple[float, int]:
+    """success_rate, but refuses a log whose two accounts disagree."""
+    chk = cross_check(text)
+    if not chk["aggregates_agree"]:
+        raise Truncated(
+            f"the per-episode lines and the per-garment summary disagree "
+            f"({chk}). This log is truncated or interleaved -- do not report a "
+            f"number from it."
+        )
+    return success_rate(text)
+
+
 def per_category(summaries: list[GarmentSummary]) -> dict[tuple[str, str], dict]:
     """Group garment summaries by (category, split).
 

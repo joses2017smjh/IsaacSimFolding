@@ -40,6 +40,20 @@ def main() -> int:
         text = p.read_text(errors="replace")
         seed_m = SEED_RE.search(p.name)
         seed = int(seed_m.group(1)) if seed_m else 0
+        # Prove the log is whole before reading a number out of it. The
+        # evaluator prints the run twice -- per episode and per garment -- and
+        # a truncated log still yields a plausible aggregate.
+        try:
+            chk = E.cross_check(text)
+            if not chk["aggregates_agree"]:
+                print(f"  SKIP {p.name}: truncated or interleaved -- {chk}",
+                      file=sys.stderr)
+                continue
+        except E.NoEpisodes:
+            print(f"  SKIP {p.name}: no scored episodes (a crash, not a zero)",
+                  file=sys.stderr)
+            continue
+
         garments = E.parse_garments(text)
         if not garments:
             print(f"  (no per-garment summary in {p.name})", file=sys.stderr)

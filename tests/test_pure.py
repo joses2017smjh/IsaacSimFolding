@@ -370,6 +370,31 @@ def eval_log_parses_the_official_formats():
 
 
 @test
+def eval_log_cross_check_catches_a_truncated_log():
+    """A tailed log reports a plausible wrong number. Refuse it."""
+    from lehome_fold import eval_log as E
+
+    whole = (
+        "Episode 1/2: Return=1.00, Length=10, Success=True\n"
+        "Episode 2/2: Return=1.00, Length=10, Success=True\n"
+        "  Top_Long_Seen_0: Success Rate = 100.00%, Avg Return = 1.00\n"
+    )
+    close(E.success_rate_checked(whole)[0], 1.0)
+
+    # the same run with the first episode line lost to a tail
+    tailed = (
+        "Episode 2/2: Return=1.00, Length=10, Success=False\n"
+        "  Top_Long_Seen_0: Success Rate = 100.00%, Avg Return = 1.00\n"
+    )
+    try:
+        E.success_rate_checked(tailed)
+    except E.Truncated:
+        pass
+    else:
+        raise AssertionError("a truncated log produced a reportable number")
+
+
+@test
 def eval_log_distinguishes_a_crash_from_a_zero_score():
     from lehome_fold import eval_log as E
 

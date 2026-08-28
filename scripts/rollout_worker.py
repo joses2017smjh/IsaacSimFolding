@@ -92,7 +92,16 @@ def write_test_list(lehome: Path, garments: list[str]) -> Path:
     return p
 
 
-def run_batch(args, ref: K.CheckpointRef) -> str:
+def read_scores(path: Path) -> list[dict]:
+    """Per-episode value-head summaries written by the policy during the batch."""
+    if not path.exists():
+        return []
+    rows = [json.loads(l) for l in path.read_text().splitlines() if l.strip()]
+    path.unlink()          # consumed; the next batch starts clean
+    return rows
+
+
+def run_batch(args, ref: K.CheckpointRef, score_log: Path) -> str:
     cmd = [
         sys.executable, f"{args.repo}/scripts/run_eval.py",
         "--policy_type", args.policy_type,
@@ -105,6 +114,7 @@ def run_batch(args, ref: K.CheckpointRef) -> str:
         "--enable_cameras", "--headless",
     ]
     env = dict(os.environ)
+    env["SCORE_LOG"] = str(score_log)
     if args.value_path:
         env["VALUE_PATH"] = args.value_path
     if args.feature_path:
@@ -144,7 +154,8 @@ def main() -> int:
                   f"(step {ref.step}, digest {ref.digest})", flush=True)
             last_version = ref.version
 
-        log = run_batch(args, ref)
+        score_log = rollout_dir / f".scores_w{args.worker_id:03d}.jsonl"
+        log = run_batch(args, ref, score_log)
         try:
             episodes = E.parse_episodes(log)
         except Exception as exc:  # noqa: BLE001
@@ -160,16 +171,30 @@ def main() -> int:
             time.sleep(args.poll_seconds)
             continue
 
+        # Join the official scorer's outcomes with the policy's own value-head
+        # estimates. Positional: both are emitted once per episode in order. If
+        # the counts disagree the join is dropped rather than mismatched -- a
+        # silently misaligned baseline is worse than no baseline, because the
+        # advantage would be wrong rather than merely weak.
+        scores = read_scores(score_log)
+        if scores and len(scores) != len(episodes):
+            print(f"[worker {args.worker_id}] {len(scores)} score rows vs "
+                  f"{len(episodes)} episodes -- dropping the join", flush=True)
+            scores = []
+
         out = rollout_dir / f"w{args.worker_id:03d}_v{ref.version:05d}_{it:06d}.jsonl"
         tmp = out.with_suffix(".jsonl.tmp")
         with open(tmp, "w") as fh:
-            for e in episodes:
-                rec = K.stamp({
+            for i, e in enumerate(episodes):
+                rec = {
                     "worker": args.worker_id, "iter": it,
                     "length": e.length, "success": e.success, "return": e.ret,
                     "success_frame": None,
-                }, ref)
-                fh.write(json.dumps(rec) + "\n")
+                }
+                if scores:
+                    rec["p_success"] = scores[i].get("p_success_first")
+                    rec["mean_spread"] = scores[i].get("mean_spread")
+                fh.write(json.dumps(K.stamp(rec, ref)) + "\n")
         # Rename last: the trainer globs this directory, and a half-written
         # file that it can already see is a race it should never have to
         # handle.

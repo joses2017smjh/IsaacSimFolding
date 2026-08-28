@@ -10,7 +10,8 @@ deliverable went missing once when it was not.
 | 21067642 | `lh-image` | 2026-08-27 | FAILED | Retry loop pulled 25 GB but the file was not a valid gzip: the CDN answered the resume with 200 not 206, curl threw away 12 GB client-side and spliced the rest onto the partial. Size matched, content did not. |
 | 21067643 | `lh-trainenv` | 2026-08-27 | FAILED | Wanted `lehome.sif`, which is not built. The train route needs no Isaac Sim, so it now reuses `bhl.sif`. |
 | 21078863 | `lh-trainenv` | 2026-08-28 | **COMPLETED** | torch 2.7.0+cu128, lerobot 0.4.3, transformers 4.57.6, CUDA available, 7.6 GB. **Stages 1-2 are unblocked.** |
-| 21078864 | `lh-image` | 2026-08-28 | pending | Same pull via `hf` instead of curl, plus a `gzip -t` check before the 25 GB conversion. Tests the one remaining hope that the official image renders where the pip stack does not. |
+| 21078864 | `lh-image` | 2026-08-28 | pending (QOSGrpCpuLimit) | Same pull via `hf` instead of curl, plus a `gzip -t` check before the 25 GB conversion. Tests the one remaining hope that the official image renders where the pip stack does not. |
+| 21078925 | `lh-data` | 2026-08-28 | pending (QOSGrpCpuLimit) | Garment assets (1.0 GB) + the 1,000 released demonstrations (18.9 GB). The last thing Stage 1 is waiting on. |
 
 ## What the ledger says about the project
 

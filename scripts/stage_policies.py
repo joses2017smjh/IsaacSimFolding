@@ -79,8 +79,14 @@ class _ValueScoredPolicy(LeRobotPolicy):
                 "candidate selection needs a value head to score with; "
                 "pass value_path or set n_candidates=1"
             )
-        self._log_scores = Path(log_scores) if log_scores else None
+        # Where per-episode value-head summaries go. The rollout worker reads
+        # this to get P_success for each episode -- without it the trainer has
+        # to fall back to a batch-mean baseline, which throws away the paper's
+        # whole point that the policy is its own value function.
+        self._log_scores = Path(log_scores or os.environ.get("SCORE_LOG", "")) \
+            if (log_scores or os.environ.get("SCORE_LOG")) else None
         self._trace: list[dict] = []
+        self._episode = 0
         self._install_tap()
 
     # -- feature extraction -------------------------------------------------
@@ -136,15 +142,34 @@ class _ValueScoredPolicy(LeRobotPolicy):
             return fn(batch)
 
     def reset(self):
-        super().reset()
+        # Flush the episode that just ENDED before clearing state for the next.
         self._flush()
+        super().reset()
 
     def _flush(self):
+        """One aggregated line per episode, not one per step.
+
+        Per-step lines would be ~600 rows an episode and the trainer only needs
+        the episode-level baseline. The first-step value is recorded separately
+        because P_success at t=0 is the state-value estimate before the policy
+        has done anything -- that is the baseline the success residual wants,
+        and the episode mean is contaminated by how the episode went.
+        """
         if self._log_scores and self._trace:
+            ps = [r["p_success"] for r in self._trace if "p_success" in r]
+            spreads = [r["spread"] for r in self._trace if "spread" in r]
+            row = {
+                "episode": self._episode,
+                "p_success": float(sum(ps) / len(ps)) if ps else None,
+                "p_success_first": ps[0] if ps else None,
+                "steps": len(self._trace),
+                "mean_spread": float(sum(spreads) / len(spreads)) if spreads else None,
+            }
+            self._log_scores.parent.mkdir(parents=True, exist_ok=True)
             with open(self._log_scores, "a") as fh:
-                for row in self._trace:
-                    fh.write(json.dumps(row) + "\n")
+                fh.write(json.dumps(row) + "\n")
         self._trace = []
+        self._episode += 1
 
 
 @PolicyRegistry.register("candidate")

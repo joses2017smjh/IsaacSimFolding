@@ -125,7 +125,22 @@ def main() -> int:
 
         # -- advantage, from the policy's own value head --------------------
         outcomes = np.array([float(r["success"]) for r in pending], dtype=np.float64)
-        baseline = np.array([float(r.get("p_success", outcomes.mean())) for r in pending])
+        have_v = [r.get("p_success") is not None for r in pending]
+        n_missing = len(have_v) - sum(have_v)
+        if n_missing:
+            # Falling back to the batch mean is a WEAKER baseline: it is the
+            # advantage over the average episode rather than over what this
+            # policy predicted for this state, which is the whole content of
+            # "the policy is its own value function". Never let that happen
+            # quietly -- if it is most of the batch, the value head is not
+            # being read and Stage 3 is not doing what it claims.
+            print(f"[trainer]   WARNING: {n_missing}/{len(pending)} rollouts carry no "
+                  f"p_success; using the batch mean for those. Check SCORE_LOG "
+                  f"is reaching the policy and that VALUE_PATH is set.", flush=True)
+        baseline = np.array([
+            float(r["p_success"]) if r.get("p_success") is not None else outcomes.mean()
+            for r in pending
+        ])
         adv = awr.success_residual(outcomes, baseline)
 
         signs = recap.binarise(adv)

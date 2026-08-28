@@ -125,6 +125,24 @@ def main() -> int:
                           num_workers=4, drop_last=True)
     val_dl = DataLoader(val_ds, batch_size=args.batch_size, num_workers=2)
 
+    # Materialise the heads BEFORE the optimiser exists.
+    #
+    # With --hidden_dim 0 the width is inferred from the first captured
+    # feature, so `wrap.heads` is None until something has run. Building the
+    # optimiser first would hand it `None.parameters()`. One warmup batch also
+    # proves the tap actually fires on this checkpoint -- far better to learn
+    # that in the first ten seconds than after the dataloader has warmed up.
+    warmup = next(iter(train_dl))
+    with torch.no_grad():
+        policy.forward(to_device(warmup, device))
+    wrap()                      # builds the heads at the captured width
+    wrap.heads.to(device)       # they were created after the initial .to()
+    print(f"[stage2] value heads: hidden_dim={wrap.cfg.hidden_dim} "
+          f"params={sum(p.numel() for p in wrap.heads.parameters()) / 1e6:.2f}M",
+          flush=True)
+
+    from lehome_fold.value_head import value_loss
+
     opt = torch.optim.AdamW(wrap.heads.parameters(), lr=args.lr)
     step = 0
     wrap.heads.train()
@@ -139,7 +157,6 @@ def main() -> int:
             with torch.no_grad():
                 policy.forward(batch)
             preds = wrap()
-            from lehome_fold.value_head import value_loss
             loss, parts = value_loss(preds, targets, future_mask=targets.get("future_mask"))
             opt.zero_grad(set_to_none=True)
             loss.backward()

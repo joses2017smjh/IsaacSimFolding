@@ -22,6 +22,9 @@
 # not part of an image rebuild.
 
 set -euo pipefail
+# Data is route-independent, but the container has to exist. The train route
+# reuses the already-built bhl.sif and its venv already carries huggingface_hub.
+export LH_ROUTE=${LH_ROUTE:-train}
 source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 
 echo "=== node: $(hostname) | dest: $LEHOME_DATA | $(date) ==="

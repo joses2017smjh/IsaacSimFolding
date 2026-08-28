@@ -16,6 +16,9 @@ deliverable went missing once when it was not.
 | ~~21078864~~ | | | | *(superseded)* | Same pull via `hf` instead of curl, plus a `gzip -t` check before the 25 GB conversion. Tests the one remaining hope that the official image renders where the pip stack does not. |
 | 21078925 | `lh-data` | 2026-08-28 | FAILED | Got the assets (946 MB, complete) and 8.2 of 18.9 GB of demonstrations, then **HTTP 429: the Hub rate-limits by IP and this cluster shares one**. A `HF_TOKEN` lifts the anonymous limit and is the real fix; the job now backs off and resumes without one. |
 
+| 21079138 | `lh-render` | 2026-08-28 | queued | **The Isaac Sim render.** Real SO-101 USD at both bimanual poses, a real Release garment with its fabric texture, the challenge's own overhead camera, arms driven by episode 0 of the released demos — on **6.0**, which renders here. |
+| 21079173 | `lh-port` | 2026-08-28 | queued | **How big is the 6.0 port?** All 15 isaaclab symbols the task imports resolve on 3.0.0b2, and the particle cloth is raw PhysX/USD, so it is version-independent. This stands the env up and reports the first real failure. |
+
 ## What the ledger says about the project
 
 The renderer is the root of everything still blocked. `21067439` settled that

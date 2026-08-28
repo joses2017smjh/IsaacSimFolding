@@ -19,15 +19,38 @@ echo "--- hf entrypoint: $HF"
 
 cd "$LEHOME_DATA"
 
+# The Hub rate-limits by IP, and this cluster shares one: the first attempt got
+# 946 MB of assets and 8.2 GB of the demonstrations, then
+#   429 Too Many Requests ... "We had to rate limit your IP (128.193.8.41).
+#    create a HF account and pass a HF_TOKEN"
+# A token lifts the anonymous limit and is the real fix; without one this backs
+# off and resumes, because `hf download` is resumable and only re-fetches what
+# is missing.
+[ -n "${HF_TOKEN:-}" ] && echo "--- using HF_TOKEN ---" ||     echo "--- no HF_TOKEN: anonymous, IP rate limits apply ---"
+
+pull() {   # pull <repo> <local-dir>
+    local repo=$1 dest=$2 try=0
+    until $HF download "$repo" --repo-type dataset --local-dir "$dest"; do
+        try=$((try + 1))
+        if [ $try -ge 8 ]; then
+            echo "FATAL: $repo failed after $try attempts" >&2
+            return 1
+        fi
+        local wait=$((try * 120))
+        echo "--- $repo attempt $try failed; sleeping ${wait}s and resuming ---"
+        sleep $wait
+    done
+}
+
 echo "=== 1. garment assets (1.0 GB) -> $LEHOME_DATA/Assets ==="
-$HF download lehome/asset_challenge --repo-type dataset --local-dir Assets
+pull lehome/asset_challenge Assets
 
 echo "=== 2. merged demonstrations (18.9 GB) -> $LEHOME_DATA/Datasets/example ==="
-$HF download lehome/dataset_challenge_merged --repo-type dataset --local-dir Datasets/example
+pull lehome/dataset_challenge_merged Datasets/example
 
 if [ "${FETCH_DEPTH:-0}" = "1" ]; then
     echo "=== 3. per-garment demonstrations with depth (24.2 GB) ==="
-    $HF download lehome/dataset_challenge --repo-type dataset --local-dir Datasets/per_garment
+    pull lehome/dataset_challenge Datasets/per_garment
 else
     echo "=== 3. skipping depth dataset (FETCH_DEPTH=1 to pull it) ==="
 fi

@@ -72,8 +72,19 @@ if ! gzip -t "$TARBALL" 2>/dev/null; then
 fi
 echo "--- gzip integrity OK ---"
 
-echo "--- converting docker-archive -> sif ---"
-apptainer build --force "$SIF" "docker-archive://$TARBALL"
+# oci-archive, NOT docker-archive. The tarball is an OCI layout --
+# `blobs/sha256/...` at the root, not the manifest.json + layer tarballs a
+# `docker save` produces. apptainer reports the mismatch as "gzip: invalid
+# header", which sends you looking for a corrupt download; the file is a
+# perfectly valid gzip of the wrong archive shape.
+echo "--- inspecting archive shape ---"
+if tar tzf "$TARBALL" 2>/dev/null | head -5 | grep -q "^blobs/"; then
+    SRC="oci-archive://$TARBALL"
+else
+    SRC="docker-archive://$TARBALL"
+fi
+echo "--- converting $SRC -> sif ---"
+apptainer build --force "$SIF" "$SRC"
 echo "built: $SIF ($(du -h "$SIF" | cut -f1))"
 
 echo "--- verifying the baked venv ---"

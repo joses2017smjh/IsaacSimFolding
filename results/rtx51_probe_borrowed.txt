@@ -1,0 +1,9 @@
+STARTED | probe_rtx_tiled.py
+SEGFAULT | exit 139, inside AppLauncher() before the first post-launch emit
+NODE     | cn-r-2  NVIDIA A40  driver 595.71.05  (2026-08-27, job 21067439)
+STACK    | isaacsim 5.1.0.0 + isaaclab 2.3.2.post1 + py3.11.16 (borrowed BHL v51)
+FRAME    | omni::usd::UsdManager::createHydraEngine
+         |   -> libomni.hydra.rtx.plugin.so
+         |   -> libcarb.scenerenderer-rtx.plugin.so
+         |   -> librtx.scenedb.plugin.so :: carbOnPluginStartup
+VERDICT  | rgb=SEGFAULT -> RTX DOES NOT RENDER ON 5.1

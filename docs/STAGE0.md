@@ -116,7 +116,7 @@ called from `garment_bi_v2.py::_check_success` / `_get_success`, and
 `scripts/utils/evaluation.py` turns it into the per-episode boolean that is
 averaged into a success rate.
 
-This repo calls that code unmodified. `scripts/g0_eval.py` registers extra
+This repo calls that code unmodified. `scripts/run_eval.py` registers extra
 policies into LeHome's own `PolicyRegistry` and then hands off to
 `scripts.eval` — no forked eval loop, no second implementation of success.
 
@@ -168,6 +168,23 @@ So the pinned version is the broken one, and the working version is unpinned.
 **This is now the blocking question, and it replaces "does the environment
 exist" as the thing to resolve first.** `slurm/00_rtx_probe.sbatch` exists to
 answer it and nothing downstream should start until it has.
+
+**RESULT (2026-08-27, job 21067439): it segfaults.** Exit 139 inside
+`AppLauncher()`, before a render product is ever requested:
+
+```
+omni::usd::UsdManager::createHydraEngine
+  -> libomni.hydra.rtx.plugin.so
+  -> libcarb.scenerenderer-rtx.plugin.so
+  -> librtx.scenedb.plugin.so :: carbOnPluginStartup
+```
+
+Node `cn-r-2`, **NVIDIA A40**, driver **595.71.05**. So it is not missing RT
+cores -- an A40 has them. And it is not node selection: every GPU driver on
+this cluster is 595.71.05 or 610.43.02, and the successful 6.0 probe ran on
+`cn-r-4`, the same node class. **Isaac Sim 5.1's RTX plugins do not support
+this cluster's drivers; 6.0's do.** That is cluster-wide and cannot be worked
+around by constraining the partition.
 
 The probe has three possible outcomes and all three are actionable:
 
@@ -234,44 +251,97 @@ frames and keep advantage labels), not an afterthought.
 
 ---
 
-## 3 · One number that does not reconcile yet
+## 3 · The control rate, resolved
 
-The work order says G0 must log the control rate and expect 30 Hz, and stop if
-it disagrees. It disagrees, and the discrepancy is exactly the "control-rate
-mismatch" that G1 names as a way the data pipeline silently breaks.
+The work order says G0 must log the control rate, expect 30 Hz, and stop if it
+disagrees. It disagrees, and the resolution matters because "control-rate
+mismatch" is exactly how G1 says the data pipeline breaks silently.
 
-- The **dataset** declares `fps = 30`.
-- The **environment** is `dt = 1/90` with `decimation = 1`, so one `env.step()`
-  advances **1/90 s** of simulated time.
-- The **eval loop** calls the policy exactly once per `env.step()`
-  (`evaluation.py`, one `select_action` then one `env.step`).
-- `RateLimiter(args.step_hz)` is a **wall-clock** throttle — it sleeps and calls
-  `env.sim.render()` — so it does not change sim-time semantics at all. It is
-  teleop/GUI machinery, not a controller.
+The numbers, all read first-hand:
 
-Two readings, and they are not equally harmless:
+| source | value |
+|---|---|
+| dataset `meta/info.json` | `fps = 30` |
+| env config | `dt = 1/90`, `decimation = 1` -> 1/90 s of sim time per step |
+| eval loop | exactly one `select_action` per `env.step()` |
+| `RateLimiter(step_hz)` | **wall-clock only** -- it sleeps and calls `env.sim.render()` |
+| episode 0 metadata | `length = 364`, video `to_timestamp = 12.1333 s` |
 
-1. **`fps=30` is a LeRobot metadata label**, and everything is self-consistent
-   because both recording and evaluation use one action per `env.step()`. Then
-   a 30-step action chunk is 30 env steps in both, and the label only matters
-   where LeRobot converts it into `delta_timestamps`.
-2. **The recording loop stepped the env 3× per stored frame.** Then a policy
-   trained on the demonstrations and replayed one-action-per-step executes at
-   3× the demonstrated speed in sim time, and BC will look mysteriously bad.
+That last row settles it. 364 / 12.1333 = **exactly 30.0**, so the recorded
+video timestamps are internally consistent with the declared 30 fps: one stored
+frame is one recorded step, not three. `RateLimiter` is teleop/GUI machinery
+and changes no sim-time semantics.
 
-Supporting neither strongly: episodes average ~266 frames, which is ~2.95 s at
-1/90 s per frame and ~8.9 s at 30 fps, against an `episode_length_s = 60`
-budget and a default `--max_steps 600`.
+So the reading is: **`fps` is a frame-rate label, and one action is one
+`env.step()` everywhere -- in recording and in evaluation alike.** The pipeline
+is self-consistent. A 30-step action chunk is 30 env steps in both, which is
+what LeRobot's `delta_timestamps` indexing needs, and it is why
+`train_value.py` derives its future horizon from `meta.fps` and never from the
+env's `dt`.
 
-**This is resolved empirically at G0, not by argument.** Replay a released
-demonstration through `scripts/utils/dataset_replay.py`, log simulated time
-elapsed against frames consumed, and check whether the official checker fires
-on a demonstration that is known to have succeeded. A demo that scores success
-on replay settles it and validates the whole harness at the same time — a
-strictly stronger G0 than a random policy, and it is why `05_g0_floor.sbatch`
-is a floor measurement rather than the only gate.
+The 3x remains real in one place only, and it is worth stating rather than
+forgetting: **one second of demonstration video is one third of a second of
+simulated time.** Nothing in training depends on that, because nothing in
+training measures sim seconds. Anything that reports a duration in seconds does
+-- so report durations in FRAMES.
 
----
+Still to confirm at G0, because metadata cannot: that a released demonstration
+replayed through the environment actually scores success. That validates the
+harness end to end and is a strictly stronger check than a random policy, which
+is why it is G0-d below.
+
+## 3a · What the demonstrations do not contain
+
+Checked against `meta/episodes/chunk-000/file-000.parquet` (1,000 rows) and
+`meta/garment_info.json`. This reshapes Stage 2, so it belongs in Stage 0.
+
+**Columns present:** `episode_index`, `tasks`, `length`, video pointers, and
+per-episode statistics over `observation.state`, `action`, the three image
+streams, `timestamp`, `frame_index`.
+
+**Columns absent:** `success`, `reward`, garment keypoints, particle positions.
+
+Three consequences, in increasing order of how much they change the plan.
+
+1. **The task string carries no garment category.** Every episode's task is the
+   same: `"fold the garment on the table"`. That matches the challenge's own
+   rule that category labels are withheld at evaluation -- the policy has to
+   read the garment from vision. Anything that appends a category to the prompt
+   is cheating the benchmark, which is why `recap.BASE_TASK` is a constant.
+
+2. **There are no keypoints.** The paper's value head predicts "keypoint
+   distances at t+30". The released data cannot supply that target; it would
+   need the simulator to expose particle positions. This repo regresses the
+   12-dim joint state at t+H instead and calls it `future_state`, deliberately
+   named so no later report can claim the paper's quantity by accident.
+
+3. **There are no failures.** All 40 garments in `garment_info.json` are
+   `Seen`, 25 episodes each, and they are successful scripted demonstrations
+   with no outcome column. So the work order's "labels are free -- you know how
+   each demo ended" holds only in the degenerate direction: every episode ended
+   the same way.
+
+   That third point is a gate, not a nuisance. **G2 asks for a CALIBRATED
+   success head, and calibration is undefined when every target is 1.** The
+   model that predicts 1.0 everywhere is perfectly accurate, perfectly useless,
+   and would sail past a careless check. `labels.class_balance` reports the
+   degeneracy before the fit and `calibration.gate` refuses it after, so the
+   failure is loud in two places.
+
+   What is trainable on demonstrations today: the **progress** head (frame index
+   over episode length, well defined everywhere) and the **future** head. What
+   needs rollouts with mixed outcomes: the **success** head, and therefore every
+   Stage 3 advantage that depends on it.
+
+   `labels.success_targets(mode="terminal")` is the partial way out -- 0 before
+   the fold completes, 1 after -- which yields both classes from a purely
+   successful demonstration. It answers "has the fold completed", not "will this
+   episode succeed", and those are different questions. It is reported
+   separately and it is not a substitute for the episode-level head.
+
+**So the dependency chain is:** renderer -> rollouts -> success negatives ->
+G2 -> Stage 3 advantages. The renderer is the root, which is the second reason
+`00_rtx_probe` is the blocking job rather than merely the first one.
 
 ## 4 · G0, restated
 

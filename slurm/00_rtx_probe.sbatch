@@ -38,6 +38,7 @@ case "$PROBE_STACK" in
         # Read-only: it imports from that venv and writes nothing into it.
         SIF=$WORKSPACE/container/bhl.sif
         PY=$WORKSPACE/venv/bin/python
+        export UV_PROJECT_ENVIRONMENT=$WORKSPACE/venv
         ;;
     official)
         # The organizers' image, once 01_install_stack has converted it.

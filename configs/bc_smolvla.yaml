@@ -1,0 +1,45 @@
+# Stage 1 BC baseline -- SmolVLA. The CHEAP baseline, not the paper's model.
+#
+# The paper fine-tuned a pi0.5-class model (SigLIP-So400m/14 -> Gemma-2B prefix
+# -> Gemma-300M action expert). SmolVLA is ~450M against that ~2.3B. It is here
+# because LeHome ships a SmolVLA config, it fits comfortably on one A40, and it
+# answers "is the data pipeline correct" for a fraction of the compute.
+#
+# Do not report a number from this as a reproduction of the paper's number.
+# The run name carries the base model for exactly that reason.
+dataset:
+  repo_id: lehome_four_types
+  root: Datasets/example/four_types_merged
+
+policy:
+  type: smolvla
+  device: cuda
+  push_to_hub: false
+
+  input_features:
+    observation.state:
+      type: STATE
+      shape: [12]
+    observation.images.top_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+    observation.images.left_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+    observation.images.right_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+
+  output_features:
+    action:
+      type: ACTION
+      shape: [12]
+
+output_dir: outputs/train/bc_smolvla_all
+batch_size: 32
+steps: 30000
+save_freq: 5000
+log_freq: 1000
+
+wandb:
+  enable: false

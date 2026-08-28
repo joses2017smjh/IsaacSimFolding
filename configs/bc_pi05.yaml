@@ -1,0 +1,45 @@
+# Stage 1 BC baseline -- pi0.5. THE PAPER'S BASE MODEL.
+#
+# `pi05` is a first-class policy type in lerobot 0.4.3 (verified against the
+# v0.4.3 tag), so the paper's base is directly available -- no port needed.
+#
+# batch_size is 8 rather than SmolVLA's 32: ~2.3B parameters against ~450M, and
+# three 480x640 image streams per sample. Expect to tune this to the card. On a
+# 48GB A40 this is the starting point, not a measured optimum, and gradient
+# accumulation is the knob to reach for before lowering it further.
+dataset:
+  repo_id: lehome_four_types
+  root: Datasets/example/four_types_merged
+
+policy:
+  type: pi05
+  device: cuda
+  push_to_hub: false
+
+  input_features:
+    observation.state:
+      type: STATE
+      shape: [12]
+    observation.images.top_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+    observation.images.left_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+    observation.images.right_rgb:
+      type: VISUAL
+      shape: [3, 480, 640]
+
+  output_features:
+    action:
+      type: ACTION
+      shape: [12]
+
+output_dir: outputs/train/bc_pi05_all
+batch_size: 8
+steps: 30000
+save_freq: 5000
+log_freq: 1000
+
+wandb:
+  enable: false

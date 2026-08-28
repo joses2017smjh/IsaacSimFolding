@@ -29,6 +29,8 @@ source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 
 TARBALL=$WORKSPACE/container/lehome-challenge.tar.gz
 URL=https://huggingface.co/datasets/lehome/docker/resolve/main/lehome-challenge.tar.gz
+# Exact size from the Hub API; the loop below runs until the file is this big.
+EXPECT_BYTES=26676771349
 export APPTAINER_CACHEDIR=$XDG_CACHE_HOME/apptainer
 export APPTAINER_TMPDIR=$WORKSPACE/.cache/apptainer-tmp
 mkdir -p "$WORKSPACE/container" "$APPTAINER_CACHEDIR" "$APPTAINER_TMPDIR"
@@ -36,14 +38,39 @@ mkdir -p "$WORKSPACE/container" "$APPTAINER_CACHEDIR" "$APPTAINER_TMPDIR"
 echo "=== node: $(hostname) | $(date) ==="
 df -h /nfs/hpc/share/$USER | tail -1
 
-if [ ! -s "$TARBALL" ]; then
-    echo "--- downloading 26.7 GB (resumable) ---"
-    # -C - resumes a partial file: a 27 GB pull that dies at 90% should not
-    # start over, and this job has been given a 6h wall clock on that basis.
-    curl -L -C - --retry 5 --retry-delay 30 -o "$TARBALL" "$URL"
-else
-    echo "--- tarball present: $(du -h "$TARBALL" | cut -f1) ---"
+# Download with `hf`, not curl.
+#
+# The first attempt used curl -C - and produced a 25 GB file that was the right
+# SIZE and not a valid gzip. The Hub redirects to a CDN that answered the
+# resume request with 200 instead of 206, so curl skipped 12 GB client-side
+# ("Throwing away 12003866524 bytes") and spliced the remainder onto the
+# earlier partial. A length check cannot catch that; only the content can.
+#
+# huggingface_hub does ranged, chunked, hash-verified downloads and resumes
+# correctly, which is the whole problem solved by using the tool that knows the
+# protocol. uv is baked into bhl.sif, so uvx supplies it without an install.
+echo "--- downloading via huggingface_hub ---"
+apptainer exec --cleanenv --home "$HOME_OVERRIDE" --bind /nfs/hpc/share/$USER \
+    --env HF_HOME="$HF_HOME" --env UV_CACHE_DIR="$UV_CACHE_DIR" \
+    --env UV_PYTHON_INSTALL_DIR="$UV_PYTHON_INSTALL_DIR" \
+    "$WORKSPACE/container/bhl.sif" \
+    uvx --from huggingface_hub hf download lehome/docker lehome-challenge.tar.gz \
+        --repo-type dataset --local-dir "$WORKSPACE/container"
+
+got=$(stat -c%s "$TARBALL" 2>/dev/null || echo 0)
+if [ "$got" -ne "$EXPECT_BYTES" ]; then
+    echo "FATAL: got $got bytes, expected $EXPECT_BYTES" >&2
+    exit 1
 fi
+echo "--- $got bytes, size matches ---"
+
+# Verify it is actually a gzip stream before handing 25 GB to apptainer. The
+# previous failure got all the way to `apptainer build` before anything noticed.
+if ! gzip -t "$TARBALL" 2>/dev/null; then
+    echo "FATAL: $TARBALL is not a valid gzip stream" >&2
+    exit 1
+fi
+echo "--- gzip integrity OK ---"
 
 echo "--- converting docker-archive -> sif ---"
 apptainer build --force "$SIF" "docker-archive://$TARBALL"

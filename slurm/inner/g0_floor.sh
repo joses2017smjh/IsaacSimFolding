@@ -26,7 +26,7 @@ ls Assets/objects/Challenge_Garment/Release 2>/dev/null || {
 # --headless and --enable_cameras are both required: headless because there is
 # no display on a compute node, and enable_cameras because the policy consumes
 # RGB and without it the observation dict comes back without images.
-"$PY" "$REPO/scripts/g0_eval.py" \
+"$PY" "$REPO/scripts/run_eval.py" \
     --policy_type "$POLICY_TYPE" \
     --garment_type "$GARMENT_TYPE" \
     --num_episodes "$NUM_EPISODES" \

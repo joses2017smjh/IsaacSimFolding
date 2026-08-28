@@ -40,13 +40,34 @@ case "$LH_ROUTE" in
         PY=/opt/lehome-challenge/.venv/bin/python
         export UV_PROJECT_ENVIRONMENT=/opt/lehome-challenge/.venv
         ;;
+    train)
+        # Training-only. lerobot + torch, NO isaacsim.
+        #
+        # This exists because of what the renderer probe found. Isaac Sim 5.1
+        # cannot render on this cluster, which blocks EVALUATION and Stage 3
+        # rollout collection -- but Stage 1 BC and Stage 2 value-head training
+        # read the released LeRobot dataset and never open a simulator at all.
+        # Splitting the stack means that block costs the training half nothing.
+        #
+        # A checkpoint trained here is a normal LeRobot checkpoint and is
+        # scored, later, by the official harness on whichever route can render.
+        #
+        # Reuses the ALREADY BUILT bhl.sif rather than needing lehome.sif. It
+        # provides glibc 2.35, the CUDA/GL userspace and uv, and this route
+        # installs no Isaac Sim -- so there is nothing lehome.sif would add.
+        # One less 2-hour container build between here and a trained policy.
+        SIF=${LH_TRAIN_SIF:-$WORKSPACE/container/bhl.sif}
+        LEHOME=$REPO/external/lehome-challenge
+        PY=$WORKSPACE/venv-lehome-train/bin/python
+        export UV_PROJECT_ENVIRONMENT=$WORKSPACE/venv-lehome-train
+        ;;
     source)
         SIF=$WORKSPACE/container/lehome.sif
         LEHOME=$REPO/external/lehome-challenge
         PY=$WORKSPACE/venv-lehome/bin/python
         export UV_PROJECT_ENVIRONMENT=$WORKSPACE/venv-lehome
         ;;
-    *) echo "unknown LH_ROUTE=$LH_ROUTE (expected official or source)" >&2; return 1 2>/dev/null || exit 1 ;;
+    *) echo "unknown LH_ROUTE=$LH_ROUTE (expected official, source or train)" >&2; return 1 2>/dev/null || exit 1 ;;
 esac
 
 # Assets and datasets live on Lustre and are bind-mounted in, NOT baked into
@@ -88,7 +109,7 @@ setup_node_cache() {
 
 # Because --cleanenv wipes the host environment, ANY variable an inner script
 # needs must be forwarded explicitly.
-LH_FORWARD_VARS="GARMENT_TYPE NUM_EPISODES MAX_STEPS POLICY_TYPE POLICY_PATH DATASET_ROOT PROBE_OUT OUT_CSV SEED DEVICE ENABLE_CAMERAS HEADLESS HF_HOME STEP_HZ RUN_NAME"
+LH_FORWARD_VARS="CONFIG VALUE_PATH FEATURE_PATH HIDDEN_DIM POLICY_PATH_OVR ROLLOUT_DIR SHARED_DIR WORKER_ID N_CANDIDATES STAGE_OUT GARMENT_TYPE NUM_EPISODES MAX_STEPS POLICY_TYPE POLICY_PATH DATASET_ROOT PROBE_OUT OUT_CSV SEED DEVICE ENABLE_CAMERAS HEADLESS HF_HOME STEP_HZ RUN_NAME"
 
 lh_exec() {
     local envargs=()

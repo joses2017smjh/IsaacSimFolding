@@ -1,231 +1,142 @@
-# lehome-fold-repro
+<h1 align="center">Isaac Sim Folding</h1>
 
-Reproducing **[Learning to Fold](https://arxiv.org/abs/2606.27163)** (Larchenko,
-2026) — 1st of 62 in the LeHome Challenge 2026 simulation round, 2nd in the
-real-world final — on the OSU cluster, in Isaac Sim.
+<p align="center">
+  Reproducing <a href="https://arxiv.org/abs/2606.27163"><b>Learning to Fold</b></a> —
+  1st of 62 at the LeHome Challenge 2026 — on a shared HPC cluster.<br>
+  <sub>Bimanual SO-ARM101 · flow-matching VLA · a policy that is its own value function</sub>
+</p>
 
-Bimanual SO-ARM101, four garment types, binary fold success. The paper's one
-structural idea is that **the policy is its own value function**: the same
-network that predicts actions also predicts success, progress and a few
-task-relevant futures, and those predictions drive advantage estimation, live
-failure detection and candidate selection. Everything else is downstream of it.
+<p align="center">
+  <img src="docs/img/thompson.gif" width="880" alt="Thompson sampling allocating an episode budget across 36 inference-hyperparameter arms and converging on the best one">
+</p>
 
-Separate from `bhl-robustness-ladder` on purpose — different robot, different
-learning paradigm, no MuJoCo sim2sim path. What carries over is the
-Slurm/apptainer discipline and the build→gate→submit habit, not a line of code.
-
-Sim2real (camera alignment, augmentation, human-in-the-loop collection) is out
-of scope. No hardware.
+<p align="center"><sub><b>Stage 4, running.</b> 36 inference-hyperparameter arms, a Beta-Bernoulli posterior each.
+The budget concentrates on what works; the amber bar is the fixed-defaults baseline, held at a
+reserved 40 episodes so <i>"gain over defaults"</i> is a measurement and not an artefact of starving it.</sub></p>
 
 ---
 
-## Status
+## The first job I ran killed the plan
 
-| | |
-|---|---|
-| Stage 0 — environment available | **resolved, GO** |
-| G0-a — RGB on the pinned stack | **FAILS.** Isaac Sim 5.1 segfaults on this cluster |
-| Stages 1–4 — implemented | **yes**, 31/31 unit tests pass |
-| Stages 1–2 — runnable now | **yes**, via `LH_ROUTE=train` (no simulator needed) |
-| Evaluation, Stage 3 rollouts | **blocked** on the renderer |
-
-Everything the reproduction needs is public, ungated and Apache-2.0: the
-[environment](https://github.com/lehome-official/lehome-challenge) (pinned at
-`a805ad2`), 1,000 demonstration episodes / 265,798 frames, 10 seen + 2 public
-unseen garments per type, and the official scorer. Nothing was reimplemented,
-so success rate here can mean the number the leaderboard meant. Full evidence,
-with the command behind each claim, in [docs/STAGE0.md](docs/STAGE0.md).
-
-### The blocking problem, and it is the inverse of the one predicted
-
-The plan assumed this needed the 6.0 stack. It is exactly backwards:
-
-- LeHome pins **`isaacsim==5.1.0`** on Python 3.11 — the same stack as the
-  locked BHL v51 venv.
-- LeHome **requires RGB**: three `TiledCamera`s at 640×480. No ray-cast
-  shortcut — a Warp mesh query has no colour to return.
-- On this cluster, **5.1's RTX renderer segfaults**, which is the documented
-  reason `bhl-robustness-ladder` has no RGB in it at all.
-- RTX renders on **6.0**, where LeHome is not pinned.
-
-The probe confirmed it (job 21067439, exit 139):
+The build order said this needed Isaac Sim 6.0. **38 seconds of GPU time proved the opposite** — and proved the version it *does* need is broken here:
 
 ```
+Episode: probe_rtx_tiled.py            exit 139
 omni::usd::UsdManager::createHydraEngine
-  -> libomni.hydra.rtx.plugin.so -> libcarb.scenerenderer-rtx.plugin.so
-  -> librtx.scenedb.plugin.so :: carbOnPluginStartup
+  → libomni.hydra.rtx.plugin.so
+  → libcarb.scenerenderer-rtx.plugin.so
+  → librtx.scenedb.plugin.so :: carbOnPluginStartup
+node cn-r-2 · NVIDIA A40 · driver 595.71.05
 ```
 
-`cn-r-2`, **NVIDIA A40**, driver **595.71.05**. Not missing RT cores — an A40
-has them. Not node selection either: every GPU driver here is 595 or 610, and
-the 6.0 probe that *worked* ran on `cn-r-4`, same node class. **5.1's RTX
-plugins do not support this cluster's drivers; 6.0's do.**
+The benchmark **pins `isaacsim==5.1.0`** and needs three RGB cameras. 5.1's RTX plugins segfault on
+this cluster's drivers. 6.0's don't — same node class, same probe, renders fine.
 
-Two branches remain. The organizers' Docker image is being tested — low
-probability, since `--nv` injects the *host* driver and a bundled userspace
-cannot fix a driver incompatibility. Failing that, porting LeHome to the 6.0
-stack, as a **stated deviation**: a ported scorer is no longer self-evidently
-the leaderboard's scorer, and that has to be said rather than glossed.
+Not missing RT cores (an A40 has them). Not fixable by `--constraint` (every driver here is 595 or 610).
+Not fixable by a container (`--nv` injects the *host* driver). **It's cluster-wide, and I found it before
+downloading 25 GB or writing a line of training code.**
 
-**What it blocks:** evaluation, and Stage 3 rollout collection. **What it does
-not block:** Stage 1 and Stage 2 *training*, which read the released LeRobot
-dataset and never open a simulator. `LH_ROUTE=train` exists for that split and
-reuses the already-built `bhl.sif`, so it needs no container build either.
-
-### Four things the plan got wrong
-
-Verified against the paper and the code, not assumed:
-
-- **The base model is π0.5, not SmolVLA.** SigLIP-So400m/14 → Gemma-2B prefix →
-  Gemma-300M action expert, 30-step chunk via flow matching. ~2.3B against
-  SmolVLA's ~450M. `pi05` is a first-class policy type in lerobot 0.4.3, so the
-  paper's base is directly available. SmolVLA stays as the cheap baseline;
-  which one produced a number goes in the run name.
-- **Physics is CPU-only and there is one environment.** `--device cpu` is the
-  only accepted value; the eval loop is hardcoded to a batch of one. There is
-  no `NUM_ENVS`. Parallelism is N Slurm tasks.
-- **Isaac Lab is a fork**, not PyPI — `lehome-official/IsaacLab`, via
-  `isaaclab.sh`.
-- **`embed_prefix` is not callable with a batch dict.** Verified against the
-  installed lerobot 0.4.3: pi05 takes `(images, img_masks, tokens, masks)` and
-  smolvla takes those plus `state`. The first version of the wrapper assumed a
-  batch dict and would have failed on the first real forward pass; it now taps
-  the method during the policy's own pass instead, which is signature- and
-  version-agnostic.
-- **The demonstrations contain no failures.** All 40 garments are `Seen`, all
-  episodes are successful scripted demos, and there is no `success` column. So
-  the success head cannot be calibrated on them and **G2 sits behind the
-  renderer** too. Progress and future heads train fine today. See
-  [STAGE0 §3a](docs/STAGE0.md#3a--what-the-demonstrations-do-not-contain).
+> Then I split the stack so it stopped mattering. Stages 1–2 read the released LeRobot dataset and
+> **never open a simulator** — `LH_ROUTE=train` runs them today on a 7.6 GB venv. Only evaluation
+> and Stage 3 rollouts are actually blocked.
 
 ---
 
-## Running it
+## Components, running
 
-Two ways to get the environment plus a training-only third, selected with
-`LH_ROUTE`:
+Every figure below is generated by executing the code in [`src/lehome_fold/`](src/lehome_fold) —
+`python scripts/make_figures.py`. Synthetic outcomes with **known ground truth**, because that's
+the only way to show an estimator recovers the right answer.
 
-- **`official`** (default) — the organizers' Docker image converted to
-  apptainer, venv baked in. The environment the leaderboard was scored in.
-- **`source`** — `uv sync` plus the forked Isaac Lab. The only editable route.
-- **`train`** — lerobot + torch, **no isaacsim**. ~8 GB. Unblocks Stages 1–2.
+### The gate that catches a silent failure
 
-```bash
-cd /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro
-python tests/test_pure.py          # 31 tests, no GPU, no simulator
+<img src="docs/img/g2_calibration.png" width="880" alt="Three reliability diagrams: calibrated passes G2, miscalibrated fails on ECE, degenerate fails because every label is 1">
 
-# --- blocked on the renderer -------------------------------------------
-sbatch slurm/00_rtx_probe.sbatch          # done: segfault, exit 139
-sbatch slurm/01_fetch_official_image.sbatch   # the remaining hope
-sbatch slurm/02_fetch_data.sbatch             # assets 1.0 GB + demos 18.9 GB
+An uncalibrated success head doesn't crash — it makes Stage 3's advantages *noise*, and the run
+degrades over hours. So calibration is a gate with a number on it. **The right-hand panel is the
+one that matters:** the released demonstrations contain no failures at all, so a success head fit
+on them is accurate, useless, and would sail past a careless check.
 
-# --- NOT blocked: Stage 1 and Stage 2 training -------------------------
-sbatch slurm/06_install_train_venv.sbatch
-CONFIG=configs/bc_smolvla.yaml SEED=0 sbatch slurm/10_train_bc.sbatch
-POLICY_PATH=<ckpt> sbatch slurm/12_probe_backbone.sbatch    # pin the feature path
-POLICY_PATH=<ckpt> FEATURE_PATH=<pinned> HIDDEN_DIM=<pinned> \
-    sbatch slurm/20_train_value.sbatch
-sbatch slurm/21_g2_calibration.sbatch      # exit 0 pass / 2 fail / 3 undecidable
+### Why AWR needs a guard
 
-# --- blocked: everything that opens a simulator ------------------------
-POLICY_TYPE=g0_uniform sbatch slurm/05_g0_floor.sbatch
-POLICY_TYPE=candidate  sbatch slurm/11_eval_stage.sbatch
-sbatch slurm/30_trainer.sbatch ; sbatch slurm/31_rollout_workers.sbatch
-sbatch slurm/40_thompson.sbatch
+<img src="docs/img/awr_ess.png" width="880" alt="Effective sample size collapsing from 256 to 1 as the AWR temperature beta shrinks">
+
+Unclipped exponential weights let one episode own the batch. **ESS 256 → 1** as β shrinks, and the
+loss curve stays smooth the whole way down. Logged every step.
+
+### The stale-checkpoint bug, caught by construction
+
+<img src="docs/img/g3_staleness.png" width="880" alt="Histogram of rollouts by checkpoint lag, with those beyond max_lag rejected">
+
+In an async pipeline a worker running a 5-versions-old policy produces advantage labels against the
+wrong baseline. Nothing crashes. Every rollout is stamped with the checkpoint version **and digest**
+that produced it; anything past `max_lag` is dropped and counted.
+
 ```
-
-Job ledger: [SLURM_JOBS.md](SLURM_JOBS.md).
-
-Storage, measured: ~45 GB for Stage 0–1; 448 GB free, no per-user quota. Stage
-3 is the one to watch — the paper's ~4.3M rollout frames would be **~305 GB**
-at the released data's bytes-per-frame, so retention has to be designed.
+[trainer] cycle 0: +80 episodes  lag0=80
+[trainer]   G3 DROPPED 12: rollout is 5 versions behind (max_lag=2)
+[trainer]   G3 DROPPED  1: rollout carries no _ckpt_version
+[trainer] cycle 0: n=80 success=0.400 adv[-0.873,+0.890] recap_positive=0.400 AWR_ESS=40.8/80
+```
 
 ---
 
-## The stages
+## 32 tests, no GPU, no simulator
 
-| | stage | gate | state |
-|---|---|---|---|
-| S0 | environment + data | **G0** renderer; official scorer emits a verdict | G0-a fails |
-| S1 | BC fine-tune, 10 seen garments/type | **G1** above the G0 floor | trainable now |
-| S2 | value head — success, progress, futures | **G2** success head calibrated | partly trainable |
-| S3 | RECAP + AWR, async trainer + workers | **G3** trainer/workers agree on version | G3 verified dry |
-| S4 | Thompson sampling at inference | gain over defaults, same checkpoint | implemented |
+The paper's method lives in a half that needs neither — so it stays testable while the environment is broken.
 
-**S1 — BC.** The released data is 40 `Seen` garments only, so Stage 1 cannot
-leak into the validation split even by accident. Report per garment type, seen
-vs unseen separately, ≥2 seeds; `aggregate_results.py` enforces the shape and
-flags a single-seed row as not a result.
+```
+$ python tests/test_pure.py
+  ok  episode_mode_on_demo_data_is_degenerate_and_says_so
+  ok  splits_rejects_held_out_garments_in_training
+  ok  g3_rejects_stale_unstamped_and_mismatched_rollouts
+  ok  feature_tap_captures_embed_prefix_with_the_real_signatures
+  ok  eval_log_cross_check_catches_a_truncated_log
+  ...
+32 passed, 0 failed
+```
 
-**S2 — the value head.** Heads over a **frozen** backbone, so Stage 2 vs Stage
-1 is a clean single-mechanism ablation on identical action weights. Buys two
-things with no RL: live failure detection, and candidate selection (sample N
-chunks, score with your own value head, execute the best). G2 is a gate rather
-than a plot because an uncalibrated head makes Stage 3's advantages noise
-*silently*.
-
-**S3 — RECAP + AWR.** Advantage conditioning feeds a binarised advantage as a
-text token (`"Advantage: positive"`), trains supervised on everything including
-failures, and conditions on positive at inference — which sidesteps the fact
-that flow matching gives no tractable log-likelihood. AWR runs alongside and is
-separately switchable, because RECAP's own source reports conditioning beating
-AWR on the same data and which one carries the gain is worth measuring.
-
-G3 is enforced, not assumed: every rollout is stamped with the checkpoint
-version and digest that produced it, anything past `--max_lag` is dropped and
-counted, and the lag histogram prints every cycle. Verified end to end with
-synthetic rollouts (`--dry_run 1`): 80 current accepted, 12 stale and 1
-unstamped rejected with reasons.
-
-**One necessary deviation.** LeHome's evaluator saves only *successful*
-episodes (`else: clear_episode_buffer()`). RECAP trains on failures — that is
-the method. So the *recorder* is ours, inside our own policy class. The
-**scorer is not**: `success_checker_garment_fold` still decides what counts as
-a fold, unmodified. The deviation is in what gets kept, not in what gets
-measured.
-
-**S4 — Thompson sampling.** Beta-Bernoulli over inference hyperparameters
-(candidates × chunk length × temperature × flow steps). Fold success is binary
-per episode, so the Beta posterior is exact rather than approximate. The
-default arm gets a **reserved budget** — in a 3,000-pull simulation Thompson
-starved it to 10 pulls, and a baseline with 10 episodes behind it cannot anchor
-a "gain over defaults" claim. Cost ratio is reported alongside: an arm that
-wins by a point at 8× compute is a different result.
+**Three bugs installing the real LeRobot found**, that reading could not:
+`embed_prefix` takes model-specific positional args on both π0.5 and SmolVLA and accepts no batch
+dict — so the wrapper now *taps* the method mid-forward-pass instead of calling it. The optimiser
+was being handed `None.parameters()`. And the rollout worker never recorded the value head's own
+prediction, which would have silently degraded the advantage to a batch mean — the exact claim the
+paper makes, quietly discarded.
 
 ---
 
-## Layout
+## What it implements
 
-```
-src/lehome_fold/          the paper's method, unit-tested, no simulator needed
-  splits.py               the 48 garments; the guard that keeps held-out ones out
-  labels.py               value-head targets, and what the demos cannot supply
-  value_head.py           success / progress / future heads
-  policy_wrap.py          attaching them to a LeRobot VLA (verified, method tap)
-  awr.py                  success residual, AWR weights, effective sample size
-  recap.py                advantage binarisation and the conditioning prompt
-  calibration.py          ECE / MCE / Brier and the G2 gate
-  thompson.py             Beta-Bernoulli arms, reserved baseline, gain reporting
-  ckpt.py                 checkpoint provenance — G3
-  eval_log.py             reads results out of the official evaluator's log
-scripts/                  entry points; run_eval.py defers to LeHome's evaluator
-tests/test_pure.py        31 tests, runs anywhere numpy + torch exist
-slurm/00..40              probe, image, data, install, train, gate, rollout, tune
-docs/STAGE0.md            the availability dossier — evidence for every claim
-```
+| | | |
+|---|---|---|
+| **S1** | BC fine-tune, π0.5 or SmolVLA | trainable now |
+| **S2** | value head — success, progress, futures, on a **frozen** backbone so it ablates cleanly | partly trainable |
+| **S3** | RECAP advantage conditioning + AWR, async trainer + N workers | G3 verified |
+| **S4** | Thompson sampling at inference | implemented |
 
-Nothing under `external/` is modified. `run_eval.py` injects our policies into
-LeHome's own registry, hands control to `scripts.eval` unchanged, and removes
-the injected files on exit — that property is what keeps the harness
-comparable, and it is worth protecting.
+`src/lehome_fold/` — [splits](src/lehome_fold/splits.py) · [labels](src/lehome_fold/labels.py) ·
+[value_head](src/lehome_fold/value_head.py) · [awr](src/lehome_fold/awr.py) ·
+[recap](src/lehome_fold/recap.py) · [calibration](src/lehome_fold/calibration.py) ·
+[thompson](src/lehome_fold/thompson.py) · [ckpt](src/lehome_fold/ckpt.py) · [eval_log](src/lehome_fold/eval_log.py)
 
-**Every number from this repo is on 48 garments, not the leaderboard's 80.**
-The 8 private garments per category never shipped.
+**Nothing under `external/` is modified.** `run_eval.py` injects our policies into the challenge's own
+registry, defers to its evaluator unchanged, and cleans up on exit — so a success rate here means
+what the leaderboard's meant.
 
-## Credit
+---
 
-Environment, assets, demonstrations and scorer are the LeHome Challenge
-organizers' work (Apache-2.0). The method is Ilia Larchenko's —
-[paper](https://arxiv.org/abs/2606.27163),
-[write-up](https://ilialarchenko.com/projects/lehome2026/),
-[checkpoint](https://huggingface.co/IliaLarchenko/lehome_sim).
+## Honest status
+
+There are **no garment-folding GIFs in this repo**, because the renderer is dead and inventing them
+would be worse than having none. What's above is the machinery, demonstrated on data where the right
+answer is known.
+
+Also true, and in [`docs/STAGE0.md`](docs/STAGE0.md) with the command behind every claim: the paper
+used **π0.5, not SmolVLA**; physics is **CPU-only with one env per process** (no `NUM_ENVS` to turn up);
+Isaac Lab comes from a **fork**, not PyPI; and every number this repo could ever report is on **48
+garments, not the leaderboard's 80** — the other 32 never shipped.
+
+Job ledger: [`SLURM_JOBS.md`](SLURM_JOBS.md) · Full build order: [`docs/PLAN.md`](docs/PLAN.md)
+
+<sub>Environment, assets and scorer © the LeHome Challenge organizers (Apache-2.0).
+Method: <a href="https://ilialarchenko.com/projects/lehome2026/">Ilia Larchenko</a>.</sub>

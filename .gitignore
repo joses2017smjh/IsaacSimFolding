@@ -40,3 +40,7 @@ __pycache__/
 # Editor / IDE workspace state -- local to whoever opened the repo.
 .vscode/
 *.code-workspace
+
+# Hugging Face token -- never commit a credential
+.hf_token
+*.hf_token

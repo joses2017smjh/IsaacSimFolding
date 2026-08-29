@@ -88,6 +88,23 @@ export XDG_CACHE_HOME=$WORKSPACE/.cache
 export HOME_OVERRIDE=$WORKSPACE/.home
 export HF_HOME=$WORKSPACE/.cache/huggingface
 
+# Hugging Face token, if one has been dropped in. The Hub rate-limits
+# anonymous traffic BY IP and every job on this cluster shares one address --
+# the first data pull died with HTTP 429 after 8.2 of 18.9 GB. A read-scoped
+# token lifts that.
+#
+# It is read from a file rather than baked into a job script so it never lands
+# in git, in a log, or in `scontrol show job` output:
+#
+#   printf %s 'hf_xxxxxxxx' > $WORKSPACE/.hf_token && chmod 600 $WORKSPACE/.hf_token
+#
+# Nothing here fails without it; the pull just falls back to anonymous with
+# backoff.
+if [ -z "${HF_TOKEN:-}" ] && [ -r "$WORKSPACE/.hf_token" ]; then
+    HF_TOKEN=$(tr -d '[:space:]' < "$WORKSPACE/.hf_token")
+    export HF_TOKEN
+fi
+
 mkdir -p "$LEHOME_DATA" "$UV_CACHE_DIR" "$UV_PYTHON_INSTALL_DIR" "$XDG_CACHE_HOME" \
          "$HOME_OVERRIDE" "$HF_HOME"
 

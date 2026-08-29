@@ -19,6 +19,8 @@ deliverable went missing once when it was not.
 | 21079138 | `lh-render` | 2026-08-28 | queued | **The Isaac Sim render.** Real SO-101 USD at both bimanual poses, a real Release garment with its fabric texture, the challenge's own overhead camera, arms driven by episode 0 of the released demos — on **6.0**, which renders here. |
 | 21079173 | `lh-port` | 2026-08-28 | queued | **How big is the 6.0 port?** All 15 isaaclab symbols the task imports resolve on 3.0.0b2, and the particle cloth is raw PhysX/USD, so it is version-independent. This stands the env up and reports the first real failure. |
 
+| 21083423 | `lh-storm51` | 2026-08-28 | queued | **Is the pincer actually a pincer?** What dies on 5.1 is the RTX *delegate*, not 5.1. Physics on 5.1 is fine and the wheels also ship OpenUSD's Storm rasteriser. If Storm draws, the deviation becomes "different renderer" instead of "different physics" — and the geometric success checker is untouched. |
+
 ## What the ledger says about the project
 
 The renderer is the root of everything still blocked. `21067439` settled that
@@ -34,7 +36,18 @@ simulator, so they run today on `LH_ROUTE=train`.
 also segfaults — likely, since `--nv` injects the host driver — the remaining
 option is porting LeHome to the 6.0 stack as a stated deviation.
 
-**Open ask:** a Hugging Face token would make the data pull reliable. The Hub
-rate-limits anonymous traffic by IP and every job on this cluster shares one.
-Create one at <https://huggingface.co/settings/tokens> (read scope is enough)
-and the job will use it: `HF_TOKEN=hf_... sbatch slurm/02_fetch_data.sbatch`.
+**Open ask — one command, needs your HF account.** The Hub rate-limits
+anonymous traffic by IP and every job on this cluster shares one address. A
+read-scoped token lifts it. I cannot create one for you; the jobs are already
+wired to pick it up from a file:
+
+```bash
+printf %s 'hf_xxxxxxxxxxxx' > /nfs/hpc/share/$USER/Humanoid_Lite/.hf_token
+chmod 600 /nfs/hpc/share/$USER/Humanoid_Lite/.hf_token
+```
+
+Token at <https://huggingface.co/settings/tokens>, read scope. `slurm/_env.sh`
+reads that file into `HF_TOKEN` and forwards it into the container. It is a
+FILE rather than a job-script variable so the credential never lands in git, in
+a job log, or in `scontrol show job` output — and `.hf_token` is gitignored.
+Nothing fails without it; the pull just falls back to anonymous with backoff.

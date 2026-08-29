@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=lh-render
 #SBATCH --account=eecs
-#SBATCH --partition=gpu,dgxh,ampere
-#SBATCH --constraint="a40|l40s|rtx8000"
+#SBATCH --partition=share,gpu,ampere,dgxh
+#SBATCH --constraint="a40|rtx8000"
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
@@ -21,6 +21,11 @@
 # Constrained to cards the 6.0 probe actually rendered on. H100/H200 are
 # excluded deliberately -- untested for RTX here, and a render job is not the
 # place to find out.
+#
+# `l40s` is NOT in this list even though it looks like it belongs: no node on
+# this cluster advertises that feature, and naming it in an OR'd constraint
+# gets the whole job rejected with BadConstraints. The a40 nodes (cn-r-*) sit
+# in the `share` partition, so that partition has to be named too.
 
 set -euo pipefail
 WORKSPACE=/nfs/hpc/share/$USER/Humanoid_Lite
@@ -57,7 +62,7 @@ apptainer exec --nv --cleanenv \
         --traj "$REPO/assets/demo_episode0_state.npy" \
         --out "$OUT" \
         --garment "${GARMENT:-Top_Short/Top_Short_Seen_0}" \
-        --frames "${FRAMES:-120}"
+        --frames "${FRAMES:-90}"
 rc=$?
 set -e
 

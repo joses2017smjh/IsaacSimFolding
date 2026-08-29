@@ -78,7 +78,17 @@ echo "--- gzip integrity OK ---"
 # header", which sends you looking for a corrupt download; the file is a
 # perfectly valid gzip of the wrong archive shape.
 echo "--- inspecting archive shape ---"
-if tar tzf "$TARBALL" 2>/dev/null | head -5 | grep -q "^blobs/"; then
+# `head` is what stops tar early -- without it, listing this archive
+# decompresses all 26 GB and takes minutes. But `set -o pipefail` is on, and
+# head closing the pipe kills tar with SIGPIPE (141), so the pipeline reports
+# failure however the grep went. That is why the previous run sniffed an OCI
+# archive and still chose docker-archive://. Suspend pipefail for this one
+# line: SIGPIPE here is the mechanism working, not an error.
+set +o pipefail
+FIRST=$(tar tzf "$TARBALL" 2>/dev/null | head -5)
+set -o pipefail
+echo "$FIRST" | sed 's/^/    /'
+if echo "$FIRST" | grep -q "^blobs/"; then
     SRC="oci-archive://$TARBALL"
 else
     SRC="docker-archive://$TARBALL"

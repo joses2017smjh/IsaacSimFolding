@@ -1,0 +1,10 @@
+STARTED | probe_storm51.py (no isaacsim, no SimulationApp)
+EGL | initialised 1.5
+EGL | requesting GL 4.5 compat profile
+GL  | 4.6.0 NVIDIA 595.71.05 | Quadro RTX 8000/PCIe/SSE2
+PXR | OpenUSD + UsdImagingGL imported
+STAGE | built a lit 3-cube scene
+RECORDER | plugin=HdStormRendererPlugin width=640
+RECORDER | Record() -> True  (/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/storm51_frame.png)
+RGB | shape=(271, 640, 3) mean=1.7 std=7.4 unique=62
+VERDICT | storm=OK -> 5.1 CAN render RGB without RTX

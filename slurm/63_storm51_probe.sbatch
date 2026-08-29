@@ -49,13 +49,14 @@ scratchbind=()
 set +e
 apptainer exec --nv --cleanenv --home "$HOME_OVERRIDE" \
     --bind /nfs/hpc/share/$USER "${scratchbind[@]}" \
-    "${scratchbind[@]:+}" \
     --env PYTHONPATH="$LIBS:$REPO/src" \
     --env LD_LIBRARY_PATH="${PYLIB:+$PYLIB:}$LIBS/bin:$LIBS/lib" \
     --env PXR_PLUGINPATH_NAME="$LIBS/bin/usd" \
     --env PROBE_OUT="$REPO/results/storm51_probe.txt" \
     --env TMPDIR="${TMPDIR:-/tmp}" \
     --env EGL_PLATFORM=surfaceless \
+    --env GL_PROFILE="${GL_PROFILE:-compat}" \
+    --env STORM_PNG="$REPO/results/storm51_frame.png" \
     "$SIF" "$VENV/bin/python" "$REPO/scripts/render/probe_storm51.py"
 rc=$?
 set -e

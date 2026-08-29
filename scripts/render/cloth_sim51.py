@@ -32,6 +32,9 @@ ap.add_argument("--lehome", required=True)
 ap.add_argument("--garment", default="Top_Short_Seen_0")
 ap.add_argument("--steps", type=int, default=120)
 ap.add_argument("--out", default="results/cloth51.npz")
+ap.add_argument("--sim_device", default="cuda:0",
+                help="PhysX device. Particle cloth needs GPU dynamics; LeHome's "
+                     "--device cpu is about POLICY INFERENCE, not physics.")
 ap.add_argument("--traj", default="",
                 help="demo joint trajectory; without it the arms hold still "
                      "and a garment that spawns already resting will not move")
@@ -84,7 +87,16 @@ try:
     cfg.particle_cfg_path = os.path.join(
         args.lehome,
         "source/lehome/lehome/tasks/bedroom/config_file/particle_garment_cfg.yaml")
-    cfg.sim.device = "cpu"          # LeHome is CPU-physics only
+    # PhysX device. Both PhysX read paths failed with the same
+    #   AttributeError: 'NoneType' object has no attribute 'count'
+    # which is what an uninstantiated particle-system backend looks like --
+    # PhysX particle cloth requires GPU dynamics. LeHome's README says
+    # "--device cpu", but that flag is POLICY INFERENCE (its help text says so);
+    # forcing sim.device to cpu was my own inference and it silently disables
+    # the particle solver while rigid bodies keep working, which is exactly the
+    # arms-move-cloth-frozen picture observed.
+    cfg.sim.device = args.sim_device
+    log(f"sim.device = {cfg.sim.device} (particle cloth needs GPU dynamics)")
     cfg.scene.num_envs = 1
 
     # Stub the camera CLASS, not the config.
@@ -146,6 +158,57 @@ try:
     obj = env.object
     log(f"cloth object: {type(obj).__name__}")
 
+    # --- direct PhysX tensor view --------------------------------------
+    # Neither available reader works: the USD `points` attribute is never
+    # written back, and _cloth_prim_view.initialize() has no sim view. The
+    # tensor API talks to PhysX itself and needs neither.
+    tensor_view = None
+    cloth_path = (getattr(obj, "prim_path", None)
+                  or getattr(obj, "_prim_path", None)
+                  or str(getattr(getattr(obj, "_prim", None), "GetPath", lambda: "")()))
+    log(f"cloth prim path: {cloth_path!r}")
+    try:
+        import omni.physics.tensors as _pt
+
+        sv = _pt.create_simulation_view("numpy")
+        for pattern in (cloth_path, cloth_path + "*", "/World/*Cloth*", "/World/**/Cloth"):
+            if not pattern:
+                continue
+            for maker in ("create_particle_cloth_view", "create_particle_system_view",
+                          "create_soft_body_view"):
+                fn = getattr(sv, maker, None)
+                if fn is None:
+                    continue
+                try:
+                    v = fn(pattern)
+                    if v is not None:
+                        tensor_view = v
+                        log(f"PhysX tensor view: {maker}({pattern!r}) -> "
+                            f"{type(v).__name__}")
+                        break
+                except Exception:  # noqa: BLE001
+                    continue
+            if tensor_view is not None:
+                break
+        if tensor_view is None:
+            log("PhysX tensor view: no maker/pattern combination matched")
+    except Exception as exc:  # noqa: BLE001
+        log(f"omni.physics.tensors unavailable: {type(exc).__name__}: {exc}")
+
+    _seen_readers = set()
+
+    def _note_reader(tag):
+        """Say WHICH reader answered, once each.
+
+        Without this the fallback chain is silent, and "the tensor API did not
+        help" is indistinguishable from "the tensor API was never reached" --
+        a conclusion I would otherwise have reported without being able to
+        tell the difference.
+        """
+        if tag not in _seen_readers:
+            _seen_readers.add(tag)
+            log(f"particle reader: {tag}")
+
     def particles():
         """Current particle positions, read exactly the way the OFFICIAL
         success checker reads them.
@@ -156,6 +219,24 @@ try:
         these are the very coordinates the scorer scores -- not a parallel
         reading that might diverge.
         """
+        if tensor_view is not None:
+            for getter in ("get_positions", "get_world_positions",
+                           "get_particle_positions"):
+                fn = getattr(tensor_view, getter, None)
+                if fn is None:
+                    continue
+                try:
+                    v = fn()
+                    a = np.asarray(v.detach().cpu() if hasattr(v, "detach") else v)
+                    if a.size:
+                        _note_reader(f"tensor_view.{getter}")
+                        return a.reshape(-1, 3)
+                    _note_reader(f"tensor_view.{getter} -> EMPTY")
+                except Exception as exc:  # noqa: BLE001
+                    _note_reader(f"tensor_view.{getter} raised "
+                                 f"{type(exc).__name__}: {str(exc)[:60]}")
+                    continue
+
         view_ = getattr(obj, "_cloth_prim_view", None)
         if view_ is not None and hasattr(view_, "get_world_positions"):
             try:
@@ -169,6 +250,7 @@ try:
             try:
                 v = fn()
                 v = v[0] if isinstance(v, (tuple, list)) else v
+                _note_reader("get_current_mesh_points (USD points)")
                 return np.asarray(v.detach().cpu() if hasattr(v, "detach") else v
                                   ).reshape(-1, 3)
             except Exception as exc:  # noqa: BLE001

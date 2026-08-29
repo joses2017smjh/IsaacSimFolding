@@ -17,6 +17,14 @@ a real <code>Release</code> garment mesh with its fabric texture at the JSON's 0
 physics but not the render product, and that is
 <a href="docs/RENDER.md">written up as an open issue</a> rather than cropped out of frame.</sub></p>
 
+<p align="center">
+  <img src="docs/img/isaacsim_topcam.png" width="420" alt="The challenge's own overhead camera view of the scene, 640x480">
+</p>
+
+<p align="center"><sub>The challenge's own overhead camera — the view the policy consumes.
+A still, not a GIF: all 90 frames of it are byte-identical, which is exactly how the replay bug
+was caught.</sub></p>
+
 ---
 
 ## The first job I ran killed the plan

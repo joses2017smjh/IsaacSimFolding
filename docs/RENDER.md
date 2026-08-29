@@ -49,6 +49,11 @@ that does not observe the `World`'s physics writeback. The next thing to try is
 dropping replicator's orchestrator and reading the cameras through
 `isaacsim.sensors.camera.Camera` while stepping the `World` directly.
 
+`docs/img/isaacsim_topcam.png` is a still from the challenge's own overhead
+camera -- the view the policy would actually consume. It is a STILL and not a
+GIF for the same reason: all 90 frames of it are byte-identical, and animating
+them would be dressing a static image up as motion.
+
 **Until that is resolved, the GIF is labelled as a camera orbit, not a replay.**
 The distinction matters: a viewer who thinks they are watching a policy — or
 even a demonstration — is being misled by a moving camera.

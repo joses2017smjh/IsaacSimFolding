@@ -134,6 +134,33 @@ for name, pos in (("Left_Robot", (-0.23, -0.25, TABLE_Z)),
         .GetPrim().GetReferences().AddReference(ROBOT)
 log(f"referenced 2x {os.path.basename(ROBOT)}")
 
+# Override the robots' materials with UsdPreviewSurface.
+#
+# Omniverse assets ship MDL materials, and Storm -- OpenUSD's GL rasteriser --
+# only evaluates UsdPreviewSurface. Left alone, every robot mesh renders as
+# flat blown-out white while the table beside it stays dark, which is exactly
+# what the first two Storm frames showed. This is the honest cost of the
+# non-RTX path: geometry and PreviewSurface survive, MDL does not.
+# Bind by EXCLUSION, not by path prefix.
+#
+# so101_follower.usd declares defaultPrim = /so101_new_calib while its 47
+# meshes live under /visuals -- a SIBLING of the default prim. A reference
+# composes the default prim, so a traversal filtered on "/World/Robot" matched
+# nothing and the first attempt rebound 0 meshes. Everything that is not the
+# table or the garment is robot, so select that way instead.
+robot_mat = material("/World/mats/robot", (0.85, 0.72, 0.12), rough=0.45)
+_nrobot = 0
+for prim in stage.Traverse():
+    path = prim.GetPath().pathString
+    if not prim.IsA(UsdGeom.Mesh):
+        continue
+    if path.startswith("/World/Garment") or path.startswith("/World/table"):
+        continue
+    UsdShade.MaterialBindingAPI(prim).Bind(
+        robot_mat, bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+    _nrobot += 1
+log(f"rebound {_nrobot} robot meshes to UsdPreviewSurface (Storm cannot read MDL)")
+
 # garment
 gdir = os.path.join(args.assets, "objects/Challenge_Garment/Release", args.garment)
 gusd = next((os.path.join(gdir, f) for f in sorted(os.listdir(gdir))
@@ -190,9 +217,13 @@ if lo[0] < 1e8:
         f"texture={os.path.basename(tex) if tex else None}")
 
 # lights
-UsdLux.DomeLight.Define(stage, "/World/dome").CreateIntensityAttr(1200.0)
+# Storm honours these intensities on the usual scale -- dropping them to ~1.0
+# produced a near-black frame. The blown-out robots in the first attempt came
+# from FrameRecorder's CAMERA light, not from these, so these stay and that
+# goes.
+UsdLux.DomeLight.Define(stage, "/World/dome").CreateIntensityAttr(1400.0)
 key = UsdLux.DistantLight.Define(stage, "/World/key")
-key.CreateIntensityAttr(6000.0)
+key.CreateIntensityAttr(3000.0)
 UsdGeom.Xformable(key).AddRotateXYZOp().Set(Gf.Vec3f(-50.0, 0.0, 35.0))
 
 # camera
@@ -210,8 +241,12 @@ log(f"scene authored -> {usd_path}")
 rec = UsdAppUtils.FrameRecorder()
 rec.SetRendererPlugin("HdStormRendererPlugin")
 rec.SetImageWidth(args.width)
-rec.SetCameraLightEnabled(True)   # the dome alone left the probe frame very dark
-rec.SetComplexity("high")
+# Camera light ON. Storm's dome-light support is limited without an
+# environment texture -- with the camera light off the table rendered black --
+# and now that the robots carry PreviewSurface instead of MDL it no longer
+# blows them out.
+rec.SetCameraLightEnabled(True)
+rec.SetComplexity(1.5)   # a float; "high" is a usdview label, not the API
 os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
 ok = rec.Record(stage, cam, Usd.TimeCode.Default(), args.out)
 log(f"Record() -> {ok} ({args.out})")

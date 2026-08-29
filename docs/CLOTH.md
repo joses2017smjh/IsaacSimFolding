@@ -1,4 +1,43 @@
-# The cloth simulates. Its state is not readable. Those are different problems.
+# The cloth simulates
+
+> **This document previously concluded the cloth state was unreadable and
+> hypothesised that the LeHome scorer depends on the render pass to sync it.
+> Both were wrong.** The cause was a device string I set myself. Corrected
+> below; the diagnostic history is kept because the wrong turns are the
+> instructive part.
+
+## The answer: PhysX particle cloth needs GPU dynamics
+
+`cfg.sim.device` must be a **CUDA device**. I had set it to `"cpu"` because
+LeHome's README says `--device cpu` — but that flag is **policy inference**, as
+its own help text states. On CPU the particle solver silently does nothing
+while rigid bodies keep working, which produces exactly the symptom that cost
+several runs: arms moving 1.6 rad, cloth frozen to the bit.
+
+With `sim.device = "cuda:0"`:
+
+```
+TOTAL max displacement 0.3296 m over 364 steps
+top of garment fell 0.1775 m (draping onto the table)
+wrote results/cloth51.npz (365, 9774, 3)
+official success checker: tensor([False])
+VERDICT cloth=SIMULATING
+```
+
+Real particle cloth, driven by all 364 steps of episode 0 of the released
+demonstrations, with the official geometric checker executing on it.
+
+**What found it:** instrumenting *which* particle reader answered. Both PhysX
+paths were failing with the same `'NoneType' object has no attribute 'count'`
+and silently falling back to the stale USD `points` attribute — so "the tensor
+API does not help" was indistinguishable from "the tensor API was never
+reached". One log line separated them, and an identical error across two
+independent paths pointed at an uninstantiated particle solver rather than the
+sync bug I had been assuming.
+
+---
+
+# Historical: the diagnosis before the fix
 
 ## What works
 

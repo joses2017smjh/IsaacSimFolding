@@ -7,23 +7,21 @@
 </p>
 
 <p align="center">
-  <img src="docs/img/isaacsim_hero.gif" width="880" alt="Path-traced orbit around the LeHome challenge scene: two SO-101 arms and a textured garment on a table, rendered in Isaac Sim 6.0">
+  <img src="docs/img/cloth_fold.gif" width="820" alt="PhysX particle cloth settling onto a table over 364 simulation steps, rendered with OpenUSD Storm on Isaac Sim 5.1">
 </p>
 
-<p align="center"><sub><b>The real challenge scene, path-traced in Isaac Sim 6.0.</b>
-<code>so101_follower.usd</code> at both bimanual poses from <code>garment_bi_cfg_v2.py</code>,
-a real <code>Release</code> garment mesh with its fabric texture at the JSON's 0.45 scale.<br>
-<b>The motion is the camera.</b> The arms hold one pose — the per-frame joint replay reaches
-physics but not the render product, and that is
-<a href="docs/RENDER.md">written up as an open issue</a> rather than cropped out of frame.</sub></p>
+<p align="center"><sub><b>Real PhysX particle cloth.</b> 9,774 particles over 364 steps of
+episode 0 of the released demonstrations, on Isaac&nbsp;Sim&nbsp;5.1 — the stack that still has
+particle cloth — rasterised through OpenUSD Storm, which never loads the RTX delegate that
+segfaults on this cluster. The geometry is simulation output, not an authored pose.</sub></p>
 
 <p align="center">
-  <img src="docs/img/isaacsim_topcam.png" width="420" alt="The challenge's own overhead camera view of the scene, 640x480">
+  <img src="docs/img/cloth_start.png" width="400" alt="Garment bunched at the start of the episode">
+  <img src="docs/img/cloth_settled.png" width="400" alt="The same garment draped flat on the table with sleeves visible">
 </p>
 
-<p align="center"><sub>The challenge's own overhead camera — the view the policy consumes.
-A still, not a GIF: all 90 frames of it are byte-identical, which is exactly how the replay bug
-was caught.</sub></p>
+<p align="center"><sub>Start, and 90 frames later: the garment drapes from bunched to flat, sleeves out.
+The top falls <b>0.178 m</b> and total particle displacement is <b>0.330 m</b>.</sub></p>
 
 ---
 

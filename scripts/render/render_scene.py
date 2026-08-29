@@ -80,8 +80,27 @@ app = SimulationApp({
     "height": args.height,
 })
 
+import carb  # noqa: E402  (Kit runtime; only importable after SimulationApp)
 import numpy as np  # noqa: E402
 import omni.replicator.core as rep  # noqa: E402
+
+# --- make physics results visible to the renderer -------------------------
+# Diagnosed, not guessed: a read-back showed set == got on every frame
+# (shoulder_pan -1.237 -> -0.908 -> -0.575) while the overhead camera produced
+# byte-identical images. So physics held the commanded pose and the RENDERER
+# never saw it -- PhysX publishes to Fabric, and the replicator render product
+# was reading the authored USD stage. Force the write-back to USD.
+_settings = carb.settings.get_settings()
+for _k in ("/physics/updateToUsd", "/physics/updateVelocitiesToUsd",
+           "/physics/updateParticlesToUsd"):
+    try:
+        _settings.set_bool(_k, True)
+    except Exception:  # noqa: BLE001
+        pass
+try:
+    _settings.set_bool("/physics/fabricUpdateTransformations", False)
+except Exception:  # noqa: BLE001
+    pass
 import omni.usd  # noqa: E402
 from pxr import Gf, Sdf, UsdGeom, UsdLux, UsdPhysics, UsdShade  # noqa: E402
 
@@ -432,6 +451,18 @@ for i in range(n):
             except Exception as e:  # noqa: BLE001
                 if i == 0:
                     log(f"joint set failed on {name}: {e}")
+            # Read the commanded angles back. Setting them raised nothing and
+            # the overhead camera still produced byte-identical frames, so the
+            # question is whether the setpoint reaches physics at all or
+            # reaches it and never reaches the renderer. Guessing cost two
+            # renders; this answers it.
+            if i < 3 and name == "Left_Robot":
+                try:
+                    got = np.asarray(art.get_joint_positions()).reshape(-1)
+                    log(f"frame {i} {name}: set={np.round(q[:6], 3).tolist()}")
+                    log(f"frame {i} {name}: got={np.round(got[:6], 3).tolist()}")
+                except Exception as e:  # noqa: BLE001
+                    log(f"readback failed: {e}")
         if world is not None:
             # render=True, not False. With render=False the physics state is
             # never flushed into the render pipeline, so every frame draws the

@@ -7,12 +7,15 @@
 </p>
 
 <p align="center">
-  <img src="docs/img/thompson.gif" width="880" alt="Thompson sampling allocating an episode budget across 36 inference-hyperparameter arms and converging on the best one">
+  <img src="docs/img/isaacsim_hero.gif" width="880" alt="Path-traced orbit around the LeHome challenge scene: two SO-101 arms and a textured garment on a table, rendered in Isaac Sim 6.0">
 </p>
 
-<p align="center"><sub><b>Stage 4, running.</b> 36 inference-hyperparameter arms, a Beta-Bernoulli posterior each.
-The budget concentrates on what works; the amber bar is the fixed-defaults baseline, held at a
-reserved 40 episodes so <i>"gain over defaults"</i> is a measurement and not an artefact of starving it.</sub></p>
+<p align="center"><sub><b>The real challenge scene, path-traced in Isaac Sim 6.0.</b>
+<code>so101_follower.usd</code> at both bimanual poses from <code>garment_bi_cfg_v2.py</code>,
+a real <code>Release</code> garment mesh with its fabric texture at the JSON's 0.45 scale.<br>
+<b>The motion is the camera.</b> The arms hold one pose — the per-frame joint replay reaches
+physics but not the render product, and that is
+<a href="docs/RENDER.md">written up as an open issue</a> rather than cropped out of frame.</sub></p>
 
 ---
 
@@ -36,9 +39,30 @@ Not missing RT cores (an A40 has them). Not fixable by `--constraint` (every dri
 Not fixable by a container (`--nv` injects the *host* driver). **It's cluster-wide, and I found it before
 downloading 25 GB or writing a line of training code.**
 
+### And the 6.0 escape hatch is closed too
+
+Standing the task up on 6.0 gets through every import, builds the config, reaches
+scene setup — then:
+
+```
+SingleClothPrim is no longer available. Omniverse PhysX removed the
+deprecated particle-based cloth features.
+```
+
+| stack | particle cloth | RTX renderer |
+|---|---|---|
+| **5.1** — what LeHome pins | ✅ | ❌ segfaults, cluster-wide |
+| **6.0** | ❌ removed from PhysX | ✅ |
+
+**No stack on this cluster can both simulate and render this task.** Two independent
+hard blocks, each established by a job rather than inferred. The cheapest real fix is
+not engineering — it is a node with a driver 5.1 supports. Rewriting the garment onto
+the `core.experimental` deformable API would change the physics and forfeit
+leaderboard comparability, which is the entire reason for reproducing this paper.
+
 > Then I split the stack so it stopped mattering. Stages 1–2 read the released LeRobot dataset and
-> **never open a simulator** — `LH_ROUTE=train` runs them today on a 7.6 GB venv. Only evaluation
-> and Stage 3 rollouts are actually blocked.
+> **never open a simulator** — `LH_ROUTE=train` runs them today on a 7.6 GB venv, and the 18 GB of
+> demonstrations are downloaded. Only evaluation and Stage 3 rollouts are blocked.
 
 ---
 
@@ -78,6 +102,22 @@ that produced it; anything past `max_lag` is dropped and counted.
 [trainer]   G3 DROPPED  1: rollout carries no _ckpt_version
 [trainer] cycle 0: n=80 success=0.400 adv[-0.873,+0.890] recap_positive=0.400 AWR_ESS=40.8/80
 ```
+
+---
+
+## Four bugs, and what each one actually looked like
+
+<img src="docs/img/render_failures.png" width="880" alt="Four side-by-side pairs: over-exposure, bad framing, a 4 mm garment, and an arm slumping under gravity, each against the corrected render">
+
+Every defect is reintroduced by `render_scene.py --defect <name>`, so the gallery
+regenerates from source and cannot drift from what it claims. Captions carry a
+measured pixel difference, not an adjective.
+
+Two candidates were **cut for being no-ops**: a single-sided cloth mesh and a
+missing 180° yaw both produced byte-identical frames, so they are not shown —
+and the backface-culling story I had written for the invisible garment was
+wrong. It was invisible for exactly one reason: the USD authors
+`xformOp:scale = 0.01`, so a 0.95 m mesh rendered at 4 mm.
 
 ---
 
@@ -127,9 +167,11 @@ what the leaderboard's meant.
 
 ## Honest status
 
-There are **no garment-folding GIFs in this repo**, because the renderer is dead and inventing them
-would be worse than having none. What's above is the machinery, demonstrated on data where the right
-answer is known.
+There are **no garment-folding GIFs in this repo**. The scene renders; the *folding* does not, because
+the cloth simulation and the renderer cannot coexist on this cluster. The orbit at the top is a camera
+moving around a statically-posed scene, labelled as such — see [`docs/RENDER.md`](docs/RENDER.md) for
+the read-back proving the joint replay reaches physics but not the render product. Everything else
+above is the machinery, demonstrated on data where the right answer is known.
 
 Also true, and in [`docs/STAGE0.md`](docs/STAGE0.md) with the command behind every claim: the paper
 used **π0.5, not SmolVLA**; physics is **CPU-only with one env per process** (no `NUM_ENVS` to turn up);

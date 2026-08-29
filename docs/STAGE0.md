@@ -169,6 +169,11 @@ So the pinned version is the broken one, and the working version is unpinned.
 exist" as the thing to resolve first.** `slurm/00_rtx_probe.sbatch` exists to
 answer it and nothing downstream should start until it has.
 
+> **SUPERSEDED — read [STORM.md](STORM.md).** What follows is correct about the
+> RTX delegate and wrong about 5.1 as a whole. 5.1 renders here through
+> OpenUSD's Storm rasteriser; the "no stack can both simulate and render"
+> conclusion below does not hold.
+
 **RESULT (2026-08-27, job 21067439): it segfaults.** Exit 139 inside
 `AppLauncher()`, before a render product is ever requested:
 

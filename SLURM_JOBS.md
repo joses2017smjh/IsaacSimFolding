@@ -21,6 +21,9 @@ deliverable went missing once when it was not.
 
 | 21083423 | `lh-storm51` | 2026-08-28 | queued | **Is the pincer actually a pincer?** What dies on 5.1 is the RTX *delegate*, not 5.1. Physics on 5.1 is fine and the wheels also ship OpenUSD's Storm rasteriser. If Storm draws, the deviation becomes "different renderer" instead of "different physics" — and the geometric success checker is untouched. |
 
+| 21083432-511 | `lh-storm51` | 2026-08-28 | **RESOLVED** | **5.1 CAN render.** Storm draws without the RTX delegate. Five probes: plugin path, `Parameters.rendererPluginId`, EGL context, compatibility profile, `FrameRecorder` readback. |
+| 21083532-582 | `lh-stormscene` | 2026-08-28 | **COMPLETED** | The real challenge scene — robots, textured garment, table — rendered on 5.1 via Storm. Caveat: Storm cannot read MDL, so the robots render flat white. See `docs/STORM.md`. |
+
 ## What the ledger says about the project
 
 The renderer is the root of everything still blocked. `21067439` settled that
@@ -32,9 +35,12 @@ hardware and not node selection — every GPU driver on this cluster is 595 or
 Stage 2 value-head training read the released LeRobot dataset and never open a
 simulator, so they run today on `LH_ROUTE=train`.
 
-`21079091` is the last branch before the fallback. If the organizers' image
-also segfaults — likely, since `--nv` injects the host driver — the remaining
-option is porting LeHome to the 6.0 stack as a stated deviation.
+**The renderer conclusion has been overturned.** `21083511` established that
+5.1 renders through OpenUSD's Storm rasteriser — what segfaults is the RTX
+delegate, not 5.1. Since 5.1 is the stack that still has PhysX particle cloth,
+the project has a path that keeps official physics AND the official geometric
+scorer, deviating only in the images. The remaining question is the size of
+that domain gap, and it is measurable.
 
 **Open ask — one command, needs your HF account.** The Hub rate-limits
 anonymous traffic by IP and every job on this cluster shares one address. A

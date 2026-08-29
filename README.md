@@ -47,26 +47,45 @@ Not missing RT cores (an A40 has them). Not fixable by `--constraint` (every dri
 Not fixable by a container (`--nv` injects the *host* driver). **It's cluster-wide, and I found it before
 downloading 25 GB or writing a line of training code.**
 
-### And the 6.0 escape hatch is closed too
+### The 6.0 escape hatch is closed — but 5.1 was never the problem
 
-Standing the task up on 6.0 gets through every import, builds the config, reaches
-scene setup — then:
+Standing the task up on 6.0 gets through every import, builds the config,
+reaches scene setup — then:
 
 ```
 SingleClothPrim is no longer available. Omniverse PhysX removed the
 deprecated particle-based cloth features.
 ```
 
-| stack | particle cloth | RTX renderer |
-|---|---|---|
-| **5.1** — what LeHome pins | ✅ | ❌ segfaults, cluster-wide |
-| **6.0** | ❌ removed from PhysX | ✅ |
+So 6.0 renders and has no cloth. I concluded no stack here could do both.
+**That was wrong**, and the error was in the other half: *"5.1 cannot render"*
+is not true of 5.1. What segfaults is `librtx.scenedb.plugin.so`, the **RTX
+delegate**. 5.1 physics is fine, and the same wheels ship OpenUSD's **Storm**
+rasteriser, which never loads it.
 
-**No stack on this cluster can both simulate and render this task.** Two independent
-hard blocks, each established by a job rather than inferred. The cheapest real fix is
-not engineering — it is a node with a driver 5.1 supports. Rewriting the garment onto
-the `core.experimental` deformable API would change the physics and forfeit
-leaderboard comparability, which is the entire reason for reproducing this paper.
+<p align="center">
+  <img src="docs/img/storm51_scene.png" width="820" alt="The LeHome scene rendered on Isaac Sim 5.1 by OpenUSD Storm: table, textured garment, two SO-101 arms">
+</p>
+
+<p align="center"><sub>The real challenge scene on <b>Isaac Sim 5.1</b>, drawn by
+<b>Storm</b> — no Kit, no SimulationApp, no RTX. The stack that <i>has</i> the particle cloth.</sub></p>
+
+| approach | physics | scorer | images |
+|---|---|---|---|
+| port the cloth to 6.0 | **changed** | official | RTX |
+| **Storm on 5.1** | **official** | **official** | rasterised |
+
+The official checker is **geometric over particle positions** — it does not
+care which rasteriser drew the pixels. So this keeps official physics *and* the
+official scorer and deviates only in what the policy sees.
+
+**The caveat is real and is not cropped out.** Storm evaluates only
+`UsdPreviewSurface`; Omniverse assets ship MDL. The table and garment shade
+correctly because this repo authors PreviewSurface for them — **the robots
+render flat white**. So the domain gap is larger than "rasteriser vs path
+tracer", and it has to be measured before any success rate is reported from
+this path. Full write-up, including the five things that had to line up and the
+two failed rebinding attempts: [`docs/STORM.md`](docs/STORM.md).
 
 > Then I split the stack so it stopped mattering. Stages 1–2 read the released LeRobot dataset and
 > **never open a simulator** — `LH_ROUTE=train` runs them today on a 7.6 GB venv, and the 18 GB of
@@ -175,8 +194,9 @@ what the leaderboard's meant.
 
 ## Honest status
 
-There are **no garment-folding GIFs in this repo**. The scene renders; the *folding* does not, because
-the cloth simulation and the renderer cannot coexist on this cluster. The orbit at the top is a camera
+There are **no garment-folding GIFs in this repo** — no policy has been trained and no rollout has
+been scored. The scene renders on both stacks now, and the path to scoring one is
+[Storm on 5.1](docs/STORM.md), with the material caveat above. The orbit at the top is a camera
 moving around a statically-posed scene, labelled as such — see [`docs/RENDER.md`](docs/RENDER.md) for
 the read-back proving the joint replay reaches physics but not the render product. Everything else
 above is the machinery, demonstrated on data where the right answer is known.

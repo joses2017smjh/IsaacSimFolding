@@ -35,6 +35,37 @@ reached". One log line separated them, and an identical error across two
 independent paths pointed at an uninstantiated particle solver rather than the
 sync bug I had been assuming.
 
+## Open-loop replay does not reproduce the fold
+
+Three replays of episode 0, all with the cloth genuinely simulating, none
+scoring a success:
+
+| driven by | cloth displacement | official checker |
+|---|---|---|
+| `observation.state` as targets | 0.330 m | `False` |
+| `action` (what the controller commanded) | 0.225 m | `False` |
+| `action` + garment pinned to the recorded `object_initial_pose` | 0.325 m | `False` |
+
+Each of those was a real hypothesis. Actions lead states by 0.074 rad on
+average (max 1.58), so replaying states is a lagged copy of the trajectory. And
+the env randomises the garment on every reset -- `initial_pos_range` in the
+garment JSON, with the per-episode pose recorded in `garment_info.json` -- so
+an open-loop replay grasps at fixed coordinates while the cloth sits somewhere
+else. Pinning the pose fixed that, and the fold still did not complete.
+
+**Why this is unsurprising rather than a bug.** Open-loop replay of a
+contact-rich manipulation is fragile in a way an arm trajectory is not. A rigid
+`object_initial_pose` does not restore the cloth's *particle configuration*;
+solver state, contact history and the exact settle differ; and once a grasp
+misses by a centimetre the rest of the trajectory is operating on a garment
+that is no longer where the demonstration left it. Reproducing a scored fold
+needs a closed-loop policy, which is what Stages 1-3 exist to train -- not a
+better replay.
+
+**What this does establish:** the environment, the cloth, the demonstrations
+and the official scorer all run end to end on this cluster, and a policy can be
+evaluated the moment there is one. That is the gate G0 was asking for.
+
 ---
 
 # Historical: the diagnosis before the fix

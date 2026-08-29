@@ -12,6 +12,12 @@
 
 # Simulate the garment for real: PhysX particle cloth on Isaac Sim 5.1.
 #
+# Replays the demonstration's ACTION column, not observation.state. The env
+# takes absolute joint position TARGETS (action_scale=1.0), and the recorded
+# actions are what the controller commanded -- they lead the achieved state by
+# 0.074 rad on average and up to 1.58 rad. Feeding states back as targets is a
+# lagged copy of the trajectory and will not reproduce the fold.
+#
 # Everything rendered so far has been the garment's AUTHORED mesh, which is why
 # it looks inflated -- it has never been simulated. 5.1 is the stack that still
 # has particle cloth, and its crash is in the RENDERER, so launching with
@@ -82,7 +88,8 @@ set +e
 run "$VENV/bin/python" "$REPO/scripts/render/cloth_sim51.py" \
     --lehome "$LEHOME" --garment "${GARMENT:-Top_Short_Seen_0}" \
     --steps "${STEPS:-120}" --out "$REPO/results/cloth51.npz" \
-    --traj "$REPO/assets/demo_episode0_state.npy" 2>&1 | tee "$PLOG"
+    --traj "${TRAJ:-$REPO/assets/demo_episode0_action.npy}" \
+    --pose "${POSE:--0.04258476 -0.01609312 0.67 -2.3939 -16.6303 0.0}" 2>&1 | tee "$PLOG"
 set -e
 if grep -q "^\[cloth\] VERDICT cloth=SIMULATING" "$PLOG"; then rc=0
 elif grep -q "^\[cloth\] VERDICT cloth=STATIC" "$PLOG"; then rc=2

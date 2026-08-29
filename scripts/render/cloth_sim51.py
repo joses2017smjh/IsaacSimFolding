@@ -32,6 +32,10 @@ ap.add_argument("--lehome", required=True)
 ap.add_argument("--garment", default="Top_Short_Seen_0")
 ap.add_argument("--steps", type=int, default=120)
 ap.add_argument("--out", default="results/cloth51.npz")
+ap.add_argument("--pose", default="",
+                help="[x y z rx ry rz] recorded initial pose, degrees for the "
+                     "rotation. The env randomises the garment per reset, so an "
+                     "open-loop replay grasps where the cloth is not.")
 ap.add_argument("--sim_device", default="cuda:0",
                 help="PhysX device. Particle cloth needs GPU dynamics; LeHome's "
                      "--device cpu is about POLICY INFERENCE, not physics.")
@@ -308,6 +312,37 @@ try:
 
     env.reset()
     log("env.reset() -- particle system brought up")
+
+    # Pin the garment to the pose the DEMONSTRATION was recorded at.
+    #
+    # garment_info.json stores object_initial_pose per episode because the env
+    # randomises it on every reset (initial_pos_range in the garment JSON). An
+    # open-loop joint replay is grasping at fixed coordinates, so if the cloth
+    # is somewhere else the arms close on air -- which is why replaying either
+    # states or actions moved the cloth (0.33 m / 0.23 m) without completing
+    # the fold.
+    if args.pose:
+        try:
+            vals = [float(v) for v in args.pose.replace(",", " ").split()]
+            if len(vals) != 6:
+                raise ValueError(f"expected 6 numbers, got {len(vals)}")
+            xyz, rpy_deg = vals[:3], vals[3:]
+            r = np.radians(rpy_deg)
+            cr, sr = np.cos(r / 2), np.sin(r / 2)
+            quat = np.array([
+                cr[0] * cr[1] * cr[2] + sr[0] * sr[1] * sr[2],
+                sr[0] * cr[1] * cr[2] - cr[0] * sr[1] * sr[2],
+                cr[0] * sr[1] * cr[2] + sr[0] * cr[1] * sr[2],
+                cr[0] * cr[1] * sr[2] - sr[0] * sr[1] * cr[2],
+            ])  # wxyz
+            obj.set_local_pose(np.asarray(xyz, dtype=np.float32),
+                               quat.astype(np.float32))
+            log(f"garment pinned to recorded pose xyz={xyz} rpy_deg={rpy_deg}")
+            for _ in range(30):        # let it settle at the pinned pose
+                env.step(torch.zeros((1, 12), dtype=torch.float32))
+            log("settled 30 steps at the recorded pose")
+        except Exception as exc:  # noqa: BLE001
+            log(f"could not pin garment pose: {type(exc).__name__}: {exc}")
 
     p0 = particles()
     if p0 is None:

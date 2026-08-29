@@ -24,6 +24,12 @@ deliverable went missing once when it was not.
 | 21083432-511 | `lh-storm51` | 2026-08-28 | **RESOLVED** | **5.1 CAN render.** Storm draws without the RTX delegate. Five probes: plugin path, `Parameters.rendererPluginId`, EGL context, compatibility profile, `FrameRecorder` readback. |
 | 21083532-582 | `lh-stormscene` | 2026-08-28 | **COMPLETED** | The real challenge scene — robots, textured garment, table — rendered on 5.1 via Storm. Caveat: Storm cannot read MDL, so the robots render flat white. See `docs/STORM.md`. |
 
+| 21090714-916 | `lh-cloth51` | 2026-08-29 | diagnostic chain | Standing the cloth env up on 5.1. Six distinct blockers: camera CLASS stub, zero-image stub, `open3d`, `_get_initial_info()` ordering, `pynput`, and a repeat of the Kit-swallows-`sys.exit` false success. |
+| 21090922 | `lh-cloth51` | 2026-08-29 | **CLOTH SIMULATES** | `sim.device=cuda:0`. 0.330 m displacement, garment top fell 0.178 m, official checker executed. PhysX particle cloth needs GPU dynamics; `--device cpu` is policy inference. |
+| 21090939-941 | `lh-fold` | 2026-08-29 | **COMPLETED** | 183 frames of the simulated cloth rendered through Storm → `docs/img/cloth_fold.gif`. 20.7% of pixels change first-vs-middle, measured. |
+| 21091167 | `lh-cloth51` | 2026-08-29 | COMPLETED | Replay `action` not `observation.state` — 0.225 m, checker `False`. |
+| 21091179 | `lh-cloth51` | 2026-08-29 | COMPLETED | Actions + garment pinned to its recorded `object_initial_pose` — 0.325 m, checker `False`. Open-loop replay does not reproduce the fold; see `docs/CLOTH.md`. |
+
 ## What the ledger says about the project
 
 The renderer is the root of everything still blocked. `21067439` settled that
@@ -34,6 +40,11 @@ hardware and not node selection — every GPU driver on this cluster is 595 or
 `21078863` is the one that matters for making progress anyway: Stage 1 BC and
 Stage 2 value-head training read the released LeRobot dataset and never open a
 simulator, so they run today on `LH_ROUTE=train`.
+
+**Two conclusions in this ledger were overturned by later jobs**, and both are
+worth reading in order rather than trusting the earliest confident statement:
+5.1 renders (via Storm), and 5.1 simulates cloth (on GPU physics). The
+"no stack can do both" claim was wrong on both halves.
 
 **The renderer conclusion has been overturned.** `21083511` established that
 5.1 renders through OpenUSD's Storm rasteriser — what segfaults is the RTX

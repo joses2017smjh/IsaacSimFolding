@@ -10,6 +10,13 @@
 dataset:
   repo_id: lehome_four_types
   root: Datasets/example/four_types_merged
+  # pyav, not torchcodec. The wheel is torchcodec 0.5+cu128 and it cannot load
+  # here -- "FFmpeg version 4: libnppicc.so.12: cannot open shared object
+  # file" -- because the CUDA NPP runtime is not in this image. The RGB streams
+  # are video-encoded, so a working decoder is not optional; PyAV 15.1.0 is
+  # installed and lerobot's decode_video_frames takes the backend as an
+  # argument.
+  video_backend: pyav
 
 policy:
   type: pi05

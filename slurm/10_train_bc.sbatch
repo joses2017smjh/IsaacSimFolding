@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=12
 #SBATCH --mem=96G
 #SBATCH --gres=gpu:1
-#SBATCH --time=24:00:00
+#SBATCH --time=06:00:00
 
 # Stage 1: BC fine-tune on the 10 Seen garments per type.
 #
@@ -16,6 +16,13 @@
 # episodes each), so this cannot leak into the validation split even by
 # accident -- verified against meta/garment_info.json. The leak exposure is
 # Stage 3, where rollouts are collected; rollout_worker.py guards that.
+#
+# 6 hours, not 24. The account is capped on GPU-MINUTES
+# (MaxGRESRunMinsPerAccount), not just concurrent GPUs, so a 24h request
+# reserves 1440 GPU-min and blocks both this job and everything else on the
+# account -- including the user's own v2-train array. save_freq=5000 writes
+# intermediate checkpoints, so a shorter wall clock still yields a usable
+# policy; it just yields fewer steps of one.
 #
 # CONFIG picks the base model, and the choice is not cosmetic:
 #   configs/bc_smolvla.yaml   ~450M, cheap, NOT the paper's model

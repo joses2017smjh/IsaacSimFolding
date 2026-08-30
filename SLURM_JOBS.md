@@ -30,6 +30,16 @@ deliverable went missing once when it was not.
 | 21091167 | `lh-cloth51` | 2026-08-29 | COMPLETED | Replay `action` not `observation.state` — 0.225 m, checker `False`. |
 | 21091179 | `lh-cloth51` | 2026-08-29 | COMPLETED | Actions + garment pinned to its recorded `object_initial_pose` — 0.325 m, checker `False`. Open-loop replay does not reproduce the fold; see `docs/CLOTH.md`. |
 
+| 21093704 | `lh-cloth51` | 2026-08-29 | COMPLETED | Re-ran the sim recording **robot link poses** (365x7x3 per arm) so the animation can show the arms, not just a garment moving itself. |
+| 21093740 | `lh-fold` | 2026-08-29 | FAILED | Link names were written as a pickled object array and would not read back. Fixed on the read side with the known body order rather than re-running a 45 s simulator boot for a constant. |
+| 21093748 | `lh-fold` | 2026-08-29 | COMPLETED | **Robot + cloth animation.** 14 link transforms across two SO-101s. Each link references `/visuals/<link>` explicitly — the USD's meshes are a *sibling* of its defaultPrim, which is why the arms had been rendering flat white. |
+| 21093756 | `lh-fold` | 2026-08-29 | COMPLETED | Reframed on the whole workspace; a camera fitted to the cloth bounds was clipping an arm out of shot. → `docs/img/robot_fold.gif` |
+| 21093764 | `lh-sweep` | 2026-08-29 | COMPLETED | **Four garments, four checker-verified failures.** Cloth moved 0.22–0.33 m each. Open-loop replay does not fold; see `docs/CLOTH.md`. |
+| 21093929/30 | `lh-bc` | 2026-08-29 | FAILED | First Stage 1 attempt. Two bugs: `lerobot.scripts.train` does not exist in 0.4.3 (it is `lerobot_train`), and **torchcodec cannot load** — `libnppicc.so.12` missing, no CUDA NPP runtime. RGB is video-encoded so a decoder is not optional. |
+| 21093962/63 | `lh-bc` | 2026-08-29 | CANCELLED | Relaunched with `video_backend: pyav`, then cancelled: two 24 h requests reserve 2,880 GPU-min and parked both behind `MaxGRESRunMinsPerAccount` — which was also blocking the user's own `v2-train` array. |
+| 21093972 | `lh-bc` | 2026-08-29 | **RUNNING** | **Stage 1 BC, SmolVLA.** 6 h wall clock (queue reason dropped to plain `Resources`). 265,798 frames / 1,000 episodes loaded, 450M total / 100M trainable, batch 32. Checkpoints every 5k steps. |
+| 21094000 | `lh-sik` | 2026-08-29 | **COMPLETED** | **Storm renders inside a live Kit process.** `GL 4.6.0 alongside Kit`, `Record() -> True`. So the observation pipeline is feasible in-process — a trained policy can actually be rolled out here. |
+
 ## What the ledger says about the project
 
 The renderer is the root of everything still blocked. `21067439` settled that
@@ -40,6 +50,12 @@ hardware and not node selection — every GPU driver on this cluster is 595 or
 `21078863` is the one that matters for making progress anyway: Stage 1 BC and
 Stage 2 value-head training read the released LeRobot dataset and never open a
 simulator, so they run today on `LH_ROUTE=train`.
+
+**The evaluation path is now open.** `21094000` showed Storm rendering inside a
+live Kit process, which is the missing piece: the env feeds the policy three RGB
+images, the RTX cameras segfault on 5.1, and the current stub returns zeros — a
+VLA looking at black frames cannot fold anything. In-process Storm means
+official physics, the official geometric scorer, and only the images deviating.
 
 **Two conclusions in this ledger were overturned by later jobs**, and both are
 worth reading in order rather than trusting the earliest confident statement:

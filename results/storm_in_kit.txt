@@ -1,0 +1,7 @@
+STARTED | Storm-inside-Kit feasibility
+KIT | 5.1 app launched, cameras off
+EGL | context already current in this process: False
+GL  | 4.6.0 NVIDIA 595.71.05 alongside Kit
+STORM | Record() -> True
+RGB | (467, 640, 3) mean=2.1 std=7.2 uniq=42
+VERDICT | storm_in_kit=OK -> observation pipeline is FEASIBLE in-process

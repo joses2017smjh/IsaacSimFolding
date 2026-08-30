@@ -46,7 +46,7 @@ output_dir: outputs/train/bc_pi05_all
 batch_size: 8
 steps: 30000
 save_freq: 5000
-log_freq: 1000
+log_freq: 100      # first signal in ~2 min, not ~20
 
 wandb:
   enable: false

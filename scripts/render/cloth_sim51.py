@@ -352,6 +352,39 @@ try:
     log(f"particles: {p0.shape[0]} points, z range "
         f"[{p0[:,2].min():.3f}, {p0[:,2].max():.3f}]")
 
+    # Record the ROBOT too, so the animation can show the arms doing the work
+    # rather than a garment moving by itself. The USD groups its visuals as
+    # /visuals/{base,shoulder,upper_arm,lower_arm,wrist,gripper,jaw}, and the
+    # articulation reports a world pose per body, so link poses are all the
+    # renderer needs -- no physics, no joint solving at render time.
+    def arm_poses():
+        out = {}
+        for side, art in (("left", getattr(env, "left_arm", None)),
+                          ("right", getattr(env, "right_arm", None))):
+            if art is None:
+                continue
+            try:
+                d = art.data
+                pos = np.asarray(d.body_pos_w[0].detach().cpu())
+                quat = np.asarray(d.body_quat_w[0].detach().cpu())   # wxyz
+                out[side] = (pos, quat)
+            except Exception:  # noqa: BLE001
+                pass
+        return out
+
+    body_names = {}
+    for side, art in (("left", getattr(env, "left_arm", None)),
+                      ("right", getattr(env, "right_arm", None))):
+        if art is not None:
+            try:
+                body_names[side] = list(art.data.body_names)
+            except Exception:  # noqa: BLE001
+                body_names[side] = []
+    log(f"robot bodies: {body_names.get('left')}")
+
+    ap0 = arm_poses()
+    arm_frames = {k: [v] for k, v in ap0.items()}
+
     frames = [p0]
 
     # Drive the arms with a REAL demonstration.
@@ -378,6 +411,8 @@ try:
         p = particles()
         if p is not None:
             frames.append(p)
+        for k, v in arm_poses().items():
+            arm_frames.setdefault(k, []).append(v)
         if i % 20 == 0:
             d = float(np.abs(frames[-1] - frames[0]).max()) if len(frames) > 1 else 0.0
             # Read the ROBOT too. If the arms are not moving either, physics is
@@ -403,12 +438,20 @@ try:
     log(f"top of garment fell {settle:.4f} m (draping onto the table)")
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
-    np.savez_compressed(args.out, particles=arr.astype(np.float32))
+    save = {"particles": arr.astype(np.float32)}
+    for side, seq in arm_frames.items():
+        if seq:
+            save[f"{side}_pos"] = np.stack([q[0] for q in seq]).astype(np.float32)
+            save[f"{side}_quat"] = np.stack([q[1] for q in seq]).astype(np.float32)
+            # plain unicode, not dtype=object: an object array needs pickle to read
+            save[f"{side}_names"] = np.array(body_names.get(side, []), dtype="U32")
+    np.savez_compressed(args.out, **save)
     log(f"wrote {args.out}  {arr.shape}")
 
     try:
         s = env._get_success()
         log(f"official success checker: {s}")
+        log(f"SUCCESS={bool(np.asarray(s.detach().cpu() if hasattr(s,'detach') else s).ravel()[0])}")
     except Exception as exc:  # noqa: BLE001
         log(f"success checker not callable here: {exc}")
 

@@ -9,7 +9,9 @@ OUT="$LEHOME_DATA/outputs/train/${BASE}_seed${SEED}"
 echo "--- config $CFG"
 echo "--- output $OUT"
 "$PY" -c "import lerobot,torch;print('lerobot',lerobot.__version__,'torch',torch.__version__)"
-exec "$PY" -m lerobot.scripts.train \
+# lerobot 0.4.3 renamed this: lerobot.scripts.train does not exist,
+# it is lerobot.scripts.lerobot_train (console script: lerobot-train).
+exec "$PY" -m lerobot.scripts.lerobot_train \
     --config_path="$CFG" \
     --output_dir="$OUT" \
     --seed="$SEED"

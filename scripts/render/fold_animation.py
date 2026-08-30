@@ -69,8 +69,33 @@ log(f"GL {GL.glGetString(GL.GL_VERSION).decode()}")
 import numpy as np  # noqa: E402
 from pxr import Gf, Sdf, Usd, UsdAppUtils, UsdGeom, UsdLux, UsdShade, Vt  # noqa: E402
 
-P = np.load(args.particles)["particles"]
+_npz = np.load(args.particles, allow_pickle=True)
+P = _npz["particles"]
 log(f"particles {P.shape} from {os.path.basename(args.particles)}")
+
+# Robot link poses, if the simulation recorded them. The animation is meant to
+# show the ARMS doing the folding -- a garment moving on its own is not what
+# anyone means by "the robot folding a shirt".
+# The articulation reports bodies in this order; it was logged by the
+# simulation and is stable for so101_follower.usd. Used as a fallback because
+# the names were written as a pickled object array that will not read back --
+# not worth a 45-second simulator boot to re-record a constant.
+DEFAULT_BODIES = ["base", "shoulder", "upper_arm", "lower_arm",
+                  "wrist", "gripper", "jaw"]
+ARMS = {}
+for side in ("left", "right"):
+    if f"{side}_pos" not in _npz:
+        continue
+    pos = _npz[f"{side}_pos"]
+    try:
+        names = [str(x) for x in _npz[f"{side}_names"]]
+    except Exception:  # noqa: BLE001
+        names = DEFAULT_BODIES[:pos.shape[1]]
+        log(f"{side}: names unreadable, using known body order")
+    ARMS[side] = (pos, _npz[f"{side}_quat"], names)
+    log(f"{side} arm: {pos.shape} poses, bodies={names}")
+if not ARMS:
+    log("no arm poses in this npz -- rendering cloth only")
 
 # --- topology + texture from the original garment -------------------------
 gdir = os.path.join(args.assets, "objects/Challenge_Garment/Release", args.garment)
@@ -152,8 +177,8 @@ table = UsdGeom.Cube.Define(stage, "/World/table")
 table.CreateSizeAttr(1.0)
 tx = UsdGeom.Xformable(table)
 cx, cy = (lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2
-tx.AddTranslateOp().Set(Gf.Vec3d(float(cx), float(cy), table_top - 0.2))
-tx.AddScaleOp().Set(Gf.Vec3f(1.6, 1.6, 0.4))
+tx.AddTranslateOp().Set(Gf.Vec3d(0.0, -0.30, table_top - 0.2))
+tx.AddScaleOp().Set(Gf.Vec3f(1.8, 1.4, 0.4))
 UsdShade.MaterialBindingAPI(table.GetPrim()).Bind(
     material("/World/mats/table", (0.72, 0.68, 0.60)))
 
@@ -173,6 +198,33 @@ UsdShade.MaterialBindingAPI(garment.GetPrim()).Bind(
 # Storm under-lights this scene badly at "sensible" intensities -- the first
 # animation came back at a mean of ~20/255 with a correct but nearly invisible
 # shirt. Push both hard and let the table read mid-grey.
+# --- robot links -----------------------------------------------------------
+# One Xform per link, each referencing that link's subtree from the robot USD
+# and driven by the recorded world pose. /visuals is a SIBLING of the USD's
+# defaultPrim, so the reference names the prim path explicitly -- referencing
+# the layer alone composes only the default prim and brings no meshes.
+ROBOT_USD = os.path.join(args.assets, "robots/lerobot/so101_follower.usd")
+VISUAL_LINKS = ("base", "shoulder", "upper_arm", "lower_arm", "wrist", "gripper", "jaw")
+link_ops = {}
+robot_mat = material("/World/mats/robot", (0.86, 0.74, 0.16), rough=0.45)
+for side, (pos, quat, names) in ARMS.items():
+    for bi, bname in enumerate(names):
+        key = bname.lower()
+        match = next((v for v in VISUAL_LINKS if v == key), None)
+        if match is None:
+            continue
+        path = f"/World/Robot_{side}/{match}"
+        xf = UsdGeom.Xform.Define(stage, path)
+        child = UsdGeom.Xform.Define(stage, path + "/geo")
+        child.GetPrim().GetReferences().AddReference(ROBOT_USD, f"/visuals/{match}")
+        op = UsdGeom.Xformable(xf).AddTransformOp()
+        link_ops[(side, bi)] = op
+log(f"robot link xforms: {len(link_ops)}")
+for prim in stage.Traverse():
+    if prim.GetPath().pathString.startswith("/World/Robot_") and prim.IsA(UsdGeom.Mesh):
+        UsdShade.MaterialBindingAPI(prim).Bind(
+            robot_mat, bindingStrength=UsdShade.Tokens.strongerThanDescendants)
+
 UsdLux.DomeLight.Define(stage, "/World/dome").CreateIntensityAttr(9000.0)
 key = UsdLux.DistantLight.Define(stage, "/World/key")
 key.CreateIntensityAttr(14000.0)
@@ -185,10 +237,22 @@ cam = UsdGeom.Camera.Define(stage, "/World/cam")
 cam.CreateFocalLengthAttr(35.0)
 cam.CreateHorizontalApertureAttr(36.0)
 cam.CreateClippingRangeAttr(Gf.Vec2f(0.02, 50.0))
-span = max(float(hi[0] - lo[0]), float(hi[1] - lo[1]), 0.3)
-eye = Gf.Vec3d(float(cx) + span * 0.9, float(cy) - span * 1.7, table_top + span * 1.15)
+# Frame the WORKSPACE, not just the cloth. The arm bases sit at x = +/-0.23 and
+# the links reach well above the table, so a camera fitted to the garment's
+# bounds clips an arm out of frame -- which it did.
+allx = [float(lo[0]), float(hi[0])]
+ally = [float(lo[1]), float(hi[1])]
+allz = [float(lo[2]), float(hi[2])]
+for _side, (_p, _q, _n) in ARMS.items():
+    allx += [float(_p[..., 0].min()), float(_p[..., 0].max())]
+    ally += [float(_p[..., 1].min()), float(_p[..., 1].max())]
+    allz += [float(_p[..., 2].min()), float(_p[..., 2].max())]
+cx, cy = (min(allx) + max(allx)) / 2, (min(ally) + max(ally)) / 2
+span = max(max(allx) - min(allx), max(ally) - min(ally), max(allz) - min(allz), 0.4)
+log(f"framing span {span:.2f} m around ({cx:.2f}, {cy:.2f})")
+eye = Gf.Vec3d(cx + span * 0.75, cy - span * 1.5, table_top + span * 0.95)
 view = Gf.Matrix4d(1.0)
-view.SetLookAt(eye, Gf.Vec3d(float(cx), float(cy), table_top + 0.04), Gf.Vec3d(0, 0, 1))
+view.SetLookAt(eye, Gf.Vec3d(cx, cy, table_top + span * 0.18), Gf.Vec3d(0, 0, 1))
 UsdGeom.Xformable(cam).AddTransformOp().Set(view.GetInverse())
 stage.GetRootLayer().Save()
 
@@ -200,8 +264,20 @@ rec.SetCameraLightEnabled(True)
 rec.SetComplexity(1.0)
 
 n_out = 0
+def _mat_from(p, q):
+    """World transform from position and a wxyz quaternion."""
+    m = Gf.Matrix4d(Gf.Rotation(Gf.Quatd(float(q[0]),
+                                         Gf.Vec3d(float(q[1]), float(q[2]), float(q[3])))),
+                    Gf.Vec3d(float(p[0]), float(p[1]), float(p[2])))
+    return m
+
+
 for i in range(0, len(P), args.stride):
     points_attr.Set(Vt.Vec3fArray.FromNumpy(P[i]))
+    for (side, bi), op in link_ops.items():
+        pos, quat, _ = ARMS[side]
+        j = min(i, len(pos) - 1)
+        op.Set(_mat_from(pos[j][bi], quat[j][bi]))
     out = os.path.join(args.out, f"fold_{n_out:04d}.png")
     if not rec.Record(stage, cam, Usd.TimeCode.Default(), out):
         log(f"Record failed at frame {i}")

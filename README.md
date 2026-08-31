@@ -190,19 +190,91 @@ what the leaderboard's meant.
 
 ---
 
+## Rollouts, scored by the challenge's own checker
+
+A policy now runs closed-loop inside Isaac Sim: the environment steps, OpenUSD Storm rasterises three
+camera views in-process, SmolVLA consumes them, its action goes back into the environment, and every
+episode is labelled by LeHome's `success_checker_garment_fold` — the same function the challenge
+scores with. No verdict below is self-assessed, and the filenames carry the verdict so a label
+cannot drift from the run that produced it.
+
+<table>
+<tr>
+<td align="center"><b>Demonstration replay — SUCCESS</b></td>
+<td align="center"><b>Trained BC policy — failure</b></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_1_replay_ep25_success.gif" width="420" alt="Bimanual arms folding a short-sleeve top; the official checker returns success"></td>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_1_policy_failure.gif" width="420" alt="The same garment under the trained policy; the arms move but never contact the cloth"></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep2_success.gif" width="420" alt="A second successful fold on a different garment instance"></td>
+<td><img src="docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif" width="420" alt="Long-sleeve top under the policy, garment untouched"></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_1_replay_ep27_success.gif" width="420" alt="Third successful fold"></td>
+<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif" width="420" alt="Short pants under the policy, garment untouched"></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep4_success.gif" width="420" alt="Fourth successful fold"></td>
+<td><img src="docs/gifs/rollout_Pant_Long_Seen_0_policy_failure.gif" width="420" alt="Long pants under the policy, garment untouched"></td>
+</tr>
+</table>
+
+<p align="center"><sub>Left column: recorded demonstrations replayed at their own spawn pose.
+Right column: the trained BC policy. Both columns are the same pipeline, the same renderer and the
+same scorer — only the thing choosing the actions differs.</sub></p>
+
+| driver | episodes | succeeded |
+|---|---|---|
+| demonstration replay | 9 | **6** |
+| trained BC policy | 8 | **0** |
+
+Per-episode detail, including which of the five fold conditions each run passed, is in
+[`results/summary.md`](results/summary.md).
+
+### What separates the two columns
+
+The success criterion for a short-sleeve top is five distances, three that must close and two that
+must stay open. An untouched garment passes the two "stay open" conditions for free, which is exactly
+what the policy scores:
+
+| condition | required | replay (ep2) | policy |
+|---|---|---|---|
+| `dist(p0,p4)` | ≤ 9.45 | **5.06** ✓ | 29.04 ✗ |
+| `dist(p2,p3)` | ≤ 12.15 | **5.65** ✓ | 38.88 ✗ |
+| `dist(p1,p5)` | ≤ 9.00 | **5.75** ✓ | 29.82 ✗ |
+| `dist(p0,p1)` | ≥ 13.05 | 20.30 ✓ | 18.63 ✓ |
+| `dist(p4,p5)` | ≥ 8.55 | 16.47 ✓ | 21.61 ✓ |
+
+Instrumenting the failure rules out the easy explanations. The policy is not degenerate — its actions
+vary step to step and the arms sweep ~1.5 rad. The action path is faithful: `action_scale = 1.0` and
+targets reach `set_joint_position_target` with the correct 6/6 split. The end effectors descend from
+~0.78 m to ~0.65 m and then **hover 12–14 cm above a garment resting at 0.529 m**, never closing.
+Total cloth displacement across 300 steps: **0.18 cm**.
+
+The environment is not the problem, and the replay column is what proves it — same scene, same
+physics, same renderer, real folds. The remaining suspect is the one deviation this setup cannot
+avoid: **the policy sees rasterised Storm frames and was trained on path-traced ones.** That gap is
+measured nowhere yet, and until it is, it is the first thing to rule out — not more training.
+
 ## Honest status
 
-There are **no garment-folding GIFs in this repo** — no policy has been trained and no rollout has
-been scored. The scene renders on both stacks now, and the path to scoring one is
-[Storm on 5.1](docs/STORM.md), with the material caveat above. The orbit at the top is a camera
-moving around a statically-posed scene, labelled as such — see [`docs/RENDER.md`](docs/RENDER.md) for
-the read-back proving the joint replay reaches physics but not the render product. Everything else
-above is the machinery, demonstrated on data where the right answer is known.
+**What works.** Particle cloth simulates on Isaac Sim 5.1; Storm rasterises in-process alongside a
+live Kit application; a 450M SmolVLA checkpoint loads and drives the environment closed-loop; and
+LeHome's own scorer labels every episode. Demonstration replay folds garments and the official
+checker confirms it, 6 times out of 9.
 
-Also true, and in [`docs/STAGE0.md`](docs/STAGE0.md) with the command behind every claim: the paper
-used **π0.5, not SmolVLA**; physics is **CPU-only with one env per process** (no `NUM_ENVS` to turn up);
-Isaac Lab comes from a **fork**, not PyPI; and every number this repo could ever report is on **48
-garments, not the leaderboard's 80** — the other 32 never shipped.
+**What does not.** The trained policy folds nothing — 0 for 8, with the cloth displaced 0.18 cm. The
+successes in this repo are **demonstration replays, not the policy**, and every filename says
+`replay` for that reason.
+
+**Caveats that bound every number above.** The paper used **π0.5, not SmolVLA** — SmolVLA was the
+affordable stand-in. The BC run stopped at **step 15K of a planned 20K** when it hit a 6-hour wall
+clock, so this is a checkpoint taken mid-descent, not a converged policy. Observations are
+**rasterised, while training data is path-traced**, and that domain gap is unmeasured. Replay is
+**open-loop**, so its 3 failures are drift, not a claim about the demonstrations. And every number
+here is on **48 garments, not the leaderboard's 80** — the other 32 never shipped.
 
 Job ledger: [`SLURM_JOBS.md`](SLURM_JOBS.md) · Full build order: [`docs/PLAN.md`](docs/PLAN.md)
 

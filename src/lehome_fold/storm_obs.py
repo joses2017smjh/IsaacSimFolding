@@ -245,6 +245,15 @@ class StormObserver:
         cam = UsdGeom.Camera.Define(stage, f"/World/cam_{name}")
         cam.CreateFocalLengthAttr(focal)
         cam.CreateHorizontalApertureAttr(aperture)
+        # Vertical aperture must be set explicitly or USD keeps its default
+        # (15.2908). FrameRecorder takes only a WIDTH and derives height from
+        # the camera's aperture ratio, so leaving this alone rendered
+        # 640x256 (38.11/15.2908 = 2.49; 640/2.49 = 256) where the policy was
+        # trained on 640x480. Deriving it from CAM_H/CAM_W keeps the intended
+        # horizontal FOV and fixes the frame shape at the source, rather than
+        # resampling a 2.49:1 image up to 4:3 and feeding the policy a
+        # vertically stretched scene.
+        cam.CreateVerticalApertureAttr(aperture * (CAM_H / CAM_W))
         cam.CreateClippingRangeAttr(Gf.Vec2f(0.01, 50.0))
         v = Gf.Matrix4d(1.0)
         v.SetLookAt(Gf.Vec3d(*eye), Gf.Vec3d(*target), Gf.Vec3d(0, 0, 1))

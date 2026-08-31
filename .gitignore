@@ -44,3 +44,6 @@ __pycache__/
 # Hugging Face token -- never commit a credential
 .hf_token
 *.hf_token
+
+# Full-size Storm renders (~13 MB each). Web-sized copies live in docs/gifs/.
+results/*.gif

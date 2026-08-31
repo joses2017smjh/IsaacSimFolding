@@ -208,12 +208,12 @@ cannot drift from the run that produced it.
 <td><img src="docs/gifs/rollout_Top_Short_Seen_1_policy_failure.gif" width="420" alt="The same garment under the trained policy; the arms move but never contact the cloth"></td>
 </tr>
 <tr>
-<td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep2_success.gif" width="420" alt="A second successful fold on a different garment instance"></td>
-<td><img src="docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif" width="420" alt="Long-sleeve top under the policy, garment untouched"></td>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep2_success.gif" width="420" alt="Short-sleeve top folded successfully by demonstration replay"></td>
+<td><img src="docs/gifs/rollout_Top_Short_Seen_0_policy_failure.gif" width="420" alt="The identical garment under the trained policy, left untouched"></td>
 </tr>
 <tr>
 <td><img src="docs/gifs/rollout_Top_Short_Seen_1_replay_ep27_success.gif" width="420" alt="Third successful fold"></td>
-<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif" width="420" alt="Short pants under the policy, garment untouched"></td>
+<td><img src="docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif" width="420" alt="Long-sleeve top under the policy, garment untouched"></td>
 </tr>
 <tr>
 <td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep4_success.gif" width="420" alt="Fourth successful fold"></td>
@@ -221,7 +221,8 @@ cannot drift from the run that produced it.
 </tr>
 </table>
 
-<p align="center"><sub>Left column: recorded demonstrations replayed at their own spawn pose.
+<p align="center"><sub>The top two rows are the <b>same garment</b> in both columns.
+Left column: recorded demonstrations replayed at their own spawn pose.
 Right column: the trained BC policy. Both columns are the same pipeline, the same renderer and the
 same scorer — only the thing choosing the actions differs.</sub></p>
 

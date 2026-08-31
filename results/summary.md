@@ -1,6 +1,6 @@
 # Rollout results
 
-Every verdict below is produced by LeHome's own `success_checker_garment_fold`,
+Every verdict is produced by LeHome's own `success_checker_garment_fold`,
 the same function the challenge scores with. Nothing here is self-assessed.
 
 | garment | driver | episode | conditions | verdict |

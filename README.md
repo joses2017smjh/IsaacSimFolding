@@ -244,7 +244,7 @@ own thresholds — a short top passes `[9.45, 12.15, 9.0, 13.05, 8.55]`, a long 
 
 | class | matched-pose replays | succeeded |
 |---|---|---|
-| Top_Short | 10 | **8** |
+| Top_Short | 11 | **8** |
 | Top_Long | 4 | **3** |
 | Pant_Short | 3 | **2** |
 | Pant_Long | 3 | **2** |

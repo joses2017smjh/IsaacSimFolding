@@ -460,8 +460,13 @@ try:
         tag = "success" if success else "failure"
         mode = "replay" if replay is not None else "policy"
         ep = f"_ep{args.replay_episode}" if replay is not None else ""
+        # Derive the GIF name from the RESULT PATH, so any suffix that
+        # distinguishes a run (a camera fix, an ablation) distinguishes its
+        # GIF too. Deriving it from garment+mode+episode alone let a re-run
+        # silently overwrite the artefact it was meant to be compared against.
+        stem = os.path.splitext(os.path.basename(args.result_out))[0]
         gif = os.path.join(os.path.dirname(args.result_out),
-                           f"rollout_{args.garment}_{mode}{ep}_{tag}.gif")
+                           f"{stem}_{mode}{ep}_{tag}.gif")
         imageio.mimsave(gif, frames, duration=0.08, loop=0)
         log(f"GIF {gif} ({len(frames)} frames, {tag})")
     json.dump({"garment": args.garment, "success": success,

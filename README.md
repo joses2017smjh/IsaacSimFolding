@@ -212,14 +212,21 @@ cannot drift from the run that produced it.
 <td><img src="docs/gifs/rollout_Top_Short_Seen_0_policy_failure.gif" width="420" alt="The identical garment under the trained policy, left untouched"></td>
 </tr>
 <tr>
-<td><img src="docs/gifs/rollout_Top_Short_Seen_1_replay_ep27_success.gif" width="420" alt="Third successful fold"></td>
+<td><img src="docs/gifs/rollout_Top_Long_Seen_0_replay_ep251_success.gif" width="420" alt="Long-sleeve top folded successfully by demonstration replay"></td>
 <td><img src="docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif" width="420" alt="Long-sleeve top under the policy, garment untouched"></td>
 </tr>
 <tr>
-<td><img src="docs/gifs/rollout_Top_Short_Seen_0_replay_ep4_success.gif" width="420" alt="Fourth successful fold"></td>
+<td><img src="docs/gifs/rollout_Pant_Long_Seen_0_replay_ep750_success.gif" width="420" alt="Long pants folded successfully by demonstration replay"></td>
 <td><img src="docs/gifs/rollout_Pant_Long_Seen_0_policy_failure.gif" width="420" alt="Long pants under the policy, garment untouched"></td>
 </tr>
+<tr>
+<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_replay_ep500_success.gif" width="420" alt="Short pants folded successfully by demonstration replay"></td>
+<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif" width="420" alt="Short pants under the policy, garment untouched"></td>
+</tr>
 </table>
+
+<p align="center"><sub>All four garment classes, one row each after the first: short top, long top,
+long pants, short pants.</sub></p>
 
 <p align="center"><sub>The top two rows are the <b>same garment</b> in both columns.
 Left column: recorded demonstrations replayed at their own spawn pose.
@@ -228,8 +235,19 @@ same scorer — only the thing choosing the actions differs.</sub></p>
 
 | driver | episodes | succeeded |
 |---|---|---|
-| demonstration replay | 9 | **6** |
+| demonstration replay | 21 | **15** |
 | trained BC policy | 8 | **0** |
+
+Verified folds now cover **all four garment classes**, which matters because each class has its
+own thresholds — a short top passes `[9.45, 12.15, 9.0, 13.05, 8.55]`, a long top
+`[11.7, 10.8, 10.8, 9.9, 9.0]` — so a result on one says little about the others:
+
+| class | matched-pose replays | succeeded |
+|---|---|---|
+| Top_Short | 10 | **8** |
+| Top_Long | 4 | **3** |
+| Pant_Short | 3 | **2** |
+| Pant_Long | 3 | **2** |
 
 Per-episode detail, including which of the five fold conditions each run passed, is in
 [`results/summary.md`](results/summary.md).

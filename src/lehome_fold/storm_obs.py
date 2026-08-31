@@ -42,6 +42,9 @@ TABLE_Z = 0.5
 ROBOT_BASES = {"left": (-0.23, -0.25, TABLE_Z), "right": (0.23, -0.25, TABLE_Z)}
 TOP_CAM_OFFSET = (0.245, -0.44, 0.56)      # relative to the right arm's base
 WRIST_CAM_OFFSET = (-0.001, 0.1, -0.04)    # relative to each gripper link
+# Isaac quaternion order (w, x, y, z), straight out of garment_bi_cfg_v2.py.
+WRIST_CAM_ROT = (-0.404379, -0.912179, -0.0451242, 0.0486914)
+WRIST_CAM_PARENT = "gripper"   # the link the challenge parents them to
 CAM_W, CAM_H = 640, 480
 
 
@@ -223,11 +226,22 @@ class StormObserver:
                    rb[2] + TOP_CAM_OFFSET[2])
         self._cams["top_rgb"] = self._camera(stage, "top", 28.7, 38.11,
                                              top_eye, (0.0, -0.34, TABLE_Z))
+        # WRIST cameras ride the gripper. The challenge mounts them at
+        # /World/Robot/{Left,Right}_Robot/gripper/{side}_wrist_camera, so they
+        # move with the hand and look at whatever it is reaching for.
+        #
+        # They were previously pinned to fixed world positions aimed at
+        # (0, -0.34, TABLE_Z) -- a point ~0.37 m in y from where the garment
+        # actually rests -- so both wrist views rendered empty table for the
+        # whole episode. That is not merely a cosmetic problem with the GIFs:
+        # the policy was being handed two dead frames out of three, and a
+        # policy that servos its gripper from wrist views would do exactly
+        # what was observed, move to a plausible pose and then hover.
+        #
+        # Parenting under the gripper Xform means the per-frame link transform
+        # carries the camera along; only the constant local offset is set here.
         for side in ("left", "right"):
-            self._cams[f"{side}_rgb"] = self._camera(
-                stage, side, 36.5, 36.83,
-                (ROBOT_BASES[side][0], ROBOT_BASES[side][1] - 0.25, TABLE_Z + 0.35),
-                (0.0, -0.34, TABLE_Z))
+            self._cams[f"{side}_rgb"] = self._wrist_camera(stage, side)
         stage.GetRootLayer().Save()
 
         from pxr import UsdAppUtils
@@ -238,6 +252,30 @@ class StormObserver:
         self._rec.SetCameraLightEnabled(True)
         self._rec.SetComplexity(1.0)
         self._built = True
+
+    def _wrist_camera(self, stage, side):
+        """A camera parented to the gripper link, matching the challenge rig."""
+        from pxr import Gf, UsdGeom
+
+        parent = f"/World/R_{side}/{WRIST_CAM_PARENT}"
+        cam = UsdGeom.Camera.Define(stage, f"{parent}/wrist_cam")
+        cam.CreateFocalLengthAttr(36.5)
+        cam.CreateHorizontalApertureAttr(36.83)
+        cam.CreateVerticalApertureAttr(36.83 * (CAM_H / CAM_W))
+        cam.CreateClippingRangeAttr(Gf.Vec2f(0.005, 50.0))
+
+        # The challenge declares these offsets with convention="ros": forward
+        # +Z, up -Y. A USD camera looks down its local -Z with +Y up, so the
+        # quaternion cannot be applied raw -- doing that aims the camera
+        # backwards out of the scene and every wrist frame renders as flat
+        # background. Converting takes one extra 180 degree turn about X,
+        # which maps +Z -> -Z and +Y -> -Y.
+        w, x, y, z = WRIST_CAM_ROT
+        rot = (Gf.Rotation(Gf.Quatd(w, Gf.Vec3d(x, y, z)))
+               * Gf.Rotation(Gf.Vec3d(1, 0, 0), 180.0))
+        m = Gf.Matrix4d(rot, Gf.Vec3d(*WRIST_CAM_OFFSET))
+        UsdGeom.Xformable(cam).AddTransformOp().Set(m)
+        return cam
 
     def _camera(self, stage, name, focal, aperture, eye, target):
         from pxr import Gf, UsdGeom

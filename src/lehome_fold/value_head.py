@@ -98,6 +98,7 @@ def value_loss(
     targets: dict[str, torch.Tensor],
     *,
     future_mask: torch.Tensor | None = None,
+    sample_mask: torch.Tensor | None = None,
     w_success: float = 1.0,
     w_progress: float = 1.0,
     w_future: float = 1.0,
@@ -109,13 +110,28 @@ def value_loss(
     the future equals the present, which is a real bias toward predicting
     stillness -- and it concentrates exactly at the end of successful folds,
     where the arms genuinely do stop.
+
+    `sample_mask` is 1 for frames whose episode actually has a scored outcome.
+    Only a subset of the released episodes has been rolled out and labelled, and
+    an unlabelled frame carries a success target of 0 by construction -- so
+    without this the success head is trained to call every unscored episode a
+    failure, which is not a weaker signal but a wrong one.
     """
     losses: dict[str, torch.Tensor] = {}
 
-    losses["success"] = F.binary_cross_entropy_with_logits(
-        preds["success_logit"], targets["success"].float()
-    )
-    losses["progress"] = F.mse_loss(preds["progress"], targets["progress"].float())
+    if sample_mask is None:
+        losses["success"] = F.binary_cross_entropy_with_logits(
+            preds["success_logit"], targets["success"].float()
+        )
+        losses["progress"] = F.mse_loss(preds["progress"], targets["progress"].float())
+    else:
+        sm = sample_mask.float()
+        n = sm.sum()
+        bce = F.binary_cross_entropy_with_logits(
+            preds["success_logit"], targets["success"].float(), reduction="none")
+        pse = (preds["progress"] - targets["progress"].float()) ** 2
+        losses["success"] = (bce * sm).sum() / n if n > 0 else bce.sum() * 0.0
+        losses["progress"] = (pse * sm).sum() / n if n > 0 else pse.sum() * 0.0
 
     fut_err = (preds["future"] - targets["future"].float()) ** 2
     if future_mask is None:

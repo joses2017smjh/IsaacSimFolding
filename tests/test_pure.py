@@ -548,6 +548,62 @@ def feature_tap_rejects_a_path_that_does_not_exist():
 
 
 @test
+def value_loss_sample_mask_ignores_unlabelled_frames():
+    """A masked frame must not influence the loss at all.
+
+    Only some released episodes have been rolled out and scored. An unlabelled
+    frame carries success=0 by construction, so an inert mask would not merely
+    weaken the signal -- it would train the success head to call every unscored
+    episode a failure.
+    """
+    import torch
+    from lehome_fold.value_head import value_loss
+
+    n, d = 8, 3
+    # Deliberately ASYMMETRIC. Two earlier drafts of this test used mirrored
+    # logits/targets, where the masked half's BCE terms are the exact mirror of
+    # the kept half's, so the mean is identical with or without the mask and
+    # the test passed regardless of whether masking worked. Here the masked
+    # half is confidently correct (logit 10, target 1 -> ~0 loss) while the
+    # kept half is maximally uncertain (logit 0 -> log 2).
+    preds = {"success_logit": torch.cat([torch.zeros(4), torch.full((4,), 10.0)]),
+             "progress": torch.zeros(n), "future": torch.zeros(n, d)}
+    targets = {"success": torch.ones(n),
+               "progress": torch.cat([torch.ones(4), torch.zeros(4)]),
+               "future": torch.zeros(n, d)}
+    mask = torch.cat([torch.ones(4), torch.zeros(4)])
+
+    _, masked = value_loss(preds, targets, sample_mask=mask)
+
+    # Same batch with the unlabelled half deleted must give the same numbers.
+    _, only_labelled = value_loss({k: v[:4] for k, v in preds.items()},
+                                  {k: v[:4] for k, v in targets.items()})
+    close(masked["success"], only_labelled["success"])
+    close(masked["progress"], only_labelled["progress"])
+
+    # And it must actually differ from ignoring the mask, or the test is vacuous.
+    _, unmasked = value_loss(preds, targets)
+    assert abs(masked["success"] - unmasked["success"]) > 1e-6, "success mask had no effect"
+    assert abs(masked["progress"] - unmasked["progress"]) > 1e-6, "progress mask had no effect"
+
+
+@test
+def value_loss_all_masked_batch_is_zero_not_nan():
+    import torch
+    from lehome_fold.value_head import value_loss
+
+    n, d = 4, 3
+    preds = {"success_logit": torch.zeros(n), "progress": torch.zeros(n),
+             "future": torch.zeros(n, d)}
+    targets = {"success": torch.ones(n), "progress": torch.ones(n),
+               "future": torch.zeros(n, d)}
+    _, parts = value_loss(preds, targets, sample_mask=torch.zeros(n))
+    for k in ("success", "progress"):
+        assert parts[k] == parts[k], f"{k} is nan on an all-masked batch"
+        close(parts[k], 0.0)
+
+
+@test
 def candidate_selection_picks_the_best_and_returns_every_score():
     import itertools
 

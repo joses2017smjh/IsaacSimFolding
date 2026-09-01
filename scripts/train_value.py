@@ -157,7 +157,9 @@ def main() -> int:
             with torch.no_grad():
                 policy.forward(batch)
             preds = wrap()
-            loss, parts = value_loss(preds, targets, future_mask=targets.get("future_mask"))
+            loss, parts = value_loss(preds, targets,
+                                     future_mask=targets.get("future_mask"),
+                                     sample_mask=targets.get("labelled"))
             opt.zero_grad(set_to_none=True)
             loss.backward()
             opt.step()
@@ -216,6 +218,16 @@ def load_outcomes(rollout_dir, ds):
             for line in f.read_text().splitlines():
                 if line.strip():
                     rows.append(json.loads(line))
+        # Key by episode_index when the rows carry one. Returning a bare list
+        # here would be indexed BY POSITION downstream, so a sparse set of
+        # scored episodes (1, 2, ... 250, ... 752) would silently attach
+        # episode 250's outcome to episode 12 -- mislabelled training data
+        # that fails no assertion and produces a plausible-looking curve.
+        if rows and "episode_index" in rows[0]:
+            return {int(r["episode_index"]):
+                    EpisodeOutcome(length=int(r["length"]), success=bool(r["success"]),
+                                   success_frame=r.get("success_frame"))
+                    for r in rows}
         return [EpisodeOutcome(length=int(r["length"]), success=bool(r["success"]),
                                success_frame=r.get("success_frame")) for r in rows]
     lengths = getattr(ds.meta, "episodes", None)
@@ -234,11 +246,18 @@ def build_targets(batch, outcomes, args, L):
 
     succ = np.zeros(len(ep), dtype=np.float32)
     prog = np.zeros(len(ep), dtype=np.float32)
+    # Frames whose episode has no scored outcome must not contribute to the
+    # loss. Defaulting them to zero would teach the success head that every
+    # unlabelled episode failed.
+    labelled = np.zeros(len(ep), dtype=np.float32)
     for i, (e, f) in enumerate(zip(ep, fr)):
-        if e < len(outcomes):
-            o = outcomes[e]
-            succ[i] = L.success_targets(o, mode=args.success_mode)[min(f, o.length - 1)]
-            prog[i] = L.progress(o.length)[min(f, o.length - 1)]
+        o = (outcomes.get(int(e)) if isinstance(outcomes, dict)
+             else (outcomes[e] if e < len(outcomes) else None))
+        if o is None:
+            continue
+        labelled[i] = 1.0
+        succ[i] = L.success_targets(o, mode=args.success_mode)[min(f, o.length - 1)]
+        prog[i] = L.progress(o.length)[min(f, o.length - 1)]
 
     state = batch["observation.state"]
     # LeRobot returns (B, n_delta, D) when delta_timestamps is set: index 0 is
@@ -256,6 +275,7 @@ def build_targets(batch, outcomes, args, L):
         "progress": torch.from_numpy(prog).to(dev),
         "future": future,
         "future_mask": valid,
+        "labelled": torch.from_numpy(labelled).to(dev),
     }
 
 

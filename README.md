@@ -289,7 +289,7 @@ successes in this repo are **demonstration replays, not the policy**, and every 
 `replay` for that reason.
 
 **Caveats that bound every number above.** The paper used **π0.5, not SmolVLA** — SmolVLA was the
-affordable stand-in. The BC run stopped at **step 15K of a planned 20K** when it hit a 6-hour wall
+affordable stand-in. The BC run stopped at **step 15K of a planned 30K** when it hit a 6-hour wall
 clock, so this is a checkpoint taken mid-descent, not a converged policy. Observations are
 **rasterised, while training data is path-traced**, and that domain gap is unmeasured. Replay is
 **open-loop**, so its 3 failures are drift, not a claim about the demonstrations. And every number

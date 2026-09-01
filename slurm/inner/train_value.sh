@@ -6,6 +6,7 @@ ARGS=(--policy_path "$POLICY_PATH"
       --feature_path "$FEATURE_PATH" --hidden_dim "$HIDDEN_DIM"
       --out "$STAGE_OUT"
       --dump_val_predictions "$REPO/results/value_val_predictions.npz"
+      --steps "${STAGE_STEPS:-3000}"
       --device "${DEVICE:-cuda}" --seed "${SEED:-0}")
 [ -n "${ROLLOUT_DIR:-}" ] && ARGS+=(--rollout_dir "$ROLLOUT_DIR")
 exec "$PY" "$REPO/scripts/train_value.py" "${ARGS[@]}"

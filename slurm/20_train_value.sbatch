@@ -31,6 +31,12 @@ setup_node_cache
 # 12_probe_backbone says this checkpoint is laid out differently.
 export FEATURE_PATH=${FEATURE_PATH:-model.embed_prefix}
 export HIDDEN_DIM=${HIDDEN_DIM:-0}
+# 20,000 steps is the script default and is wrong for this data. Each step
+# runs a full 450M forward to drive a 0.76M head over only 6,066 scored
+# frames; measured throughput was under 28 steps/min, so 20k needs ~12 h
+# against any sane wall clock -- and the save happens AFTER the loop, so a
+# TIMEOUT loses the entire run rather than degrading it.
+export STAGE_STEPS=${STAGE_STEPS:-3000}
 export STAGE_OUT=${STAGE_OUT:-$LEHOME_DATA/outputs/value/$(basename $POLICY_PATH)}
 echo "=== node: $(hostname) | $POLICY_PATH -> $STAGE_OUT | $(date) ==="
 lh_exec "$REPO/slurm/inner/train_value.sh"

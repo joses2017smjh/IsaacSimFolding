@@ -4,7 +4,7 @@
 #SBATCH --partition=gpu,dgxh,ampere
 #SBATCH --constraint="l40s|h100|h200|h200-70g|a40"
 #SBATCH --cpus-per-task=12
-#SBATCH --mem=128G
+#SBATCH --mem=80G
 #SBATCH --gres=gpu:1
 #SBATCH --time=05:30:00
 #SBATCH --output=/nfs/hpc/share/sanchej7/Humanoid_Lite/logs/%x-%j.out
@@ -23,6 +23,12 @@
 # _env.sh -- a file, never a job-script variable, so the credential stays out
 # of git, out of logs and out of `scontrol show job`. So no HF_HUB_OFFLINE here,
 # unlike the rollout jobs.
+#
+# Memory: 80G, not 128G. At 128G this sat PENDING on QOSMaxMemoryPerUser --
+# a per-USER total, so it was competing with the user's own running jobs
+# (2x v2-train, 2x grip-train, ice-ppo) plus this project's own 96G training
+# and value jobs. A request that cannot schedule is not a conservative choice,
+# it is an invisible one.
 #
 # Sequencing note: this is the most expensive item queued, and its value
 # partly depends on whether the SmolVLA resume (21124825) shows that more

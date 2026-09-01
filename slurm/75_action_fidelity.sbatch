@@ -27,6 +27,10 @@ setup_node_cache
 CKPT=${CKPT:-$LEHOME_DATA/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model}
 TAG=${TAG:-015000}
 export CKPT TAG
+# lh_exec runs apptainer with --cleanenv and forwards ONLY the names in
+# LH_FORWARD_VARS, so exporting alone does not carry a variable across --
+# the inner script died with "CKPT: unbound variable".
+export LH_FORWARD_VARS="${LH_FORWARD_VARS:-} CKPT TAG EPISODES SAMPLES"
 echo "=== node: $(hostname) | ckpt $TAG | $(date) ==="
 # lh_exec takes a SCRIPT PATH and runs it with bash. Passing `bash -c "..."`
 # made it exec `bash bash -c ...`, which fails with

@@ -39,6 +39,8 @@ def main() -> int:
     ap.add_argument("--repo_id", default="lehome_four_types")
     ap.add_argument("--episodes", default="25,26,2,250,500,750")
     ap.add_argument("--samples", type=int, default=120)
+    ap.add_argument("--video_backend", default="pyav",
+                    help="pyav; the installed torchcodec cannot load here")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
@@ -57,11 +59,24 @@ def main() -> int:
     print(f"[fid] policy on {dev}", flush=True)
 
     eps = [int(x) for x in args.episodes.split(",")]
-    ds = LeRobotDataset(args.repo_id, root=args.dataset_root, episodes=eps)
-    print(f"[fid] frames={ds.num_frames} episodes={eps}", flush=True)
+    # video_backend="pyav": the installed torchcodec cannot load here
+    # ("Could not load libtorchcodec"). And the episode subset is built by
+    # filtering episode_index rather than passing `episodes=`, which raises
+    #   PicklingError: Can't pickle <class 'MonthDayNano'>
+    # inside LeRobotDataset's own dill/pyarrow handling. Both of these were
+    # already solved in scripts/train_value.py; this script is newer and
+    # repeated them.
+    ds = LeRobotDataset(args.repo_id, root=args.dataset_root,
+                        video_backend=args.video_backend)
+    ep_col = np.asarray(ds.hf_dataset["episode_index"])
+    keep = np.nonzero(np.isin(ep_col, eps))[0]
+    print(f"[fid] {len(keep)} frames from episodes {eps} "
+          f"(of {len(ep_col)} total)", flush=True)
+    if len(keep) == 0:
+        raise SystemExit(f"no frames for episodes {eps}")
 
-    step = max(1, ds.num_frames // args.samples)
-    idxs = list(range(0, ds.num_frames, step))[: args.samples]
+    step = max(1, len(keep) // args.samples)
+    idxs = [int(i) for i in keep[::step][: args.samples]]
 
     acts_true, acts_pred = [], []
     for n, i in enumerate(idxs):

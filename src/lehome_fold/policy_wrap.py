@@ -189,11 +189,26 @@ class ValueAugmentedPolicy(nn.Module):
         if cfg.hidden_dim:
             self._build_heads(cfg.hidden_dim)
 
-    def _build_heads(self, hidden_dim: int) -> None:
+    def _build_heads(self, hidden_dim: int,
+                     like: torch.Tensor | None = None) -> None:
+        """Build the heads, on the device of the feature that will drive them.
+
+        These are constructed lazily, the first time a feature is captured, so
+        the enclosing module's earlier `.to(device)` cannot have reached them:
+        they did not exist yet. Creating them on the CPU default and then
+        immediately calling them with a CUDA feature raises
+          RuntimeError: Expected all tensors to be on the same device
+        from inside the first Linear. `like` is that feature.
+        """
         self.heads = ValueHeads(
             ValueHeadConfig(hidden_dim=hidden_dim, future_dim=self.cfg.future_dim,
                             detach_backbone=self.cfg.detach_backbone)
         )
+        if like is not None:
+            # Device only, not dtype: the backbone may run in bf16/fp16, and
+            # the heads are what actually gets optimised here, so they stay in
+            # their default float32 and the feature is cast at the call site.
+            self.heads.to(like.device)
         self.cfg.hidden_dim = hidden_dim
 
     def _pool(self, x: torch.Tensor, mask: torch.Tensor | None) -> torch.Tensor:
@@ -219,7 +234,13 @@ class ValueAugmentedPolicy(nn.Module):
     def forward(self, _batch: dict | None = None) -> dict[str, torch.Tensor]:
         f = self.features()
         if self.heads is None:
-            self._build_heads(f.shape[-1])
+            self._build_heads(f.shape[-1], like=f)
+        # Cast the feature to the heads' dtype rather than the reverse, so a
+        # half-precision backbone does not silently drag the trained heads
+        # down with it.
+        param = next(self.heads.parameters(), None)
+        if param is not None and f.dtype != param.dtype:
+            f = f.to(param.dtype)
         return self.heads(f)
 
     @torch.no_grad()

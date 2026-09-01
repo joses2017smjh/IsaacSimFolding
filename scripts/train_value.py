@@ -107,7 +107,17 @@ def main() -> int:
     # docs/STAGE0.md section 3; the two disagree and the dataset's own label is
     # the one that indexes its own frames.
     fps = meta.fps
-    delta = {"observation.state": [0.0, args.horizon / fps]}
+    # The action chunk is required, not optional. SmolVLA's `forward` is its
+    # TRAINING forward: it builds an attention mask whose width depends on the
+    # action-suffix length, so a single (B, D) action from the dataset gives
+    #   RuntimeError: The size of tensor a (250) must match ... b (264)
+    # inside make_att_2d_masks. Asking for chunk_size future actions produces
+    # the (B, chunk, D) the model was trained with. The tap only needs the
+    # prefix features, but it can only get them by running a forward that
+    # does not blow up.
+    chunk = int(getattr(cfg, "chunk_size", 50) or 50)
+    delta = {"observation.state": [0.0, args.horizon / fps],
+             "action": [i / fps for i in range(chunk)]}
     # video_backend="pyav", not the torchcodec default: the installed
     # torchcodec cannot load here ("FFmpeg version 4: libnppicc.so.12: cannot
     # open shared object file"), which surfaces as a RuntimeError inside a

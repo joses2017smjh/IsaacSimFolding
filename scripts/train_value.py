@@ -103,7 +103,7 @@ def main() -> int:
 
     outcomes = load_outcomes(args.rollout_dir, ds)
     y_all = np.concatenate([
-        L.success_targets(o, mode=args.success_mode) for o in outcomes
+        L.success_targets(o, mode=args.success_mode) for o in outcomes.values()
     ]) if outcomes else np.zeros(0)
 
     bal = L.class_balance(y_all)
@@ -204,7 +204,14 @@ def to_device(batch, device):
 
 
 def load_outcomes(rollout_dir, ds):
-    """Episode outcomes, from rollouts if available, else from the demos.
+    """Episode outcomes keyed by episode_index, from rollouts else the demos.
+
+    Always a dict, never a list. Downstream code indexes these BY EPISODE
+    INDEX, and the scored rollouts are a sparse subset (1, 2, ... 250, ... 752),
+    so a positional list would silently attach episode 250's outcome to episode
+    12. Returning one shape everywhere also avoids the half-applied refactor
+    that broke the class-balance line here: iterating a dict yields its keys,
+    so `for o in outcomes` handed an int to success_targets.
 
     A released demonstration is a success with no recorded success frame, which
     is exactly the awkward combination EpisodeOutcome is built to represent --
@@ -223,17 +230,15 @@ def load_outcomes(rollout_dir, ds):
         # scored episodes (1, 2, ... 250, ... 752) would silently attach
         # episode 250's outcome to episode 12 -- mislabelled training data
         # that fails no assertion and produces a plausible-looking curve.
-        if rows and "episode_index" in rows[0]:
-            return {int(r["episode_index"]):
-                    EpisodeOutcome(length=int(r["length"]), success=bool(r["success"]),
-                                   success_frame=r.get("success_frame"))
-                    for r in rows}
-        return [EpisodeOutcome(length=int(r["length"]), success=bool(r["success"]),
-                               success_frame=r.get("success_frame")) for r in rows]
+        return {int(r.get("episode_index", i)):
+                EpisodeOutcome(length=int(r["length"]), success=bool(r["success"]),
+                               success_frame=r.get("success_frame"))
+                for i, r in enumerate(rows)}
     lengths = getattr(ds.meta, "episodes", None)
     if lengths is None:
-        return []
-    return [EpisodeOutcome(length=int(n), success=True) for n in lengths["length"]]
+        return {}
+    return {i: EpisodeOutcome(length=int(n), success=True)
+            for i, n in enumerate(lengths["length"])}
 
 
 def build_targets(batch, outcomes, args, L):
@@ -251,8 +256,7 @@ def build_targets(batch, outcomes, args, L):
     # unlabelled episode failed.
     labelled = np.zeros(len(ep), dtype=np.float32)
     for i, (e, f) in enumerate(zip(ep, fr)):
-        o = (outcomes.get(int(e)) if isinstance(outcomes, dict)
-             else (outcomes[e] if e < len(outcomes) else None))
+        o = outcomes.get(int(e))
         if o is None:
             continue
         labelled[i] = 1.0

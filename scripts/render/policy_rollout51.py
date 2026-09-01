@@ -56,6 +56,9 @@ ap.add_argument("--replay_parquet", default="",
 ap.add_argument("--replay_episode", type=int, default=0)
 ap.add_argument("--settle_steps", type=int, default=0,
                 help="physics steps holding the initial pose before the policy acts")
+ap.add_argument("--shadow_policy", type=int, default=0,
+                help="during replay, also record what the policy would do on "
+                     "the SAME state, rendered by Storm")
 ap.add_argument("--gif_every", type=int, default=3,
                 help="keep every Nth rendered frame for the GIF")
 ap.add_argument("--result_out", default="results/rollout.json")
@@ -353,6 +356,7 @@ try:
         obs.update(p0, link_poses())
 
     frames = []
+    shadow = []
     for i in range(args.steps):
         imgs = obs.render()
         n_rendered += 1
@@ -378,6 +382,29 @@ try:
         }
         if replay is not None:
             a = replay[min(i, replay.shape[0] - 1)]
+            # Teacher-forced fidelity ON STORM FRAMES.
+            #
+            # On path-traced dataset frames this policy scores skill +0.966
+            # against a mean-action baseline -- it has learned the mapping.
+            # Yet driving the same policy in sim leaves the cloth untouched.
+            # Two explanations survive and need different fixes: the policy
+            # cannot parse RASTERISED frames (domain gap), or it parses them
+            # fine and drifts once it drives its own state distribution
+            # (compounding error).
+            #
+            # Replay pins the state to the demonstration's, so asking the
+            # policy what it WOULD have done here isolates perception from
+            # drift: the state distribution is identical to the fidelity test,
+            # only the renderer differs. A collapse in skill is the domain gap;
+            # skill holding up leaves compounding error.
+            if args.shadow_policy:
+                batch = pre(observation) if pre else observation
+                with torch.inference_mode():
+                    sa = policy.select_action(batch)
+                if post:
+                    sa = post(sa)
+                sa = np.asarray(sa.squeeze(0).detach().cpu()).reshape(-1)[:12]
+                shadow.append((a.copy(), sa))
         else:
             batch = pre(observation) if pre else observation
             with torch.inference_mode():
@@ -445,6 +472,25 @@ try:
                 log(f"OFFICIAL CHECKER FIRED at step {i}")
         if i % 50 == 0:
             log(f"step {i:4d}  success={success}")
+
+    if shadow:
+        T = np.stack([x[0] for x in shadow])
+        P = np.stack([x[1] for x in shadow])
+        mse_p = float(((P - T) ** 2).mean())
+        mse_m = float(((T.mean(axis=0, keepdims=True) - T) ** 2).mean())
+        skill = 1.0 - mse_p / mse_m if mse_m else float("nan")
+        log(f"SHADOW n={len(shadow)} policy_mse={mse_p:.5f} "
+            f"mean_baseline_mse={mse_m:.5f} skill={skill:+.3f} "
+            f"var_ratio={float(P.var(axis=0).mean() / T.var(axis=0).mean()):.3f}")
+        json.dump({"n": len(shadow), "mse_policy": mse_p,
+                   "mse_mean_baseline": mse_m, "skill_vs_mean": skill,
+                   "renderer": "storm", "episode": args.replay_episode,
+                   "garment": args.garment,
+                   "note": "teacher-forced on replay states, Storm frames; "
+                           "compare with results/action_fidelity_*.json which "
+                           "is the same measurement on path-traced frames"},
+                  open(args.result_out.replace(".json", "_shadow.json"), "w"),
+                  indent=2)
 
     log(f"FINAL success={success} after {args.steps} steps")
 

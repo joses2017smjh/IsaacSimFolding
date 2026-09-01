@@ -75,7 +75,7 @@ apptainer exec --nv --cleanenv --home "$HOME_OVERRIDE" \
     --lehome "$LEHOME" --policy_path "$CKPT" \
     --garment "$GARMENT" --garment_dir "$GDIR" --assets "$ASSETS" \
     --steps "${STEPS:-300}" --frames_out "$FRAMES" \
-    --settle_steps "${SETTLE:-0}" \
+    --settle_steps "${SETTLE:-0}" --shadow_policy "${SHADOW:-0}" \
     ${REPLAY:+--replay_parquet "$REPLAY" --replay_episode "${REPLAY_EP:-0}"} \
     ${MATCH_POSE:+--match_pose="$MATCH_POSE"} ${MATCH_SCALE:+--match_scale="$MATCH_SCALE"} \
     --result_out "$REPO/results/rollout_${GARMENT}${RESULT_SUFFIX:-}.json" 2>&1 | tee "$PLOG"

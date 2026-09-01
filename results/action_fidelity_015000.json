@@ -1,0 +1,19 @@
+{
+  "samples": 120,
+  "mse_policy": 0.01028144359588623,
+  "mse_mean_baseline": 0.3010018765926361,
+  "skill_vs_mean": 0.9658425930353892,
+  "var_policy": 0.2965306341648102,
+  "var_demos": 0.3010019063949585,
+  "verdict": "LEARNED the mapping",
+  "episodes": [
+    25,
+    26,
+    2,
+    250,
+    500,
+    750
+  ],
+  "policy": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model",
+  "note": "in-distribution dataset frames; no simulator, no Storm"
+}

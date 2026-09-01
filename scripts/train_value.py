@@ -68,7 +68,7 @@ def main() -> int:
 
     from lerobot.configs.policies import PreTrainedConfig
     from lerobot.datasets.lerobot_dataset import LeRobotDataset, LeRobotDatasetMetadata
-    from lerobot.policies.factory import make_policy
+    from lerobot.policies.factory import make_policy, make_pre_post_processors
 
     from lehome_fold import labels as L
     from lehome_fold.policy_wrap import ValueAugmentedPolicy, WrapConfig
@@ -84,6 +84,13 @@ def main() -> int:
     cfg = PreTrainedConfig.from_pretrained(args.policy_path, cli_overrides={})
     cfg.pretrained_path = args.policy_path
     policy = make_policy(cfg, ds_meta=meta).eval().to(device)
+    # The policy's forward expects the batch the POLICY PROCESSOR produces, not
+    # the one the dataset yields: SmolVLA reads observation.language.tokens,
+    # which the preprocessor creates by tokenising the task string. Calling
+    # forward on a raw dataset batch dies with KeyError on that key. Every
+    # forward below therefore goes through `prep`.
+    pre, _post = make_pre_post_processors(policy_cfg=cfg,
+                                          pretrained_path=args.policy_path)
     for p in policy.parameters():
         p.requires_grad_(False)
 
@@ -107,11 +114,38 @@ def main() -> int:
     # DataLoader worker rather than at construction. The BC config pins pyav
     # for the same reason; this script had never been given the same treatment
     # because it had never been run against the video dataset before.
+    # Load the outcomes FIRST so the dataset can be restricted to the episodes
+    # that actually have one.
+    #
+    # Only 20 of the 1,000 released episodes have been rolled out and scored --
+    # 7,964 frames out of 265,798, about 3%. Training on the whole set would
+    # leave ~97% of every batch masked out, so the success head would see a
+    # handful of real gradients per epoch and the run would mostly be an
+    # expensive no-op. The mask still matters (a batch can straddle episodes),
+    # but restricting the sampler is what makes the stage affordable.
+    outcomes = load_outcomes(args.rollout_dir, None)
+    ep_subset = sorted(outcomes) if (args.rollout_dir and outcomes) else None
+    if ep_subset:
+        print(f"[stage2] restricting to {len(ep_subset)} scored episodes: "
+              f"{ep_subset[:6]}{' ...' if len(ep_subset) > 6 else ''}", flush=True)
     ds = LeRobotDataset(repo_id="lehome", root=args.dataset_root,
                         delta_timestamps=delta,
                         video_backend=args.video_backend)
+    if not outcomes:
+        outcomes = load_outcomes(args.rollout_dir, ds)
 
-    outcomes = load_outcomes(args.rollout_dir, ds)
+    # Filter to the scored episodes by INDEX rather than via LeRobotDataset's
+    # `episodes=` argument: that path raises
+    #   PicklingError: Can't pickle <class 'MonthDayNano'>
+    # somewhere in its dill/pyarrow handling. Reading the episode_index column
+    # once (~23 s over 265k rows) and wrapping in a Subset gets the same result
+    # without touching that code path.
+    if ep_subset:
+        ep_col = np.asarray(ds.hf_dataset["episode_index"])
+        keep = np.nonzero(np.isin(ep_col, ep_subset))[0]
+        print(f"[stage2] {len(keep)} frames from {len(ep_subset)} scored episodes "
+              f"(of {len(ep_col)} total)", flush=True)
+        ds = torch.utils.data.Subset(ds, keep.tolist())
     y_all = np.concatenate([
         L.success_targets(o, mode=args.success_mode) for o in outcomes.values()
     ]) if outcomes else np.zeros(0)
@@ -144,7 +178,13 @@ def main() -> int:
     # that in the first ten seconds than after the dataloader has warmed up.
     warmup = next(iter(train_dl))
     with torch.no_grad():
-        policy.forward(to_device(warmup, device))
+        # Same order as the training loop: build_targets collapses the delta
+        # state to the present frame, which is what forward expects. Prepping
+        # the warmup differently would materialise the heads against a
+        # different feature shape than training then uses.
+        warmup = to_device(warmup, device)
+        build_targets(warmup, outcomes, args, L)
+        policy.forward(prep(warmup, device, pre))
     wrap()                      # builds the heads at the captured width
     wrap.heads.to(device)       # they were created after the initial .to()
     print(f"[stage2] value heads: hidden_dim={wrap.cfg.hidden_dim} "
@@ -158,8 +198,19 @@ def main() -> int:
     wrap.heads.train()
     while step < args.steps:
         for batch in train_dl:
-            batch = to_device(batch, device)
-            targets = build_targets(batch, outcomes, args, L)
+            # Targets come from the RAW batch and the forward from the
+            # PROCESSED one. The policy processor drops `frame_index` (and
+            # would therefore KeyError in build_targets), while the policy's
+            # forward needs `observation.language.tokens`, which only the
+            # processor creates. Neither batch can serve both roles.
+            # Order matters. build_targets needs `frame_index`, which the
+            # policy processor drops, and it also COLLAPSES the (B, 2, D)
+            # delta_timestamps state down to the present frame -- which is the
+            # shape the policy's forward expects. So targets are built first,
+            # on the raw batch, and the processor runs on the result.
+            raw = to_device(batch, device)
+            targets = build_targets(raw, outcomes, args, L)
+            batch = prep(raw, device, pre)
             # Run the frozen backbone so the tap captures this batch's prefix
             # features. no_grad because the backbone is frozen and the heads
             # detach anyway -- this saves the activation memory that would
@@ -196,9 +247,9 @@ def main() -> int:
         wrap.heads.eval()
         with torch.no_grad():
             for batch in val_dl:
-                batch = to_device(batch, device)
-                t = build_targets(batch, outcomes, args, L)
-                policy.forward(batch)
+                raw = to_device(batch, device)
+                t = build_targets(raw, outcomes, args, L)
+                policy.forward(prep(raw, device, pre))
                 probs.append(torch.sigmoid(wrap()["success_logit"]).cpu().numpy())
                 labs.append(t["success"].cpu().numpy())
         p = Path(args.dump_val_predictions)
@@ -206,6 +257,18 @@ def main() -> int:
         np.savez(p, probs=np.concatenate(probs), labels=np.concatenate(labs))
         print(f"[stage2] wrote {p} -- now run scripts/check_calibration.py (G2)", flush=True)
     return 0
+
+
+def prep(batch, device, pre):
+    """Device-move, then run the policy's own preprocessor.
+
+    Kept as one helper because the three forward sites must agree: a batch
+    prepared differently in the train loop than in validation would silently
+    change what the tap captures, and the value heads would be fit and scored
+    on different features.
+    """
+    b = to_device(batch, device)
+    return pre(b) if pre else b
 
 
 def to_device(batch, device):

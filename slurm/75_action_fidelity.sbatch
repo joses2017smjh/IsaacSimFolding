@@ -26,10 +26,10 @@ source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 setup_node_cache
 CKPT=${CKPT:-$LEHOME_DATA/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model}
 TAG=${TAG:-015000}
+export CKPT TAG
 echo "=== node: $(hostname) | ckpt $TAG | $(date) ==="
-lh_exec bash -c "cd \"\$LEHOME\" && exec \"\$PY\" -u \
-  $REPO/scripts/eval/action_fidelity.py \
-  --policy_path '$CKPT' \
-  --dataset_root \"\$LEHOME_DATA/Datasets/example/four_types_merged\" \
-  --out '$REPO/results/action_fidelity_${TAG}.json'"
+# lh_exec takes a SCRIPT PATH and runs it with bash. Passing `bash -c "..."`
+# made it exec `bash bash -c ...`, which fails with
+#   /usr/bin/bash: cannot execute binary file
+lh_exec "$REPO/slurm/inner/action_fidelity.sh"
 echo "=== done: $(date) ==="

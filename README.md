@@ -273,9 +273,33 @@ targets reach `set_joint_position_target` with the correct 6/6 split. The end ef
 Total cloth displacement across 300 steps: **0.18 cm**.
 
 The environment is not the problem, and the replay column is what proves it — same scene, same
-physics, same renderer, real folds. The remaining suspect is the one deviation this setup cannot
-avoid: **the policy sees rasterised Storm frames and was trained on path-traced ones.** That gap is
-measured nowhere yet, and until it is, it is the first thing to rule out — not more training.
+physics, same renderer, real folds.
+
+### The cause, measured
+
+The policy is not undertrained and not mean-collapsed. Run on the **path-traced frames it was
+trained on** — no simulator, no Storm — it reproduces demonstrated actions almost exactly. Run on
+**Storm frames of the identical states**, it collapses to barely better than guessing the average
+action:
+
+| frames | skill vs mean-action baseline | MSE | output variance / demos |
+|---|---|---|---|
+| path-traced (training distribution) | **+0.966** | 0.01028 | 0.985 |
+| Storm rasterised (what rollouts feed it) | **+0.063** | 0.18345 | **0.275** |
+
+Same policy, same states, **only the renderer differs** — a 0.902 skill drop attributable to
+rasterisation alone. The state trajectory is pinned by demonstration replay, so this isolates
+perception from compounding closed-loop drift, which was the competing explanation.
+
+That accounts for every symptom: the end effectors hovering ~12 cm above the cloth, the 0/8 rollout
+failures, and why fixing a genuine wrist-camera bug changed the policy's behaviour almost not at all
+— correcting camera *geometry* does nothing about a rendering-*style* mismatch. Mean-collapse is the
+symptom of the blindness, not the disease.
+
+**The bottleneck is the renderer, not the policy or the training budget.** Closing it means
+path-traced observations at rollout time — which on this cluster means the RTX delegate that
+[segfaults on Isaac Sim 5.1](docs/STORM.md) — or fine-tuning on rasterised frames so the two
+distributions meet.
 
 ## Honest status
 

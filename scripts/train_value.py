@@ -38,6 +38,8 @@ def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--policy_path", required=True, help="Stage 1 BC checkpoint")
     ap.add_argument("--dataset_root", required=True)
+    ap.add_argument("--video_backend", default="pyav",
+                    help="pyav; the installed torchcodec cannot load on this cluster")
     ap.add_argument("--rollout_dir", default=None,
                     help="rollouts with mixed outcomes; required for a G2-capable success head")
     ap.add_argument("--feature_path", default="model.embed_prefix",
@@ -99,7 +101,15 @@ def main() -> int:
     # the one that indexes its own frames.
     fps = meta.fps
     delta = {"observation.state": [0.0, args.horizon / fps]}
-    ds = LeRobotDataset(repo_id="lehome", root=args.dataset_root, delta_timestamps=delta)
+    # video_backend="pyav", not the torchcodec default: the installed
+    # torchcodec cannot load here ("FFmpeg version 4: libnppicc.so.12: cannot
+    # open shared object file"), which surfaces as a RuntimeError inside a
+    # DataLoader worker rather than at construction. The BC config pins pyav
+    # for the same reason; this script had never been given the same treatment
+    # because it had never been run against the video dataset before.
+    ds = LeRobotDataset(repo_id="lehome", root=args.dataset_root,
+                        delta_timestamps=delta,
+                        video_backend=args.video_backend)
 
     outcomes = load_outcomes(args.rollout_dir, ds)
     y_all = np.concatenate([

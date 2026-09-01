@@ -6,7 +6,11 @@
 #SBATCH --error=/nfs/hpc/share/sanchej7/Humanoid_Lite/logs/%x-%j.out
 #SBATCH --job-name=lh-value
 #SBATCH --cpus-per-task=12
-#SBATCH --mem=96G
+# 48G, down from 96G. This trains a 0.76M head against a FROZEN 450M backbone
+# over a 6k-frame subset -- it does not need a training-sized allocation, and
+# at 96G it sat PENDING on QOSMaxMemoryPerUser behind this project's own BC
+# resume. Asking for what the job needs is what lets it start.
+#SBATCH --mem=48G
 #SBATCH --gres=gpu:1
 #SBATCH --time=12:00:00
 

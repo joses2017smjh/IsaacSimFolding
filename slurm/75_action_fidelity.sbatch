@@ -2,6 +2,11 @@
 #SBATCH --job-name=lh-fid
 #SBATCH --account=eecs
 #SBATCH --partition=share,gpu,ampere,dgxh
+# Constrain the GPU type. Without this the job landed on cn-c23 and died with
+#   CUDA error: no kernel image is available for execution on the device
+# -- the venv's torch has no kernels for that card's compute capability. Every
+# other GPU job in this repo carries the same constraint for the same reason.
+#SBATCH --constraint="a40|rtx8000|l40s|h100|h200|h200-70g"
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --gres=gpu:1

@@ -176,7 +176,33 @@ class StormObserver:
                     for f in sorted(os.listdir(self.cfg.garment_dir))
                     if f.endswith(".usd"))
         src = Usd.Stage.Open(gusd)
-        msrc = next(UsdGeom.Mesh(p) for p in src.Traverse() if p.IsA(UsdGeom.Mesh))
+        # Pick the mesh whose vertex count MATCHES the simulated particles, not
+        # simply the first one in the stage.
+        #
+        # Several released garments carry more than one mesh (a textured shell,
+        # a collision proxy). Taking the first gave face indices describing a
+        # different vertex set than the points written each frame, so the mesh
+        # was silently invalid and rendered nothing at all -- an empty table
+        # under a caption claiming a successful fold. It was invisible as a bug
+        # because the CHECKER reads particle positions from physics, not from
+        # the render, so those episodes still scored and still passed.
+        #
+        # Affected 11 of 33 recorded GIFs, and split by garment INSTANCE rather
+        # than class: Top_Long_Seen_1 rendered while Top_Long_Seen_0 did not.
+        n_particles = int(np.asarray(particles0).shape[0])
+        meshes = [UsdGeom.Mesh(p) for p in src.Traverse() if p.IsA(UsdGeom.Mesh)]
+        msrc = None
+        for cand in meshes:
+            pts = cand.GetPointsAttr().Get()
+            if pts is not None and len(pts) == n_particles:
+                msrc = cand
+                break
+        if msrc is None:
+            counts = [len(c.GetPointsAttr().Get() or ()) for c in meshes]
+            raise RuntimeError(
+                f"no mesh in {os.path.basename(gusd)} has {n_particles} vertices "
+                f"to match the particle array; found {counts}. Rendering the "
+                f"first mesh anyway would produce an invisible garment.")
         g = UsdGeom.Mesh.Define(stage, "/World/cloth")
         g.CreateFaceVertexCountsAttr(msrc.GetFaceVertexCountsAttr().Get())
         g.CreateFaceVertexIndicesAttr(msrc.GetFaceVertexIndicesAttr().Get())

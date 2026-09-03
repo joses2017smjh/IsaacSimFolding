@@ -1,3 +1,8 @@
+> **Note (2026-09-03):** several GIFs below render an empty table. The observer copied topology
+> from the first mesh in each garment USD, and some assets carry more than one, so the cloth mesh
+> was invalid and drew nothing. Physics and scoring were unaffected. Fixed in `storm_obs.py`;
+> these GIFs predate the fix. See the Known issue section in the main README.
+
 <h1 align="center">Isaac Sim Folding</h1>
 
 <p align="center">

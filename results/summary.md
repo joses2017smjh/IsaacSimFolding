@@ -50,3 +50,12 @@ Runs shorter than 250 steps are camera/plumbing tests, not fold attempts, and ar
 | Top_Long | 4 | **3** |
 | Pant_Short | 3 | **2** |
 | Pant_Long | 3 | **2** |
+
+### Why the policy fails, measured
+
+| frames | skill vs mean-action baseline | MSE | output variance / demos |
+|---|---|---|---|
+| path-traced (training distribution) | **+0.966** | 0.01028 | 0.985 |
+| Storm rasterised (what rollouts feed it) | **+0.063** | 0.18345 | 0.275 |
+
+Same policy, same states (pinned by demonstration replay), only the renderer differs.

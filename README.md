@@ -23,6 +23,43 @@ segfaults on this cluster. The geometry is simulation output, not an authored po
 <p align="center"><sub>Start, and 90 frames later: the garment drapes from bunched to flat, sleeves out.
 The top falls <b>0.178 m</b> and total particle displacement is <b>0.330 m</b>.</sub></p>
 
+<p align="center">
+  <b>15 verified folds across all four garment classes</b> &nbsp;·&nbsp;
+  every verdict from the challenge's own scorer &nbsp;·&nbsp;
+  <a href="#the-cause-measured">the failure cause, measured</a>
+</p>
+
+<table align="center">
+<tr><td align="center" width="33%"><b>What works</b></td>
+    <td align="center" width="33%"><b>What does not</b></td>
+    <td align="center" width="33%"><b>Why, measured</b></td></tr>
+<tr>
+<td>Particle cloth on Isaac&nbsp;Sim&nbsp;5.1, Storm rendering in-process, a 450M VLA driving the
+env closed-loop, and LeHome's scorer labelling every episode.</td>
+<td>The trained policy folds nothing — <b>0 of 8</b> — while demonstration replay through the
+identical pipeline folds <b>15 of 21</b>.</td>
+<td>Not the policy and not the training budget. A <b>0.902 skill drop</b> caused by the renderer
+alone, with the state trajectory held fixed.</td>
+</tr>
+</table>
+
+---
+
+## The three cameras the policy actually sees
+
+<p align="center">
+  <img src="docs/img/three_camera_view.png" width="900" alt="Three camera views side by side: left wrist showing gripper jaws over red cloth, top-down showing both arms and the garment, right wrist">
+</p>
+
+<p align="center"><sub>Left wrist · top-down · right wrist, rendered by OpenUSD Storm inside a live
+Kit process. The wrist cameras ride the grippers, matching the challenge's own rig
+(<code>/Left_Robot/gripper/left_wrist_camera</code>).<br>
+They did not always. They were pinned to fixed world poses aimed ~0.37&nbsp;m from where the garment
+rests, so both rendered empty table and <b>the policy ran on two dead frames out of three</b>.
+Measured before the fix: 14% of side-panel pixels changed between first and last frame but
+<b>0.00%</b> changed by more than 60 — shading drift, no object motion. After: <b>13.1%</b> and
+<b>17.4%</b> above 60.</sub></p>
+
 ---
 
 ## The first job I ran killed the plan
@@ -252,6 +289,34 @@ own thresholds — a short top passes `[9.45, 12.15, 9.0, 13.05, 8.55]`, a long 
 Per-episode detail, including which of the five fold conditions each run passed, is in
 [`results/summary.md`](results/summary.md).
 
+### Replay succeeds and fails on the same garment
+
+Open-loop replay is not a guaranteed success: it drives a recorded action sequence at a cloth that
+diverges from the recording, so it lands 15 times in 21. Both outcomes below are the same garment
+class, the same pipeline and the same scorer — which is what makes the success meaningful rather
+than cherry-picked.
+
+<table>
+<tr><td align="center"><b>SUCCESS — 5/5 conditions</b></td>
+    <td align="center"><b>failure — drift, not a scene problem</b></td></tr>
+<tr>
+<td><img src="docs/gifs/rollout_Top_Long_Seen_0_replay_ep252_success.gif" width="420" alt="Long-sleeve top folded, all five conditions passed"></td>
+<td><img src="docs/gifs/rollout_Top_Long_Seen_0_replay_ep250_failure.gif" width="420" alt="Long-sleeve top, same class, open-loop replay drifts and misses"></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_replay_ep501_success.gif" width="420" alt="Short pants folded successfully"></td>
+<td><img src="docs/gifs/rollout_Pant_Short_Seen_0_replay_ep502_failure.gif" width="420" alt="Short pants, same class, replay misses"></td>
+</tr>
+<tr>
+<td><img src="docs/gifs/rollout_Pant_Long_Seen_0_replay_ep752_success.gif" width="420" alt="Long pants folded successfully"></td>
+<td><img src="docs/gifs/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif" width="420" alt="Long pants, same class, replay misses"></td>
+</tr>
+</table>
+
+<p align="center"><sub>Every filename carries the verdict the challenge's checker returned, so a
+label cannot drift from the run that produced it. That guard exists because a replay once
+overwrote a policy GIF of the same garment and verdict.</sub></p>
+
 ### What separates the two columns
 
 The success criterion for a short-sleeve top is five distances, three that must close and two that
@@ -270,10 +335,12 @@ Instrumenting the failure rules out the easy explanations. The policy is not deg
 vary step to step and the arms sweep ~1.5 rad. The action path is faithful: `action_scale = 1.0` and
 targets reach `set_joint_position_target` with the correct 6/6 split. The end effectors descend from
 ~0.78 m to ~0.65 m and then **hover 12–14 cm above a garment resting at 0.529 m**, never closing.
-Total cloth displacement across 300 steps: **0.18 cm**.
+With the garment settled before the policy acts, its own contribution to cloth motion over 300 steps is **~1.4 cm** — enough to perturb the cloth, nowhere near a fold. (An earlier figure of 0.18 cm came from a run with no settle phase, where the visible motion was gravity rather than the policy.)
 
 The environment is not the problem, and the replay column is what proves it — same scene, same
 physics, same renderer, real folds.
+
+<a name="the-cause-measured"></a>
 
 ### The cause, measured
 
@@ -303,21 +370,34 @@ distributions meet.
 
 ## Honest status
 
-**What works.** Particle cloth simulates on Isaac Sim 5.1; Storm rasterises in-process alongside a
-live Kit application; a 450M SmolVLA checkpoint loads and drives the environment closed-loop; and
-LeHome's own scorer labels every episode. Demonstration replay folds garments and the official
-checker confirms it, 6 times out of 9.
+**What works.** Particle cloth simulates on Isaac&nbsp;Sim&nbsp;5.1; Storm rasterises in-process
+alongside a live Kit application; a 450M SmolVLA checkpoint drives the environment closed-loop; and
+LeHome's own scorer labels every episode. Demonstration replay folds garments across **all four
+classes** — 15 of 21, confirmed by the official checker.
 
-**What does not.** The trained policy folds nothing — 0 for 8, with the cloth displaced 0.18 cm. The
-successes in this repo are **demonstration replays, not the policy**, and every filename says
-`replay` for that reason.
+**What does not.** The trained policy folds nothing, 0 of 8. The successes here are
+**demonstration replays, not the policy**, and every filename says `replay` for that reason.
 
-**Caveats that bound every number above.** The paper used **π0.5, not SmolVLA** — SmolVLA was the
-affordable stand-in. The BC run stopped at **step 15K of a planned 30K** when it hit a 6-hour wall
-clock, so this is a checkpoint taken mid-descent, not a converged policy. Observations are
-**rasterised, while training data is path-traced**, and that domain gap is unmeasured. Replay is
-**open-loop**, so its 3 failures are drift, not a claim about the demonstrations. And every number
-here is on **48 garments, not the leaderboard's 80** — the other 32 never shipped.
+**Why, and it is now measured rather than guessed.** The policy reproduces demonstrated actions
+almost exactly on the path-traced frames it was trained on (skill **+0.966** against a mean-action
+baseline) and collapses to **+0.063** on Storm frames of the *identical* states. The bottleneck is
+the renderer. Three earlier explanations were asserted and then refuted by measurement — a
+mis-stated version of the domain gap, the wrist cameras, and mean-collapse — so the reasoning arc
+is recorded in [`SLURM_JOBS.md`](SLURM_JOBS.md) alongside the results.
+
+**Caveats that bound every number above.**
+
+- The paper used **π0.5, not SmolVLA**. π0.5 is currently **blocked, not merely unfinished**:
+  lerobot 0.4.3's implementation probes for `transformers.models.siglip.check`, a module from a
+  patched transformers fork that no declared extra installs. Forcing one risks the working SmolVLA
+  pipeline, so it was not attempted.
+- The BC schedule is **incomplete**: 25K of 30K steps, resumed across wall clocks. Loss was still
+  descending (0.067 → 0.059) when the last one expired.
+- Replay is **open-loop**, so its 6 failures are drift, not a claim about the demonstrations.
+- Every number is on **48 garments, not the leaderboard's 80** — the other 32 never shipped.
+- The measured skill gap is **single-step and teacher-forced on replay states**. It isolates
+  perception from compounding drift, which is what it was built to do, but it is not a closed-loop
+  success measurement.
 
 Job ledger: [`SLURM_JOBS.md`](SLURM_JOBS.md) · Full build order: [`docs/PLAN.md`](docs/PLAN.md)
 

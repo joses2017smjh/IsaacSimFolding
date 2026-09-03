@@ -238,18 +238,18 @@ def main() -> int:
             if step % 500 == 0:
                 print(f"[stage2] step {step}/{args.steps} loss={float(loss):.4f} "
                       + " ".join(f"{k}={v:.4f}" for k, v in parts.items()), flush=True)
+                # Save as we go. A previous run reached step 2000/3000 with the
+                # loss descending nicely (0.824 -> 0.637) and lost ALL of it to
+                # the wall clock, because the only save was after the loop.
+                # Head state is ~0.76M params; writing it every 500 steps costs
+                # nothing next to a 450M forward, and turns a TIMEOUT from
+                # total loss into a slightly-short run.
+                save_heads(out, wrap, args, step, quiet=True)
             if step >= args.steps:
                 break
 
     # -- save --------------------------------------------------------------
-    torch.save(wrap.heads.state_dict(), out / "value_head.pt")
-    (out / "value_head_config.json").write_text(json.dumps({
-        "hidden_dim": args.hidden_dim, "trunk_dim": wrap.heads.cfg.trunk_dim,
-        "future_dim": wrap.heads.cfg.future_dim, "dropout": wrap.heads.cfg.dropout,
-        "detach_backbone": bool(args.detach_backbone),
-    }, indent=2))
-    (out / "run.json").write_text(json.dumps(vars(args), indent=2, default=str))
-    print(f"[stage2] wrote {out}/value_head.pt", flush=True)
+    save_heads(out, wrap, args, step)
 
     # -- validation predictions for G2 -------------------------------------
     if args.dump_val_predictions:
@@ -267,6 +267,22 @@ def main() -> int:
         np.savez(p, probs=np.concatenate(probs), labels=np.concatenate(labs))
         print(f"[stage2] wrote {p} -- now run scripts/check_calibration.py (G2)", flush=True)
     return 0
+
+
+def save_heads(out, wrap, args, step, quiet=False):
+    """Write the value heads and their config. Safe to call mid-training."""
+    import torch
+
+    torch.save(wrap.heads.state_dict(), out / "value_head.pt")
+    (out / "value_head_config.json").write_text(json.dumps({
+        "hidden_dim": args.hidden_dim, "trunk_dim": wrap.heads.cfg.trunk_dim,
+        "future_dim": wrap.heads.cfg.future_dim, "dropout": wrap.heads.cfg.dropout,
+        "detach_backbone": bool(args.detach_backbone),
+        "steps_completed": int(step),
+    }, indent=2))
+    (out / "run.json").write_text(json.dumps(vars(args), indent=2, default=str))
+    if not quiet:
+        print(f"[stage2] wrote {out}/value_head.pt at step {step}", flush=True)
 
 
 def prep(batch, device, pre):

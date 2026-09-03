@@ -551,41 +551,67 @@ def feature_tap_rejects_a_path_that_does_not_exist():
 def seam_map_recovers_duplicated_uv_vertices():
     """Render meshes duplicate a vertex at every UV seam; the solver does not.
 
-    PS_049 ships 11,573 render vertices against 11,385 particles. Writing the
-    particle array straight into `points` left indices running past the point
-    list, so the mesh drew nothing -- an empty table under a caption claiming a
-    successful fold, invisible because the checker reads physics, not pixels.
+    PS_049 ships 11,573 render vertices collapsing to 11,385 unique positions,
+    which is exactly its particle count. Writing the particle array straight
+    into `points` left indices running past the point list, so the mesh drew
+    nothing -- an empty table under a caption claiming a successful fold,
+    invisible because the checker reads physics, not pixels.
     """
     import numpy as np
     from lehome_fold.storm_obs import _seam_map
 
     rng = np.random.default_rng(0)
-    particles = rng.normal(size=(400, 3)) * 0.3
-    dup = rng.choice(len(particles), 37, replace=False)
-    mesh = np.concatenate([particles, particles[dup]], axis=0)
-    mesh = mesh[rng.permutation(len(mesh))]      # render order is arbitrary
+    base = rng.normal(size=(400, 3)) * 0.3
+    dup = rng.choice(len(base), 37, replace=False)
+    mesh = np.concatenate([base, base[dup]], axis=0)
 
-    m = _seam_map(mesh, particles)
-    assert len(m) == len(mesh), "one index per render vertex"
-    close(float(np.abs(particles[m] - mesh).max()), 0.0)
-    assert len(np.unique(m)) == len(particles), "every particle should be used"
+    weld = _seam_map(mesh, len(base))
+    assert len(weld) == len(mesh), "one index per render vertex"
+    assert len(np.unique(weld)) == len(base), "every particle used once"
+    # every render vertex must land on a particle sharing its rest position
+    close(float(np.abs(base[weld] - mesh).max()), 0.0)
 
 
 @test
-def seam_map_refuses_a_cloud_it_cannot_match():
-    """A wrong correspondence renders a garbled garment, which is harder to
-    notice than an absent one, so a poor match must raise rather than return."""
+def seam_map_refuses_a_particle_count_it_cannot_explain():
+    """A wrong correspondence renders a garbled garment, harder to notice than
+    an absent one, so a count mismatch must raise rather than return."""
     import numpy as np
     from lehome_fold.storm_obs import _seam_map
 
-    rng = np.random.default_rng(1)
-    particles = rng.normal(size=(300, 3))
-    unrelated = rng.normal(size=(340, 3)) * 5.0
+    mesh = np.random.default_rng(1).normal(size=(340, 3))
     try:
-        _seam_map(unrelated, particles)
+        _seam_map(mesh, 300)          # 340 unique positions, 300 particles
     except RuntimeError:
         return
-    raise AssertionError("accepted a point cloud that does not correspond")
+    raise AssertionError("accepted a mesh whose unique count is not the particle count")
+
+
+@test
+def edge_sanity_flags_a_scrambled_weld():
+    """A scrambled weld fills the point list, so the mesh still renders -- as a
+    spray of stretched triangles. Edge length is what separates that from a
+    garment."""
+    import numpy as np
+    from lehome_fold.storm_obs import _edge_sanity
+
+    # 8x8 grid, 1 cm spacing, triangles over ACTUAL neighbours -- an earlier
+    # version of this test wired consecutive indices across the whole grid, so
+    # its "tidy" mesh had 0.30 m edges and the assertion was meaningless.
+    n, step = 8, 0.01
+    xs, ys = np.meshgrid(np.arange(n) * step, np.arange(n) * step)
+    pts = np.stack([xs.ravel(), ys.ravel(), np.zeros(n * n)], axis=1)
+    counts, idx = [], []
+    for r in range(n - 1):
+        for c in range(n - 1):
+            v = r * n + c
+            counts.append(3)
+            idx += [v, v + 1, v + n]           # neighbours, one step apart
+    tidy = _edge_sanity(pts, counts, idx)
+    assert tidy < 0.02, f"neighbouring vertices should be ~{step} m apart, got {tidy}"
+
+    scrambled = pts[np.random.default_rng(2).permutation(len(pts))]
+    assert _edge_sanity(scrambled, counts, idx) > tidy * 3, "scramble should be caught"
 
 
 @test

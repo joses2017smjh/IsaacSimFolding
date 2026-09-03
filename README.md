@@ -75,7 +75,7 @@ The dependency-light half runs anywhere. No GPU, no simulator, no Isaac Sim.
 git clone https://github.com/joses2017smjh/IsaacSimFolding.git
 cd IsaacSimFolding
 pip install numpy torch
-PYTHONPATH=src python tests/test_pure.py     # 36 tests
+PYTHONPATH=src python tests/test_pure.py     # 37 tests
 python scripts/make_figures.py               # regenerates docs/img/*.png
 ```
 
@@ -190,7 +190,7 @@ GIFs have not been regenerated yet**, so this README shows only episodes that re
 
 | | |
 |---|---|
-| Unit tests | 36, no GPU, no simulator |
+| Unit tests | 37, no GPU, no simulator |
 | Cloth | 9,774 particles, PhysX GPU dynamics |
 | Observations | 3 × 640×480, ~0.05 s/frame via Storm |
 | Policy | SmolVLA 450M, chunk 50, 12-DoF absolute joint targets |

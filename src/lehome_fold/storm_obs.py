@@ -49,37 +49,61 @@ CAM_W, CAM_H = 640, 480
 
 
 
-def _seam_map(mesh_pts: np.ndarray, particles: np.ndarray) -> np.ndarray:
+def _seam_map(mesh_pts: np.ndarray, n_particles: int) -> np.ndarray:
     """Map each render vertex to the particle it duplicates.
 
-    UV seams split one physical vertex into several render vertices at the same
-    position, so the mapping is many-to-one and recoverable from geometry alone.
-    Both clouds are centred and RMS-normalised first because the USD stores a
-    rest pose while the particles are in world space after spawn.
+    UV seams split one physical vertex into several render vertices at the SAME
+    rest position, so the correspondence is recoverable from the rest pose
+    alone -- deduplicate positions and the k-th unique vertex is particle k.
 
-    Raises if the match is poor rather than returning a plausible-looking
-    scramble -- a wrong correspondence renders a garbled garment, which is
-    harder to notice than an absent one.
+    Measured on the released assets, and the correlation is exact:
+
+        Pant_Short_Seen_0  11,573 verts  11,385 unique  188 dupes  -> was blank
+        Top_Long_Seen_0    14,746 verts  14,544 unique  202 dupes  -> was blank
+        Top_Short_Seen_1    9,774 verts   9,774 unique    0 dupes  -> rendered
+        Top_Long_Seen_1    10,410 verts  10,410 unique    0 dupes  -> rendered
+
+    11,385 is exactly the particle count for PS_049.
+
+    An earlier version matched CURRENT particle positions geometrically. That
+    cannot work: the rollout settles the garment before the first render, so
+    the particles are draped over a table while the USD holds a flat rest pose.
+    No rigid alignment relates those two shapes, and the check correctly
+    refused at 0.947 normalised units rather than returning a scramble.
     """
-    def norm(a):
-        c = a.mean(axis=0)
-        d = a - c
-        return d / (np.sqrt((d ** 2).sum(axis=1)).mean() + 1e-12)
-
-    m, p = norm(mesh_pts), norm(particles)
-    idx = np.empty(len(m), dtype=np.int64)
-    worst = 0.0
-    for i in range(0, len(m), 2048):                       # chunked: 11k x 11k
-        d = ((m[i:i + 2048, None, :] - p[None, :, :]) ** 2).sum(axis=2)
-        j = d.argmin(axis=1)
-        idx[i:i + 2048] = j
-        worst = max(worst, float(np.sqrt(d[np.arange(len(j)), j]).max()))
-    if worst > 0.05:
+    key = np.round(mesh_pts, 6)
+    # First-appearance order, not np.unique's sorted order: a welder walks the
+    # vertex list in order, so particle k should be the k-th vertex first seen.
+    _, first_idx, inverse = np.unique(key, axis=0, return_index=True,
+                                      return_inverse=True)
+    order = np.argsort(first_idx)                  # unique ids -> appearance rank
+    rank = np.empty_like(order)
+    rank[order] = np.arange(len(order))
+    weld = rank[inverse]
+    n_unique = len(first_idx)
+    if n_unique != n_particles:
         raise RuntimeError(
-            f"seam map is unreliable: worst vertex sits {worst:.3f} from its "
-            f"nearest particle in normalised units. Rendering this would "
-            f"produce a garbled garment.")
-    return idx
+            f"garment mesh has {len(mesh_pts)} vertices collapsing to {n_unique} "
+            f"unique positions, but the solver reports {n_particles} particles. "
+            f"Rendering this would produce an invisible or garbled garment.")
+    return weld
+
+
+def _edge_sanity(points: np.ndarray, face_counts, face_indices) -> float:
+    """Largest edge in the reconstructed mesh, for catching a bad weld.
+
+    A scrambled correspondence still produces a full point list, so the mesh
+    renders -- as a spray of stretched triangles. Edge length is what separates
+    that from a garment, and it is cheap to check once at build.
+    """
+    fi = np.asarray(face_indices)
+    fc = np.asarray(face_counts)
+    if len(fc) == 0 or fc[0] < 2:
+        return 0.0
+    starts = np.concatenate([[0], np.cumsum(fc)[:-1]])
+    a = fi[starts]
+    b = fi[starts + 1]
+    return float(np.linalg.norm(points[a] - points[b], axis=1).max())
 
 
 @dataclass
@@ -237,14 +261,26 @@ class StormObserver:
         # affected some garments and not others.
         self._weld = None
         if n_verts != n_particles:
-            self._weld = _seam_map(np.asarray(msrc.GetPointsAttr().Get(), np.float64),
-                                   np.asarray(particles0, np.float64))
+            self._weld = _seam_map(
+                np.asarray(msrc.GetPointsAttr().Get(), np.float64), n_particles)
         g = UsdGeom.Mesh.Define(stage, "/World/cloth")
         g.CreateFaceVertexCountsAttr(msrc.GetFaceVertexCountsAttr().Get())
         g.CreateFaceVertexIndicesAttr(msrc.GetFaceVertexIndicesAttr().Get())
         p0 = np.asarray(particles0, np.float32)
-        g.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(
-            p0[self._weld] if self._weld is not None else p0))
+        pts0 = p0[self._weld] if self._weld is not None else p0
+        g.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(pts0))
+        # A scrambled weld still fills the point list, so the mesh renders --
+        # as a spray of stretched triangles rather than a garment. The longest
+        # edge separates the two. A settled garment spans well under a metre,
+        # so an edge approaching that means the correspondence is wrong.
+        if self._weld is not None:
+            longest = _edge_sanity(pts0, msrc.GetFaceVertexCountsAttr().Get(),
+                                   msrc.GetFaceVertexIndicesAttr().Get())
+            if longest > 0.25:
+                raise RuntimeError(
+                    f"weld produced a {longest:.2f} m edge; the garment is under "
+                    f"a metre across, so this correspondence is wrong. Refusing "
+                    f"to render a garbled garment.")
         g.CreateDoubleSidedAttr(True)
         uv = UsdGeom.PrimvarsAPI(msrc.GetPrim()).GetPrimvar("st")
         if uv:

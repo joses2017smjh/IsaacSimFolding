@@ -548,6 +548,47 @@ def feature_tap_rejects_a_path_that_does_not_exist():
 
 
 @test
+def seam_map_recovers_duplicated_uv_vertices():
+    """Render meshes duplicate a vertex at every UV seam; the solver does not.
+
+    PS_049 ships 11,573 render vertices against 11,385 particles. Writing the
+    particle array straight into `points` left indices running past the point
+    list, so the mesh drew nothing -- an empty table under a caption claiming a
+    successful fold, invisible because the checker reads physics, not pixels.
+    """
+    import numpy as np
+    from lehome_fold.storm_obs import _seam_map
+
+    rng = np.random.default_rng(0)
+    particles = rng.normal(size=(400, 3)) * 0.3
+    dup = rng.choice(len(particles), 37, replace=False)
+    mesh = np.concatenate([particles, particles[dup]], axis=0)
+    mesh = mesh[rng.permutation(len(mesh))]      # render order is arbitrary
+
+    m = _seam_map(mesh, particles)
+    assert len(m) == len(mesh), "one index per render vertex"
+    close(float(np.abs(particles[m] - mesh).max()), 0.0)
+    assert len(np.unique(m)) == len(particles), "every particle should be used"
+
+
+@test
+def seam_map_refuses_a_cloud_it_cannot_match():
+    """A wrong correspondence renders a garbled garment, which is harder to
+    notice than an absent one, so a poor match must raise rather than return."""
+    import numpy as np
+    from lehome_fold.storm_obs import _seam_map
+
+    rng = np.random.default_rng(1)
+    particles = rng.normal(size=(300, 3))
+    unrelated = rng.normal(size=(340, 3)) * 5.0
+    try:
+        _seam_map(unrelated, particles)
+    except RuntimeError:
+        return
+    raise AssertionError("accepted a point cloud that does not correspond")
+
+
+@test
 def value_loss_sample_mask_ignores_unlabelled_frames():
     """A masked frame must not influence the loss at all.
 

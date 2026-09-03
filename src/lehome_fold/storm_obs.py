@@ -48,6 +48,40 @@ WRIST_CAM_PARENT = "gripper"   # the link the challenge parents them to
 CAM_W, CAM_H = 640, 480
 
 
+
+def _seam_map(mesh_pts: np.ndarray, particles: np.ndarray) -> np.ndarray:
+    """Map each render vertex to the particle it duplicates.
+
+    UV seams split one physical vertex into several render vertices at the same
+    position, so the mapping is many-to-one and recoverable from geometry alone.
+    Both clouds are centred and RMS-normalised first because the USD stores a
+    rest pose while the particles are in world space after spawn.
+
+    Raises if the match is poor rather than returning a plausible-looking
+    scramble -- a wrong correspondence renders a garbled garment, which is
+    harder to notice than an absent one.
+    """
+    def norm(a):
+        c = a.mean(axis=0)
+        d = a - c
+        return d / (np.sqrt((d ** 2).sum(axis=1)).mean() + 1e-12)
+
+    m, p = norm(mesh_pts), norm(particles)
+    idx = np.empty(len(m), dtype=np.int64)
+    worst = 0.0
+    for i in range(0, len(m), 2048):                       # chunked: 11k x 11k
+        d = ((m[i:i + 2048, None, :] - p[None, :, :]) ** 2).sum(axis=2)
+        j = d.argmin(axis=1)
+        idx[i:i + 2048] = j
+        worst = max(worst, float(np.sqrt(d[np.arange(len(j)), j]).max()))
+    if worst > 0.05:
+        raise RuntimeError(
+            f"seam map is unreliable: worst vertex sits {worst:.3f} from its "
+            f"nearest particle in normalised units. Rendering this would "
+            f"produce a garbled garment.")
+    return idx
+
+
 @dataclass
 class StormObsConfig:
     assets: str
@@ -191,22 +225,26 @@ class StormObserver:
         # than class: Top_Long_Seen_1 rendered while Top_Long_Seen_0 did not.
         n_particles = int(np.asarray(particles0).shape[0])
         meshes = [UsdGeom.Mesh(p) for p in src.Traverse() if p.IsA(UsdGeom.Mesh)]
-        msrc = None
-        for cand in meshes:
-            pts = cand.GetPointsAttr().Get()
-            if pts is not None and len(pts) == n_particles:
-                msrc = cand
-                break
-        if msrc is None:
-            counts = [len(c.GetPointsAttr().Get() or ()) for c in meshes]
-            raise RuntimeError(
-                f"no mesh in {os.path.basename(gusd)} has {n_particles} vertices "
-                f"to match the particle array; found {counts}. Rendering the "
-                f"first mesh anyway would produce an invisible garment.")
+        msrc = max(meshes, key=lambda m: len(m.GetPointsAttr().Get() or ()))
+        n_verts = len(msrc.GetPointsAttr().Get() or ())
+        # The render mesh and the solver disagree on vertex count, and the
+        # render mesh always has MORE: PS_049 carries 11,573 against 11,385
+        # particles. That gap is UV seams -- the USD duplicates a vertex
+        # wherever the texture atlas cuts, the solver keeps one particle. Writing
+        # the particle array straight into `points` therefore produced a mesh
+        # whose indices ran past its own point list, which draws nothing at all.
+        # Top_Short happened to match exactly, which is why this looked like it
+        # affected some garments and not others.
+        self._weld = None
+        if n_verts != n_particles:
+            self._weld = _seam_map(np.asarray(msrc.GetPointsAttr().Get(), np.float64),
+                                   np.asarray(particles0, np.float64))
         g = UsdGeom.Mesh.Define(stage, "/World/cloth")
         g.CreateFaceVertexCountsAttr(msrc.GetFaceVertexCountsAttr().Get())
         g.CreateFaceVertexIndicesAttr(msrc.GetFaceVertexIndicesAttr().Get())
-        g.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(np.asarray(particles0, np.float32)))
+        p0 = np.asarray(particles0, np.float32)
+        g.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(
+            p0[self._weld] if self._weld is not None else p0))
         g.CreateDoubleSidedAttr(True)
         uv = UsdGeom.PrimvarsAPI(msrc.GetPrim()).GetPrimvar("st")
         if uv:
@@ -331,7 +369,10 @@ class StormObserver:
         if not self._built:
             self.build(particles, link_poses)
             return
-        self._points.Set(Vt.Vec3fArray.FromNumpy(np.asarray(particles, np.float32)))
+        pts = np.asarray(particles, np.float32)
+        if self._weld is not None:
+            pts = pts[self._weld]          # duplicate seam vertices back out
+        self._points.Set(Vt.Vec3fArray.FromNumpy(pts))
         for (side, i), op in self._link_ops.items():
             pos, quat = link_poses[side]
             q = quat[i]

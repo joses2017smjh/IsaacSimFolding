@@ -368,6 +368,26 @@ path-traced observations at rollout time — which on this cluster means the RTX
 [segfaults on Isaac Sim 5.1](docs/STORM.md) — or fine-tuning on rasterised frames so the two
 distributions meet.
 
+## Stage 2: a calibrated value head, gated on real outcomes
+
+The success head could never pass its gate while the only labels were demonstrations — they are all
+successes, so `labels.class_balance` reported them **degenerate** and there was no negative signal to
+learn from. Twenty matched-pose replays now supply **15 success / 5 failure** across 6,066 frames,
+and with that the gate passes:
+
+| metric | value | threshold |
+|---|---|---|
+| ECE | **0.0717** | ≤ 0.10 ✓ |
+| pred_std | **0.1813** | ≥ 0.01 ✓ |
+| Brier | 0.1144 | — |
+| base rate | 0.772 | — |
+| MCE | 0.4383 | — |
+
+**G2 PASS.** Read with two caveats, both in [`results/g2_calibration.txt`](results/g2_calibration.txt)
+with the full reliability table: the 0.772 base rate flatters ECE, so `pred_std` is what shows the
+head is not near-constant; and `MCE=0.438` reflects sparse low-confidence bins — 1–7 samples each,
+against 199 in `[0.93, 1.00)`. The head is calibrated where the data is, not across the whole range.
+
 ## Honest status
 
 **What works.** Particle cloth simulates on Isaac&nbsp;Sim&nbsp;5.1; Storm rasterises in-process

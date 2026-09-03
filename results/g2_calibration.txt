@@ -1,0 +1,35 @@
+G2 calibration gate -- value head trained on REAL rollout outcomes
+=================================================================
+head:      outputs/value/bc15k_rollouts/value_head.pt  (steps_completed 2000)
+labels:    20 matched-pose replay episodes, 15 success / 5 failure
+           (the demonstrations alone are all successes and cannot gate this)
+
+         bin       n     pred      obs      gap
+  [0.00,0.07)       3    0.041    0.000   -0.041
+  [0.07,0.13)       2    0.107    0.000   -0.107
+  [0.13,0.20)       1    0.166    0.000   -0.166
+  [0.20,0.27)       5    0.239    0.000   -0.239
+  [0.27,0.33)       3    0.302    0.000   -0.302
+  [0.33,0.40)       2    0.368    0.000   -0.368
+  [0.40,0.47)       7    0.436    0.000   -0.436
+  [0.47,0.53)      14    0.510    0.071   -0.438
+  [0.53,0.60)      45    0.573    0.311   -0.262
+  [0.60,0.67)      69    0.631    0.580   -0.051
+  [0.67,0.73)      70    0.700    0.686   -0.014
+  [0.73,0.80)      48    0.766    0.792   +0.025
+  [0.80,0.87)      61    0.831    0.934   +0.103
+  [0.87,0.93)      77    0.899    0.961   +0.062
+  [0.93,1.00)     199    0.973    0.985   +0.012
+
+ECE=0.0717  MCE=0.4383  Brier=0.1144  base_rate=0.772  pred_std=0.1813
+G2 thresholds: ECE <= 0.1, pred_std >= 0.01
+G2 PASS
+
+Read this with two caveats.
+
+base_rate is 0.772, so a head biased toward "success" scores well on ECE
+alone; pred_std=0.1813 is what shows the head is not near-constant.
+
+MCE=0.4383 says the worst bin is badly calibrated. The table shows where:
+the low-confidence bins hold 1-7 samples each while 199 sit in [0.93,1.00).
+Calibration is trustworthy where the data is, not across the whole range.

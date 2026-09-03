@@ -267,7 +267,13 @@ def main() -> int:
                 break
 
     # -- save --------------------------------------------------------------
-    save_heads(out, wrap, args, step)
+    # Never in eval-only mode. The loop is skipped by setting `step` to the
+    # target, so saving here would stamp steps_completed with a number the
+    # head was never trained for -- it did exactly that once, relabelling a
+    # 2,000-step head as 3,000. The weights were unharmed and the provenance
+    # was not, which is the worse of the two to get wrong silently.
+    if not args.eval_only:
+        save_heads(out, wrap, args, step)
 
     # -- validation predictions for G2 -------------------------------------
     if args.dump_val_predictions:

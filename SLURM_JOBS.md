@@ -122,5 +122,5 @@ reads that file into `HF_TOKEN` and forwards it into the container. It is a
 FILE rather than a job-script variable so the credential never lands in git, in
 a job log, or in `scontrol show job` output — and `.hf_token` is gitignored.
 Nothing fails without it; the pull just falls back to anonymous with backoff.
-| 21136262 | `lh-value` | 2026-09-01 | **RUNNING** | Stage 2 retry with **periodic saving every 500 steps** — the actual fix for the timeout, rather than another guess at the step budget. A wall clock now costs a slightly shorter run instead of the whole run, and `steps_completed` is recorded in the head config so the artefact is never ambiguous about how far it got. |
-| 21136263 | `lh-bcres` | 2026-09-01 | **RUNNING** | Completes the BC schedule 25K -> 30K (5,000 steps at ~1.37 s/step is under 2 h). |
+| 21136262 | `lh-value` | 2026-09-01 | **PENDING** | Stage 2 retry with **periodic saving every 500 steps** — the actual fix for the timeout, rather than another guess at the step budget. A wall clock now costs a slightly shorter run instead of the whole run, and `steps_completed` is recorded in the head config so the artefact is never ambiguous about how far it got. |
+| 21136263 | `lh-bcres` | 2026-09-01 | **PENDING** | Completes the BC schedule 25K -> 30K (5,000 steps at ~1.37 s/step is under 2 h). |

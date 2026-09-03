@@ -48,6 +48,9 @@ def parse_args() -> argparse.Namespace:
                     help="0 infers the width from the first captured feature")
     ap.add_argument("--out", required=True)
     ap.add_argument("--steps", type=int, default=20000)
+    ap.add_argument("--eval_only", type=int, default=0,
+                    help="load an existing value_head.pt and only dump validation "
+                         "predictions; for recovering G2 data after a timeout")
     ap.add_argument("--batch_size", type=int, default=64)
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--horizon", type=int, default=30, help="future head lookahead, in frames")
@@ -203,8 +206,23 @@ def main() -> int:
 
     from lehome_fold.value_head import value_loss
 
+    # Recover from a timeout without retraining.
+    #
+    # The validation dump runs after the training loop, so a wall clock that
+    # lands mid-loop leaves a perfectly good value_head.pt on disk and no G2
+    # data to gate it with. Reloading the head and running validation alone
+    # costs one pass over the val split instead of thousands of 450M forwards.
+    if args.eval_only:
+        ck = out / "value_head.pt"
+        if not ck.exists():
+            raise SystemExit(f"--eval_only needs {ck}, which does not exist")
+        wrap.heads.load_state_dict(torch.load(ck, map_location=device))
+        wrap.heads.to(device)
+        done = json.loads((out / "value_head_config.json").read_text()).get("steps_completed")
+        print(f"[stage2] eval-only: loaded head trained for {done} steps", flush=True)
+
     opt = torch.optim.AdamW(wrap.heads.parameters(), lr=args.lr)
-    step = 0
+    step = args.steps if args.eval_only else 0
     wrap.heads.train()
     while step < args.steps:
         for batch in train_dl:

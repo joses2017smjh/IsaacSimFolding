@@ -15,19 +15,19 @@ PhysX particle cloth, 9,774 particles, rendered by OpenUSD Storm inside a live K
 <table align="center">
 <tr>
 <td align="center"><b>Top, long sleeve</b></td>
+<td align="center"><b>Pants, short</b></td>
 <td align="center"><b>Pants, long</b></td>
 </tr>
 <tr>
-<td><img src="docs/demo/fold_top_long_success.gif" width="380" alt="Long-sleeve top folded, all five conditions passed"></td>
-<td><img src="docs/demo/fold_pant_long_success.gif" width="380" alt="Long pants folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_top_long_success.gif" width="280" alt="Long-sleeve top folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_pant_short_success.gif" width="280" alt="Short pants folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_pant_long_success.gif" width="280" alt="Long pants folded, all five conditions passed"></td>
 </tr>
 </table>
 
-<p align="center"><sub>Each class has its own fold criteria — a short top must satisfy
-<code>[9.45, 12.15, 9.0, 13.05, 8.55]</code>, a long top <code>[11.7, 10.8, 10.8, 9.9, 9.0]</code> —
-so passing one says nothing about the others. <b>Pant_Short is scored but not shown:</b> the
-renderer drops the garment for 11 of 33 recorded episodes, so no honest GIF of it exists yet.
-<a href="#known-issue-invisible-garments">Cause and fix below.</a></sub></p>
+<p align="center"><sub>All four garment classes. Each has its own fold criteria — a short top must
+satisfy <code>[9.45, 12.15, 9.0, 13.05, 8.55]</code>, a long top
+<code>[11.7, 10.8, 10.8, 9.9, 9.0]</code> — so passing one says nothing about the others.</sub></p>
 
 ### What the wrist cameras see
 
@@ -158,20 +158,27 @@ moved the numbers almost not at all — camera geometry is not rendering style.
 
 <a name="known-issue-invisible-garments"></a>
 
-### Known issue: invisible garments
+### Fixed: invisible garments
 
-11 of 33 recorded episodes render an empty table. The physics is fine — those episodes fold and
-score — but the observer copied topology from the **first** mesh in each garment USD, and several
-released assets carry more than one. Face indices then described a different vertex set than the
-points written each frame, so the mesh was silently invalid and drew nothing.
+11 of 33 recorded episodes rendered an empty table. The physics was fine — they folded and scored —
+but the observer wrote the particle array straight into the mesh's `points`, and UV seams mean the
+render mesh has **more** vertices than the solver has particles. Face indices then ran past the
+point list and the mesh drew nothing.
 
-It splits by garment *instance*, not class: `Top_Long_Seen_1` renders, `Top_Long_Seen_0` does not.
-It stayed hidden because the checker reads particle positions from physics, never from the render,
-so every affected episode still produced a valid verdict.
+```
+Pant_Short_Seen_0  11,573 verts -> 11,385 unique  (= its particle count)   was blank
+Top_Long_Seen_0    14,746 verts -> 14,544 unique                           was blank
+Top_Short_Seen_1    9,774 verts ->  9,774 unique  (no seams)               rendered
+Top_Long_Seen_1    10,410 verts -> 10,410 unique  (no seams)               rendered
+```
 
-Fixed in [`storm_obs.py`](src/lehome_fold/storm_obs.py) by selecting the mesh whose vertex count
-matches the particle array, and raising instead of rendering an invisible garment. **The affected
-GIFs have not been regenerated yet**, so this README shows only episodes that render.
+It hid because the checker reads particle positions from physics and never looks at a pixel, so
+every affected episode still produced a valid verdict — under a caption over an empty table.
+
+[`storm_obs.py`](src/lehome_fold/storm_obs.py) now recovers the mapping by deduplicating rest
+positions, and refuses to render if the unique count disagrees with the particle count or if the
+result contains a 0.25 m edge. `Pant_Short_Seen_0` went from **0.00% to 6.64%** garment pixels and
+still scores `success=True`. Older GIFs under [`docs/gifs/`](docs/gifs) predate the fix.
 
 ### Where it loses
 

@@ -177,8 +177,9 @@ every affected episode still produced a valid verdict — under a caption over a
 
 [`storm_obs.py`](src/lehome_fold/storm_obs.py) now recovers the mapping by deduplicating rest
 positions, and refuses to render if the unique count disagrees with the particle count or if the
-result contains a 0.25 m edge. `Pant_Short_Seen_0` went from **0.00% to 6.64%** garment pixels and
-still scores `success=True`. Older GIFs under [`docs/gifs/`](docs/gifs) predate the fix.
+result contains a 0.25 m edge. All affected episodes were re-recorded. **Every verdict came back identical** — 250 False, 251 True,
+252 True, 501 True, 502 False, and all four policy rollouts `failure` — while garment pixels went from
+0.00% to 11.6–19.5%. Same physics, same scores, now visible. All 38 published GIFs audited: none blank.
 
 ### Where it loses
 

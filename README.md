@@ -131,7 +131,7 @@ Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing
 | driver | episodes | folded |
 |---|---|---|
 | demonstration replay | 21 | **15** |
-| trained BC policy | 8 | **0** |
+| trained BC policy | 9 | **0** |
 
 | class | replays | folded |
 |---|---|---|
@@ -189,8 +189,9 @@ result contains a 0.25 m edge. All affected episodes were re-recorded. **Every v
 
 ### Where it loses
 
-- **The policy folds nothing.** 0 of 8. Every success in this repo is a demonstration replay, and
-  every filename says `replay`.
+- **The policy folds nothing.** 0 of 9, including the fully converged 30,000-step checkpoint, which
+  fails identically to the half-trained one — same 2/5 conditions, same 12–14 cm hover. Every success
+  in this repo is a demonstration replay, and every filename says `replay`.
 - **π0.5 — the paper's actual base model — does not run.** lerobot 0.4.3 probes for
   `transformers.models.siglip.check`, from a patched fork no declared extra installs.
 - **BC training is complete**: 30,000 steps across four wall clocks, loss 1.505 → 0.056. It did not help: see above.

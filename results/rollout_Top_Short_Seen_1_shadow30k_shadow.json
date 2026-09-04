@@ -1,0 +1,10 @@
+{
+  "n": 364,
+  "mse_policy": 0.2033359408378601,
+  "mse_mean_baseline": 0.19587385654449463,
+  "skill_vs_mean": -0.038096377051066055,
+  "renderer": "storm",
+  "episode": 25,
+  "garment": "Top_Short_Seen_1",
+  "note": "teacher-forced on replay states, Storm frames; compare with results/action_fidelity_*.json which is the same measurement on path-traced frames"
+}

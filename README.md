@@ -147,14 +147,20 @@ Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing
 Same policy, same states, only the renderer differs. Demonstration replay pins the state
 trajectory, so this isolates perception from compounding closed-loop drift.
 
-| frames | skill vs mean-action baseline | MSE | output variance / demos |
+| checkpoint | path-traced (trained on) | Storm rasterised (rollouts) | gap |
 |---|---|---|---|
-| path-traced (what it trained on) | **+0.966** | 0.01028 | 0.985 |
-| Storm rasterised (what rollouts feed it) | **+0.063** | 0.18345 | 0.275 |
+| 15K steps | +0.966 | +0.063 | 0.902 |
+| **30K, converged** | **+0.976** | **−0.038** | **1.014** |
 
-A 0.902 skill drop caused by rasterisation alone. The policy learned the task and cannot see the
-renderer. That accounts for the 12–14 cm hover, the 0-for-8, and why fixing a real wrist-camera bug
-moved the numbers almost not at all — camera geometry is not rendering style.
+The policy learned the task and cannot see the renderer. That accounts for the 12–14 cm hover, the
+0-for-8, and why fixing a real wrist-camera bug moved the numbers almost not at all — camera
+geometry is not rendering style.
+
+**Training is not the bottleneck, and the converged run proves it.** Doubling the schedule improved
+in-distribution skill (+0.966 → +0.976, MSE down 29%) and pushed Storm-frame skill *below* the
+mean-action baseline (+0.063 → −0.038). The gap widened. A better-fit policy is more tightly tuned
+to path-traced appearance statistics, so it transfers worse — more training deepens the overfit to
+the renderer it saw.
 
 <a name="known-issue-invisible-garments"></a>
 
@@ -187,7 +193,7 @@ result contains a 0.25 m edge. All affected episodes were re-recorded. **Every v
   every filename says `replay`.
 - **π0.5 — the paper's actual base model — does not run.** lerobot 0.4.3 probes for
   `transformers.models.siglip.check`, from a patched fork no declared extra installs.
-- **BC training is incomplete**: 27,700 of 30,000 steps, across three wall clocks. Loss 1.505 → 0.055.
+- **BC training is complete**: 30,000 steps across four wall clocks, loss 1.505 → 0.056. It did not help: see above.
 - **48 garments, not the leaderboard's 80.** The other 32 never shipped.
 - **G2 passes at `ECE=0.0717`**, but `MCE=0.438`: the low-confidence bins hold 1–7 samples against
   199 in `[0.93, 1.00)`. Calibrated where the data is, not everywhere.

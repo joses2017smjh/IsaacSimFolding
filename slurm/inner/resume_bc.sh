@@ -14,4 +14,9 @@ export PYTHONUNBUFFERED=1
 # --resume=true continues optimizer and scheduler state from training_state/,
 # so this is a continuation of the same schedule, not a fresh run warm-started
 # from the weights.
-exec "$PY" -u -m lerobot.scripts.lerobot_train --config_path="$CKPT" --resume=true
+# save_freq is overridden, not inherited. The checkpoint carries 5000, which
+# means a segment that does not complete a full 5,000 steps writes NOTHING --
+# twice now a job has run its whole wall clock and left no artefact (~2,700
+# steps, then ~3,200). Saving every 1,000 turns a short segment into slower
+# progress instead of no progress.
+exec "$PY" -u -m lerobot.scripts.lerobot_train     --config_path="$CKPT" --resume=true --save_freq="${SAVE_FREQ:-1000}"

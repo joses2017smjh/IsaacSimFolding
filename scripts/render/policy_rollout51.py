@@ -60,6 +60,8 @@ ap.add_argument("--capture_out", default="",
                 help="during replay, save (storm RGB, state, recorded action) "
                      "per step as an .npz for rasterised fine-tuning")
 ap.add_argument("--capture_every", type=int, default=2)
+ap.add_argument("--capture_chunk", type=int, default=50,
+                help="future actions per frame; must match the policy chunk_size")
 ap.add_argument("--shadow_policy", type=int, default=0,
                 help="during replay, also record what the policy would do on "
                      "the SAME state, rendered by Storm")
@@ -393,9 +395,20 @@ try:
             # distribution the policy is actually deployed on -- which is the
             # entire mismatch, measured at a 1.014 skill gap.
             if args.capture_out and i % args.capture_every == 0:
+                # Capture the ACTION CHUNK, not a single action. SmolVLA
+                # predicts chunk_size future actions; a single action tiled to
+                # fill that shape trains the model to emit a constant
+                # trajectory, which is trivially easy to fit (training loss
+                # collapses) and destroys action production (skill fell from
+                # -0.038 to -0.201 on the first attempt). Tail frames repeat
+                # the last recorded action, which is what the demonstration
+                # does anyway once the arms stop.
+                j0 = min(i, replay.shape[0] - 1)
+                idx = np.minimum(np.arange(j0, j0 + args.capture_chunk),
+                                 replay.shape[0] - 1)
                 cap.append((
                     np.stack([imgs["top_rgb"], imgs["left_rgb"], imgs["right_rgb"]]),
-                    joint.astype(np.float32), a.astype(np.float32)))
+                    joint.astype(np.float32), replay[idx].astype(np.float32)))
             # Teacher-forced fidelity ON STORM FRAMES.
             #
             # On path-traced dataset frames this policy scores skill +0.966

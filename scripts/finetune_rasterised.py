@@ -138,7 +138,15 @@ def main() -> int:
             b[k] = im[:, j].permute(0, 3, 1, 2).contiguous()
         b["observation.state"] = torch.from_numpy(S[idx]).to(dev).float()
         a = torch.from_numpy(A[idx]).to(dev).float()
-        b["action"] = a.unsqueeze(1).repeat(1, chunk, 1)
+        if a.dim() == 2:
+            raise SystemExit(
+                "capture holds one action per frame, not a chunk. Tiling it "
+                "trains the policy to emit a constant trajectory: the first "
+                "attempt cut training loss 82% and moved Storm-frame skill "
+                "from -0.038 to -0.201. Re-capture with --capture_chunk.")
+        if a.shape[1] != chunk:
+            raise SystemExit(f"capture chunk {a.shape[1]} != policy chunk {chunk}")
+        b["action"] = a
         b["task"] = ["fold the garment"] * len(idx)
         return pre(b) if pre else b
 

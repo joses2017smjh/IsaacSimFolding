@@ -33,6 +33,26 @@ import numpy as np
 import torch
 
 
+def _copy_processors(src: str, dst: str) -> None:
+    """Carry the policy processors across to the fine-tuned checkpoint.
+
+    save_pretrained writes config.json and model.safetensors only, so a
+    fine-tuned directory cannot be loaded by anything that calls
+    make_pre_post_processors -- which is every rollout in this repo. Copying is
+    correct rather than a workaround: this fine-tune moves vision weights, and
+    the normaliser statistics it would otherwise be missing are unchanged.
+    """
+    import shutil
+
+    for f in ("policy_preprocessor.json", "policy_postprocessor.json",
+              "policy_preprocessor_step_5_normalizer_processor.safetensors",
+              "policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+              "train_config.json"):
+        a, b = os.path.join(src, f), os.path.join(dst, f)
+        if os.path.exists(a) and not os.path.exists(b):
+            shutil.copy2(a, b)
+
+
 def load_capture(pattern: str):
     files = sorted(glob.glob(pattern))
     if not files:
@@ -161,6 +181,7 @@ def main() -> int:
                 if v < best:
                     best = v
                     policy.save_pretrained(args.out)
+                    _copy_processors(args.policy_path, args.out)
                     flag = "  <- saved"
                 print(f"[ft] step {step}/{args.steps} train={float(loss):.4f} "
                       f"val={v:.4f}{flag}", flush=True)

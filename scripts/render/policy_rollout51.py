@@ -56,6 +56,10 @@ ap.add_argument("--replay_parquet", default="",
 ap.add_argument("--replay_episode", type=int, default=0)
 ap.add_argument("--settle_steps", type=int, default=0,
                 help="physics steps holding the initial pose before the policy acts")
+ap.add_argument("--capture_out", default="",
+                help="during replay, save (storm RGB, state, recorded action) "
+                     "per step as an .npz for rasterised fine-tuning")
+ap.add_argument("--capture_every", type=int, default=2)
 ap.add_argument("--shadow_policy", type=int, default=0,
                 help="during replay, also record what the policy would do on "
                      "the SAME state, rendered by Storm")
@@ -357,6 +361,7 @@ try:
 
     frames = []
     shadow = []
+    cap = []
     for i in range(args.steps):
         imgs = obs.render()
         n_rendered += 1
@@ -382,6 +387,15 @@ try:
         }
         if replay is not None:
             a = replay[min(i, replay.shape[0] - 1)]
+            # Capture the pairing the fine-tune needs: what the renderer SHOWS
+            # against what the demonstration DID. Replay drives the recorded
+            # actions, so the action label is ground truth and the image is the
+            # distribution the policy is actually deployed on -- which is the
+            # entire mismatch, measured at a 1.014 skill gap.
+            if args.capture_out and i % args.capture_every == 0:
+                cap.append((
+                    np.stack([imgs["top_rgb"], imgs["left_rgb"], imgs["right_rgb"]]),
+                    joint.astype(np.float32), a.astype(np.float32)))
             # Teacher-forced fidelity ON STORM FRAMES.
             #
             # On path-traced dataset frames this policy scores skill +0.966
@@ -491,6 +505,18 @@ try:
                            "is the same measurement on path-traced frames"},
                   open(args.result_out.replace(".json", "_shadow.json"), "w"),
                   indent=2)
+
+    if cap:
+        os.makedirs(os.path.dirname(args.capture_out) or ".", exist_ok=True)
+        np.savez_compressed(
+            args.capture_out,
+            images=np.stack([c[0] for c in cap]).astype(np.uint8),   # (N,3,H,W,3)
+            state=np.stack([c[1] for c in cap]),
+            action=np.stack([c[2] for c in cap]),
+            garment=args.garment, episode=args.replay_episode,
+            success=bool(success))
+        log(f"CAPTURED {len(cap)} frames -> {args.capture_out} "
+            f"({os.path.getsize(args.capture_out)/1e6:.1f} MB)")
 
     log(f"FINAL success={success} after {args.steps} steps")
 

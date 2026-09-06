@@ -5,12 +5,16 @@ Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own chec
 </p>
 
 <p align="center">
-  <img src="docs/demo/fold_top_short_success.gif" width="560" alt="Two SO-ARM101 arms folding a red short-sleeve top on a table; the official checker returns success">
+  <img src="docs/demo/POLICY_fold_success.gif" width="560" alt="A trained policy folding short pants in Isaac Sim; the challenge's own checker returns success">
 </p>
 
-<p align="center"><sub><b>One episode, 364 steps, verdict from
-<code>success_checker_garment_fold</code> — the function the challenge grades with.</b>
-PhysX particle cloth, 9,774 particles, rendered by OpenUSD Storm inside a live Kit process.</sub></p>
+<p align="center"><sub><b>A trained policy folding a garment, closed-loop, scored
+<code>Success ✓</code> by the challenge's own <code>success_checker_garment_fold</code>.</b>
+No demonstration actions — the policy reads three rasterised camera views and emits joint targets.
+All five fold conditions passed; the checker fired at step 119 of 400.<br>
+<b>This is 1 of 5 rollouts.</b> The other four still fail at 2/5 conditions. It took a measured
+domain-gap diagnosis, 18,200 rasterised training frames and unfreezing the action decoder to get
+here from 0-for-16.</sub></p>
 
 <table align="center">
 <tr>
@@ -222,7 +226,22 @@ halved and displacement rose 14-fold. On `Top_Long_Seen_1` it missed a condition
 Two folding conditions now pass by wide margins. The third fails because the policy pulls that pair
 apart while folding the other two axes — a partial fold rather than a failure to act.
 
-**It still folds nothing: 0 for 16.** Every success in this repo remains a demonstration replay. Note
+**And then it folded one.** Scaling the capture to 91 episodes (18,200 frames, class-balanced) with
+the decoder unfrozen produced the project's first policy success: `Pant_Short_Seen_0`, **5/5
+conditions**, checker fired at step 119. **1 of 5 rollouts** — the other four still fail at 2/5, so
+this is a first success, not a solved task.
+
+| | 30K base | +raster 16ep vision | +raster 16ep v+a | **+raster 91ep v+a** |
+|---|---|---|---|---|
+| Storm skill | −0.038 | +0.328 | **+0.803** | +0.652 |
+| best rollout | 2/5 | 2/5 | 4/5 | **5/5 — SUCCESS** |
+| policy folds | 0/9 | 0/4 | 0/3 | **1/5** |
+
+Note the shadow skill *fell* from +0.803 to +0.652 while the rollout result improved from 4/5 to a
+success. Teacher-forced action prediction and closed-loop control are not the same objective, which
+is the fourth time in this project a validation-style metric has pointed the wrong way.
+
+**Previously: 0 for 16.** Every success in this repo remains a demonstration replay. Note
 also that validation loss badly under-read this: 0.0739 → 0.0686, a 7% improvement, for a 0.475 gain
 in Storm-frame skill and 2/5 → 4/5 conditions.
 

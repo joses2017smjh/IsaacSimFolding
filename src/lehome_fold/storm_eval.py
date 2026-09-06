@@ -62,6 +62,54 @@ def _link_poses(env):
     return out
 
 
+def stub_keyboard():
+    """Insert a no-op `pynput` so a headless evaluation can import LeHome.
+
+    LeHome's device modules do `from pynput.keyboard import Listener, Key`
+    unguarded, and pynput opens an X connection at import:
+
+        ImportError: this platform is not supported:
+        ('failed to acquire X connection: Bad display name ""')
+
+    A batch evaluation on a compute node has no keyboard and no display, so the
+    honest fix is to satisfy the import with something inert rather than to
+    conjure a virtual X server. The rollout path never hit this because it
+    imports the env module directly and skips the devices package entirely.
+
+    The Listener is a no-op: start() and stop() do nothing, so any teleop code
+    that constructs one gets an object that never delivers a key. That is
+    correct for headless batch -- but it means a caller who genuinely wanted
+    keyboard control would get silence, so this is opt-in rather than automatic.
+    """
+    import sys
+    import types
+
+    if "pynput" in sys.modules:
+        return False
+
+    class _Listener:
+        def __init__(self, *a, **k): pass
+        def start(self): return None
+        def stop(self): return None
+        def join(self, *a, **k): return None
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+
+    class _Key:
+        def __getattr__(self, name): return f"<key:{name}>"
+
+    kb = types.ModuleType("pynput.keyboard")
+    kb.Listener = _Listener
+    kb.Key = _Key()
+    kb.KeyCode = type("KeyCode", (), {"from_char": staticmethod(lambda c: c)})
+    root = types.ModuleType("pynput")
+    root.keyboard = kb
+    sys.modules["pynput"] = root
+    sys.modules["pynput.keyboard"] = kb
+    print("[storm_eval] pynput stubbed: headless batch has no keyboard", flush=True)
+    return True
+
+
 def enable_when_imported(module_name, observer, *, device="cuda"):
     """Patch the env module the moment it is first imported, not before.
 

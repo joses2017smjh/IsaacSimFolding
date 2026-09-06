@@ -38,15 +38,15 @@ LOG=$W/logs/evalprobe-${SLURM_JOB_ID}.txt
 export XDG_CACHE_HOME=$W/.cache HF_HOME=$W/.cache/huggingface
 mkdir -p "$XDG_CACHE_HOME"
 LIBS=$(ls -d "$VENV"/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-* | head -1)
-mkdir -p "$LEHOME/Assets"
-for d in "$ASSETS"/*; do n=$(basename "$d"); [ "$n" = ".gitignore" ] && continue
-  [ -e "$LEHOME/Assets/$n" ] || ln -s "$d" "$LEHOME/Assets/$n"; done
-for d in Datasets outputs; do
-  [ -e "$LEHOME/$d" ] || ln -s "$W/lehome-data/$d" "$LEHOME/$d" 2>/dev/null || true; done
+databind=()
+for d in Assets Datasets outputs; do
+  [ -d "$W/lehome-data/$d" ] && databind+=(--bind "$W/lehome-data/$d:$LEHOME/$d")
+done
+echo "    data binds: ${#databind[@]} dirs"
 
 echo "=== node: $(hostname) | $(date) ==="
 mkdir -p "$W/lehome-data/storm_eval_probe"
-echo "    LH_STORM_EVAL=${LH_STORM_EVAL:-0}"
+echo "    LH_STORM_EVAL=${LH_STORM_EVAL:-0}  camera flag: ${LH_CAMERA_FLAG:---enable_cameras}"
 echo "    container: $SIF ($([ -f "$SIF" ] && echo present || echo MISSING))"
 set +e
 apptainer exec --nv --cleanenv --home "$W/.home" --bind /nfs/hpc/share/$USER \
@@ -59,11 +59,13 @@ apptainer exec --nv --cleanenv --home "$W/.home" --bind /nfs/hpc/share/$USER \
   --env LH_STORM_GARMENT_DIR="$ASSETS/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0" \
   --env LH_STORM_WORKDIR="$W/lehome-data/storm_eval_probe" \
   --env LH_STORM_DEVICE=cuda \
+  --env HF_HUB_OFFLINE=1 --env TRANSFORMERS_OFFLINE=1 \
+  --pwd "$LEHOME" "${databind[@]}" \
   "$SIF" "$VENV/bin/python" -u "$REPO/scripts/run_eval.py" \
     --policy_type lerobot --policy_path "$CKPT" \
     --dataset_root Datasets/example/four_types_merged \
     --garment_type pant_short --num_episodes 1 --max_steps 60 \
-    --device cpu --enable_cameras --headless 2>&1 | tee "$LOG"
+    --device cpu ${LH_CAMERA_FLAG:---enable_cameras} --headless 2>&1 | tee "$LOG"
 set -e
 
 echo "--- verdict ---"
@@ -73,8 +75,14 @@ elif grep -qiE "could not open image|FATAL: *While|no such file.*\.sif" "$LOG"; 
   echo "INCONCLUSIVE: container/apptainer failure -- the evaluator never started"
 elif grep -qiE "Segmentation fault|librtx|core dumped" "$LOG"; then
   echo "BLOCKED: reached Isaac Sim and crashed in the RTX path"
-elif grep -qiE "episode|success|Final result" "$LOG"; then
-  echo "RUNNABLE: the official evaluator produced episode output"
+elif grep -qiE "RepositoryNotFoundError|401 Client Error|Repository Not Found" "$LOG"; then
+  echo "INCONCLUSIVE: reached the eval loop, then failed to resolve the dataset"
+  echo "  (Hub fallback, not a renderer problem -- the RTX segfault is gone)"
+elif grep -qE "\[Success Check\] Final result" "$LOG"; then
+  echo "RUNNABLE: the official checker scored an episode"
+elif grep -qiE "Traceback" "$LOG"; then
+  echo "INCONCLUSIVE: launched, then raised -- see the traceback"
+  tail -8 "$LOG" | sed "s/^/    /"
 else
   echo "INCONCLUSIVE: started but produced neither episodes nor a crash signature"
   echo "  last lines:"; tail -6 "$LOG" | sed 's/^/    /'

@@ -80,6 +80,9 @@ print(f"[run_eval] registered: {sorted(ep.PolicyRegistry.list_policies())}", flu
 if os.environ.get("LH_STORM_EVAL") == "1":
     try:
         from lehome_fold.storm_camera import DEPTH_IS_SYNTHETIC
+        from lehome_fold.storm_eval import stub_keyboard
+
+        stub_keyboard()
         from lehome_fold.storm_eval import enable_when_imported
         from lehome_fold.storm_obs import StormObserver, StormObsConfig
 

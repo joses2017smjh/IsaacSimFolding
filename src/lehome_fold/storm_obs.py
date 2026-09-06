@@ -435,6 +435,10 @@ class StormObserver:
                 bg = Image.new("RGBA", im.size, (150, 150, 150, 255))
                 im = Image.alpha_composite(bg, im)
             out[key] = np.asarray(im.convert("RGB"), dtype=np.uint8)
+        # Cache the latest frames so a StormCamera can serve them through the
+        # TiledCamera interface without re-rendering. The rollout loop already
+        # calls render() once per step; the cameras read what it produced.
+        self._last_frames = out
         return out
 
     def close(self):

@@ -69,6 +69,39 @@ for name in _INJECTED:
 
 print(f"[run_eval] registered: {sorted(ep.PolicyRegistry.list_policies())}", flush=True)
 
+# Storm-backed cameras, when asked for.
+#
+# LeHome's eval builds TiledCamera render products, and 5.1's RTX delegate
+# segfaults against this cluster's driver -- verified, not inferred: a probe
+# reached Isaac Sim and died with "Segmentation fault (core dumped)". 6.0
+# renders but has no particle cloth. LH_STORM_EVAL=1 swaps the cameras for
+# Storm-backed ones so the challenge's OWN eval loop runs unmodified and the
+# success numbers still come from its checker.
+if os.environ.get("LH_STORM_EVAL") == "1":
+    try:
+        from lehome_fold.storm_camera import DEPTH_IS_SYNTHETIC
+        from lehome_fold.storm_eval import enable_when_imported
+        from lehome_fold.storm_obs import StormObserver, StormObsConfig
+
+        _obs = StormObserver(StormObsConfig(
+            assets=os.environ["LH_STORM_ASSETS"],
+            garment_dir=os.environ["LH_STORM_GARMENT_DIR"],
+            workdir=os.environ.get("LH_STORM_WORKDIR", ""), extra={}))
+        # Deferred: the env module imports isaaclab_tasks, which does not exist
+        # until AppLauncher has run, and LeHome's eval owns the launch. A
+        # post-import hook is the only point both after the app exists and
+        # before the env is built.
+        enable_when_imported("lehome.tasks.bedroom.garment_bi_v2", _obs,
+                             device=os.environ.get("LH_STORM_DEVICE", "cuda"))
+        if DEPTH_IS_SYNTHETIC:
+            print("[run_eval] NOTE: Storm supplies colour; depth is synthetic. "
+                  "The success checker reads particle positions, not depth.",
+                  flush=True)
+    except Exception as exc:  # noqa: BLE001
+        # Refuse rather than fall through to RTX, which would segfault and
+        # look like a different problem entirely.
+        raise SystemExit(f"[run_eval] LH_STORM_EVAL=1 but setup failed: {exc!r}")
+
 try:
     runpy.run_module("scripts.eval", run_name="__main__")
 finally:

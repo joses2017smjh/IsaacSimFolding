@@ -45,6 +45,8 @@ for d in Datasets outputs; do
   [ -e "$LEHOME/$d" ] || ln -s "$W/lehome-data/$d" "$LEHOME/$d" 2>/dev/null || true; done
 
 echo "=== node: $(hostname) | $(date) ==="
+mkdir -p "$W/lehome-data/storm_eval_probe"
+echo "    LH_STORM_EVAL=${LH_STORM_EVAL:-0}"
 echo "    container: $SIF ($([ -f "$SIF" ] && echo present || echo MISSING))"
 set +e
 apptainer exec --nv --cleanenv --home "$W/.home" --bind /nfs/hpc/share/$USER \
@@ -52,6 +54,11 @@ apptainer exec --nv --cleanenv --home "$W/.home" --bind /nfs/hpc/share/$USER \
   --env XDG_CACHE_HOME="$XDG_CACHE_HOME" --env HF_HOME="$HF_HOME" \
   --env PYTHONPATH="$SITE:$LEHOME/source/lehome:$LEHOME:$REPO/src:$REPO/scripts" \
   --env PXR_PLUGINPATH_NAME="$LIBS/bin/usd" --env PYTHONUNBUFFERED=1 \
+  --env LH_STORM_EVAL="${LH_STORM_EVAL:-0}" \
+  --env LH_STORM_ASSETS="$ASSETS" \
+  --env LH_STORM_GARMENT_DIR="$ASSETS/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0" \
+  --env LH_STORM_WORKDIR="$W/lehome-data/storm_eval_probe" \
+  --env LH_STORM_DEVICE=cuda \
   "$SIF" "$VENV/bin/python" -u "$REPO/scripts/run_eval.py" \
     --policy_type lerobot --policy_path "$CKPT" \
     --dataset_root Datasets/example/four_types_merged \

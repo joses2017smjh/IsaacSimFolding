@@ -548,6 +548,66 @@ def feature_tap_rejects_a_path_that_does_not_exist():
 
 
 @test
+def storm_camera_serves_the_right_view_to_each_camera():
+    """The env builds top, left wrist, right wrist in that order.
+
+    Binding by construction order is fragile: if the env ever reorders those
+    three lines the wrist views swap silently, and a policy fed a mirrored
+    world would fail in a way no log line explains.
+    """
+    import types
+    import numpy as np
+    from lehome_fold.storm_camera import install
+
+    obs = types.SimpleNamespace(_last_frames={
+        "top_rgb": np.full((4, 4, 3), 10, np.uint8),
+        "left_rgb": np.full((4, 4, 3), 20, np.uint8),
+        "right_rgb": np.full((4, 4, 3), 30, np.uint8)})
+    mod = types.SimpleNamespace()
+    install(mod, obs, device="cpu")
+    for want in (10, 20, 30):
+        cam = mod.TiledCamera(None)
+        close(float(cam.data.output["rgb"].float().mean()), float(want))
+
+
+@test
+def storm_camera_refuses_an_output_key_it_cannot_supply():
+    """Returning zeros for an unknown channel is how an invisible garment
+    survived 11 episodes here. Unsupported keys raise instead."""
+    import types
+    import numpy as np
+    from lehome_fold.storm_camera import install
+
+    obs = types.SimpleNamespace(_last_frames={"top_rgb": np.zeros((4, 4, 3), np.uint8)})
+    mod = types.SimpleNamespace()
+    install(mod, obs, device="cpu")
+    cam = mod.TiledCamera(None)
+    cam.data.output["rgb"]            # supported
+    cam.data.output["depth"]          # supported, synthetic
+    try:
+        cam.data.output["semantic_segmentation"]
+    except KeyError:
+        return
+    raise AssertionError("unsupported output key did not raise")
+
+
+@test
+def storm_camera_survives_a_missing_frame():
+    """A camera asked for pixels before the first render must return a valid
+    black frame rather than None, or the env dies inside its own observation
+    builder with a traceback that points nowhere useful."""
+    import types
+    from lehome_fold.storm_camera import install
+
+    mod = types.SimpleNamespace()
+    install(mod, types.SimpleNamespace(_last_frames=None), device="cpu")
+    cam = mod.TiledCamera(None)
+    rgb = cam.data.output["rgb"]
+    assert tuple(rgb.shape) == (1, 480, 640, 3), tuple(rgb.shape)
+    close(float(rgb.float().mean()), 0.0)
+
+
+@test
 def seam_map_recovers_duplicated_uv_vertices():
     """Render meshes duplicate a vertex at every UV seam; the solver does not.
 

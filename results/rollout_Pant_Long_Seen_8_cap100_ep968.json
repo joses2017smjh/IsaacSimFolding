@@ -1,0 +1,12 @@
+{
+  "garment": "Pant_Long_Seen_8",
+  "success": false,
+  "mode": "replay",
+  "replay_episode": 968,
+  "match_pose": "0.03924041:-0.05349529:0.69999999:11.05651855:-8.27821636:90.00000000",
+  "match_scale": 0.45,
+  "steps": 400,
+  "policy": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model",
+  "renderer": "storm",
+  "note": "rasterised obs, path-traced training data"
+}

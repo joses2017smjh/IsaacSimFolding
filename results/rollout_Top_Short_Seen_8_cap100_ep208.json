@@ -1,0 +1,12 @@
+{
+  "garment": "Top_Short_Seen_8",
+  "success": false,
+  "mode": "replay",
+  "replay_episode": 208,
+  "match_pose": "0.00266961:0.01584365:0.67000002:-15.59792328:-11.97085285:0.00000000",
+  "match_scale": 0.45,
+  "steps": 400,
+  "policy": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model",
+  "renderer": "storm",
+  "note": "rasterised obs, path-traced training data"
+}

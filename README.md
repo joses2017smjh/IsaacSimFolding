@@ -133,7 +133,7 @@ Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing
 | driver | episodes | folded |
 |---|---|---|
 | demonstration replay | 21 | **15** |
-| trained BC policy | 13 | **0** |
+| trained BC policy | 16 | **0** |
 
 | class | replays | folded |
 |---|---|---|
@@ -208,15 +208,27 @@ The policy went from not touching the cloth to genuinely manipulating it — fol
 halved and displacement rose 14-fold. On `Top_Long_Seen_1` it missed a condition by **0.19 cm**
 (10.99 against a 10.80 threshold).
 
-**It still folds nothing: 0 for 13.** Closing a domain gap moved the policy from inert to close, and
-"close" is not a fold. The honest reading is that the rasterisation gap was necessary to fix and is
-not sufficient on its own — 16 episodes of vision-only adaptation is a small intervention, and the
-remaining error may be the compounding closed-loop drift the shadow test was designed to exclude
-rather than measure.
+**Unfreezing the action decoder as well takes it further.** Same 16 episodes, additionally training
+`lm_expert` (98.2M) and the action projections while the 350M language model stays frozen:
+
+| | vision only | vision + action decoder |
+|---|---|---|
+| Storm-frame skill | +0.328 | **+0.803** |
+| best rollout | 2/5 conditions | **4/5 conditions** |
+| `dist(p0,p4)` → 9.45 | 20.47 | **3.78** ✓ |
+| `dist(p1,p5)` → 9.00 | 14.65 | **6.82** ✓ |
+| `dist(p2,p3)` → 12.15 | 25.16 | 43.08 ✗ |
+
+Two folding conditions now pass by wide margins. The third fails because the policy pulls that pair
+apart while folding the other two axes — a partial fold rather than a failure to act.
+
+**It still folds nothing: 0 for 16.** Every success in this repo remains a demonstration replay. Note
+also that validation loss badly under-read this: 0.0739 → 0.0686, a 7% improvement, for a 0.475 gain
+in Storm-frame skill and 2/5 → 4/5 conditions.
 
 ### Where it loses
 
-- **The policy folds nothing.** 0 of 13, including the converged 30,000-step checkpoint and the
+- **The policy folds nothing.** 0 of 16, including the converged 30,000-step checkpoint and the
   rasterised fine-tune. Every success in this repo is a demonstration replay, and every filename
   says `replay`.
 - **π0.5 — the paper's actual base model — does not run.** lerobot 0.4.3 probes for

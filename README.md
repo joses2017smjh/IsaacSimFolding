@@ -74,10 +74,12 @@ The dependency-light half runs anywhere. No GPU, no simulator, no Isaac Sim.
 ```bash
 git clone https://github.com/joses2017smjh/IsaacSimFolding.git
 cd IsaacSimFolding
-pip install numpy torch
+pip install -r requirements.txt
 PYTHONPATH=src python tests/test_pure.py     # 37 tests
 python scripts/make_figures.py               # regenerates docs/img/*.png
 ```
+
+Run in CI on every push — [`.github/workflows/tests.yml`](.github/workflows/tests.yml).
 
 Verified: `src/` and `tests/` import only `numpy` and `torch`. The suite uses plain asserts and a
 20-line runner — no pytest, no fixtures, no config.

@@ -1,0 +1,4 @@
+# Rendered artefacts are binary; do not let git try to diff or merge them.
+*.gif binary
+*.png binary
+*.mp4 binary

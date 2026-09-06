@@ -1,0 +1,22 @@
+name: tests
+
+# The pure half is designed to run anywhere numpy and torch exist -- no GPU, no
+# Isaac Sim, no dataset. That is the whole point of keeping it separable, so it
+# should be enforced rather than asserted in a README.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Run the suite
+        run: PYTHONPATH=src python tests/test_pure.py

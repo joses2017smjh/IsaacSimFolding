@@ -1,6 +1,6 @@
 {
   "garment": "Pant_Long_Seen_0",
-  "success": true,
+  "success": false,
   "mode": "replay",
   "replay_episode": 752,
   "match_pose": "0.03266127:-0.06041753:0.69999999:-0.42188960:25.25382423:90.00000000",

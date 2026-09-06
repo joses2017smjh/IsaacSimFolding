@@ -12,9 +12,10 @@ Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own chec
 <code>Success ✓</code> by the challenge's own <code>success_checker_garment_fold</code>.</b>
 No demonstration actions — the policy reads three rasterised camera views and emits joint targets.
 All five fold conditions passed; the checker fired at step 119 of 400.<br>
-<b>This is 1 of 5 rollouts.</b> The other four still fail at 2/5 conditions. It took a measured
-domain-gap diagnosis, 18,200 rasterised training frames and unfreezing the action decoder to get
-here from 0-for-16.</sub></p>
+<b>It folds 2 of 8 short-pants poses (25%), and 0 of 4 on the other three garment classes.</b>
+Reproducible, not a lucky configuration — and not a solved task. Getting here from 0-for-16 took a
+measured domain-gap diagnosis, 18,200 rasterised training frames and unfreezing the action
+decoder.</sub></p>
 
 <table align="center">
 <tr>
@@ -226,10 +227,21 @@ halved and displacement rose 14-fold. On `Top_Long_Seen_1` it missed a condition
 Two folding conditions now pass by wide margins. The third fails because the policy pulls that pair
 apart while folding the other two axes — a partial fold rather than a failure to act.
 
-**And then it folded one.** Scaling the capture to 91 episodes (18,200 frames, class-balanced) with
-the decoder unfrozen produced the project's first policy success: `Pant_Short_Seen_0`, **5/5
-conditions**, checker fired at step 119. **1 of 5 rollouts** — the other four still fail at 2/5, so
-this is a first success, not a solved task.
+**And then it folded.** Scaling the capture to 91 episodes (18,200 frames, class-balanced) with the
+decoder unfrozen produced the project's first policy successes.
+
+Run across **eight recorded spawn poses of the same class**, so the result is a rate rather than an
+anecdote:
+
+| garment class | poses tried | folded |
+|---|---|---|
+| Pant_Short | 8 | **2 (25%)** |
+| Top_Short | 2 | 0 |
+| Top_Long | 1 | 0 |
+| Pant_Long | 1 | 0 |
+
+Failures are not flailing — they sit at 2/5 or 3/5 conditions with the cloth visibly manipulated.
+The successes pass all five, checker firing as early as step 119 of 400.
 
 | | 30K base | +raster 16ep vision | +raster 16ep v+a | **+raster 91ep v+a** |
 |---|---|---|---|---|

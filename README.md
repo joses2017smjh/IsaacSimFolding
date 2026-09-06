@@ -215,6 +215,27 @@ result contains a 0.25 m edge. All affected episodes were re-recorded. **Every v
 | Labelled frames | 6,066 from 20 scored episodes — 15 success / 5 failure |
 | Slurm jobs run | 71, each with its cause recorded |
 
+## What is implemented but not run
+
+Stages 3 and 4 exist in full and are unit-tested, and have never been executed against real
+rollouts. They are not dead code and they are not results either:
+
+| stage | code | state |
+|---|---|---|
+| RECAP advantage conditioning | [`src/lehome_fold/recap.py`](src/lehome_fold/recap.py) | tested, unrun |
+| AWR with an ESS guard | [`src/lehome_fold/awr.py`](src/lehome_fold/awr.py) | tested, unrun |
+| Async trainer / rollout workers | [`scripts/trainer_loop.py`](scripts/trainer_loop.py), [`scripts/rollout_worker.py`](scripts/rollout_worker.py) | tested, unrun |
+| Thompson sampling over checkpoints | [`src/lehome_fold/thompson.py`](src/lehome_fold/thompson.py) | tested, unrun |
+
+They were blocked on having scored rollouts with real failures, which Stage 2 now has. Running them
+is only worthwhile once a policy folds something — advantage-weighted regression over a policy that
+is 0-for-13 would be weighting noise.
+
+**π0.5, the paper's base model, does not run at all.** lerobot 0.4.3 probes for
+`transformers.models.siglip.check`, a module from a patched transformers fork that no declared extra
+installs. Forcing one risks the working SmolVLA pipeline everything else depends on, so it was not
+attempted.
+
 ## Stack
 
 - Isaac Sim 5.1.0 · Isaac Lab 2.3.2 (forked)

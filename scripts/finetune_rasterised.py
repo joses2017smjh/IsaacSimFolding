@@ -81,8 +81,10 @@ def main() -> int:
     ap.add_argument("--lr", type=float, default=1e-5)
     ap.add_argument("--val_fraction", type=float, default=0.15)
     ap.add_argument("--unfreeze", default="vision",
-                    choices=["vision", "all"],
-                    help="vision: only the image pathway, where the deficit is")
+                    choices=["vision", "vision+action", "all"],
+                    help="vision: image pathway only. vision+action: also the "
+                         "action expert and projections, leaving the language "
+                         "model frozen. all: everything.")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
@@ -111,13 +113,33 @@ def main() -> int:
     # Freeze everything, then re-enable only the vision pathway. The action
     # decoder already maps features to good actions -- the 1.014 gap is in
     # producing features from a rasterised image, not in what happens after.
+    # Explicit module groups, not substring matching.
+    #
+    # A first attempt filtered on the substring "expert", which matches
+    # `vlm_with_expert` and therefore selected all 450M parameters while
+    # claiming to select the action decoder. The real layout is:
+    #   model.vlm_with_expert.vlm         350.2M   language + vision tower
+    #   model.vlm_with_expert.lm_expert    98.2M   the action expert
+    #   model.action_* / state_proj         1.6M   projections
+    VISION = ("vision", "image", "patch", "visual")
+    ACTION_PREFIX = ("model.vlm_with_expert.lm_expert",
+                     "model.action_in_proj", "model.action_out_proj",
+                     "model.action_time_mlp", "model.state_proj")
+
+    def wanted(name: str) -> bool:
+        if args.unfreeze == "all":
+            return True
+        if any(k in name.lower() for k in VISION):
+            return True
+        if args.unfreeze == "vision+action":
+            return name.startswith(ACTION_PREFIX)
+        return False
+
     for p in policy.parameters():
         p.requires_grad_(False)
     trainable = []
     for name, p in policy.named_parameters():
-        want = args.unfreeze == "all" or any(
-            k in name.lower() for k in ("vision", "image", "patch", "visual"))
-        if want:
+        if wanted(name):
             p.requires_grad_(True)
             trainable.append(p)
     n_train = sum(p.numel() for p in trainable)

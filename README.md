@@ -295,22 +295,32 @@ rollouts. They are not dead code and they are not results either:
 | Async trainer / rollout workers | [`scripts/trainer_loop.py`](scripts/trainer_loop.py), [`scripts/rollout_worker.py`](scripts/rollout_worker.py) | tested, unrun |
 | Thompson sampling over checkpoints | [`src/lehome_fold/thompson.py`](src/lehome_fold/thompson.py) | tested, unrun |
 
-They are blocked on the renderer, and this is now tested rather than inferred. Both route through
-[`scripts/run_eval.py`](scripts/run_eval.py) into LeHome's own `scripts.eval` with
-`--enable_cameras` — the Isaac&nbsp;Lab render product that 5.1's RTX delegate segfaults on, which is
-the same reason every rollout here goes through Storm. A probe run in the working container reached
-Isaac Sim and died with `Segmentation fault (core dumped)`:
+They **were** blocked on the renderer, and are not any more.
+
+Both route through [`scripts/run_eval.py`](scripts/run_eval.py) into LeHome's own `scripts.eval`,
+which was run with `--enable_cameras`. `AppLauncher` builds the Isaac&nbsp;Lab render product at
+*launch* when that flag is set, and 5.1's RTX delegate segfaults against this driver — at
+586&nbsp;ms, before any camera object exists. Replacing the camera class alone could never have
+helped.
+
+The fix is to drop the flag and serve pixels through a `TiledCamera`-shaped shim, because the
+environment touches its cameras through only four things: construction, registration as a scene
+sensor, `data.output["rgb"]`, and `data.output["depth"]`. Storm already produces those for every
+rollout in this repo.
 
 ```
-[Fatal] [carb.crashreporter-breakpad.plugin] 052: python!_PyRun_AnyFileObject
-Segmentation fault (core dumped) apptainer exec --nv ...
+[storm_eval] TiledCamera -> Storm; _get_observations wrapped
+[Success Check] Garment type: short-pant, Thresholds: [...]
+[Success Check] Final result: Failed ✗
 ```
 
-The dependency is structural, not a wrapper detail: Stage 4's arms are
-`(n_candidates, chunk_length, temperature, flow_steps)`, and `n_candidates` needs the
-candidate-ranking policy in `scripts/stage_policies.py`, which is Stage 3 machinery, which needs the
-official evaluator. The Storm rollout path exposes none of the four. Running these means porting
-candidate ranking onto Storm — real work, not a flag.
+**12 episodes scored by the challenge's own checker, 0 render failures.** Stages 3 and 4 are
+runnable — [`storm_camera.py`](src/lehome_fold/storm_camera.py),
+[`storm_eval.py`](src/lehome_fold/storm_eval.py), enabled with `LH_STORM_EVAL=1`.
+
+Three limits, stated rather than left to be discovered: depth is synthetic (the checker reads
+particle positions and never depth), cameras bind to views by construction order, and `pynput` is
+stubbed because a headless compute node has no keyboard.
 
 **π0.5, the paper's base model, does not run at all.** lerobot 0.4.3 probes for
 `transformers.models.siglip.check`, a module from a patched transformers fork that no declared extra

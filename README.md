@@ -133,7 +133,7 @@ Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing
 | driver | episodes | folded |
 |---|---|---|
 | demonstration replay | 21 | **15** |
-| trained BC policy | 9 | **0** |
+| trained BC policy | 13 | **0** |
 
 | class | replays | folded |
 |---|---|---|
@@ -189,11 +189,36 @@ result contains a 0.25 m edge. All affected episodes were re-recorded. **Every v
 252 True, 501 True, 502 False, and all four policy rollouts `failure` — while garment pixels went from
 0.00% to 11.6–19.5%. Same physics, same scores, now visible. All 38 published GIFs audited: none blank.
 
+### Fine-tuning on rasterised frames: large effect, still no fold
+
+The gap the measurement identified is closable. Capturing 3,200 `(Storm frame,
+demonstration action-chunk)` pairs by replaying demonstrations in sim, then fine-tuning the vision
+pathway on them (86.4M of 450M parameters, val loss 0.268 → 0.074):
+
+| | 30K base | rasterised fine-tune |
+|---|---|---|
+| Storm-frame skill | **−0.038** | **+0.328** |
+| cloth displacement | 0.0176 m | **0.2534 m** (14×) |
+| `dist(p0,p4)` → 9.45 | 29.22 | **20.47** |
+| `dist(p2,p3)` → 12.15 | 39.16 | **25.16** |
+| `dist(p1,p5)` → 9.00 | 29.40 | **14.65** |
+| verdict | failure | failure |
+
+The policy went from not touching the cloth to genuinely manipulating it — fold distances roughly
+halved and displacement rose 14-fold. On `Top_Long_Seen_1` it missed a condition by **0.19 cm**
+(10.99 against a 10.80 threshold).
+
+**It still folds nothing: 0 for 13.** Closing a domain gap moved the policy from inert to close, and
+"close" is not a fold. The honest reading is that the rasterisation gap was necessary to fix and is
+not sufficient on its own — 16 episodes of vision-only adaptation is a small intervention, and the
+remaining error may be the compounding closed-loop drift the shadow test was designed to exclude
+rather than measure.
+
 ### Where it loses
 
-- **The policy folds nothing.** 0 of 9, including the fully converged 30,000-step checkpoint, which
-  fails identically to the half-trained one — same 2/5 conditions, same 12–14 cm hover. Every success
-  in this repo is a demonstration replay, and every filename says `replay`.
+- **The policy folds nothing.** 0 of 13, including the converged 30,000-step checkpoint and the
+  rasterised fine-tune. Every success in this repo is a demonstration replay, and every filename
+  says `replay`.
 - **π0.5 — the paper's actual base model — does not run.** lerobot 0.4.3 probes for
   `transformers.models.siglip.check`, from a patched fork no declared extra installs.
 - **BC training is complete**: 30,000 steps across four wall clocks, loss 1.505 → 0.056. It did not help: see above.

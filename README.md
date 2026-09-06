@@ -295,9 +295,22 @@ rollouts. They are not dead code and they are not results either:
 | Async trainer / rollout workers | [`scripts/trainer_loop.py`](scripts/trainer_loop.py), [`scripts/rollout_worker.py`](scripts/rollout_worker.py) | tested, unrun |
 | Thompson sampling over checkpoints | [`src/lehome_fold/thompson.py`](src/lehome_fold/thompson.py) | tested, unrun |
 
-They were blocked on having scored rollouts with real failures, which Stage 2 now has. Running them
-is only worthwhile once a policy folds something — advantage-weighted regression over a policy that
-is 0-for-13 would be weighting noise.
+They are blocked on the renderer, and this is now tested rather than inferred. Both route through
+[`scripts/run_eval.py`](scripts/run_eval.py) into LeHome's own `scripts.eval` with
+`--enable_cameras` — the Isaac&nbsp;Lab render product that 5.1's RTX delegate segfaults on, which is
+the same reason every rollout here goes through Storm. A probe run in the working container reached
+Isaac Sim and died with `Segmentation fault (core dumped)`:
+
+```
+[Fatal] [carb.crashreporter-breakpad.plugin] 052: python!_PyRun_AnyFileObject
+Segmentation fault (core dumped) apptainer exec --nv ...
+```
+
+The dependency is structural, not a wrapper detail: Stage 4's arms are
+`(n_candidates, chunk_length, temperature, flow_steps)`, and `n_candidates` needs the
+candidate-ranking policy in `scripts/stage_policies.py`, which is Stage 3 machinery, which needs the
+official evaluator. The Storm rollout path exposes none of the four. Running these means porting
+candidate ranking onto Storm — real work, not a flag.
 
 **π0.5, the paper's base model, does not run at all.** lerobot 0.4.3 probes for
 `transformers.models.siglip.check`, a module from a patched transformers fork that no declared extra

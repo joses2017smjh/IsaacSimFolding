@@ -63,6 +63,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--steps_per_cycle", type=int, default=500)
     ap.add_argument("--max_cycles", type=int, default=10**9)
     ap.add_argument("--poll_seconds", type=float, default=60.0)
+    ap.add_argument("--heartbeat_cycles", type=int, default=20,
+                    help="how often to say it is still waiting")
+    ap.add_argument("--max_idle_cycles", type=int, default=120,
+                    help="give up if not one rollout has EVER arrived "
+                         "after this many idle cycles; a slow worker "
+                         "trickles, a broken one gives exactly nothing")
     ap.add_argument("--dry_run", type=int, default=0,
                     help="do everything except the gradient step; used to exercise G3")
     return ap.parse_args()
@@ -108,10 +114,14 @@ def main() -> int:
 
     seen_files: set[str] = set()
     pending: list[dict] = []
+    idle = 0
+    total_consumed = 0
+    ever_seen = 0
 
     for cycle in range(args.max_cycles):
         new, lags, dropped = consume(rollouts, seen_files, ref, args.max_lag)
         pending.extend(new)
+        ever_seen += len(new)
 
         if lags or dropped:
             hist = " ".join(f"lag{k}={v}" for k, v in sorted(lags.items()))
@@ -120,8 +130,28 @@ def main() -> int:
                 print(f"[trainer]   G3 DROPPED {n}: {reason}", flush=True)
 
         if len(pending) < args.min_new_episodes:
+            # Say something. The first real run of this loop sat here for 13
+            # hours emitting nothing after "published v0" while every worker
+            # crashed on an import error, and the silence was indistinguishable
+            # from healthy training between batches.
+            idle += 1
+            if idle == 1 or idle % args.heartbeat_cycles == 0:
+                print(f"[trainer] waiting: {len(pending)}/{args.min_new_episodes} "
+                      f"episodes buffered, {ever_seen} seen and "
+                      f"{total_consumed} trained on so far, "
+                      f"{idle} idle cycles", flush=True)
+            if ever_seen == 0 and idle >= args.max_idle_cycles:
+                # Nothing has EVER arrived. Slow workers produce a trickle;
+                # broken ones produce exactly this. Holding the GPU longer
+                # cannot distinguish them, and only one is worth waiting for.
+                print(f"[trainer] ABORT: {idle} cycles and not one rollout has "
+                      f"arrived in {rollouts}. The workers are not producing "
+                      f"-- check their logs, not this one.", flush=True)
+                return 2
             time.sleep(args.poll_seconds)
             continue
+        idle = 0
+        total_consumed += len(pending)
 
         # -- advantage, from the policy's own value head --------------------
         outcomes = np.array([float(r["success"]) for r in pending], dtype=np.float64)

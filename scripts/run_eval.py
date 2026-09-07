@@ -50,7 +50,15 @@ for name in _INJECTED:
     dst = _PKG / f"_{name}.py"
     # Copy rather than symlink: the submodule may sit on a filesystem where a
     # cross-mount link is awkward, and these files are disposable.
-    shutil.copyfile(src, dst)
+    #
+    # Written to a per-process temp name and renamed, because Stage 3 runs
+    # several workers plus the tuner at once and they all land on this exact
+    # destination. os.replace is atomic within a directory, so a reader either
+    # sees the old complete file or the new one -- never a half-written module
+    # that fails to import and takes candidate/recap out of the registry.
+    tmp = dst.with_name(f"{dst.name}.{os.getpid()}.tmp")
+    shutil.copyfile(src, tmp)
+    os.replace(tmp, dst)
     _copied.append(dst)
 
 import importlib  # noqa: E402

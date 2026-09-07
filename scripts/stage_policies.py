@@ -71,6 +71,17 @@ class _ValueScoredPolicy(LeRobotPolicy):
 
     def __init__(self, value_path: str | None = None, feature_path: str = "",
                  n_candidates: int = 1, log_scores: str | None = None, **kwargs):
+        # evaluation.py only fills policy_path/dataset_root/task_description
+        # for policy_type == "lerobot". Everything else -- candidate and recap
+        # included -- arrives as {"device": ..., "model_path": ...}. Since these
+        # subclass LeRobotPolicy, which requires all three, translate here.
+        # run_eval.py stashed the evaluator's own argv so dataset_root cannot
+        # drift from the dataset actually being evaluated.
+        from lehome_fold.eval_kwargs import translate_policy_kwargs
+        from lehome_fold.recap import BASE_TASK
+
+        kwargs = translate_policy_kwargs(kwargs, os.environ,
+                                         base_task=BASE_TASK)
         super().__init__(**kwargs)
         self.n_candidates = int(n_candidates)
         if self.n_candidates < 1:

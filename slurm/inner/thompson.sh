@@ -9,4 +9,5 @@ exec "$PY" -u "$REPO/scripts/tune_inference.py" \
     --feature_path "${FEATURE_PATH:-}" \
     --budget "${BUDGET:-400}" \
     --max_dead_pulls "${MAX_DEAD_PULLS:-3}" \
+    --baseline_pulls "${BASELINE_PULLS:-40}" \
     --out "$REPO/results/stage4_thompson.json"

@@ -7,4 +7,5 @@ exec "$PY" "$REPO/scripts/rollout_worker.py" \
     --policy_type "${POLICY_TYPE:-recap}" \
     --value_path "${VALUE_PATH:-}" --feature_path "${FEATURE_PATH:-}" \
     --episodes_per_batch "${NUM_EPISODES:-4}" \
+    --max_dead_iters "${MAX_DEAD_ITERS:-5}" \
     --garment_types "${GARMENT_TYPE:-top_long,top_short,pant_long,pant_short}"

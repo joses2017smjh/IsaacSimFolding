@@ -782,5 +782,51 @@ def injected_policy_modules_use_one_level_relative_imports():
     assert not bad, "two-level relative import in an injected module: " + "; ".join(bad)
 
 
+@test
+def eval_kwargs_translates_what_evaluation_py_actually_sends():
+    """evaluation.py builds {"device", "model_path"} for every policy type that
+    is not lerobot or docker. candidate/recap subclass LeRobotPolicy, which
+    wants policy_path/dataset_root/task_description -- the mismatch cost 420
+    worker iterations across 12.5 hours before anything said why."""
+    from lehome_fold.eval_kwargs import translate_policy_kwargs
+
+    sent = {"device": "cpu", "model_path": "/ckpt"}
+    out = translate_policy_kwargs(
+        sent, {"LH_EVAL_DATASET_ROOT": "Datasets/x"}, base_task="fold it")
+    assert out["policy_path"] == "/ckpt", out
+    assert "model_path" not in out, out
+    assert out["dataset_root"] == "Datasets/x", out
+    assert out["task_description"] == "fold it", out
+    assert out["device"] == "cpu", out
+    # The caller's dict is not mutated.
+    assert sent == {"device": "cpu", "model_path": "/ckpt"}
+
+
+@test
+def eval_kwargs_prefers_explicit_values_over_env():
+    from lehome_fold.eval_kwargs import translate_policy_kwargs
+
+    out = translate_policy_kwargs(
+        {"policy_path": "/explicit", "dataset_root": "D", "task_description": "T"},
+        {"LH_EVAL_DATASET_ROOT": "ignored", "LH_EVAL_TASK_DESCRIPTION": "ignored"})
+    assert out["policy_path"] == "/explicit"
+    assert out["dataset_root"] == "D"
+    assert out["task_description"] == "T"
+
+
+@test
+def eval_kwargs_refuses_a_missing_checkpoint_or_dataset():
+    from lehome_fold.eval_kwargs import translate_policy_kwargs
+
+    for kw, env in (({"device": "cpu"}, {"LH_EVAL_DATASET_ROOT": "D"}),
+                    ({"model_path": "/ckpt"}, {})):
+        try:
+            translate_policy_kwargs(kw, env)
+        except ValueError:
+            pass
+        else:
+            assert False, f"should have refused {kw} with env {env}"
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -59,6 +59,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_steps", type=int, default=600)
     ap.add_argument("--max_iters", type=int, default=10**9)
     ap.add_argument("--poll_seconds", type=float, default=30.0)
+    ap.add_argument("--max_dead_iters", type=int, default=5,
+                    help="give up after this many consecutive iterations "
+                         "that score no episode; the first run spun 420 "
+                         "times over 12.5 h on one unchanging error")
     return ap.parse_args()
 
 
@@ -149,6 +153,7 @@ def main() -> int:
     rollout_dir.mkdir(parents=True, exist_ok=True)
 
     last_version = -1
+    dead = 0
     for it in range(args.max_iters):
         try:
             ref = K.read(args.shared_dir)
@@ -174,10 +179,33 @@ def main() -> int:
             # A worker that silently produces nothing looks identical to a
             # worker that is merely slow. Say so, and back off rather than
             # spinning on a broken environment.
+            dead += 1
             print(f"[worker {args.worker_id}] iter {it}: ZERO episodes parsed -- "
-                  f"the evaluation crashed rather than failing", flush=True)
+                  f"the evaluation crashed rather than failing "
+                  f"({dead} in a row)", flush=True)
+            # Say WHY. Without this the first run of this worker spun 420
+            # iterations across 12.5 hours on one unchanging import error and
+            # reported it 420 identical times, none of which named the cause.
+            lines = [ln for ln in log.splitlines() if ln.strip()]
+            keys = ("[run_eval]", "did not register", "not found in registry",
+                    "Error during evaluation", "unexpected keyword argument")
+            flagged = [ln for ln in lines if any(k in ln for k in keys)]
+            if dead == 1 or dead % 25 == 0:
+                for ln in flagged[:8]:
+                    print(f"    ! {ln[:220]}", flush=True)
+                for ln in lines[-12:]:
+                    print(f"    | {ln[:200]}", flush=True)
+            if dead >= args.max_dead_iters:
+                # Nothing about this fixes itself by waiting. The trainer is
+                # blocked on rollouts either way; holding the GPU only hides
+                # that behind a job that still looks alive.
+                print(f"[worker {args.worker_id}] ABORT: {dead} consecutive "
+                      f"iterations produced no scored episode. The evaluator is "
+                      f"not running -- see the child output above.", flush=True)
+                return 2
             time.sleep(args.poll_seconds)
             continue
+        dead = 0
 
         # Join the official scorer's outcomes with the policy's own value-head
         # estimates. Positional: both are emitted once per episode in order. If

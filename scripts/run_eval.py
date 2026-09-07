@@ -113,6 +113,30 @@ if os.environ.get("LH_STORM_EVAL") == "1":
         # look like a different problem entirely.
         raise SystemExit(f"[run_eval] LH_STORM_EVAL=1 but setup failed: {exc!r}")
 
+# evaluation.py only puts policy_path/dataset_root/task_description into
+# policy_kwargs for policy_type == "lerobot". Every other type -- candidate and
+# recap included -- gets `model_path` and `device` and nothing else. The value
+# policies subclass LeRobotPolicy, which needs all three, so stash the
+# evaluator's OWN argv here rather than re-deriving them in stage_policies and
+# risking a dataset_root that disagrees with the one being evaluated.
+def _argv_value(flag: str) -> str:
+    if flag in sys.argv:
+        i = sys.argv.index(flag)
+        if i + 1 < len(sys.argv):
+            return sys.argv[i + 1]
+    pre = f"{flag}="
+    for a in sys.argv:
+        if a.startswith(pre):
+            return a[len(pre):]
+    return ""
+
+
+for _flag, _env in (("--dataset_root", "LH_EVAL_DATASET_ROOT"),
+                    ("--task_description", "LH_EVAL_TASK_DESCRIPTION")):
+    _v = _argv_value(_flag)
+    if _v:
+        os.environ[_env] = _v
+
 try:
     runpy.run_module("scripts.eval", run_name="__main__")
 finally:

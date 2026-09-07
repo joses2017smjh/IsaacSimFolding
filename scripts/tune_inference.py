@@ -100,9 +100,22 @@ def run_arm(args, arm: T.Arm) -> list[bool]:
         # child that crashes every time loops until walltime and writes no
         # result. Say WHY, or the run looks like slow progress rather than a
         # dead subprocess.
-        tail = [ln for ln in blob.splitlines() if ln.strip()][-25:]
+        lines = [ln for ln in blob.splitlines() if ln.strip()]
+        # The cause is often nowhere near the end. run_eval.py reports a
+        # policy that failed to register and then carries on, so the fatal
+        # "policy type not found" lands hundreds of lines later while the real
+        # explanation scrolled past long before. Pull those out by name.
+        keys = ("[run_eval]", "did not register", "not found in registry",
+                "Error during evaluation")
+        flagged = [ln for ln in lines if any(k in ln for k in keys)]
         print(f"[stage4] {arm.name}: child rc={proc.returncode}, no episodes "
-              f"parsed. Last {len(tail)} lines:", flush=True)
+              f"parsed.", flush=True)
+        if flagged:
+            print("  registration/eval lines:", flush=True)
+            for ln in flagged[:12]:
+                print(f"    ! {ln[:220]}", flush=True)
+        tail = lines[-20:]
+        print(f"  last {len(tail)} lines:", flush=True)
         for ln in tail:
             print(f"    | {ln[:200]}", flush=True)
     return outcomes

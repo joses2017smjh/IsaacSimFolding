@@ -36,8 +36,14 @@ import torch
 
 from lehome.utils.logger import get_logger
 
-from .eval_policy.lerobot_policy import LeRobotPolicy
-from .eval_policy.registry import PolicyRegistry
+# One level, not two. run_eval.py copies this file INTO scripts/eval_policy/,
+# so `.lerobot_policy` is the sibling module. Writing `.eval_policy.…` here
+# resolves to scripts.eval_policy.eval_policy.… and the import fails, which
+# run_eval.py reports as a warning and carries on -- leaving `candidate` and
+# `recap` unregistered and every Stage 3/4 pull dying on "policy type not
+# found". g0_policies.py, which registers fine, uses this same one-level form.
+from .lerobot_policy import LeRobotPolicy
+from .registry import PolicyRegistry
 
 logger = get_logger(__name__)
 

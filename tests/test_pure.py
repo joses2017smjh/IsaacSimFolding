@@ -761,5 +761,26 @@ def main() -> int:
     return 1 if failed else 0
 
 
+@test
+def injected_policy_modules_use_one_level_relative_imports():
+    """run_eval.py copies these INTO scripts/eval_policy/, so a `.eval_policy.x`
+    import resolves to scripts.eval_policy.eval_policy.x and fails. run_eval
+    reports that as a warning and carries on, so the damage shows up much later
+    as "policy type 'candidate' not found in registry" -- which is what killed
+    the first two Stage 4 runs."""
+    import re
+    root = Path(__file__).resolve().parent.parent
+    injected = ["g0_policies.py", "stage_policies.py"]
+    bad = []
+    for name in injected:
+        f = root / "scripts" / name
+        if not f.exists():
+            continue
+        for i, line in enumerate(f.read_text().splitlines(), 1):
+            if re.match(r"\s*from \.\w+\.", line):
+                bad.append(f"{name}:{i}: {line.strip()}")
+    assert not bad, "two-level relative import in an injected module: " + "; ".join(bad)
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

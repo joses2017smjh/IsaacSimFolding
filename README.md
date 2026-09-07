@@ -20,13 +20,15 @@ decoder.</sub></p>
 <table align="center">
 <tr>
 <td align="center"><b>Top, long sleeve</b></td>
+<td align="center"><b>Top, short sleeve</b></td>
 <td align="center"><b>Pants, short</b></td>
 <td align="center"><b>Pants, long</b></td>
 </tr>
 <tr>
-<td><img src="docs/demo/fold_top_long_success.gif" width="280" alt="Long-sleeve top folded, all five conditions passed"></td>
-<td><img src="docs/demo/fold_pant_short_success.gif" width="280" alt="Short pants folded, all five conditions passed"></td>
-<td><img src="docs/demo/fold_pant_long_success.gif" width="280" alt="Long pants folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_top_long_success.gif" width="210" alt="Long-sleeve top folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_top_short_success.gif" width="210" alt="Short-sleeve top folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_pant_short_success.gif" width="210" alt="Short pants folded, all five conditions passed"></td>
+<td><img src="docs/demo/fold_pant_long_success.gif" width="210" alt="Long pants folded, all five conditions passed"></td>
 </tr>
 </table>
 
@@ -40,14 +42,17 @@ satisfy <code>[9.45, 12.15, 9.0, 13.05, 8.55]</code>, a long top
 <tr>
 <td align="center"><b>Left wrist</b></td>
 <td align="center"><b>Right wrist</b></td>
+<td align="center"><b>The headline fold, from the gripper</b></td>
 </tr>
 <tr>
-<td><img src="docs/demo/wrist_left_success.gif" width="380" alt="Left gripper camera: jaws closing on red cloth"></td>
-<td><img src="docs/demo/wrist_right_success.gif" width="380" alt="Right gripper camera: jaws closing on red cloth"></td>
+<td><img src="docs/demo/wrist_left_success.gif" width="270" alt="Left gripper camera: jaws closing on red cloth"></td>
+<td><img src="docs/demo/wrist_right_success.gif" width="270" alt="Right gripper camera: jaws closing on red cloth"></td>
+<td><img src="docs/demo/policy_wrist_success.gif" width="270" alt="Wrist camera during the policy's successful fold: jaws closing on the garment"></td>
 </tr>
 </table>
 
-<p align="center"><sub>These ride the grippers, matching the challenge rig
+<p align="center"><sub>The third is the same run as the GIF at the top of this page — what
+the policy itself saw while earning its 5/5. These ride the grippers, matching the challenge rig
 (<code>/Left_Robot/gripper/left_wrist_camera</code>, offset <code>(-0.001, 0.1, -0.04)</code>).
 Two of the policy's three inputs. They were previously pinned to fixed world poses aimed 0.37 m from
 the garment and rendered empty table — 14% of pixels changed between first and last frame but

@@ -47,6 +47,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--feature_path", default="")
     ap.add_argument("--out", default="results/stage4_thompson.json")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--max_dead_pulls", type=int, default=3,
+                    help="abort after this many consecutive pulls that "
+                         "score no episode; a broken evaluator otherwise "
+                         "spends the whole budget looking like slow progress")
     return ap.parse_args()
 
 
@@ -85,10 +89,23 @@ def run_arm(args, arm: T.Arm) -> list[bool]:
     })
     proc = subprocess.run(cmd, cwd=args.lehome, env=env,
                           capture_output=True, text=True, check=False)
+    blob = proc.stdout + proc.stderr
     try:
-        return [e.success for e in E.parse_episodes(proc.stdout + proc.stderr)]
-    except Exception:  # noqa: BLE001
-        return []
+        outcomes = [e.success for e in E.parse_episodes(blob)]
+    except Exception as exc:  # noqa: BLE001
+        outcomes = []
+        print(f"[stage4] {arm.name}: parse raised {exc!r}", flush=True)
+    if not outcomes:
+        # An arm that yields nothing is not charged against the budget, so a
+        # child that crashes every time loops until walltime and writes no
+        # result. Say WHY, or the run looks like slow progress rather than a
+        # dead subprocess.
+        tail = [ln for ln in blob.splitlines() if ln.strip()][-25:]
+        print(f"[stage4] {arm.name}: child rc={proc.returncode}, no episodes "
+              f"parsed. Last {len(tail)} lines:", flush=True)
+        for ln in tail:
+            print(f"    | {ln[:200]}", flush=True)
+    return outcomes
 
 
 def main() -> int:
@@ -99,7 +116,20 @@ def main() -> int:
     print(f"[stage4] {len(arms)} arms, budget {args.budget} episodes, "
           f"{args.baseline_pulls} reserved for {T.DEFAULT_ARM.name}", flush=True)
 
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    def snapshot() -> dict:
+        return {
+            "gain": ts.gain_over_baseline(),
+            "arms": [{"name": a.name, "pulls": ts.pulls(a),
+                      "successes": ts.successes[a.name],
+                      "posterior_mean": ts.posterior_mean(a),
+                      "cost": a.cost} for a in arms],
+        }
+
     spent = 0
+    dead = 0
     while spent < args.budget:
         arm = ts.select()
         outcomes = run_arm(args, arm)
@@ -110,10 +140,24 @@ def main() -> int:
             # and wrong conclusion.
             print(f"[stage4] {arm.name}: no episodes parsed -- not charged", flush=True)
             spent += 1
+            dead += 1
+            if dead >= args.max_dead_pulls:
+                # Every pull so far has crashed. Spending the rest of the
+                # budget relaunching Isaac Sim to crash the same way buys
+                # nothing and writes a result file that looks like a measured
+                # zero rather than a broken setup.
+                print(f"\n[stage4] ABORT: {dead} consecutive pulls produced no "
+                      f"scored episode. The evaluator is not running -- see the "
+                      f"child output above. No tuning result written.", flush=True)
+                return 2
             continue
+        dead = 0
         for ok in outcomes:
             ts.update(arm, ok)
             spent += 1
+        # Written every cycle: at budget 400 this job outlives its walltime,
+        # and an end-only write would leave nothing behind when it does.
+        out.write_text(json.dumps(snapshot(), indent=2))
         if spent % 25 < len(outcomes):
             print(f"[stage4] {spent}/{args.budget}  last={arm.name} "
                   f"{sum(outcomes)}/{len(outcomes)}", flush=True)
@@ -125,15 +169,7 @@ def main() -> int:
     for k, v in gain.items():
         print(f"  {k:16s} {v}")
 
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({
-        "gain": gain,
-        "arms": [{"name": a.name, "pulls": ts.pulls(a),
-                  "successes": ts.successes[a.name],
-                  "posterior_mean": ts.posterior_mean(a),
-                  "cost": a.cost} for a in arms],
-    }, indent=2))
+    out.write_text(json.dumps(snapshot(), indent=2))
     print(f"\n[stage4] wrote {out}", flush=True)
     return 0
 

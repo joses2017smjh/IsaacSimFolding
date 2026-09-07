@@ -111,10 +111,18 @@ def run_batch(args, ref: K.CheckpointRef, score_log: Path) -> str:
         "--num_episodes", str(args.episodes_per_batch),
         "--max_steps", str(args.max_steps),
         "--device", "cpu",
-        "--enable_cameras", "--headless",
+        # No --enable_cameras: AppLauncher builds the Isaac Lab render product
+        # at LAUNCH when it is set, and 5.1's RTX delegate segfaults against
+        # this driver at 586 ms, before any camera exists. Storm supplies the
+        # pixels through a TiledCamera-shaped shim instead.
+        "--headless",
     ]
     env = dict(os.environ)
     env["SCORE_LOG"] = str(score_log)
+    # Inherit the Storm routing from the worker's own environment so a batch
+    # scores through LeHome's checker rather than dying in RTX.
+    env.setdefault("LH_STORM_EVAL", os.environ.get("LH_STORM_EVAL", "1"))
+    env.setdefault("HF_HUB_OFFLINE", "1")
     if args.value_path:
         env["VALUE_PATH"] = args.value_path
     if args.feature_path:

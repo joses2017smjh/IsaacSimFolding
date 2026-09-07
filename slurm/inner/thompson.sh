@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 cd "$LEHOME"
-exec "$PY" "$REPO/scripts/tune_inference.py" \
+exec "$PY" -u "$REPO/scripts/tune_inference.py" \
     --policy_path "$POLICY_PATH" --value_path "$VALUE_PATH" \
     --dataset_root "${DATASET_ROOT:-Datasets/example/four_types_merged}" \
     --lehome "$LEHOME" --repo "$REPO" \

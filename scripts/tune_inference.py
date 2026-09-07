@@ -60,10 +60,22 @@ def run_arm(args, arm: T.Arm) -> list[bool]:
         "--garment_type", args.garment_type,
         "--num_episodes", str(args.episodes_per_pull),
         "--max_steps", str(args.max_steps),
-        "--device", "cpu", "--enable_cameras", "--headless",
+        "--device", "cpu", "--headless",
     ]
+    # No --enable_cameras. AppLauncher builds the Isaac Lab render product at
+    # LAUNCH when that flag is set, and 5.1's RTX delegate segfaults against
+    # this driver -- at 586 ms, before any camera exists. Storm supplies the
+    # pixels through a TiledCamera-shaped shim instead, so the flag is not
+    # merely unnecessary, it is fatal.
     env = dict(os.environ)
     env.update({
+        # Route cameras through Storm; see scripts/run_eval.py.
+        "LH_STORM_EVAL": "1",
+        "LH_STORM_ASSETS": os.environ.get("LH_STORM_ASSETS", ""),
+        "LH_STORM_GARMENT_DIR": os.environ.get("LH_STORM_GARMENT_DIR", ""),
+        "LH_STORM_WORKDIR": os.environ.get("LH_STORM_WORKDIR", ""),
+        "LH_STORM_DEVICE": os.environ.get("LH_STORM_DEVICE", "cuda"),
+        "HF_HUB_OFFLINE": "1",
         "VALUE_PATH": args.value_path,
         "FEATURE_PATH": args.feature_path,
         "N_CANDIDATES": str(arm.n_candidates),

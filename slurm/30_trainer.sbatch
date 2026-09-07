@@ -23,7 +23,7 @@
 # --dry_run 1 exercises the whole provenance/advantage/conditioning path with
 # no gradient step, which is how G3 was verified without a simulator.
 set -euo pipefail
-export LH_ROUTE=${LH_ROUTE:-train}
+export LH_ROUTE=${LH_ROUTE:-isaac}
 source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 setup_node_cache
 : "${POLICY_PATH:?set POLICY_PATH to the Stage 2 checkpoint}"

@@ -14,6 +14,7 @@
 # Reports gain over fixed defaults on the SAME checkpoint, with the default arm
 # given a reserved budget so the baseline is measured rather than starved.
 set -euo pipefail
+export LH_ROUTE=${LH_ROUTE:-isaac}
 source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 setup_node_cache
 : "${POLICY_PATH:?set POLICY_PATH}"

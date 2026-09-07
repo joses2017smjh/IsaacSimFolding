@@ -61,13 +61,29 @@ case "$LH_ROUTE" in
         PY=$WORKSPACE/venv-lehome-train/bin/python
         export UV_PROJECT_ENVIRONMENT=$WORKSPACE/venv-lehome-train
         ;;
+    isaac)
+        # The combination every working rollout in this repo actually uses:
+        # bhl.sif plus $WORKSPACE/venv, which is the only environment here with
+        # Isaac Sim 5.1 installed. Neither `train` nor `source` gives it --
+        # train pairs bhl.sif with venv-lehome-train, which has no isaacsim,
+        # and source wants a lehome.sif that was never built. Stages 3 and 4
+        # need Isaac Sim AND the official evaluator, so they need this.
+        SIF=${LH_ISAAC_SIF:-$WORKSPACE/container/bhl.sif}
+        LEHOME=$REPO/external/lehome-challenge
+        PY=${LH_PY:-$WORKSPACE/venv/bin/python}
+        # Storm resolves its Hydra plugins through this; without it the
+        # renderer silently falls back and finds nothing.
+        _libs=$(ls -d "$WORKSPACE"/venv/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-* 2>/dev/null | head -1)
+        [ -n "$_libs" ] && export PXR_PLUGINPATH_NAME="$_libs/bin/usd"
+        export OMNI_KIT_ACCEPT_EULA=YES ACCEPT_EULA=Y
+        ;;
     source)
         SIF=$WORKSPACE/container/lehome.sif
         LEHOME=$REPO/external/lehome-challenge
         PY=$WORKSPACE/venv-lehome/bin/python
         export UV_PROJECT_ENVIRONMENT=$WORKSPACE/venv-lehome
         ;;
-    *) echo "unknown LH_ROUTE=$LH_ROUTE (expected official, source or train)" >&2; return 1 2>/dev/null || exit 1 ;;
+    *) echo "unknown LH_ROUTE=$LH_ROUTE (expected official, source, train or isaac)" >&2; return 1 2>/dev/null || exit 1 ;;
 esac
 
 # Assets and datasets live on Lustre and are bind-mounted in, NOT baked into
@@ -172,6 +188,9 @@ lh_exec() {
         --env REPO="$REPO" \
         --env WORKSPACE="$WORKSPACE" \
         --env PY="$PY" \
+        --env PXR_PLUGINPATH_NAME="${PXR_PLUGINPATH_NAME:-}" \
+        --env OMNI_KIT_ACCEPT_EULA="${OMNI_KIT_ACCEPT_EULA:-}" \
+        --env ACCEPT_EULA="${ACCEPT_EULA:-}" \
         "${envargs[@]}" \
         "$SIF" bash "$@"
 }

@@ -25,6 +25,7 @@
 #
 # BLOCKED until a route can render -- see results/rtx51_probe_borrowed.txt.
 set -euo pipefail
+export LH_ROUTE=${LH_ROUTE:-isaac}
 source /nfs/hpc/share/$USER/Humanoid_Lite/lehome-fold-repro/slurm/_env.sh
 setup_node_cache
 export SHARED_DIR=${SHARED_DIR:-$LEHOME_DATA/stage3/shared}

@@ -71,6 +71,15 @@ case "$LH_ROUTE" in
         SIF=${LH_ISAAC_SIF:-$WORKSPACE/container/bhl.sif}
         LEHOME=$REPO/external/lehome-challenge
         PY=${LH_PY:-$WORKSPACE/venv/bin/python}
+        # Same venv $PY lives in. Every other route sets this; omitting it here
+        # made `set -u` kill the job at the apptainer line in three seconds.
+        export UV_PROJECT_ENVIRONMENT=${LH_VENV:-$WORKSPACE/venv}
+        # $WORKSPACE/venv carries isaacsim + isaaclab but NOT lehome, lerobot
+        # or transformers; those live in lehome51-site. apptainer --cleanenv
+        # drops PYTHONPATH, so it has to be rebuilt here and forwarded below.
+        # This exact order is the one the 12-episode Storm eval probe verified.
+        export PYTHONPATH="${LH_SITE:-$WORKSPACE/lehome51-site}:$LEHOME/source/lehome:$LEHOME:$REPO/src:$REPO/scripts"
+        export PYTHONUNBUFFERED=1
         # Storm resolves its Hydra plugins through this; without it the
         # renderer silently falls back and finds nothing.
         _libs=$(ls -d "$WORKSPACE"/venv/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-* 2>/dev/null | head -1)
@@ -142,7 +151,7 @@ setup_node_cache() {
 
 # Because --cleanenv wipes the host environment, ANY variable an inner script
 # needs must be forwarded explicitly.
-LH_FORWARD_VARS="LH_STORM_EVAL LH_STORM_ASSETS LH_STORM_GARMENT_DIR LH_STORM_WORKDIR LH_STORM_DEVICE BASE_CKPT CAP_GLOB FT_OUT FT_STEPS FT_UNFREEZE CAPTURE_OUT SAVE_FREQ EVAL_ONLY STAGE_STEPS HF_TOKEN FETCH_DEPTH CONFIG VALUE_PATH FEATURE_PATH HIDDEN_DIM POLICY_PATH_OVR ROLLOUT_DIR SHARED_DIR WORKER_ID N_CANDIDATES STAGE_OUT GARMENT_TYPE NUM_EPISODES MAX_STEPS POLICY_TYPE POLICY_PATH DATASET_ROOT PROBE_OUT OUT_CSV SEED DEVICE ENABLE_CAMERAS HEADLESS HF_HOME STEP_HZ RUN_NAME"
+LH_FORWARD_VARS="PYTHONPATH PYTHONUNBUFFERED LH_STORM_EVAL LH_STORM_ASSETS LH_STORM_GARMENT_DIR LH_STORM_WORKDIR LH_STORM_DEVICE BASE_CKPT CAP_GLOB FT_OUT FT_STEPS FT_UNFREEZE CAPTURE_OUT SAVE_FREQ EVAL_ONLY STAGE_STEPS HF_TOKEN FETCH_DEPTH CONFIG VALUE_PATH FEATURE_PATH HIDDEN_DIM POLICY_PATH_OVR ROLLOUT_DIR SHARED_DIR WORKER_ID N_CANDIDATES STAGE_OUT GARMENT_TYPE NUM_EPISODES MAX_STEPS POLICY_TYPE POLICY_PATH DATASET_ROOT PROBE_OUT OUT_CSV SEED DEVICE ENABLE_CAMERAS HEADLESS HF_HOME STEP_HZ RUN_NAME"
 
 lh_exec() {
     local envargs=()

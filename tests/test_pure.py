@@ -922,5 +922,38 @@ def garment_dir_for_maps_every_name_the_evaluator_sweeps():
         assert False, "should refuse a name with no _Seen_N / _Unseen_N suffix"
 
 
+@test
+def stage4_refuses_to_sweep_dimensions_nothing_applies():
+    """tune_inference exports N_CANDIDATES, CHUNK_LENGTH, TEMPERATURE and
+    FLOW_STEPS; only N_CANDIDATES is read by anything. The first Stage 4 runs
+    swept all four across 36 arms while the policy applied none of them, so
+    every arm was the same configuration and every arm returned the same
+    numbers -- a tuning result that was pure noise."""
+    from lehome_fold import thompson as T
+
+    # The full grid varies three inert dimensions -> must refuse.
+    try:
+        T.assert_dims_implemented(T.grid())
+    except ValueError as e:
+        assert "chunk_length" in str(e) and "temperature" in str(e), str(e)
+    else:
+        assert False, "full grid varies unimplemented dims and must be refused"
+
+    # Pinned to the one implemented dimension -> allowed.
+    ok = T.grid(chunk_length=(T.DEFAULT_ARM.chunk_length,),
+                temperature=(T.DEFAULT_ARM.temperature,),
+                flow_steps=(T.DEFAULT_ARM.flow_steps,))
+    T.assert_dims_implemented(ok)
+    assert T.varying_dims(ok) == {"n_candidates"}, T.varying_dims(ok)
+    assert len(ok) == 3, len(ok)
+
+    # A single arm varies nothing and is trivially fine.
+    T.assert_dims_implemented([T.DEFAULT_ARM])
+    assert T.varying_dims([T.DEFAULT_ARM]) == set()
+
+    # The two sets must not overlap or the declaration is lying.
+    assert not (T.IMPLEMENTED_DIMS & T.UNIMPLEMENTED_DIMS)
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

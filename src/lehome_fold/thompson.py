@@ -55,6 +55,45 @@ def grid(n_candidates=(1, 4, 16), chunk_length=(15, 30, 50),
 
 DEFAULT_ARM = Arm(n_candidates=1, chunk_length=30, temperature=1.0, flow_steps=10)
 
+# Which arm dimensions the policy actually honours at inference.
+#
+# tune_inference exports one env var per dimension, but only the ones listed
+# here are read by anything. The first real Stage 4 run varied all four across
+# 36 arms while the policy applied NONE of them -- every arm was the default
+# configuration, which is why every arm returned identical numbers and why a
+# "best arm" would have been noise dressed as a tuning result.
+#
+# Adding a dimension here is a claim that something reads its env var. Keep it
+# honest: assert_dims_implemented is what stops Stage 4 reporting otherwise.
+IMPLEMENTED_DIMS = frozenset({"n_candidates"})
+UNIMPLEMENTED_DIMS = frozenset({"chunk_length", "temperature", "flow_steps"})
+
+
+def varying_dims(arms) -> set[str]:
+    """Dimensions that actually differ across the given arms."""
+    out = set()
+    for dim in ("n_candidates", "chunk_length", "temperature", "flow_steps"):
+        if len({getattr(a, dim) for a in arms}) > 1:
+            out.add(dim)
+    return out
+
+
+def assert_dims_implemented(arms) -> None:
+    """Refuse to tune over dimensions nothing applies.
+
+    A sweep across an inert dimension does not return "no effect" -- it returns
+    noise, indistinguishable from a real result and reported with the same
+    confidence.
+    """
+    inert = varying_dims(arms) - IMPLEMENTED_DIMS
+    if inert:
+        raise ValueError(
+            "Stage 4 grid varies dimensions the policy does not apply: "
+            f"{sorted(inert)}. Nothing reads their env vars, so every arm runs "
+            "the same configuration and the tuning result is noise. Either "
+            "implement them in stage_policies and add them to IMPLEMENTED_DIMS, "
+            "or restrict the grid to " + str(sorted(IMPLEMENTED_DIMS)) + ".")
+
 
 @dataclass
 class ThompsonSampler:

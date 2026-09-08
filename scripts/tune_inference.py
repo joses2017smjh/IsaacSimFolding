@@ -47,6 +47,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--feature_path", default="")
     ap.add_argument("--out", default="results/stage4_thompson.json")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--only_implemented_dims", type=int, default=1,
+                    help="pin the dimensions the policy does not "
+                         "apply to their defaults instead of "
+                         "sweeping them for nothing")
     ap.add_argument("--max_dead_pulls", type=int, default=3,
                     help="abort after this many consecutive pulls that "
                          "score no episode; a broken evaluator otherwise "
@@ -123,7 +127,12 @@ def run_arm(args, arm: T.Arm) -> list[bool]:
 
 def main() -> int:
     args = parse_args()
-    arms = T.grid()
+    arms = T.grid(**({"chunk_length": (T.DEFAULT_ARM.chunk_length,),
+                      "temperature": (T.DEFAULT_ARM.temperature,),
+                      "flow_steps": (T.DEFAULT_ARM.flow_steps,)}
+                     if args.only_implemented_dims else {}))
+    # Fails loudly rather than sweeping a dimension nothing applies.
+    T.assert_dims_implemented(arms)
     ts = T.ThompsonSampler(arms, seed=args.seed, baseline=T.DEFAULT_ARM,
                            baseline_pulls=args.baseline_pulls)
     print(f"[stage4] {len(arms)} arms, budget {args.budget} episodes, "

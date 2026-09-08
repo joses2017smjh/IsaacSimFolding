@@ -83,6 +83,12 @@ class _ValueScoredPolicy(LeRobotPolicy):
         kwargs = translate_policy_kwargs(kwargs, os.environ,
                                          base_task=BASE_TASK)
         super().__init__(**kwargs)
+        # evaluation.py constructs custom policies with {device, model_path}
+        # only -- it has no way to pass n_candidates -- so the arm value arrives
+        # through the environment, the same route feature_path already uses.
+        # Without this every Stage 4 arm silently ran n_candidates=1.
+        if n_candidates == 1 and os.environ.get("N_CANDIDATES"):
+            n_candidates = int(os.environ["N_CANDIDATES"])
         self.n_candidates = int(n_candidates)
         if self.n_candidates < 1:
             raise ValueError(f"n_candidates must be >= 1, got {self.n_candidates}")

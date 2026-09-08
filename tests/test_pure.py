@@ -955,5 +955,37 @@ def stage4_refuses_to_sweep_dimensions_nothing_applies():
     assert not (T.IMPLEMENTED_DIMS & T.UNIMPLEMENTED_DIMS)
 
 
+@test
+def custom_kwargs_come_from_env_because_evaluation_py_cannot_pass_them():
+    """evaluation.py builds {"device", "model_path"} for non-lerobot types, so
+    every argument our policies add must arrive by environment. n_candidates
+    was found missing after 36 inert Stage 4 arms; value_path was found one job
+    later, when n>1 refused to run for want of a value head."""
+    from lehome_fold.eval_kwargs import custom_kwargs_from_env, ENV_KWARGS
+
+    defaults = {"value_path": None, "feature_path": "",
+                "log_scores": None, "n_candidates": 1}
+    env = {"VALUE_PATH": "/v", "FEATURE_PATH": "/f",
+           "SCORE_LOG": "/s", "N_CANDIDATES": "16"}
+    out = custom_kwargs_from_env(dict(defaults), env, defaults)
+    assert out["value_path"] == "/v", out
+    assert out["feature_path"] == "/f", out
+    assert out["log_scores"] == "/s", out
+    assert out["n_candidates"] == 16 and isinstance(out["n_candidates"], int), out
+
+    # An explicit value beats the environment.
+    out = custom_kwargs_from_env(
+        {"value_path": "/explicit", "n_candidates": 4}, env, defaults)
+    assert out["value_path"] == "/explicit", out
+    assert out["n_candidates"] == 4, out
+
+    # Empty env leaves the defaults alone.
+    out = custom_kwargs_from_env(dict(defaults), {}, defaults)
+    assert out == defaults, out
+
+    # Every declared kwarg has a distinct env var.
+    assert len(set(ENV_KWARGS.values())) == len(ENV_KWARGS)
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

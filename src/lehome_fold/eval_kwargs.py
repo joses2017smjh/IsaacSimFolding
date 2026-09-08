@@ -46,3 +46,40 @@ def translate_policy_kwargs(kwargs: Mapping[str, Any],
             "dataset_root is required (LeRobotPolicy reads the action shape "
             "from its metadata); pass --dataset_root to the evaluator")
     return out
+
+# Constructor kwargs that evaluation.py has no way to pass.
+#
+# It builds policy_kwargs as {"device", "model_path"} for every policy type
+# that is not lerobot or docker, so ANY argument our policies add must arrive
+# through the environment. Each of these was found the hard way, one job at a
+# time: n_candidates silently stayed 1 across all 36 Stage 4 arms, then
+# value_path was missing so every n>1 arm refused to run. Listing them in one
+# place is what stops the next one being found the same way.
+ENV_KWARGS = {
+    "value_path": "VALUE_PATH",
+    "feature_path": "FEATURE_PATH",
+    "log_scores": "SCORE_LOG",
+    "n_candidates": "N_CANDIDATES",
+}
+
+_INT_KWARGS = frozenset({"n_candidates"})
+
+
+def custom_kwargs_from_env(kwargs, env, defaults=None):
+    """Fill our own constructor kwargs from the environment.
+
+    An explicitly passed value always wins; a value equal to the declared
+    default counts as unset, since that is what evaluation.py leaves behind.
+    """
+    defaults = defaults or {}
+    out = dict(kwargs)
+    for name, var in ENV_KWARGS.items():
+        given = out.get(name)
+        unset = given is None or given == "" or given == defaults.get(name)
+        if not unset:
+            continue
+        raw = env.get(var)
+        if raw is None or raw == "":
+            continue
+        out[name] = int(raw) if name in _INT_KWARGS else raw
+    return out

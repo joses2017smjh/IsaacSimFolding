@@ -77,22 +77,30 @@ class _ValueScoredPolicy(LeRobotPolicy):
         # subclass LeRobotPolicy, which requires all three, translate here.
         # run_eval.py stashed the evaluator's own argv so dataset_root cannot
         # drift from the dataset actually being evaluated.
-        from lehome_fold.eval_kwargs import translate_policy_kwargs
+        from lehome_fold.eval_kwargs import (custom_kwargs_from_env,
+                                              translate_policy_kwargs)
         from lehome_fold.recap import BASE_TASK
+
+        # Our own kwargs first: evaluation.py cannot pass any of them, so they
+        # come from the environment or not at all.
+        _mine = custom_kwargs_from_env(
+            {"value_path": value_path, "feature_path": feature_path,
+             "log_scores": log_scores, "n_candidates": n_candidates},
+            os.environ,
+            defaults={"value_path": None, "feature_path": "",
+                      "log_scores": None, "n_candidates": 1})
+        value_path = _mine["value_path"]
+        feature_path = _mine["feature_path"]
+        log_scores = _mine["log_scores"]
+        n_candidates = _mine["n_candidates"]
 
         kwargs = translate_policy_kwargs(kwargs, os.environ,
                                          base_task=BASE_TASK)
         super().__init__(**kwargs)
-        # evaluation.py constructs custom policies with {device, model_path}
-        # only -- it has no way to pass n_candidates -- so the arm value arrives
-        # through the environment, the same route feature_path already uses.
-        # Without this every Stage 4 arm silently ran n_candidates=1.
-        if n_candidates == 1 and os.environ.get("N_CANDIDATES"):
-            n_candidates = int(os.environ["N_CANDIDATES"])
         self.n_candidates = int(n_candidates)
         if self.n_candidates < 1:
             raise ValueError(f"n_candidates must be >= 1, got {self.n_candidates}")
-        self.feature_path = feature_path or os.environ.get("FEATURE_PATH", "")
+        self.feature_path = feature_path
         self.heads = None
         if value_path:
             self.heads, _ = _load_heads(value_path, self.device)
@@ -106,8 +114,7 @@ class _ValueScoredPolicy(LeRobotPolicy):
         # this to get P_success for each episode -- without it the trainer has
         # to fall back to a batch-mean baseline, which throws away the paper's
         # whole point that the policy is its own value function.
-        self._log_scores = Path(log_scores or os.environ.get("SCORE_LOG", "")) \
-            if (log_scores or os.environ.get("SCORE_LOG")) else None
+        self._log_scores = Path(log_scores) if log_scores else None
         self._trace: list[dict] = []
         self._episode = 0
         self._install_tap()

@@ -78,6 +78,12 @@ def consume(rollout_dir: Path, seen: set[str], ref: K.CheckpointRef, max_lag: in
     """Read unconsumed rollout files and verify each record's provenance."""
     records, lags, dropped = [], Counter(), Counter()
     for f in sorted(rollout_dir.glob("*.jsonl")):
+        # pathlib's glob matches dotfiles -- shell globbing does not, and the
+        # leading-dot naming of the workers' .scores_wNNN.jsonl sidecars
+        # assumed it did. Reading those as rollouts put one "carries no
+        # _ckpt_version" drop into every single cycle's histogram.
+        if f.name.startswith("."):
+            continue
         if f.name in seen:
             continue
         seen.add(f.name)

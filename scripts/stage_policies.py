@@ -59,9 +59,37 @@ def _load_heads(value_path: str, device: torch.device):
             f"{cfg_file} not found. Stage 2 policies need a value-head "
             f"checkpoint from scripts/train_value.py, not just the BC weights."
         )
-    cfg = ValueHeadConfig(**json.loads(cfg_file.read_text()))
+    import dataclasses
+
+    raw = json.loads(cfg_file.read_text())
+    # train_value.py writes training metadata (steps_completed) into the same
+    # file, and passing it straight through is a TypeError. Keep the fields the
+    # dataclass declares and say what was dropped.
+    fields = {f.name for f in dataclasses.fields(ValueHeadConfig)}
+    extra = sorted(set(raw) - fields)
+    if extra:
+        logger.info(f"value_head_config.json: ignoring non-config keys {extra}")
+    kw = {k: v for k, v in raw.items() if k in fields}
+
+    sd = torch.load(p / "value_head.pt", map_location=device)
+    # hidden_dim is the width of the pooled backbone feature, discovered when
+    # the heads are first built. The checkpoint that exists on disk recorded 0,
+    # which ValueHeads rejects outright -- but the trunk's input width IS the
+    # answer, so take it from the weights rather than refusing to load.
+    if int(kw.get("hidden_dim", 0)) <= 0:
+        w = sd.get("trunk.0.weight")
+        if w is None or w.ndim != 2:
+            raise ValueError(
+                f"{cfg_file} has hidden_dim={kw.get('hidden_dim')!r} and "
+                f"trunk.0.weight is missing, so the feature width cannot be "
+                f"recovered. Retrain the value head.")
+        kw["hidden_dim"] = int(w.shape[1])
+        logger.info(f"value_head_config.json had hidden_dim<=0; recovered "
+                    f"{kw['hidden_dim']} from trunk.0.weight")
+
+    cfg = ValueHeadConfig(**kw)
     heads = ValueHeads(cfg)
-    heads.load_state_dict(torch.load(p / "value_head.pt", map_location=device))
+    heads.load_state_dict(sd)
     heads.eval().to(device)
     return heads, cfg
 

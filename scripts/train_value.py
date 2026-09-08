@@ -298,8 +298,19 @@ def save_heads(out, wrap, args, step, quiet=False):
     import torch
 
     torch.save(wrap.heads.state_dict(), out / "value_head.pt")
+    # hidden_dim from the BUILT config, not from args. The heads discover the
+    # pooled feature width on their first forward, so args.hidden_dim is still
+    # 0 for a lazily built head -- every other field here already reads
+    # wrap.heads.cfg. The checkpoint on disk recorded hidden_dim: 0 because of
+    # this, which ValueHeads rejects on load.
+    _hid = int(getattr(wrap.heads.cfg, "hidden_dim", 0) or args.hidden_dim)
+    if _hid <= 0:
+        raise ValueError(
+            "refusing to save a value head with hidden_dim<=0: the heads have "
+            "not seen a forward pass yet, so the feature width is unknown and "
+            "the checkpoint would not load")
     (out / "value_head_config.json").write_text(json.dumps({
-        "hidden_dim": args.hidden_dim, "trunk_dim": wrap.heads.cfg.trunk_dim,
+        "hidden_dim": _hid, "trunk_dim": wrap.heads.cfg.trunk_dim,
         "future_dim": wrap.heads.cfg.future_dim, "dropout": wrap.heads.cfg.dropout,
         "detach_backbone": bool(args.detach_backbone),
         "steps_completed": int(step),

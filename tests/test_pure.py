@@ -987,5 +987,28 @@ def custom_kwargs_come_from_env_because_evaluation_py_cannot_pass_them():
     assert len(set(ENV_KWARGS.values())) == len(ENV_KWARGS)
 
 
+@test
+def trainer_does_not_consume_dotfile_sidecars_as_rollouts():
+    """pathlib.Path.glob("*.jsonl") MATCHES dotfiles; shell globbing does not.
+    The workers write .scores_wNNN.jsonl sidecars into the rollout directory on
+    the assumption that a leading dot hides them, so the trainer read them as
+    rollouts and dropped one per cycle for missing provenance."""
+    import json
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        (d / ".scores_w000.jsonl").write_text(
+            json.dumps({"episode": 1, "p_success": 0.0}) + "\n")
+        (d / "rollout_w000_0001.jsonl").write_text(
+            json.dumps({"success": True, "_ckpt_version": 0}) + "\n")
+        # The pattern alone is not enough -- this is the trap.
+        assert len(list(d.glob("*.jsonl"))) == 2
+        kept = [f for f in sorted(d.glob("*.jsonl"))
+                if not f.name.startswith(".")]
+        assert [f.name for f in kept] == ["rollout_w000_0001.jsonl"], kept
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

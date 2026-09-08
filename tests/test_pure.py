@@ -896,5 +896,31 @@ def no_inner_script_passes_enable_cameras_unconditionally():
                      + "; ".join(bad))
 
 
+@test
+def garment_dir_for_maps_every_name_the_evaluator_sweeps():
+    """LeHome loads 12 garments for pant_short and calls switch_garment between
+    them. Storm loads ONE garment USD at build time, so following the switch is
+    the difference between scoring 12 garments and scoring the first one twelve
+    times against the wrong pixels."""
+    import sys as _s
+    _s.modules.pop("lehome_fold.storm_eval", None)
+    from lehome_fold.storm_eval import garment_dir_for
+
+    got = garment_dir_for("/A", "Pant_Short_Seen_0")
+    assert got == "/A/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0", got
+    got = garment_dir_for("/A", "Top_Long_Unseen_1")
+    assert got == "/A/objects/Challenge_Garment/Release/Top_Long/Top_Long_Unseen_1", got
+    # Stage is honoured.
+    assert garment_dir_for("/A", "Top_Short_Seen_9", "Release").endswith(
+        "Release/Top_Short/Top_Short_Seen_9")
+    # A name with no index suffix is a bug, not a silent passthrough.
+    try:
+        garment_dir_for("/A", "Pant_Short")
+    except ValueError:
+        pass
+    else:
+        assert False, "should refuse a name with no _Seen_N / _Unseen_N suffix"
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

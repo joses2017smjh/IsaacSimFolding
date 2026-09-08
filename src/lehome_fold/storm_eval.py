@@ -141,6 +141,24 @@ def enable_when_imported(module_name, observer, *, device="cuda"):
     return state
 
 
+def garment_dir_for(assets: str, name: str, stage: str = "Release") -> str:
+    """Where a garment's USD lives, from the name the evaluator switches to.
+
+    Names look like Pant_Short_Seen_0 / Top_Long_Unseen_1; the category
+    directory is the name with the trailing _Seen_N / _Unseen_N removed:
+        {assets}/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0
+    """
+    import os
+    import re
+
+    # "Unseen" has a lowercase s -- _(?:Un)?Seen_ silently fails to match it
+    # and would hand back the full name as the category directory.
+    cat = re.sub(r"_(?:Seen|Unseen)_\d+$", "", name)
+    if cat == name:
+        raise ValueError(f"garment name has no _Seen_N / _Unseen_N suffix: {name!r}")
+    return os.path.join(assets, "objects", "Challenge_Garment", stage, cat, name)
+
+
 def enable(env_module, observer, *, device="cuda", verbose=True):
     """Point `env_module`'s cameras at Storm and drive them from the env.
 
@@ -172,6 +190,31 @@ def enable(env_module, observer, *, device="cuda", verbose=True):
                     print(f"[storm_eval] render failed ({state['fails']}x): "
                           f"{type(exc).__name__}: {exc}", flush=True)
         return original(self)
+
+    # LeHome sweeps every garment in a category, calling switch_garment between
+    # them. Storm loads one garment USD when it builds, so without following the
+    # switch the policy is shown the FIRST garment for all twelve while physics
+    # simulates the real one -- eleven of twelve scored against wrong pixels.
+    original_switch = getattr(env_cls, "switch_garment", None)
+    if original_switch is not None:
+        def switch_garment(self, garment_name, garment_stage="Release", *a, **kw):
+            out = original_switch(self, garment_name, garment_stage, *a, **kw)
+            try:
+                observer.retarget(
+                    garment_dir_for(observer.cfg.assets, garment_name,
+                                    garment_stage))
+                if verbose:
+                    print(f"[storm_eval] retargeted to {garment_name} "
+                          f"({garment_stage})", flush=True)
+            except Exception as exc:  # noqa: BLE001
+                # Never silently keep rendering the old garment.
+                raise RuntimeError(
+                    f"Storm could not follow switch_garment({garment_name!r}): "
+                    f"{exc!r}. Continuing would score the policy against the "
+                    f"wrong garment.") from exc
+            return out
+
+        env_cls.switch_garment = switch_garment
 
     env_cls._get_observations = _get_observations
     if verbose:

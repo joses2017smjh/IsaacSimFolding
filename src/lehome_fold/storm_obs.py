@@ -399,6 +399,20 @@ class StormObserver:
         return cam
 
     # -- per step ---------------------------------------------------------
+    def retarget(self, garment_dir: str) -> None:
+        """Point the observer at a different garment and force a rebuild.
+
+        LeHome's evaluator sweeps every garment in a category -- twelve for
+        pant_short -- calling switch_garment between them. The observer loads
+        ONE garment USD when it builds its stage, so without this the policy
+        would be shown Pant_Short_Seen_0 while physics simulated Seen_1 through
+        Unseen_1: eleven of twelve garments scored against the wrong pixels.
+        """
+        if garment_dir and garment_dir != self.cfg.garment_dir:
+            self.cfg.garment_dir = garment_dir
+            self._built = False
+            self._stage = None
+
     def update(self, particles: np.ndarray, link_poses: dict):
         from pxr import Gf, Vt
 

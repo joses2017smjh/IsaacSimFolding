@@ -176,7 +176,10 @@ def gif_thompson(out: Path) -> None:
     for step in range(1, 1201):
         arm = ts.select()
         ts.update(arm, rng.uniform() < truth[arm.name])
-        hist.append(truth[ts.best().name])
+        # best() returns None until an arm has evidence; at step 1 exactly
+        # one has been pulled, so this only guards the very first frame.
+        _b = ts.best()
+        hist.append(truth[_b.name] if _b is not None else 0.0)
         if step % 40 or step < 80:
             if step % 40:
                 continue

@@ -828,5 +828,50 @@ def eval_kwargs_refuses_a_missing_checkpoint_or_dataset():
             assert False, f"should have refused {kw} with env {env}"
 
 
+@test
+def thompson_never_names_an_unpulled_arm_as_best():
+    """An untried arm sits at the Beta(1,1) prior of 0.5. When every measured
+    arm is worse than that -- 36 episodes, 0 successes, which is exactly what
+    the first real Stage 4 run saw -- the old best() returned an arm it had
+    never pulled and gain_over_baseline reported 0.48 for it."""
+    from lehome_fold import thompson as T
+
+    arms = T.grid()
+    base = T.DEFAULT_ARM
+    ts = T.ThompsonSampler(arms, seed=0, baseline=base, baseline_pulls=0)
+    # Pull two arms, both total failures; every other arm stays untouched.
+    measured = [a for a in arms if a.name == base.name][0]
+    for _ in range(24):
+        ts.update(measured, False)
+    assert ts.pulls(measured) == 24
+
+    b = ts.best()
+    assert b is not None, "an arm WAS pulled, so there is a best"
+    assert ts.pulls(b) > 0, f"best() named {b.name} with {ts.pulls(b)} pulls"
+
+    g = ts.gain_over_baseline()
+    assert g["best_pulls"] > 0, g
+    assert g["arms_pulled"] == 1, g
+    # 0 successes in 24 cannot outrank the 0.5 prior of an untried arm.
+    assert g["best_mean"] < 0.5, g
+    assert g["gain"] is not None and g["gain"] <= 0.0, g
+    # And with no successes anywhere, the report must refuse to rank.
+    assert g["total_successes"] == 0, g
+    assert g["note"] and "no ranking valid" in g["note"], g
+
+
+@test
+def thompson_reports_nothing_when_nothing_was_pulled():
+    from lehome_fold import thompson as T
+
+    ts = T.ThompsonSampler(T.grid(), seed=0, baseline=T.DEFAULT_ARM,
+                           baseline_pulls=0)
+    assert ts.best() is None
+    g = ts.gain_over_baseline()
+    assert g["best_arm"] is None and g["gain"] is None, g
+    assert g["arms_pulled"] == 0, g
+    assert "note" in g
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

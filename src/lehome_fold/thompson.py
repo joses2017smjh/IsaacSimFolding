@@ -155,15 +155,55 @@ class ThompsonSampler:
             )
         return "\n".join(out)
 
-    def best(self) -> Arm:
-        return max(self.arms, key=self.posterior_mean)
+    def best(self, min_pulls: int = 1) -> Arm | None:
+        """Best arm among those actually measured.
+
+        An untried arm sits at the Beta(1,1) prior mean of 0.5. When no arm has
+        beaten that -- which is every run where the policy fails often -- an
+        arm with ZERO pulls outranks every measured one, and the reported gain
+        becomes a prior minus a measurement. The first real Stage 4 run spent
+        36 episodes on 2 arms, scored 0, and reported "gain 0.48" for an arm it
+        had never once pulled. Requiring evidence is the whole fix.
+        """
+        eligible = [a for a in self.arms if self.pulls(a) >= min_pulls]
+        if not eligible:
+            return None
+        return max(eligible, key=self.posterior_mean)
 
     def gain_over_baseline(self) -> dict[str, float]:
         """The Stage 4 headline: best arm minus fixed defaults, same checkpoint."""
         b, base = self.best(), self.baseline
-        blo, bhi = self.credible_interval(b)
         rlo, rhi = self.credible_interval(base)
+        n_pulled = sum(1 for a in self.arms if self.pulls(a) > 0)
+        if b is None:
+            # Nothing was measured. Say so instead of returning a number that
+            # reads like a result.
+            return {
+                "best_arm": None, "best_mean": None, "best_pulls": 0.0,
+                "baseline_arm": base.name,
+                "baseline_mean": self.posterior_mean(base),
+                "baseline_pulls": float(self.pulls(base)),
+                "gain": None,
+                "best_ci_lo": None, "best_ci_hi": None,
+                "baseline_ci_lo": rlo, "baseline_ci_hi": rhi,
+                "separated": 0.0, "cost_ratio": None,
+                "arms_pulled": n_pulled, "arms_total": len(self.arms),
+                "note": "no arm has been pulled; nothing to compare",
+            }
+        blo, bhi = self.credible_interval(b)
+        total_succ = sum(self.successes[a.name] for a in self.arms)
+        note = None
+        if total_succ == 0:
+            # Every arm at zero successes means the posterior mean is a
+            # decreasing function of pulls alone, so "best" would name whichever
+            # arm was tried LEAST. That is an artifact of the prior, not a
+            # ranking, and it must not be presented as one.
+            note = ("no arm recorded a single success; posterior means here "
+                    "rank by fewest pulls, not by quality -- no ranking valid")
         return {
+            "arms_pulled": n_pulled, "arms_total": len(self.arms),
+            "total_successes": total_succ,
+            "note": note,
             "best_arm": b.name,
             "best_mean": self.posterior_mean(b),
             "best_pulls": float(self.pulls(b)),

@@ -23,14 +23,22 @@ ls Assets/objects/Challenge_Garment/Release 2>/dev/null || {
     echo "  Run 02_fetch_data.sbatch, or fall back to LH_ROUTE=source." >&2
     exit 5; }
 
-# --headless and --enable_cameras are both required: headless because there is
-# no display on a compute node, and enable_cameras because the policy consumes
-# RGB and without it the observation dict comes back without images.
+# --headless is always required: there is no display on a compute node.
+#
+# --enable_cameras was described here as equally required, because the policy
+# consumes RGB and without it the observation dict comes back imageless. That
+# holds only on a working RTX. On 5.1 against this cluster's driver the flag is
+# FATAL -- AppLauncher builds the render product at LAUNCH and segfaults at
+# 586 ms, before any camera exists. LH_STORM_EVAL=1 supplies the same RGB
+# through the TiledCamera-shaped shim, so the flag becomes both unnecessary and
+# lethal; it must be absent, not merely ignored.
+CAM=(--enable_cameras)
+[ "${LH_STORM_EVAL:-0}" = "1" ] && CAM=()
 "$PY" "$REPO/scripts/run_eval.py" \
     --policy_type "$POLICY_TYPE" \
     --garment_type "$GARMENT_TYPE" \
     --num_episodes "$NUM_EPISODES" \
     --max_steps "$MAX_STEPS" \
     --device cpu \
-    --enable_cameras \
+    "${CAM[@]}" \
     --headless

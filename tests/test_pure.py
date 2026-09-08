@@ -873,5 +873,28 @@ def thompson_reports_nothing_when_nothing_was_pulled():
     assert "note" in g
 
 
+@test
+def no_inner_script_passes_enable_cameras_unconditionally():
+    """--enable_cameras makes AppLauncher build the RTX render product at LAUNCH,
+    which segfaults on 5.1 against this cluster's driver before any camera
+    exists. Under LH_STORM_EVAL=1 the flag must be ABSENT, not merely unused.
+    This was fixed in tune_inference.py, then again in rollout_worker.py, then
+    found a third time in eval_stage.sh and g0_floor.sh -- where it segfaulted
+    both halves of a controlled comparison."""
+    root = Path(__file__).resolve().parent.parent
+    bad = []
+    for f in sorted((root / "slurm" / "inner").glob("*.sh")):
+        for i, line in enumerate(f.read_text().splitlines(), 1):
+            code = line.split("#", 1)[0]
+            if "--enable_cameras" not in code:
+                continue
+            # The one allowed form: seeding a CAM array that Storm can empty.
+            if code.strip().startswith("CAM=("):
+                continue
+            bad.append(f"{f.name}:{i}: {line.strip()}")
+    assert not bad, ("unconditional --enable_cameras (fatal under Storm): "
+                     + "; ".join(bad))
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

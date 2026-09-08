@@ -37,7 +37,12 @@ SITE=$WORKSPACE/lehome51-site
 ASSETS=$WORKSPACE/lehome-data/Assets
 CKPT=${CKPT:-$WORKSPACE/lehome-data/outputs/train/bc_smolvla_seed0/checkpoints/015000/pretrained_model}
 GARMENT=${GARMENT:-Top_Short_Seen_0}
-GDIR=$ASSETS/objects/Challenge_Garment/Release/${GARMENT%_Seen_*}/$GARMENT
+# Two strips, not one. "Unseen" has a lowercase s, so ${GARMENT%_Seen_*}
+# leaves Pant_Short_Unseen_1 untouched and builds .../Pant_Short_Unseen_1/
+# Pant_Short_Unseen_1 -- a path that does not exist. The same lowercase s
+# broke the Python name->path mapping in storm_eval.garment_dir_for.
+GCAT=${GARMENT%_Seen_*}; GCAT=${GCAT%_Unseen_*}
+GDIR=$ASSETS/objects/Challenge_Garment/Release/$GCAT/$GARMENT
 # Per-RUN workdir, not per-garment. Storm renders into fixed filenames
 # (top_rgb.png, obs_stage.usda, ...) inside this directory, so two concurrent
 # array tasks on the SAME garment -- different demo episodes of it -- raced and

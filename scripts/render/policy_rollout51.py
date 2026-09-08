@@ -130,6 +130,17 @@ try:
     gbv.TiledCamera = _NoCamera
 
     cfg = GarmentEnvCfg()
+    # --garment drives PHYSICS, --garment_dir drives what Storm RENDERS.
+    # Nothing tied them together, so a mismatched pair would simulate one
+    # garment and show the policy another -- silently, and scored as a real
+    # result. That is exactly the bug that made eleven of twelve garments
+    # meaningless under the official evaluator (see storm_eval.garment_dir_for).
+    _dir_name = os.path.basename(os.path.normpath(args.garment_dir))
+    if _dir_name != args.garment:
+        raise SystemExit(
+            f"garment mismatch: physics gets --garment {args.garment!r} but "
+            f"Storm renders --garment_dir .../{_dir_name!r}. These must name "
+            f"the same garment or the episode is scored against wrong pixels.")
     cfg.garment_name = args.garment
     cfg.garment_cfg_base_path = os.path.join(args.lehome, "Assets/objects/Challenge_Garment")
     particle_cfg = os.path.join(

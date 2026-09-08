@@ -114,7 +114,12 @@ def run_batch(args, ref: K.CheckpointRef, score_log: Path) -> str:
         "--garment_type", "custom",
         "--num_episodes", str(args.episodes_per_batch),
         "--max_steps", str(args.max_steps),
-        "--device", "cpu",
+        # SIMULATION device. LeHome's README calls --device the inference
+        # device and says only cpu; evaluation.py feeds it to parse_env_cfg,
+        # which sets the sim device, and PhysX particle cloth does not
+        # simulate on CPU. Measured: cpu gives dist 14.54 every episode
+        # forever, cuda:0 gives 13.66 then 13.63. Frozen vs moving cloth.
+        "--device", os.environ.get("SIM_DEVICE", "cuda:0"),
         # No --enable_cameras: AppLauncher builds the Isaac Lab render product
         # at LAUNCH when it is set, and 5.1's RTX delegate segfaults against
         # this driver at 586 ms, before any camera exists. Storm supplies the

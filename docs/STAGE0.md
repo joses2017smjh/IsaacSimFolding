@@ -207,11 +207,36 @@ Isaac Lab cannot change whether `create_hydra_engine` survives — which is what
 makes the borrowed stack a valid instrument for this one question, and only
 this one.
 
-### 2.3 Physics is CPU-only, and there is one environment
+### 2.3 There is one environment, and `--device` is NOT the physics device
 
-`--device cpu` is the **only** accepted value for the eval device, stated twice
-in the README and enforced in the parser. The garments are PhysX particle
-cloth, which is where that comes from.
+**Corrected 2026-09-08.** This section previously claimed physics was CPU-only
+and that `--device cpu` was enforced in the parser. Both halves were wrong, and
+the error cost real measurements.
+
+LeHome's README documents `--device` as the **inference** device and says only
+`cpu` is supported. But `scripts/utils/evaluation.py` passes it to
+`parse_env_cfg(args.task, device=args.device)`, which sets the **simulation**
+device, and nothing in the garment env config overrides it. PhysX particle
+cloth needs GPU dynamics, so `--device cpu` leaves the garment frozen at its
+spawn pose for the entire episode.
+
+Measured, same job in every other respect:
+
+| `--device` | `dist(p[0], p[1])` per episode |
+|---|---|
+| `cpu` | 14.54, 14.54 — identical forever |
+| `cuda:0` | 13.66, 13.63 — moving |
+
+Under `cpu` the success distances were identical to two decimals across 27
+episodes, across `n_candidates` 1 and 16, and across two different garments.
+That is what a frozen deformable looks like, and it is why every episode
+through the official evaluator scored zero.
+
+`scripts/render/policy_rollout51.py` had it right the whole time --
+`cfg.sim.device = args.sim_device  # particle cloth needs GPU dynamics`, default
+`cuda:0` -- and those are the runs that actually folded.
+
+The batch size of one is still real: the evaluator holds a single environment.
 
 `scripts/utils/evaluation.py` is hardcoded single-environment — the action is
 `unsqueeze(0)`'d into a batch of one on every step. So the work order's "tens of

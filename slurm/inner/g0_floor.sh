@@ -39,6 +39,6 @@ CAM=(--enable_cameras)
     --garment_type "$GARMENT_TYPE" \
     --num_episodes "$NUM_EPISODES" \
     --max_steps "$MAX_STEPS" \
-    --device cpu \
+    --device "${SIM_DEVICE:-cuda:0}" \
     "${CAM[@]}" \
     --headless

@@ -1,6 +1,27 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
-**Latest media status (20 September):** [robot-asset repair and replacement gate 21367715](docs/MEDIA_GATE_2026-09-20.md). Rendering passed: 600 actions, 601 validated render calls, all four views. **The new adapted-policy episode failed to fold** — [watch the failure](docs/demo/adapt-s0-failure.mp4).
+**Current measured status — 20 September 2026:** the strict short-pants
+evaluation recorded **8/24** checker successes for the historical raster-adapted
+baseline and **3/24** for new adaptation seed 1. Only **5 of 12** policy/class
+evaluation cells completed; the other seven failed or timed out. The two new
+adaptations have **not demonstrated an improvement**. These counts use the
+official checker's ever-triggered success, not an independently rechecked final
+settled fold. [Protocol, complete table and failure diagnosis](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md#measured-status-20-september-2026).
+
+**Policy demos and both arm cameras:** [captioned gallery and provenance](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/FOLDING_MEDIA.md).
+
+| Recording | Scope |
+|---|---|
+| [Historical policy success](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/folding-policy-success.gif) · [historical failure](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/folding-policy-failure.gif) | Earlier checkpoint, selected short-pants development poses; not either new adaptation |
+| [New seed-0 policy failure](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/folding-adapted-failure.gif) | Short-sleeve top; 600 completed actions, checker never passed |
+| [Left wrist](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/folding-adapted-left-wrist.gif) · [right wrist](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/gifs/folding-adapted-right-wrist.gif) | Both actual camera views from that same new failed episode |
+
+The [replacement media gate](docs/MEDIA_GATE_2026-09-20.md) passed
+rendering validation: 600 actions, 601 validated render calls and all four
+outputs. **The fold failed**. [Compact failure video](docs/demo/adapt-s0-failure.mp4).
+Selected clips illustrate behavior; they do not establish a success rate or a
+controlled comparison between checkpoint generations. The record below follows
+the earlier development sequence and is superseded by the current table above.
 
 <p align="center">
 Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own checker.
@@ -10,14 +31,15 @@ Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own chec
   <img src="docs/demo/POLICY_fold_success.gif" width="560" alt="A trained policy folding short pants in Isaac Sim; the challenge's own checker returns success">
 </p>
 
-<p align="center"><sub><b>A trained policy folding a garment, closed-loop, scored
+<p align="center"><sub><b>Historical raster-adapted policy, closed-loop, scored
 <code>Success ✓</code> by the challenge's own <code>success_checker_garment_fold</code>.</b>
 No demonstration actions — the policy reads three rasterised camera views and emits joint targets.
-All five fold conditions passed; the checker fired at step 119 of 400.<br>
-<b>It folds 2 of 8 short-pants poses (25%), and 0 of 4 on the other three garment classes.</b>
-Reproducible, not a lucky configuration — and not a solved task. Getting here from 0-for-16 took a
-measured domain-gap diagnosis, 18,200 rasterised training frames and unfreezing the action
-decoder.</sub></p>
+This is an earlier checkpoint, not either new adaptation. Success is latched
+when the checker passes; it does not establish a stable final fold.<br>
+The earlier selected-pose study reported 2 of 8 short-pants poses and 0 of 4
+across the other three classes. The newer matched evaluation is reported above.
+The development path included a measured renderer-domain gap, 18,200 rasterised
+training frames and unfreezing the action decoder.</sub></p>
 
 <table align="center">
 <tr>
@@ -38,7 +60,7 @@ decoder.</sub></p>
 satisfy <code>[9.45, 12.15, 9.0, 13.05, 8.55]</code>, a long top
 <code>[11.7, 10.8, 10.8, 9.9, 9.0]</code> — so passing one says nothing about the others.</sub></p>
 
-### What the wrist cameras see
+### Historical wrist-camera examples
 
 <table align="center">
 <tr>
@@ -60,7 +82,7 @@ Two of the policy's three inputs. They were previously pinned to fixed world pos
 the garment and rendered empty table — 14% of pixels changed between first and last frame but
 <b>0.00%</b> by more than 60. After the fix: <b>13.1%</b> and <b>17.4%</b>.</sub></p>
 
-### Both failure modes, same pipeline
+### Historical failure modes
 
 <table align="center">
 <tr>
@@ -87,7 +109,7 @@ The dependency-light half runs anywhere. No GPU, no simulator, no Isaac Sim.
 git clone https://github.com/joses2017smjh/IsaacSimFolding.git
 cd IsaacSimFolding
 pip install -r requirements.txt
-PYTHONPATH=src python tests/test_pure.py     # 37 tests
+PYTHONPATH=src python tests/test_pure.py     # CPU-only assertions
 python scripts/make_figures.py               # regenerates docs/img/*.png
 ```
 
@@ -138,9 +160,15 @@ an A40 or better. Entry points are in [`slurm/`](slurm); every job's outcome and
 | AWR | [`src/lehome_fold/awr.py`](src/lehome_fold/awr.py) | Advantage weights plus an effective-sample-size guard. |
 | Rollout | [`scripts/render/policy_rollout51.py`](scripts/render/policy_rollout51.py) | The loop above. Emits a verdict only for episodes that actually ran. |
 
-## Results
+## Historical development results
 
-Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing is self-scored.
+The following tables preserve earlier development snapshots. Their different
+checkpoints, pose selections and capture protocols must not be pooled with the
+current strict evaluation. Verdicts come from the challenge's
+`success_checker_garment_fold`; this checks geometry, not camera validity.
+The separately reported old baseline result of 6/24 is invalid as a
+correctly observed baseline because its policy received stale images after
+23,250 swallowed rendering errors. See the [diagnosis](https://github.com/joses2017smjh/bhl-robustness-ladder/blob/main/docs/CLOTH_FOLDING_WEEKEND.md#what-failed-and-what-already-works).
 
 | driver | episodes | folded |
 |---|---|---|
@@ -156,7 +184,7 @@ Every verdict comes from the challenge's `success_checker_garment_fold`. Nothing
 
 <a name="why-the-policy-fails"></a>
 
-### Why the policy fails
+### Why the original policy failed
 
 Same policy, same states, only the renderer differs. Demonstration replay pins the state
 trajectory, so this isolates perception from compounding closed-loop drift.
@@ -166,11 +194,12 @@ trajectory, so this isolates perception from compounding closed-loop drift.
 | 15K steps | +0.966 | +0.063 | 0.902 |
 | **30K, converged** | **+0.976** | **−0.038** | **1.014** |
 
-The policy learned the task and cannot see the renderer. That accounts for the 12–14 cm hover, the
-0-for-8, and why fixing a real wrist-camera bug moved the numbers almost not at all — camera
-geometry is not rendering style.
+These action-prediction measurements support a renderer-domain gap. They do
+not by themselves establish closed-loop task mastery. The original policy
+hovered 12–14 cm above the cloth, and fixing wrist-camera geometry alone did
+not resolve its failure to act on the rasterised observations.
 
-**Training is not the bottleneck, and the converged run proves it.** Doubling the schedule improved
+**Longer training alone did not close this measured gap.** Doubling the schedule improved
 in-distribution skill (+0.966 → +0.976, MSE down 29%) and pushed Storm-frame skill *below* the
 mean-action baseline (+0.063 → −0.038). The gap widened. A better-fit policy is more tightly tuned
 to path-traced appearance statistics, so it transfers worse — more training deepens the overfit to
@@ -237,8 +266,8 @@ apart while folding the other two axes — a partial fold rather than a failure 
 **And then it folded.** Scaling the capture to 91 episodes (18,200 frames, class-balanced) with the
 decoder unfrozen produced the project's first policy successes.
 
-Run across **eight recorded spawn poses of the same class**, so the result is a rate rather than an
-anecdote:
+The historical selected-pose study covered **eight recorded spawn poses of the
+same class**. Its observed fraction is descriptive, not a generalization estimate:
 
 | garment class | poses tried | folded |
 |---|---|---|
@@ -248,7 +277,8 @@ anecdote:
 | Pant_Long | 1 | 0 |
 
 Failures are not flailing — they sit at 2/5 or 3/5 conditions with the cloth visibly manipulated.
-The successes pass all five, checker firing as early as step 119 of 400.
+The recorded successes passed all five conditions at some point during the
+400-action rollout; the historical records do not establish terminal success.
 
 | | 30K base | +raster 16ep vision | +raster 16ep v+a | **+raster 91ep v+a** |
 |---|---|---|---|---|
@@ -260,15 +290,17 @@ Note the shadow skill *fell* from +0.803 to +0.652 while the rollout result impr
 success. Teacher-forced action prediction and closed-loop control are not the same objective, which
 is the fourth time in this project a validation-style metric has pointed the wrong way.
 
-**Previously: 0 for 16.** Every success in this repo remains a demonstration replay. Note
+**Earlier snapshot: 0 for 16.** At that stage every recorded success was a
+demonstration replay; later raster-adapted checkpoints produced policy successes. Note
 also that validation loss badly under-read this: 0.0739 → 0.0686, a 7% improvement, for a 0.475 gain
 in Storm-frame skill and 2/5 → 4/5 conditions.
 
 ### Where it loses
 
-- **The policy folds nothing.** 0 of 16, including the converged 30,000-step checkpoint and the
-  rasterised fine-tune. Every success in this repo is a demonstration replay, and every filename
-  says `replay`.
+- **Reliable folding remains unestablished.** The original 0/16 policy snapshot
+  was followed by occasional raster-adapted short-pants successes. The strict
+  September comparison did not demonstrate an improvement from the two new
+  adaptations, and seven evaluation cells remained incomplete.
 - **π0.5 — the paper's actual base model — does not run.** lerobot 0.4.3 probes for
   `transformers.models.siglip.check`, from a patched fork no declared extra installs.
 - **BC training is complete**: 30,000 steps across four wall clocks, loss 1.505 → 0.056. It did not help: see above.
@@ -278,7 +310,7 @@ in Storm-frame skill and 2/5 → 4/5 conditions.
 - **The 0.902 gap is single-step and teacher-forced.** It isolates perception, which is what it was
   built for. It is not a closed-loop success measurement.
 
-### Other numbers
+### Other historical snapshot numbers
 
 | | |
 |---|---|
@@ -292,8 +324,9 @@ in Storm-frame skill and 2/5 → 4/5 conditions.
 
 ## What is implemented but not run
 
-Stages 3 and 4 exist in full and are unit-tested, and have never been executed against real
-rollouts. They are not dead code and they are not results either:
+Components for stages 3 and 4 exist and have unit tests. These helpers and
+orchestration code do not establish an end-to-end trained or validated
+RECAP/AWR policy:
 
 | stage | code | state |
 |---|---|---|
@@ -302,7 +335,9 @@ rollouts. They are not dead code and they are not results either:
 | Async trainer / rollout workers | [`scripts/trainer_loop.py`](scripts/trainer_loop.py), [`scripts/rollout_worker.py`](scripts/rollout_worker.py) | tested, unrun |
 | Thompson sampling over checkpoints | [`src/lehome_fold/thompson.py`](src/lehome_fold/thompson.py) | tested, unrun |
 
-They **were** blocked on the renderer, and are not any more.
+The Storm camera shim unblocked the initial rendering path. The later stale-frame,
+garment-switch and scorer failures show why that smoke result is not a complete
+training or evaluation validation.
 
 Both route through [`scripts/run_eval.py`](scripts/run_eval.py) into LeHome's own `scripts.eval`,
 which was run with `--enable_cameras`. `AppLauncher` builds the Isaac&nbsp;Lab render product at
@@ -321,8 +356,9 @@ rollout in this repo.
 [Success Check] Final result: Failed ✗
 ```
 
-**12 episodes scored by the challenge's own checker, 0 render failures.** Stages 3 and 4 are
-runnable — [`storm_camera.py`](src/lehome_fold/storm_camera.py),
+**Historical smoke: 12 episodes scored by the challenge's own checker, 0 render failures.**
+This exercised the renderer/evaluator path, not stages 3 and 4 learning end to end:
+[`storm_camera.py`](src/lehome_fold/storm_camera.py),
 [`storm_eval.py`](src/lehome_fold/storm_eval.py), enabled with `LH_STORM_EVAL=1`.
 
 Three limits, stated rather than left to be discovered: depth is synthetic (the checker reads

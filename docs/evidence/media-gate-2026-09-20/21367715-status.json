@@ -1,0 +1,8 @@
+{
+  "task": "adapt_s0_Top_Short_Seen_0_pose2",
+  "returncode": 0,
+  "state": "completed",
+  "slurm_job_id": "21367715",
+  "slurm_array_task_id": "0",
+  "success": false
+}

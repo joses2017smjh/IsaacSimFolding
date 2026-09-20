@@ -1,6 +1,6 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
-**Latest media status (20 September):** [robot-asset repair and replacement gate 21367715](docs/MEDIA_GATE_2026-09-20.md). Submitted, not yet a verified rendering result.
+**Latest media status (20 September):** [robot-asset repair and replacement gate 21367715](docs/MEDIA_GATE_2026-09-20.md). Rendering passed: 600 actions, 601 validated render calls, all four views. **The new adapted-policy episode failed to fold** — [watch the failure](docs/demo/adapt-s0-failure.mp4).
 
 <p align="center">
 Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own checker.

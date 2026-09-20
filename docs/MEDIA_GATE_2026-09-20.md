@@ -1,7 +1,9 @@
 # Folding media status — 20 September 2026
 
 Replacement rendering gate **21367715** was submitted at 17:31 UTC. It is a
-single 30-minute GPU job, not a new training run. No existing jobs were cancelled,
+single GPU job capped at 30 minutes, not a new training run. It completed all
+600 policy actions and 601 validated render calls, with all four GIFs present.
+**Rendering passed; this policy episode did not fold the garment.** No existing jobs were cancelled,
 released from hold, requeued, or given different dependencies.
 
 ## Failure and repair
@@ -26,7 +28,7 @@ checks, 3 media pipeline checks, and 51 existing pure checks (66 total).
 | 21360436 | Original 15-episode array | Preserved; dependency can never be satisfied |
 | 21360437 | Original report | Preserved; waits for the original array |
 | 21367674 | First replacement | Robot loaded; then failed on the same root bug for the scene |
-| 21367715 | Full asset-root replacement | Submitted; loaded scene and entered camera rendering |
+| 21367715 | Full asset-root replacement | Completed: 600 actions, 601 render calls, four GIFs; fold failed |
 
 A passing replacement does **not** unblock the original array: its dependency
 still names 21360435. The remaining episodes need a separate replacement array
@@ -37,8 +39,9 @@ if requested after this gate is inspected.
 The new gate must save overhead, both wrist views and a triptych for one full
 600-action adapted-policy episode. Either a valid success or a valid failed fold
 can pass this infrastructure check. A crash, timeout or missing view cannot.
-The second attempt has entered camera rendering, confirming robot and scene loading.
-No completed fold or adapted-policy GIF is claimed until its output is validated.
+The second attempt completed. The unchanged fold checker never passed and the
+terminal verdict was also false. This is one illustrative development pose, not
+an estimate of policy success rate. No additional GPU array was submitted.
 
 The README's older policy GIF and the four-class demonstration replays are
 historical, separate evidence. Their results are not the result of this campaign.
@@ -52,3 +55,13 @@ training and its weekend orchestration, including the selected adaptation
 checkpoint paths. `isaac-sim-pruning-workflow` owns the UR5e orchard recordings.
 A VS Code active tab is editor context, not a change to the agent's shell cwd.
 Always check `pwd` and `git remote -v` before reporting or editing another project.
+
+## New adapted-policy failure recording
+
+[![Adaptation seed 0: short-top failure, wrist/overhead/wrist views](demo/adapt-s0-failure.gif)](demo/adapt-s0-failure.mp4)
+
+[Compact MP4](demo/adapt-s0-failure.mp4) · [Scorer and render audit](evidence/media-gate-2026-09-20/21367715-rollout.json).
+The preview preserves the episode timeline; spatial size and frame rate are
+reduced for the web. Full-resolution individual camera GIFs remain in the
+campaign output directory. The historical success at the top of the README
+uses a different checkpoint and garment; it is not a success from this gate.

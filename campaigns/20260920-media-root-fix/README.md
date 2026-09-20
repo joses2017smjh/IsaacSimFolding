@@ -1,5 +1,9 @@
 # Replacement folding media gate — 20 September 2026
 
+**Completed:** job 21367715, exit 0:0, 3m51s. Rendering passed with 600 policy
+actions, 601 validated render calls and all four GIFs. The fold failed.
+[Published recording and scorer](../../docs/MEDIA_GATE_2026-09-20.md).
+
 Gate `21360435` failed before simulation because LeHome inferred its asset root
 from the containing Git repository. The USD exists under the shared asset pack,
 not `lehome-fold-repro/Assets`.

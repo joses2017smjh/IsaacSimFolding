@@ -5,5 +5,10 @@
   "media_pipeline_tests": 3,
   "existing_pure_tests": 51,
   "previous_attempt": "21367674 fixed robot, then failed loading scene; no frames",
-  "gpu_execution": "replacement full-root gate required"
+  "gpu_execution": "21367715 COMPLETED 0:0 in 3m51s",
+  "completed_actions": 600,
+  "validated_render_calls": 601,
+  "fold_success": false,
+  "terminal_success": false,
+  "camera_gifs": 4
 }

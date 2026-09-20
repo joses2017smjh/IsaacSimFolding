@@ -1,5 +1,7 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
+**Latest media status (20 September):** [robot-asset repair and replacement gate 21367715](docs/MEDIA_GATE_2026-09-20.md). Submitted, not yet a verified rendering result.
+
 <p align="center">
 Bimanual garment folding in Isaac Sim, scored by the LeHome challenge's own checker.
 </p>
@@ -32,7 +34,7 @@ decoder.</sub></p>
 </tr>
 </table>
 
-<p align="center"><sub>All four garment classes. Each has its own fold criteria — a short top must
+<p align="center"><sub><b>Historical demonstration replays, not policy rollouts.</b> All four garment classes. Each has its own fold criteria — a short top must
 satisfy <code>[9.45, 12.15, 9.0, 13.05, 8.55]</code>, a long top
 <code>[11.7, 10.8, 10.8, 9.9, 9.0]</code> — so passing one says nothing about the others.</sub></p>
 

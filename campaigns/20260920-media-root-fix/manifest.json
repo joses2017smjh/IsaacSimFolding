@@ -1,0 +1,51 @@
+{
+  "created": "2026-09-20",
+  "project_remote": "https://github.com/joses2017smjh/IsaacSimFolding.git",
+  "source_revision": "d6dd94d8b177156d04a76515a224451b5ce70d77",
+  "assets": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets",
+  "checkpoints": {
+    "adapt_s0": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/bhl-robustness-ladder/results/weekend-20260919/fold-adapt-s0/step_001200",
+      "training_seed": 0,
+      "best_step": 1200,
+      "completed_updates": 1500,
+      "sha256": {
+        "fold_training.json": "0640b5503d29ac14257d82f6734c168921dbb8bc3618a0eae1bf81611cfbb8d0",
+        "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+        "model.safetensors": "1b1d5206221f406c0c05e0639fa95c5a9e7b1d49eafad9a62c4622ee80759fb7",
+        "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+        "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+        "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+        "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+      }
+    }
+  },
+  "tasks": [
+    {
+      "index": 0,
+      "id": "adapt_s0_Top_Short_Seen_0_pose2",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 2,
+      "match_pose": "-0.03773808:-0.01536524:0.67000002:4.93192530:-7.44048691:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    }
+  ],
+  "existing_jobs_do_not_modify": [
+    "21359573",
+    "21359574",
+    "21359575"
+  ],
+  "scope": "Complementary pinned-pose media episodes, two adaptation seeds, four garment classes. Official 96-episode/checkpoint evaluations already queued separately remain the primary population results. No new training. Same 50-step execution queue as checkpoint. Outcome of each new episode is unknown.",
+  "protocol": "GPU cloth, Storm RGB at all3cameras, seed100, recorded spawn pose +scale.45, settle60,600policy steps, task prompt matches adaptation training. Single garment per process. These are illustrative development poses, not held-out benchmark estimates.",
+  "replaces_gate": "21367674",
+  "original_campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260919-media",
+  "purpose": "One replacement rendering gate; no changes to existing jobs",
+  "previous_attempts": [
+    "21360435",
+    "21367674"
+  ]
+}

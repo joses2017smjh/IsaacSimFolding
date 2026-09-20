@@ -1,0 +1,16 @@
+{
+  "status": "error",
+  "success": null,
+  "terminal_success": null,
+  "completed_steps": 0,
+  "requested_steps": 600,
+  "first_success_step": null,
+  "policy": "/nfs/hpc/share/sanchej7/Humanoid_Lite/bhl-robustness-ladder/results/weekend-20260919/fold-adapt-s0/step_001200",
+  "policy_variant": "adapt_s0",
+  "garment": "Top_Short_Seen_0",
+  "seed": 100,
+  "n_rendered": 0,
+  "error_type": "FileNotFoundError",
+  "error": "USD file not found at path at: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/Assets/scenes/marble/Scene_00_Apartment.usd'.",
+  "traceback": "Traceback (most recent call last):\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/scripts/render/policy_rollout51.py\", line 295, in <module>\n    env = GarmentEnv(cfg=cfg)\n          ^^^^^^^^^^^^^^^^^^^\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/garment_bi_v2.py\", line 62, in __init__\n    super().__init__(cfg, render_mode, **kwargs)\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/envs/direct_rl_env.py\", line 135, in __init__\n    self._setup_scene()\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/garment_bi_v2.py\", line 73, in _setup_scene\n    cfg.func(\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/utils/prims.py\", line 715, in wrapper\n    prim = func(prim_paths[0], cfg, *args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/spawners/from_files/from_files.py\", line 76, in spawn_from_usd\n    return _spawn_from_usd_file(prim_path, cfg.usd_path, cfg, translation, orientation)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/sim/spawners/from_files/from_files.py\", line 307, in _spawn_from_usd_file\n    raise FileNotFoundError(f\"USD file not found at path at: '{usd_path}'.\")\nFileNotFoundError: USD file not found at path at: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/Assets/scenes/marble/Scene_00_Apartment.usd'.\n"
+}

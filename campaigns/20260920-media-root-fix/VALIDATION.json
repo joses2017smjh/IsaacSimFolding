@@ -1,0 +1,9 @@
+{
+  "date": "2026-09-20",
+  "asset_regressions": 4,
+  "camera_audit_tests": 8,
+  "media_pipeline_tests": 3,
+  "existing_pure_tests": 51,
+  "previous_attempt": "21367674 fixed robot, then failed loading scene; no frames",
+  "gpu_execution": "replacement full-root gate required"
+}

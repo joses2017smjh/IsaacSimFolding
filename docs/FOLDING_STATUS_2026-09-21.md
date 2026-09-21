@@ -39,7 +39,7 @@ These traces exercise the native switch but do not validate a second policy epis
 
 ## New submissions and next steps
 
-At 2026-09-21 20:46:58 UTC, corrected smoke array **21383691** and dependent switch diagnostic **21383692** were submitted. [Exact receipts and output paths](../campaigns/20260921-folding-pilot-v5/submissions.jsonl). The snapshot retains the same fixed checkpoint, 8 development poses, seeds and horizons 50/10/5. No retraining was launched and unrelated jobs were preserved.
+At 2026-09-21 20:46:58 UTC, corrected smoke array **21383691** and dependent switch diagnostic **21383692** were submitted. [Exact receipts and output paths](../campaigns/20260921-folding-pilot-v5/submissions.jsonl). At publication, v5 smoke index 0 had passed; index 1 was running and the other indices were pending. The experiment-level gate remained closed. The snapshot retains the same fixed checkpoint, 8 development poses, seeds and horizons 50/10/5. No retraining was launched and unrelated jobs were preserved.
 
 1. Validate all five v5 smoke outputs, especially long pants and the unwelded short top. A successful Slurm exit alone is insufficient.
 2. Once the experiment-level gate passes, submit the already frozen **24-rollout pilot**. Compare native ever-success, settled terminal success, geometric margins, cloth motion, replanning costs and camera validity across matched poses.

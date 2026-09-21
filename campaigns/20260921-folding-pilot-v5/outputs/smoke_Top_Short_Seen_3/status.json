@@ -1,0 +1,13 @@
+{
+  "task": "smoke_Top_Short_Seen_3",
+  "state": "completed",
+  "success": false,
+  "slurm_job_id": "21383706",
+  "slurm_array_task_id": "0",
+  "process_isolated": true,
+  "infrastructure_error": null,
+  "child_pid": 1468593,
+  "returncode": 0,
+  "terminal_success": false,
+  "wall_seconds": 131.43252245592885
+}

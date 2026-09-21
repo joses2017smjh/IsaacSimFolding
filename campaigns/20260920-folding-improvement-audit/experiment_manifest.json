@@ -1,0 +1,891 @@
+{
+  "schema_version": 1,
+  "status": "documentation_assessment_complete_execution_not_performed",
+  "scope": {
+    "repository_remote": "https://github.com/joses2017smjh/IsaacSimFolding.git",
+    "requested_directory": "/nfs/stak/users/sanchej7/hpc-share/Humanoid_Lite/lehome-fold-repro",
+    "resolved_directory": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro",
+    "branch": "main",
+    "commit": "34a424c0a0a1e1d52cbd43beca4a4ad24738bc3b",
+    "source_restriction": [
+      "repository .md files",
+      "repository .txt files",
+      "repository NOTICE files"
+    ],
+    "additional_observations": [
+      "Git scope/status",
+      "read-only Slurm queries explicitly required by the attachment",
+      "existence of documented media paths"
+    ],
+    "sibling_repositories_inspected": false,
+    "source_code_inspected_or_modified": false,
+    "primary_result_JSON_read": false,
+    "meshes_or_dataset_metadata_read": false,
+    "external_research_performed": false
+  },
+  "source_files": [
+    {
+      "path": "NOTICE",
+      "sha256": "f02fa9daa6ef19b37ed8279cc3c53f2e80463693d6619146db391d369dbbd1c2"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7b24487da0471285d026675377a3723b7818d3b0bfb5df549f43c7a5070db5f8"
+    },
+    {
+      "path": "SLURM_JOBS.md",
+      "sha256": "e608d1eeb2614c561f7c964cb5be23cf3f39bca299cf540958388ae80a3da7a9"
+    },
+    {
+      "path": "SESSION_STATUS.md",
+      "sha256": "5709b047993f343e69668487f9fa47b0b39b0c1e24ba7c1162d37a056b578e0b"
+    },
+    {
+      "path": "SESSION_STATUS_2026-09-19.md",
+      "sha256": "8cd75338acafc7bd60110570a3c12947cbb20a743248d35b0cef7338cdad2f85"
+    },
+    {
+      "path": "docs/STAGE0.md",
+      "sha256": "a5174d774b524685409661dd2596bed02872d4be629b3a259dafbf0cd8ebb6b6"
+    },
+    {
+      "path": "docs/PLAN.md",
+      "sha256": "14aa1cc1f3252638199eb48a0d66c5af148d4c854874723a4f4a34de2852291d"
+    },
+    {
+      "path": "docs/CLOTH.md",
+      "sha256": "0c63745c6ea119488c10dd8f7002f7f256d2afee425a71d3901858444a136709"
+    },
+    {
+      "path": "docs/STORM.md",
+      "sha256": "d16b0e04fc8a0258072b3ed45fca11cb3b14be616a660fa750b4869be41d6104"
+    },
+    {
+      "path": "docs/RENDER.md",
+      "sha256": "ff4e4a15eb3acfb1c28a693cb21823f17095251dc5bf39bc18095d6bd3d86922"
+    },
+    {
+      "path": "docs/README_long.md",
+      "sha256": "5efd755b2f2c96f12bb38cab3ea047a4d783387e222aab0aba566e4d23fb09f1"
+    },
+    {
+      "path": "docs/MEDIA_GATE_2026-09-20.md",
+      "sha256": "3ed3b998bcb5736eff0e144ef527b528ed4bd28cf818bf8143dc408a24a4a0a4"
+    },
+    {
+      "path": "results/summary.md",
+      "sha256": "8690657994bb422ba2bef306e801930f047e9842e4a9abf6f4024c25c8b08478"
+    },
+    {
+      "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+      "sha256": "baa1e27da6ee7039c4499c09157932e63163cc9b4bd948f45359bb264b86d616"
+    },
+    {
+      "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+      "sha256": "afea0f96b943cf717e41527cd72e9cdfb31c0b983f21893755cf852c2b053300"
+    },
+    {
+      "path": "campaigns/20260920-media-root-fix/README.md",
+      "sha256": "50ef90f19eeae4d7596bf85b3d90c1b17c487315fe3605e8ef82929305d413f1"
+    },
+    {
+      "path": "campaigns/20260920-media-root-fix/MEDIA_STATUS.md",
+      "sha256": "de5ddbcb2ab60c0002ba49114593c10826ea10f43a3144875dce685d22a70d13"
+    },
+    {
+      "path": "external/lehome-challenge/README.md",
+      "sha256": "d2f10b8d3fdc0922d8a76dfd21ef9dbe341f378caa57ecac8f4b68b38bed2c8a"
+    }
+  ],
+  "scheduler_snapshot": "scheduler_snapshot.txt",
+  "baseline_table": [
+    {
+      "policy": "historical_raster_baseline",
+      "class": "Pant_Short",
+      "completed_episodes": 24,
+      "ever_successes": 8,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": 20,
+        "ever_successes": 8,
+        "basis": "arithmetic_from_documented_total_minus_Unseen"
+      },
+      "unseen": {
+        "completed_episodes": 4,
+        "ever_successes": 0
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "completion_reported_not_revalidated",
+      "evidence_level": "repository_documentation_only",
+      "source": {
+        "path": "SESSION_STATUS.md",
+        "line": 30,
+        "text": "- Strict short-pants evaluation: historical raster-adapted baseline **8/24**,"
+      }
+    },
+    {
+      "policy": "historical_raster_baseline",
+      "class": "Pant_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "historical_raster_baseline",
+      "class": "Top_Short",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "historical_raster_baseline",
+      "class": "Top_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s0",
+      "class": "Pant_Short",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s0",
+      "class": "Pant_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s0",
+      "class": "Top_Short",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s0",
+      "class": "Top_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s1",
+      "class": "Pant_Short",
+      "completed_episodes": 24,
+      "ever_successes": 3,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": 20,
+        "ever_successes": 3,
+        "basis": "arithmetic_from_documented_total_minus_Unseen"
+      },
+      "unseen": {
+        "completed_episodes": 4,
+        "ever_successes": 0
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "completion_reported_not_revalidated",
+      "evidence_level": "repository_documentation_only",
+      "source": {
+        "path": "SESSION_STATUS.md",
+        "line": 30,
+        "text": "- Strict short-pants evaluation: historical raster-adapted baseline **8/24**,"
+      }
+    },
+    {
+      "policy": "adapt_s1",
+      "class": "Pant_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s1",
+      "class": "Top_Short",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    },
+    {
+      "policy": "adapt_s1",
+      "class": "Top_Long",
+      "completed_episodes": null,
+      "ever_successes": null,
+      "terminal_successes": null,
+      "seen": {
+        "completed_episodes": null,
+        "ever_successes": null,
+        "basis": null
+      },
+      "unseen": {
+        "completed_episodes": null,
+        "ever_successes": null
+      },
+      "infrastructure_invalid_episodes": null,
+      "missing_episodes": null,
+      "infrastructure_status": "per_class_detail_not_available_in_allowed_sources",
+      "evidence_level": "repository_documentation_only",
+      "source": null
+    }
+  ],
+  "historical_evaluation_tasks": {
+    "21359573": {
+      "policy": "historical_raster_baseline",
+      "states": [
+        "COMPLETED",
+        "FAILED",
+        "TIMEOUT",
+        "TIMEOUT"
+      ]
+    },
+    "21359574": {
+      "policy": "adapt_s0",
+      "states": [
+        "TIMEOUT",
+        "FAILED",
+        "COMPLETED",
+        "COMPLETED"
+      ]
+    },
+    "21359575": {
+      "policy": "adapt_s1",
+      "states": [
+        "COMPLETED",
+        "TIMEOUT",
+        "TIMEOUT",
+        "COMPLETED"
+      ]
+    }
+  },
+  "array_class_mapping_verified": false,
+  "historical_completed_task_count": 5,
+  "historical_failed_task_count": 2,
+  "historical_timed_out_task_count": 5,
+  "measured_improvement_demonstrated": false,
+  "new_policy_rollouts": 0,
+  "new_training_jobs": [],
+  "new_evaluation_jobs": [],
+  "existing_jobs_modified": [],
+  "new_code_fixes": [],
+  "new_policy_tests_run": 0,
+  "required_tests": [
+    {
+      "name": "all_scorer_indices_valid_for_every_garment",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "all_local_garment_files_resolvable",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "exact_garment_counts",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "Seen_Unseen_mapping",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "camera_freshness",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "garment_switch_or_process_isolation",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "terminal_checker",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "action_queue_reset_after_replanning",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "deterministic_execution_horizon",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "whole_episode_train_validation_split",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "no_garment_identity_leakage",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "class_balanced_sampler",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "grasp_window_sampler",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "finite_cloth_state",
+      "status": "not_run",
+      "passed": null
+    },
+    {
+      "name": "GIF_video_metadata_provenance",
+      "status": "not_run",
+      "passed": null
+    }
+  ],
+  "historical_test_report": {
+    "total": 66,
+    "source": {
+      "path": "docs/MEDIA_GATE_2026-09-20.md",
+      "line": 20,
+      "text": "is unchanged. CPU validation passed: 4 asset regressions, 8 camera/episode audit"
+    },
+    "rerun_this_session": false
+  },
+  "gates": [
+    {
+      "phase": "A",
+      "name": "static_asset_scorer_split_audit_and_tests",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    },
+    {
+      "phase": "B",
+      "name": "four_class_single_garment_smoke",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    },
+    {
+      "phase": "C",
+      "name": "matched_execution_horizon_development",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    },
+    {
+      "phase": "D",
+      "name": "formal_short_pants_comparison",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    },
+    {
+      "phase": "E",
+      "name": "grasp_sampling_experiment_if_warranted",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    },
+    {
+      "phase": "F",
+      "name": "matched_four_class_comparison",
+      "status": "not_evaluated",
+      "passed": false,
+      "evidence": [],
+      "reason": "Primary implementation and artifact validation unavailable under documentation-only scope"
+    }
+  ],
+  "horizon_development_plan": {
+    "status": "not_frozen_not_submitted",
+    "fixed_policy": "best_existing_raster_adapted_checkpoint",
+    "checkpoint_path": null,
+    "checkpoint_sha256": null,
+    "predicted_chunk_length": 50,
+    "execution_horizons": [
+      50,
+      10,
+      5
+    ],
+    "maximum_executed_actions": 600,
+    "settle_steps": null,
+    "settle_protocol_note": "Freeze both pre-rollout and terminal settle behavior before execution; historical media uses 60 initial settling steps.",
+    "candidate_count": 1,
+    "fixed_development_poses": 8,
+    "garment_ids": null,
+    "pose_selection_required": "At least two short-pants garment identities, identical eight pose/seed pairs at all horizons; reserve formal evaluation seeds/poses.",
+    "freeze_before_launch": [
+      "checkpoint_sha256",
+      "predicted_chunk_length",
+      "preprocessing_sha256",
+      "camera_implementation_sha256",
+      "pose_and_initial_particle_state_protocol",
+      "simulation_timestep",
+      "action_normalization_sha256",
+      "evaluation_seeds",
+      "maximum_executed_actions",
+      "scorer_sha256",
+      "asset_and_physics_sha256",
+      "settling_protocol",
+      "candidate_count"
+    ],
+    "episodes": [
+      {
+        "development_pose_slot": 0,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 0,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 0,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 1,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 1,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 1,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 2,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 2,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 2,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 3,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 3,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 3,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 4,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 4,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 4,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 5,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 5,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 5,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 6,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 6,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 6,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 7,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 50,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 7,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 10,
+        "status": "planned_not_runnable",
+        "result": null
+      },
+      {
+        "development_pose_slot": 7,
+        "garment_id": null,
+        "pose": null,
+        "evaluation_seed": null,
+        "execution_horizon": 5,
+        "status": "planned_not_runnable",
+        "result": null
+      }
+    ],
+    "selection_rule": "Exclude infrastructure-invalid episodes; compare matched terminal success first, ever-success and condition margins second. Stop if shorter execution clearly degrades; freeze one global candidate only if development supports it.",
+    "selected_horizon": null
+  },
+  "formal_plan": {
+    "status": "conditional_not_submitted",
+    "requires": [
+      "A_pass",
+      "B_pass",
+      "C_supported_and_candidate_frozen"
+    ],
+    "classes": [
+      "Pant_Short"
+    ],
+    "documented_garments": 12,
+    "poses_per_garment_per_seed": 2,
+    "evaluation_seeds": [
+      0,
+      1
+    ],
+    "horizons": [
+      50,
+      null
+    ],
+    "projected_rollouts_if_full_protocol_used": 96,
+    "interpretation": "Report raw matched counts and paired uncertainty; garment clustering limits episode independence; a one-episode gain is inconclusive."
+  },
+  "cross_class_screen_plan": {
+    "status": "conditional_not_submitted",
+    "classes": [
+      "Pant_Short",
+      "Pant_Long",
+      "Top_Short",
+      "Top_Long"
+    ],
+    "requires": "shorter horizon supported and frozen",
+    "matched_controls": [
+      "baseline_horizon_50",
+      "selected_horizon"
+    ],
+    "garments_and_poses": null
+  },
+  "grasp_supervision_plan": {
+    "status": "deferred",
+    "justified_now": false,
+    "control": "existing class-balanced successful whole-episode sampling",
+    "treatment": "within the same class distribution, 50% ordinary frames plus 50% validated pre-grasp/grasp-commitment frames",
+    "required_window_validation": [
+      "wrist_view",
+      "gripper_command_and_state",
+      "valid_contact_or_cloth_proximity",
+      "demonstration_trajectory"
+    ],
+    "held_fixed": [
+      "starting_checkpoint",
+      "optimizer",
+      "learning_rate",
+      "training_steps",
+      "validation_split",
+      "training_seeds",
+      "class_distribution"
+    ],
+    "minimum_seeds_if_pilot_promising": 2,
+    "new_capture_priority": "underrepresented Pant_Long after validating current captures",
+    "duplicate_identical_frames_to_fix_imbalance": false
+  },
+  "four_class_formal_plan": {
+    "status": "conditional_not_submitted",
+    "policies": [
+      "historical_raster_baseline",
+      "best_new_candidate_not_selected"
+    ],
+    "classes": [
+      "Pant_Short",
+      "Pant_Long",
+      "Top_Short",
+      "Top_Long"
+    ],
+    "valid_denominator_only": true,
+    "Seen_Unseen_separate": true
+  },
+  "storage": {
+    "large_outputs_generated": false,
+    "this_assessment_target_bytes_upper_bound": 1000000,
+    "future_measurements_required": [
+      "du -sh \"$HOME\"",
+      "du -sh /nfs/hpc/share/\"$USER\" 2>/dev/null || true",
+      "df -h \"$HOME\"",
+      "df -h /nfs/hpc/share 2>/dev/null || true"
+    ],
+    "development_RGB_uncompressed_bytes_for_24x601x3x480x640x3": 39879475200,
+    "note": "39.88 GB decimal / 37.14 GiB for raw uint8 RGB alone; excludes filesystem/array overhead and all other data. Stream MP4 where possible and measure pilot sizes. No large capture authorized by passing this manifest."
+  },
+  "unresolved_primary_evidence": [
+    "full 48-identity Release inventory",
+    "mesh/scorer index correspondence",
+    "blocking garment-switch operation",
+    "ten baseline class rows absent from allowed documents",
+    "episode-level camera validity and terminal results",
+    "actual selected checkpoint hashes",
+    "full eight policy clips with required metadata"
+  ]
+}

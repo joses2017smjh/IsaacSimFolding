@@ -1,0 +1,107 @@
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaaclab/apps/isaaclab.python.headless.kit
+Loading user config located at: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20260920_181856.log
+2026-09-21T01:18:56Z [3ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/63613e7b-8759-4371-bf5346a7-b13b68d1.dmp'
+2026-09-21T01:18:56Z [5ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/d978d7b9-20c7-40fe-688afcbc-45f2ecc9.dmp'
+2026-09-21T01:18:56Z [5ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/44ceda51-020d-418f-ad61b8ae-9f1889a1.dmp'
+2026-09-21T01:18:56Z [7ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/16b0e915-468a-41e6-967782b5-166e54a1.dmp'
+2026-09-21T01:18:56Z [10ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/803da406-5dc1-4faa-7ccdbd93-2d63002f.dmp'
+2026-09-21T01:18:56Z [10ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/fa36c916-5227-4679-c5cdd0b2-9c0e2924.dmp'
+2026-09-21T01:18:56Z [11ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/5d094fad-4085-4685-35f927bf-d40c26bb.dmp'
+2026-09-21T01:18:56Z [12ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/b6ddc6c8-c45e-41f1-66f10b81-fb56cd6b.dmp'
+2026-09-21T01:18:56Z [15ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/95e36d9c-d997-4a94-37e071a6-e76340bd.dmp'
+2026-09-21T01:18:56Z [15ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/6ae9510b-191b-4e41-2464af8b-ea1710c5.dmp'
+2026-09-21T01:18:56Z [16ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/d32f8e76-8ec4-42a6-f779e38a-1fc195e3.dmp'
+2026-09-21T01:18:56Z [16ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/5920b44d-27f4-4601-9516af85-3caae0d2.dmp'
+2026-09-21T01:18:56Z [17ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/0af54216-434e-4644-2265ed95-d221c0c0.dmp'
+2026-09-21T01:18:56Z [18ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/5933a686-58e4-4f89-bbce209c-084bcef8.dmp'
+2026-09-21T01:18:56Z [19ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/b39b435c-a21c-4f5e-d6f002ab-3afe0484.dmp'
+2026-09-21T01:18:56Z [21ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/46ef5fa7-9c0a-4092-be442aa9-59521f1f.dmp'
+2026-09-21T01:18:56Z [22ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/8f50649c-59c1-4132-d445fd83-d772859a.dmp'
+2026-09-21T01:18:56Z [24ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/c5ef1610-ef44-45e3-ff9c68bc-164e7944.dmp'
+2026-09-21T01:18:56Z [26ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/62a3bd3c-dc11-491b-81c2429b-f14cc2e2.dmp'
+2026-09-21T01:18:56Z [28ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/92807cd9-eedb-4309-78bfe58c-182d510a.dmp'
+2026-09-21T01:18:56Z [30ms] [Warning] [carb.crashreporter-breakpad.plugin] [previous crash] preventing upload of minidump due to user opt-out: '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/49dd57b6-8469-4851-dfd814a6-cc4a7c5a.dmp'
+2026-09-21T01:18:57Z [580ms] [Error] [omni.datastore] Failed to acquire exclusive lock to data store (256>=256)
+2026-09-21T01:18:57Z [580ms] [Error] [omni.datastore] Failed to create local file data store at '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/cache/DerivedDataCache'
+2026-09-21T01:18:57Z [629ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-21T01:18:57Z [1,114ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-21T01:18:58Z [1,448ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-09-21T01:18:58Z [1,466ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-09-21T01:19:05Z [8,452ms] [Error] [omni.kit.app.plugin] failed to open file '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary
+2026-09-21T01:19:05Z [8,539ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-09-21T01:19:05Z [8,539ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-09-21T01:19:05Z [8,539ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 595.71.05     | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | Quadro RTX 8000                  | Yes: 0 |     | 78838   MB | 10de      | 0          |
+|     |                                  |        |     |            | 1e78      | 74950fe9.. |
+|     |                                  |        |     |            | c1        |            |
+|=============================================================================================|
+| OS: 22.04.5 LTS (Jammy Jellyfish) ubuntu, Version: 22.04.5, Kernel: 5.14.0-611.55.1.el9_7.x86_64
+| Processor: Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz
+| Cores: 40 | Logical Cores: 40
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 772478 | Free Memory: 749593
+| Total Page/Swap (MB): 0 | Free Page/Swap: 0
+|---------------------------------------------------------------------------------------------|
+2026-09-21T01:19:05Z [9,136ms] [Warning] [gpu.foundation.plugin] ECC is enabled on physical device 0
+2026-09-21T01:19:05Z [9,182ms] [Warning] [omni.kvdb.plugin] Disabling key-value database because another kit process is locking it
+2026-09-21T01:19:05Z [9,209ms] [Error] [omni.kit.app.plugin] failed to open file '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary
+[rollout] 5.1 app launched, cameras off
+[rollout] ROBOT_ASSET /nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/robots/lerobot/so101_follower_good.usd
+[rollout] PINNED sampler+config pos=[0.02544118091, -0.03557077795, 0.6999999881] ori=[0.4298920929, -4.294627666, 90.0] scale=0.37
+
+[36m====================================================================================================================================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v4/runtime/21370119_2/tmp/isaaclab/logs/isaaclab_2026-09-20_18-19-07.log[0m
+[36m====================================================================================================================================================================================================[0m
+
+2026-09-21T01:19:07Z [10,998ms] [Error] [omni.kit.app.plugin] failed to open file '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary
+2026-09-21T01:19:07Z [11,005ms] [Error] [omni.kit.app.plugin] failed to open file '/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json' - unable to save the dictionary
+[33m18:19:07 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 100
+	Physics step-size     : 0.011111111111111112
+	Rendering step-size   : 0.011111111111111112
+	Environment step-size : 0.011111111111111112
+2026-09-21T01:19:08Z [11,446ms] [Warning] [isaacsim.core.prims.impl.cloth_prim] Please note that support for particle cloth and related APIs is now deprecated. These features will be removed in future releases.
+2026-09-20 18:19:08 - lehome.tasks.bedroom.garment_bi_v2 - INFO - [GarmentEnv] GarmentObject created successfully
+[INFO]: Time taken for scene creation : 0.461737 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1
+	Environment spacing   : 4.0
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : []
+	Replicate physics     : True
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+2026-09-21T01:19:08Z [11,471ms] [Warning] [omni.physicsschema.plugin] Non-uniform scale may result in a non matching collision representation on prim: /World/Robot/Left_Robot/gripper/Capsule
+2026-09-21T01:19:08Z [11,472ms] [Warning] [omni.physicsschema.plugin] Non-uniform scale may result in a non matching collision representation on prim: /World/Robot/Left_Robot/jaw/Capsule
+2026-09-21T01:19:08Z [11,472ms] [Warning] [omni.physicsschema.plugin] Non-uniform scale may result in a non matching collision representation on prim: /World/Robot/Right_Robot/gripper/Capsule
+2026-09-21T01:19:08Z [11,472ms] [Warning] [omni.physicsschema.plugin] Non-uniform scale may result in a non matching collision representation on prim: /World/Robot/Right_Robot/jaw/Capsule
+2026-09-21T01:19:22Z [26,124ms] [Warning] [omni.physx.cooking.plugin] ConvexMeshCookingTask: adjusted the thickness of a very thin or very small mesh such that it meets the requirements for a GPU compatible convex hull collider. Prim 
+2026-09-21T01:19:22Z [26,126ms] [Error] [omni.physx.plugin] PhysX error: attachShape: non-SDF triangle mesh, tetrahedron mesh, heightfield or plane geometry shapes configured as eSIMULATION_SHAPE are not supported for non-kinematic PxRigidDynamic instances., FILE /builds/omniverse/physics/physx/source/physx/src/NpRigidBodyTemplate.h, LINE 390
+2026-09-21T01:19:22Z [26,190ms] [Warning] [omni.physx.plugin] Detected an articulation at /World/Robot/Left_Robot with more than 4 velocity iterations being added to a TGS scene.The related behavior changed recently, please consult the changelog. This warning will only print once.
+[INFO]: Time taken for simulation start : 15.020140 seconds
+[INFO]: Completed setting up the environment...
+[rollout] cloth_prim_view.initialize(sim_view) ok
+[rollout] object.post_reset() ok
+[rollout] object._get_initial_info() ok
+[landmark] rest (9904, 3) live (9904, 3) authored (9904, 3) to_weld () to_orig ()
+[rollout] TRACEBACK Traceback (most recent call last):
+    File "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v4/scripts/render/policy_rollout51.py", line 359, in <module>
+      landmark_proof = bind_landmarks(obj, mesh_path)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v4/scripts/../src/lehome_fold/folding_geometry.py", line 121, in bind_landmarks
+      if live.shape != (len(to_orig), 3) or not np.isfinite(live).all():
+                        ^^^^^^^^^^^^
+  TypeError: len() of unsized object
+  
+[rollout] NO COMPLETED RESULT -- setup, episode, or artifact writing failed (completed_steps=0, rendered=0)

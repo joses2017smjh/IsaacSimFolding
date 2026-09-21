@@ -1,0 +1,28 @@
+Read-only queries performed from lehome-fold-repro. No jobs modified.
+Commands:
+squeue -u "$USER" -o "%.18i %.12P %.24j %.10T %.12M %.30R %.20b"
+sacct -u "$USER" -j 21359573,21359574,21359575,21360435,21360436,21360437,21367674,21367715 --starttime 2026-09-18 --format=JobID,JobName%24,Partition,State,ExitCode,Elapsed -X
+
+2026-09-21T00:15:19Z
+             JOBID    PARTITION                     NAME      STATE         TIME               NODELIST(REASON)        TRES_PER_NODE
+          21369598          gpu             ood-advanced    RUNNING      1:33:49                        cn-gpu7           gres/gpu:2
+          21369796        share         m7-learn-both-s0    RUNNING        45:19                         cn-b02                  N/A
+JobID                         JobName  Partition      State ExitCode    Elapsed 
+------------ ------------------------ ---------- ---------- -------- ---------- 
+21359573_0           wk-fold-baseline        gpu  COMPLETED      0:0   01:20:09 
+21359573_1           wk-fold-baseline     ampere     FAILED      1:0   00:20:22 
+21359573_2           wk-fold-baseline        gpu    TIMEOUT      0:0   06:00:19 
+21359573_3           wk-fold-baseline        gpu    TIMEOUT      0:0   06:00:06 
+21359574_0            wk-fold-eval-s0        gpu    TIMEOUT      0:0   06:00:23 
+21359574_1            wk-fold-eval-s0        gpu     FAILED      1:0   00:27:03 
+21359574_2            wk-fold-eval-s0     ampere  COMPLETED      0:0   01:33:07 
+21359574_3            wk-fold-eval-s0        gpu  COMPLETED      0:0   01:45:13 
+21359575_0            wk-fold-eval-s1     ampere  COMPLETED      0:0   01:13:58 
+21359575_1            wk-fold-eval-s1     ampere    TIMEOUT      0:0   06:00:03 
+21359575_2            wk-fold-eval-s1        gpu    TIMEOUT      0:0   06:00:07 
+21359575_3            wk-fold-eval-s1        gpu  COMPLETED      0:0   01:43:36 
+21360435                lh-media-gate        gpu     FAILED      3:0   00:00:36 
+21360437              lh-media-report      share CANCELLED+      0:0   00:00:00 
+21360436_[1+                 lh-media gpu,ampere CANCELLED+      0:0   00:00:00 
+21367674                 lh-media-fix        gpu     FAILED      3:0   00:00:35 
+21367715                 lh-media-fix        gpu  COMPLETED      0:0   00:03:51

@@ -1,0 +1,13 @@
+{
+  "status": "cancelled_after_reproduced_setup_error",
+  "job_ids": [
+    "21370072",
+    "21370073"
+  ],
+  "reason": "PhysX restPoints are authored topology; actual weldedVerticesRemapToWeld/Orig attributes discovered",
+  "replacement": "20260920-folding-pilot-v3",
+  "preserved_completed_array_tasks": [
+    "21370072_2"
+  ],
+  "cancelled_interrupted_status_files_may_say_running": true
+}

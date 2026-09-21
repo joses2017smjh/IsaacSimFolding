@@ -1,0 +1,882 @@
+{
+  "schema_version": 1,
+  "status": "partial_documentation_inventory",
+  "not_a_verified_asset_inventory": true,
+  "documented_expected_total": 48,
+  "explicitly_named_identities": 12,
+  "missing_identity_records": 36,
+  "unseen_identities_enumerated": 0,
+  "unknown_value": null,
+  "classes": [
+    {
+      "class": "Pant_Short",
+      "documented_garments": 12,
+      "documented_seen": 10,
+      "documented_unseen": 2,
+      "documented_demonstrations": 250,
+      "documented_successful_captures": 24,
+      "documented_failed_captures": 1,
+      "documented_adaptation_train_episodes": 21,
+      "documented_adaptation_validation_episodes": 3,
+      "adaptation_holdout": "Pant_Short_Seen_9",
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "docs/STAGE0.md",
+          "line": 97,
+          "text": "| `Pant_Short` | 10 | 2 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 86,
+          "text": "   | Pant_Short | 24 | 1 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 152,
+          "text": "| Pant_Short | 21 | 3 | Pant_Short_Seen_9 |"
+        }
+      ]
+    },
+    {
+      "class": "Pant_Long",
+      "documented_garments": 12,
+      "documented_seen": 10,
+      "documented_unseen": 2,
+      "documented_demonstrations": 250,
+      "documented_successful_captures": 3,
+      "documented_failed_captures": 21,
+      "documented_adaptation_train_episodes": 2,
+      "documented_adaptation_validation_episodes": 1,
+      "adaptation_holdout": "Pant_Long_Seen_5",
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "docs/STAGE0.md",
+          "line": 96,
+          "text": "| `Pant_Long` | 10 | 2 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 87,
+          "text": "   | Pant_Long | 3 | 21 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 153,
+          "text": "| Pant_Long | 2 | 1 | Pant_Long_Seen_5 |"
+        }
+      ]
+    },
+    {
+      "class": "Top_Short",
+      "documented_garments": 12,
+      "documented_seen": 10,
+      "documented_unseen": 2,
+      "documented_demonstrations": 250,
+      "documented_successful_captures": 11,
+      "documented_failed_captures": 7,
+      "documented_adaptation_train_episodes": 8,
+      "documented_adaptation_validation_episodes": 3,
+      "adaptation_holdout": "Top_Short_Seen_7",
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "docs/STAGE0.md",
+          "line": 95,
+          "text": "| `Top_Short` | 10 | 2 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 84,
+          "text": "   | Top_Short | 11 | 7 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 150,
+          "text": "| Top_Short | 8 | 3 | Top_Short_Seen_7 |"
+        }
+      ]
+    },
+    {
+      "class": "Top_Long",
+      "documented_garments": 12,
+      "documented_seen": 10,
+      "documented_unseen": 2,
+      "documented_demonstrations": 250,
+      "documented_successful_captures": 17,
+      "documented_failed_captures": 7,
+      "documented_adaptation_train_episodes": 16,
+      "documented_adaptation_validation_episodes": 1,
+      "adaptation_holdout": "Top_Long_Seen_9",
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "docs/STAGE0.md",
+          "line": 94,
+          "text": "| `Top_Long` | 10 | 2 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 85,
+          "text": "   | Top_Long | 17 | 7 |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 151,
+          "text": "| Top_Long | 16 | 1 | Top_Long_Seen_9 |"
+        }
+      ]
+    }
+  ],
+  "garments": [
+    {
+      "garment_id": "Pant_Long_Seen_0",
+      "category": "Pant_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 10
+          },
+          "table_row": "| Pant_Long_Seen_0 | Pant_Long | policy | - | 2/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 18
+          },
+          "table_row": "| Pant_Long_Seen_0 | Pant_Long | replay | ep750 | 4/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 19
+          },
+          "table_row": "| Pant_Long_Seen_0 | Pant_Long | replay | ep751 | 4/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 20
+          },
+          "table_row": "| Pant_Long_Seen_0 | Pant_Long | replay | ep752 | 4/5 | **SUCCESS** |"
+        }
+      ],
+      "available_gif_video_evidence": [
+        {
+          "mode": "policy",
+          "gif_path": "docs/gifs/rollout_Pant_Long_Seen_0_policy_failure.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep750_success.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif",
+          "content_and_metadata_verified": false
+        }
+      ],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "results/summary.md",
+          "line": 10,
+          "text": "| Pant_Long_Seen_0 | Pant_Long | policy | - | 2/5 | failure |"
+        },
+        {
+          "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+          "line": 21,
+          "text": "| adapt_s0 | Pant_Long_Seen_0 / 750 | blocked_by_failed_gate | pending / unknown | awaiting media |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Pant_Long_Seen_1",
+      "category": "Pant_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 11
+          },
+          "table_row": "| Pant_Long_Seen_1 | Pant_Long | policy | - | 2/5 | failure |"
+        }
+      ],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "results/summary.md",
+          "line": 11,
+          "text": "| Pant_Long_Seen_1 | Pant_Long | policy | - | 2/5 | failure |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Pant_Long_Seen_5",
+      "category": "Pant_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": true,
+      "successful_storm_capture_count": 1,
+      "used_in_adaptation_training": false,
+      "validation_held_out": true,
+      "used_in_base_pretraining": true,
+      "evaluated": null,
+      "historical_results": [],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 153,
+          "text": "| Pant_Long | 2 | 1 | Pant_Long_Seen_5 |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Pant_Short_Seen_0",
+      "category": "Pant_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": 11573,
+      "particle_count": 11385,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 12
+          },
+          "table_row": "| Pant_Short_Seen_0 | Pant_Short | policy | - | 3/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 21
+          },
+          "table_row": "| Pant_Short_Seen_0 | Pant_Short | replay | ep500 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 22
+          },
+          "table_row": "| Pant_Short_Seen_0 | Pant_Short | replay | ep501 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 23
+          },
+          "table_row": "| Pant_Short_Seen_0 | Pant_Short | replay | ep502 | 4/5 | failure |"
+        }
+      ],
+      "available_gif_video_evidence": [
+        {
+          "mode": "policy",
+          "gif_path": "docs/demo/POLICY_fold_success.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "policy",
+          "gif_path": "docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep501_replay_ep501_success.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep502_replay_ep502_failure.gif",
+          "content_and_metadata_verified": false
+        }
+      ],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 189,
+          "text": "Pant_Short_Seen_0  11,573 verts -> 11,385 unique  (= its particle count)   was blank"
+        },
+        {
+          "path": "results/summary.md",
+          "line": 12,
+          "text": "| Pant_Short_Seen_0 | Pant_Short | policy | - | 3/5 | failure |"
+        },
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 61,
+          "text": "`results/rollout_Pant_Short_Seen_0_fullpolicy.json`,"
+        },
+        {
+          "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+          "line": 17,
+          "text": "| adapt_s0 | Pant_Short_Seen_0 / 509 | blocked_by_failed_gate | pending / unknown | awaiting media |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Pant_Short_Seen_1",
+      "category": "Pant_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 13
+          },
+          "table_row": "| Pant_Short_Seen_1 | Pant_Short | policy | - | 3/5 | failure |"
+        }
+      ],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "results/summary.md",
+          "line": 13,
+          "text": "| Pant_Short_Seen_1 | Pant_Short | policy | - | 3/5 | failure |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Pant_Short_Seen_9",
+      "category": "Pant_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": true,
+      "successful_storm_capture_count": 3,
+      "used_in_adaptation_training": false,
+      "validation_held_out": true,
+      "used_in_base_pretraining": true,
+      "evaluated": null,
+      "historical_results": [],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 152,
+          "text": "| Pant_Short | 21 | 3 | Pant_Short_Seen_9 |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Long_Seen_0",
+      "category": "Top_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": 14746,
+      "particle_count": 14544,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 14
+          },
+          "table_row": "| Top_Long_Seen_0 | Top_Long | policy | - | 2/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 24
+          },
+          "table_row": "| Top_Long_Seen_0 | Top_Long | replay | ep250 | 3/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 25
+          },
+          "table_row": "| Top_Long_Seen_0 | Top_Long | replay | ep251 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 26
+          },
+          "table_row": "| Top_Long_Seen_0 | Top_Long | replay | ep252 | 5/5 | **SUCCESS** |"
+        }
+      ],
+      "available_gif_video_evidence": [
+        {
+          "mode": "policy",
+          "gif_path": "docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep251_replay_ep251_success.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep250_replay_ep250_failure.gif",
+          "content_and_metadata_verified": false
+        }
+      ],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 190,
+          "text": "Top_Long_Seen_0    14,746 verts -> 14,544 unique                           was blank"
+        },
+        {
+          "path": "results/summary.md",
+          "line": 14,
+          "text": "| Top_Long_Seen_0 | Top_Long | policy | - | 2/5 | failure |"
+        },
+        {
+          "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+          "line": 13,
+          "text": "| adapt_s0 | Top_Long_Seen_0 / 251 | blocked_by_failed_gate | pending / unknown | awaiting media |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Long_Seen_1",
+      "category": "Top_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": 10410,
+      "particle_count": 10410,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 15
+          },
+          "table_row": "| Top_Long_Seen_1 | Top_Long | policy | - | 2/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 27
+          },
+          "table_row": "| Top_Long_Seen_1 | Top_Long | replay | ep275 | 5/5 | **SUCCESS** |"
+        }
+      ],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 192,
+          "text": "Top_Long_Seen_1    10,410 verts -> 10,410 unique  (no seams)               rendered"
+        },
+        {
+          "path": "results/summary.md",
+          "line": 15,
+          "text": "| Top_Long_Seen_1 | Top_Long | policy | - | 2/5 | failure |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Long_Seen_9",
+      "category": "Top_Long",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": true,
+      "successful_storm_capture_count": 1,
+      "used_in_adaptation_training": false,
+      "validation_held_out": true,
+      "used_in_base_pretraining": true,
+      "evaluated": null,
+      "historical_results": [],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 151,
+          "text": "| Top_Long | 16 | 1 | Top_Long_Seen_9 |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Short_Seen_0",
+      "category": "Top_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 16
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | policy | - | 2/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 28
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | - | 4/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 29
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep1 | 4/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 30
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep2 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 31
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep3 | 3/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 32
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep4 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 33
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep5 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 34
+          },
+          "table_row": "| Top_Short_Seen_0 | Top_Short | replay | ep6 | 5/5 | **SUCCESS** |"
+        }
+      ],
+      "available_gif_video_evidence": [
+        {
+          "mode": "policy",
+          "gif_path": "docs/demo/adapt-s0-failure.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "policy",
+          "gif_path": "docs/gifs/rollout_Top_Short_Seen_0_policy_failure.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep2_success.gif",
+          "content_and_metadata_verified": false
+        },
+        {
+          "mode": "demonstration_replay",
+          "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep1_failure.gif",
+          "content_and_metadata_verified": false
+        }
+      ],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "results/summary.md",
+          "line": 16,
+          "text": "| Top_Short_Seen_0 | Top_Short | policy | - | 2/5 | failure |"
+        },
+        {
+          "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+          "line": 9,
+          "text": "| adapt_s0 | Top_Short_Seen_0 / 2 | infrastructure_error | pending / unknown | awaiting media |"
+        },
+        {
+          "path": "campaigns/20260920-media-root-fix/MEDIA_STATUS.md",
+          "line": 9,
+          "text": "| adapt_s0 | Top_Short_Seen_0 / 2 | completed | failure / False | [top](outputs/adapt_s0_Top_Short_Seen_0_pose2/rollout_policy_failure_top.gif) \u00b7 [left_wrist](outputs/adapt_s0_Top_Short_Seen_0_pose2/rollout_policy_failure_left_wrist.gif) \u00b7 [right_wrist](outputs/adapt_s0_Top_Short_Seen_0_pose2/rollout_policy_failure_right_wrist.gif) \u00b7 [triptych](outputs/adapt_s0_Top_Short_Seen_0_pose2/rollout_policy_failure_triptych.gif) |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Short_Seen_1",
+      "category": "Top_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": 9774,
+      "particle_count": 9774,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": null,
+      "successful_storm_capture_count": null,
+      "used_in_adaptation_training": null,
+      "validation_held_out": false,
+      "used_in_base_pretraining": true,
+      "evaluated": true,
+      "historical_results": [
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 17
+          },
+          "table_row": "| Top_Short_Seen_1 | Top_Short | policy | - | 2/5 | failure |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 35
+          },
+          "table_row": "| Top_Short_Seen_1 | Top_Short | replay | ep25 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 36
+          },
+          "table_row": "| Top_Short_Seen_1 | Top_Short | replay | ep26 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 37
+          },
+          "table_row": "| Top_Short_Seen_1 | Top_Short | replay | ep27 | 5/5 | **SUCCESS** |"
+        },
+        {
+          "evidence_level": "repository_documentation_only",
+          "source": {
+            "path": "results/summary.md",
+            "line": 38
+          },
+          "table_row": "| Top_Short_Seen_1 | Top_Short | replay | ep28 | 5/5 | **SUCCESS** |"
+        }
+      ],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 191,
+          "text": "Top_Short_Seen_1    9,774 verts ->  9,774 unique  (no seams)               rendered"
+        },
+        {
+          "path": "results/summary.md",
+          "line": 17,
+          "text": "| Top_Short_Seen_1 | Top_Short | policy | - | 2/5 | failure |"
+        }
+      ]
+    },
+    {
+      "garment_id": "Top_Short_Seen_7",
+      "category": "Top_Short",
+      "split": "Seen",
+      "mesh_path": null,
+      "mesh_file_verified": false,
+      "vertex_count": null,
+      "particle_count": null,
+      "material": null,
+      "color": null,
+      "demonstrations_exist": true,
+      "demonstration_count": 25,
+      "demonstration_count_basis": "docs/STAGE0.md says all 40 Seen garments have 25 demonstrations; not independently verified",
+      "successful_storm_captures_exist": true,
+      "successful_storm_capture_count": 3,
+      "used_in_adaptation_training": false,
+      "validation_held_out": true,
+      "used_in_base_pretraining": true,
+      "evaluated": null,
+      "historical_results": [],
+      "available_gif_video_evidence": [],
+      "evidence_level": "repository_documentation_only",
+      "sources": [
+        {
+          "path": "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+          "line": 150,
+          "text": "| Top_Short | 8 | 3 | Top_Short_Seen_7 |"
+        }
+      ]
+    }
+  ],
+  "identity_extraction_sources": [
+    "README.md",
+    "SESSION_STATUS.md",
+    "docs/STAGE0.md",
+    "results/summary.md",
+    "campaigns/20260919-media/docs/AUDIT_2026-09-19.md",
+    "campaigns/20260919-media/MEDIA_STATUS.md",
+    "campaigns/20260920-media-root-fix/MEDIA_STATUS.md"
+  ],
+  "missing_32_explanation": {
+    "status": "documented_not_reverified",
+    "explanation": "Release documents describe 10 Seen plus 2 public Unseen per class; eight private Holdout garments per class were not released in that pack. This does not establish present-day upstream availability.",
+    "source": {
+      "path": "docs/STAGE0.md",
+      "line": 101,
+      "text": "ships, so the 8 private garments per type that made up the rest of the"
+    }
+  },
+  "sweater": {
+    "explicit_benchmark_category_documented": false,
+    "visually_sweater_like_garments_verified": null,
+    "visual_inspection_performed": false,
+    "benchmark_class_to_retain": "Top_Long"
+  }
+}

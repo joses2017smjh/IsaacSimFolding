@@ -1,0 +1,9 @@
+{
+  "task": "smoke_Top_Short_Seen_3",
+  "state": "running",
+  "success": null,
+  "slurm_job_id": "21370050",
+  "slurm_array_task_id": "0",
+  "process_isolated": true,
+  "infrastructure_error": null
+}

@@ -1,0 +1,17 @@
+test_all_scorer_landmarks_preserve_authored_rest_positions (test_improvement.ImprovementTests.test_all_scorer_landmarks_preserve_authored_rest_positions) ... ok
+test_baseline_raw_success_episodes_and_missing_not_zero (test_improvement.ImprovementTests.test_baseline_raw_success_episodes_and_missing_not_zero) ... ok
+test_exact_release_counts_identities_and_paths (test_improvement.ImprovementTests.test_exact_release_counts_identities_and_paths) ... ok
+test_installed_smolvla_queue_replans_from_new_observation (test_improvement.ImprovementTests.test_installed_smolvla_queue_replans_from_new_observation) ... ok
+test_mp4_is_encoded_from_rgb_with_policy_caption (test_improvement.ImprovementTests.test_mp4_is_encoded_from_rgb_with_policy_caption) ... ok
+test_native_throttle_false_is_not_terminal_geometry (test_improvement.ImprovementTests.test_native_throttle_false_is_not_terminal_geometry) ... ok
+test_official_condition_counts_and_signed_margins (test_improvement.ImprovementTests.test_official_condition_counts_and_signed_margins) ... ok
+test_reproduces_actual_top_short_3_index_error (test_improvement.ImprovementTests.test_reproduces_actual_top_short_3_index_error) ... ok
+test_runtime_ordering_rejects_permutation_and_nonfinite (test_improvement.ImprovementTests.test_runtime_ordering_rejects_permutation_and_nonfinite) ... ok
+test_stale_camera_file_cannot_satisfy_false_record_success (test_improvement.ImprovementTests.test_stale_camera_file_cannot_satisfy_false_record_success) ... ok
+test_training_split_identity_and_whole_episode_separation (test_improvement.ImprovementTests.test_training_split_identity_and_whole_episode_separation) ... ok
+test_unbound_or_nonfinite_scorer_fails_closed (test_improvement.ImprovementTests.test_unbound_or_nonfinite_scorer_fails_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 1.304s
+
+OK

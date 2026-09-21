@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "actual_assets_verified": true,
+  "garment_count": 48,
+  "demonstration_count": 1000,
+  "demonstration_metadata": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Datasets/example/four_types_merged/meta/garment_info.json",
+  "demonstration_metadata_sha256": "0c3a3eea8bfeed866fabf3d0efdfc8b53d5da98ed07278becb24a1bb9fadf794",
+  "adaptation_split": "/nfs/hpc/share/sanchej7/Humanoid_Lite/bhl-robustness-ladder/results/weekend-20260919/fold-adapt-s0/data_split.json",
+  "adaptation_split_sha256": "113e1a18f099307310062b17cda6f81a6ae99fdd209984a9397fa05dbdfde125",
+  "capture_count": 91,
+  "successful_captures": 55,
+  "class_counts": {
+    "Pant_Short": 12,
+    "Pant_Long": 12,
+    "Top_Short": 12,
+    "Top_Long": 12
+  },
+  "scorer_out_of_bounds_garments": [
+    "Top_Short_Seen_3",
+    "Top_Short_Seen_4",
+    "Top_Short_Unseen_1"
+  ],
+  "scorer_changed_landmark_garments": [
+    "Pant_Short_Seen_3",
+    "Pant_Short_Seen_4",
+    "Pant_Short_Seen_5",
+    "Pant_Long_Seen_1",
+    "Pant_Long_Unseen_1",
+    "Top_Short_Seen_3",
+    "Top_Short_Seen_4",
+    "Top_Short_Unseen_0",
+    "Top_Short_Unseen_1",
+    "Top_Long_Seen_4"
+  ],
+  "static_preflight_passed": true,
+  "runtime_correspondence_gate_passed": false,
+  "missing_32": "Local pack contains Release only; no private Holdout assets present. Current upstream availability was not queried.",
+  "capture_label_caveat": "Historical replay-success labels used legacy landmark selection; affected identities need corrected geometric revalidation."
+}

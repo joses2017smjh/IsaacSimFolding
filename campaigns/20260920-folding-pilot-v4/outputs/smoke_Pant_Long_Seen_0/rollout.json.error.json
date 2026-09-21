@@ -1,0 +1,16 @@
+{
+  "status": "error",
+  "success": null,
+  "terminal_success": null,
+  "completed_steps": 0,
+  "requested_steps": 120,
+  "first_success_step": null,
+  "policy": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+  "policy_variant": "historical_raster_fixed",
+  "garment": "Pant_Long_Seen_0",
+  "seed": 100,
+  "n_rendered": 0,
+  "error_type": "TypeError",
+  "error": "len() of unsized object",
+  "traceback": "Traceback (most recent call last):\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v4/scripts/render/policy_rollout51.py\", line 359, in <module>\n    landmark_proof = bind_landmarks(obj, mesh_path)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v4/scripts/../src/lehome_fold/folding_geometry.py\", line 121, in bind_landmarks\n    if live.shape != (len(to_orig), 3) or not np.isfinite(live).all():\n                      ^^^^^^^^^^^^\nTypeError: len() of unsized object\n"
+}

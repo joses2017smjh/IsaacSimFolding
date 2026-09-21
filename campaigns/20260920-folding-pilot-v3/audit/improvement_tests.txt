@@ -1,0 +1,4 @@
+Command: venv/bin/python campaigns/20260920-folding-pilot-v3/tests/test_improvement.py (USD environment)
+..............
+Ran 14 tests in 1.117s
+OK

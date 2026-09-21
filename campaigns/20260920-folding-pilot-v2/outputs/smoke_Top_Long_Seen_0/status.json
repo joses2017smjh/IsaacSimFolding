@@ -1,0 +1,12 @@
+{
+  "task": "smoke_Top_Long_Seen_0",
+  "state": "infrastructure_error",
+  "success": null,
+  "slurm_job_id": "21370080",
+  "slurm_array_task_id": "3",
+  "process_isolated": true,
+  "infrastructure_error": "RuntimeError('Isaac child exited 3')",
+  "child_pid": 3771860,
+  "returncode": 3,
+  "wall_seconds": 27.802101470995694
+}

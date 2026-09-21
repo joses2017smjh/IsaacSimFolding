@@ -1,0 +1,15 @@
+{
+  "improvement_regressions_passed": 15,
+  "legacy_pure_tests_passed": 51,
+  "policy_or_GPU_tests_run": false,
+  "phase_A_static_checks_passed": true,
+  "notes": [
+    "Runtime landmark correspondence remains a smoke gate",
+    "Pants have four official conditions; tops have five",
+    "No training or grasp-window experiment is included in this phase"
+  ],
+  "prior_attempt": "v3 long-pants had no welded vertices and PhysX omitted both remap tables",
+  "repair": "accept identity only for absent maps plus unique source vertices, exact rest positions, and matching live count",
+  "completed_GPU_smoke_indices": [],
+  "all_required_GPU_smokes_passed": false
+}

@@ -1,0 +1,39 @@
+{
+  "passed": false,
+  "status": "incomplete_or_invalid",
+  "rows": [
+    {
+      "index": 0,
+      "passed": true,
+      "garment": "Top_Short_Seen_3",
+      "child_pid": 3777313,
+      "job": "21370083"
+    },
+    {
+      "index": 1,
+      "passed": true,
+      "garment": "Pant_Short_Seen_0",
+      "child_pid": 3779960,
+      "job": "21370094"
+    },
+    {
+      "index": 2,
+      "passed": false,
+      "garment": "Pant_Long_Seen_0",
+      "reason": "infrastructure_error"
+    },
+    {
+      "index": 3,
+      "passed": false,
+      "garment": "Top_Long_Seen_0",
+      "reason": "running"
+    },
+    {
+      "index": 4,
+      "passed": false,
+      "garment": "Top_Short_Seen_0",
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v3/outputs/smoke_Top_Short_Seen_0/status.json'"
+    }
+  ],
+  "policy_success_is_not_required": true
+}

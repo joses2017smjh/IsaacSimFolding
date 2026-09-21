@@ -1,0 +1,8 @@
+....[landmark] rest (9904, 3) live (9904, 3) authored (9904, 3) to_weld () to_orig ()
+[landmark] rest (9774, 3) live (9774, 3) authored (9774, 3) to_weld () to_orig ()
+[landmark] rest (11381, 3) live (10869, 3) authored (11381, 3) to_weld (11381,) to_orig (10869,)
+............
+----------------------------------------------------------------------
+Ran 16 tests in 2.473s
+
+OK

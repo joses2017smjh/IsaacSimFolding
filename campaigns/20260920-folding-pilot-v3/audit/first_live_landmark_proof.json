@@ -1,0 +1,28 @@
+{
+  "mesh_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_3/TCSC_Top004_1_obj_exp.usd",
+  "mesh_prim": "/World/mesh",
+  "mesh_sha256": "08926d28286c1e9bf9cc9d04b5149242a4a90e149daaeabda5b74c1412fb5999",
+  "authored_vertex_count": 11381,
+  "particle_count": 10869,
+  "authored_indices": [
+    10309,
+    11029,
+    7217,
+    4539,
+    11266,
+    11378
+  ],
+  "particle_indices": [
+    9845,
+    10565,
+    7217,
+    4539,
+    10776,
+    10866
+  ],
+  "mapping_changed": true,
+  "runtime_correspondence_verified": true,
+  "proof_source": "PhysX weldedVerticesRemapToWeld and weldedVerticesRemapToOrig; authored restPoints",
+  "max_rest_correspondence_error_asset_units": 0.0,
+  "tolerance_asset_units": 1e-06
+}

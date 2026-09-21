@@ -1,5 +1,7 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
+**Update — 21 September 2026:** the v4 folding smoke gate finished **3/5 passed**, with two setup errors and no successful folds among the three valid short-budget episodes. The garment-switch diagnostic completed without reproducing the historical hang. A remaining unwelded-mesh integration guard is repaired; 16 CPU tests pass and replacement GPU smokes are submitted. The 24-rollout horizon pilot has not run. [Verified results, four-class policy footage, repairs and next steps](docs/FOLDING_STATUS_2026-09-21.md).
+
 **Current measured status — 20 September 2026:** the strict short-pants
 evaluation recorded **8/24** checker successes for the historical raster-adapted
 baseline and **3/24** for new adaptation seed 1. Only **5 of 12** policy/class

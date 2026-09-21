@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "status": "historical_documented_references_only",
+  "new_clips_generated": 0,
+  "requested_new_policy_clips": 8,
+  "verified_new_policy_clips": 0,
+  "documented_policy_references": [
+    {
+      "garment_id": "Pant_Short_Seen_0",
+      "class": "Pant_Short",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "historical_raster_adapted",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": null,
+      "execution_horizon": null,
+      "documented_ever_success": true,
+      "documented_terminal_success": null,
+      "documented_conditions_passed": 5,
+      "first_failure_category": null,
+      "gif_path": "docs/demo/POLICY_fold_success.gif",
+      "mp4_path": null,
+      "gif_path_exists": true,
+      "mp4_path_exists": null,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 16,
+          "text": "All five fold conditions passed; the checker fired at step 119 of 400.<br>"
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    },
+    {
+      "garment_id": "Pant_Short_Seen_0",
+      "class": "Pant_Short",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "historical_BC",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": null,
+      "execution_horizon": null,
+      "documented_ever_success": false,
+      "documented_terminal_success": null,
+      "documented_conditions_passed": 3,
+      "first_failure_category": null,
+      "gif_path": "docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif",
+      "mp4_path": null,
+      "gif_path_exists": true,
+      "mp4_path_exists": null,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "docs/README_long.md",
+          "line": 272,
+          "text": "<td><img src=\"docs/gifs/rollout_Pant_Short_Seen_0_policy_failure.gif\" width=\"420\" alt=\"Short pants under the policy, garment untouched\"></td>"
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    },
+    {
+      "garment_id": "Pant_Long_Seen_0",
+      "class": "Pant_Long",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "historical_BC",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": null,
+      "execution_horizon": null,
+      "documented_ever_success": false,
+      "documented_terminal_success": null,
+      "documented_conditions_passed": 2,
+      "first_failure_category": null,
+      "gif_path": "docs/gifs/rollout_Pant_Long_Seen_0_policy_failure.gif",
+      "mp4_path": null,
+      "gif_path_exists": true,
+      "mp4_path_exists": null,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "docs/README_long.md",
+          "line": 268,
+          "text": "<td><img src=\"docs/gifs/rollout_Pant_Long_Seen_0_policy_failure.gif\" width=\"420\" alt=\"Long pants under the policy, garment untouched\"></td>"
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    },
+    {
+      "garment_id": "Top_Long_Seen_0",
+      "class": "Top_Long",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "historical_BC",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": null,
+      "execution_horizon": null,
+      "documented_ever_success": false,
+      "documented_terminal_success": null,
+      "documented_conditions_passed": 2,
+      "first_failure_category": null,
+      "gif_path": "docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif",
+      "mp4_path": null,
+      "gif_path_exists": true,
+      "mp4_path_exists": null,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "docs/README_long.md",
+          "line": 264,
+          "text": "<td><img src=\"docs/gifs/rollout_Top_Long_Seen_0_policy_failure.gif\" width=\"420\" alt=\"Long-sleeve top under the policy, garment untouched\"></td>"
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    },
+    {
+      "garment_id": "Top_Short_Seen_0",
+      "class": "Top_Short",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "adapt_s0",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": 0,
+      "execution_horizon": null,
+      "documented_ever_success": false,
+      "documented_terminal_success": false,
+      "documented_conditions_passed": null,
+      "first_failure_category": null,
+      "gif_path": "docs/demo/adapt-s0-failure.gif",
+      "mp4_path": "docs/demo/adapt-s0-failure.mp4",
+      "gif_path_exists": true,
+      "mp4_path_exists": true,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "docs/MEDIA_GATE_2026-09-20.md",
+          "line": 63,
+          "text": "[Compact MP4](demo/adapt-s0-failure.mp4) \u00b7 [Scorer and render audit](evidence/media-gate-2026-09-20/21367715-rollout.json)."
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    },
+    {
+      "garment_id": "Top_Short_Seen_0",
+      "class": "Top_Short",
+      "split": "Seen",
+      "mode": "policy",
+      "policy": "historical_BC",
+      "checkpoint_path": null,
+      "checkpoint_hash": null,
+      "evaluation_seed": null,
+      "training_seed": null,
+      "execution_horizon": null,
+      "documented_ever_success": false,
+      "documented_terminal_success": null,
+      "documented_conditions_passed": 2,
+      "first_failure_category": null,
+      "gif_path": "docs/gifs/rollout_Top_Short_Seen_0_policy_failure.gif",
+      "mp4_path": null,
+      "gif_path_exists": true,
+      "mp4_path_exists": null,
+      "content_and_metadata_verified": false,
+      "sources": [
+        {
+          "path": "docs/README_long.md",
+          "line": 260,
+          "text": "<td><img src=\"docs/gifs/rollout_Top_Short_Seen_0_policy_failure.gif\" width=\"420\" alt=\"The identical garment under the trained policy, left untouched\"></td>"
+        }
+      ],
+      "suitable_for_new_matched_comparison": false
+    }
+  ],
+  "policy_reference_coverage": [
+    {
+      "class": "Pant_Short",
+      "target": 2,
+      "documented_references": 2,
+      "missing_references_to_reach_two": 0,
+      "metadata_complete": false
+    },
+    {
+      "class": "Pant_Long",
+      "target": 2,
+      "documented_references": 1,
+      "missing_references_to_reach_two": 1,
+      "metadata_complete": false
+    },
+    {
+      "class": "Top_Short",
+      "target": 2,
+      "documented_references": 2,
+      "missing_references_to_reach_two": 0,
+      "metadata_complete": false
+    },
+    {
+      "class": "Top_Long",
+      "target": 2,
+      "documented_references": 1,
+      "missing_references_to_reach_two": 1,
+      "metadata_complete": false
+    }
+  ],
+  "separate_historical_replay_controls": [
+    {
+      "garment_id": "Top_Short_Seen_0",
+      "class": "Top_Short",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": true,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep2_success.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep2.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 30,
+        "text": "- [Top_Short_Seen_0 \u2014 replay success](reference_replays/rollout_Top_Short_Seen_0_replay_ep2_success.gif) ([scorer record](reference_replays/rollout_Top_Short_Seen_0_replay_ep2.json))"
+      }
+    },
+    {
+      "garment_id": "Top_Short_Seen_0",
+      "class": "Top_Short",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": false,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep1_failure.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Top_Short_Seen_0_replay_ep1.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 31,
+        "text": "- [Top_Short_Seen_0 \u2014 replay failure](reference_replays/rollout_Top_Short_Seen_0_replay_ep1_failure.gif) ([scorer record](reference_replays/rollout_Top_Short_Seen_0_replay_ep1.json))"
+      }
+    },
+    {
+      "garment_id": "Top_Long_Seen_0",
+      "class": "Top_Long",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": true,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep251_replay_ep251_success.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep251.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 32,
+        "text": "- [Top_Long_Seen_0 \u2014 replay success](reference_replays/rollout_Top_Long_Seen_0_v2_ep251_replay_ep251_success.gif) ([scorer record](reference_replays/rollout_Top_Long_Seen_0_v2_ep251.json))"
+      }
+    },
+    {
+      "garment_id": "Top_Long_Seen_0",
+      "class": "Top_Long",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": false,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep250_replay_ep250_failure.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Top_Long_Seen_0_v2_ep250.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 33,
+        "text": "- [Top_Long_Seen_0 \u2014 replay failure](reference_replays/rollout_Top_Long_Seen_0_v2_ep250_replay_ep250_failure.gif) ([scorer record](reference_replays/rollout_Top_Long_Seen_0_v2_ep250.json))"
+      }
+    },
+    {
+      "garment_id": "Pant_Short_Seen_0",
+      "class": "Pant_Short",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": true,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep501_replay_ep501_success.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep501.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 34,
+        "text": "- [Pant_Short_Seen_0 \u2014 replay success](reference_replays/rollout_Pant_Short_Seen_0_v2_ep501_replay_ep501_success.gif) ([scorer record](reference_replays/rollout_Pant_Short_Seen_0_v2_ep501.json))"
+      }
+    },
+    {
+      "garment_id": "Pant_Short_Seen_0",
+      "class": "Pant_Short",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": false,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep502_replay_ep502_failure.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Short_Seen_0_v2_ep502.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 35,
+        "text": "- [Pant_Short_Seen_0 \u2014 replay failure](reference_replays/rollout_Pant_Short_Seen_0_v2_ep502_replay_ep502_failure.gif) ([scorer record](reference_replays/rollout_Pant_Short_Seen_0_v2_ep502.json))"
+      }
+    },
+    {
+      "garment_id": "Pant_Long_Seen_0",
+      "class": "Pant_Long",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": true,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep750_success.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep750.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 36,
+        "text": "- [Pant_Long_Seen_0 \u2014 replay success](reference_replays/rollout_Pant_Long_Seen_0_replay_ep750_success.gif) ([scorer record](reference_replays/rollout_Pant_Long_Seen_0_replay_ep750.json))"
+      }
+    },
+    {
+      "garment_id": "Pant_Long_Seen_0",
+      "class": "Pant_Long",
+      "mode": "demonstration_replay",
+      "required_caption": "DEMONSTRATION REPLAY \u2014 NOT POLICY SUCCESS",
+      "documented_ever_success": false,
+      "terminal_success": null,
+      "gif_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif",
+      "path_exists": true,
+      "mp4_path": null,
+      "scorer_path": "campaigns/20260919-media/reference_replays/rollout_Pant_Long_Seen_0_replay_ep751.json",
+      "content_and_metadata_verified": false,
+      "source": {
+        "path": "campaigns/20260919-media/MEDIA_STATUS.md",
+        "line": 37,
+        "text": "- [Pant_Long_Seen_0 \u2014 replay failure](reference_replays/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif) ([scorer record](reference_replays/rollout_Pant_Long_Seen_0_replay_ep751.json))"
+      }
+    }
+  ],
+  "replays_satisfy_policy_clip_request": false
+}

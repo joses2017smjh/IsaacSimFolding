@@ -1,0 +1,15 @@
+{
+  "improvement_regressions_passed": 16,
+  "legacy_pure_tests_passed": 51,
+  "policy_or_GPU_tests_run": false,
+  "phase_A_static_checks_passed": true,
+  "notes": [
+    "Runtime landmark correspondence remains a smoke gate",
+    "Pants have four official conditions; tops have five",
+    "No training or grasp-window experiment is included in this phase"
+  ],
+  "prior_attempt": "v4 identity helper passed, but bind_landmarks then called len() on an absent remap table",
+  "repair": "guard live array shape directly after the verified mapping; full bind_landmarks regression covers actual welded and both unwelded garment assets",
+  "completed_GPU_smoke_indices": [],
+  "all_required_GPU_smokes_passed": false
+}

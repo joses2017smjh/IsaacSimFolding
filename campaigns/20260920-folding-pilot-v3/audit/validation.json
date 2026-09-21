@@ -1,0 +1,17 @@
+{
+  "improvement_regressions_passed": 14,
+  "legacy_pure_tests_passed": 51,
+  "policy_or_GPU_tests_run": true,
+  "phase_A_static_checks_passed": true,
+  "notes": [
+    "Runtime landmark correspondence remains a smoke gate",
+    "Pants have four official conditions; tops have five",
+    "No training or grasp-window experiment is included in this phase"
+  ],
+  "prior_attempt": "21370072: cooked restPoints remained authored topology, actual PhysX forward/reverse weld attributes present",
+  "repair": "use and cross-validate PhysX forward/reverse vertex maps and source rest positions",
+  "completed_GPU_smoke_indices": [
+    0
+  ],
+  "all_required_GPU_smokes_passed": false
+}

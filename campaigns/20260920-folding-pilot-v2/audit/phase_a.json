@@ -1,0 +1,8 @@
+{
+  "static_asset_scorer_preflight": true,
+  "exact_counts": true,
+  "whole_episode_and_garment_split": true,
+  "runtime_landmark_correspondence": false,
+  "phase_a_complete": true,
+  "required_tests_passed": true
+}

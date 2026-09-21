@@ -1,0 +1,31 @@
+{
+  "validation_kind": "new_documentation_artifact_consistency_only",
+  "does_not_validate_policy_or_infrastructure": true,
+  "checks_passed": 20,
+  "checks": [
+    "documented class totals",
+    "demonstration totals",
+    "capture and split totals",
+    "partial identity count explicit",
+    "no invented full inventory",
+    "source hashes unchanged",
+    "quoted source lines resolve",
+    "all baseline cells present",
+    "only supported baseline cells populated",
+    "Seen Unseen arithmetic",
+    "horizon matrix paired correctly",
+    "unexecuted matrix has no results",
+    "gates fail closed",
+    "policy test status honest",
+    "no jobs or repairs invented",
+    "eight replay references kept separate",
+    "policy metadata gaps explicit",
+    "documented media files exist",
+    "report relative links resolve",
+    "assessment below one megabyte"
+  ],
+  "referenced_source_lines_checked": 52,
+  "bytes_before_validation_report": 98044,
+  "policy_tests_run": 0,
+  "GPU_jobs_submitted": 0
+}

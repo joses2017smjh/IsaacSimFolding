@@ -1,0 +1,13 @@
+{
+  "task": "smoke_Pant_Short_Seen_0",
+  "state": "completed",
+  "success": false,
+  "slurm_job_id": "21370116",
+  "slurm_array_task_id": "1",
+  "process_isolated": true,
+  "infrastructure_error": null,
+  "child_pid": 3795508,
+  "returncode": 0,
+  "terminal_success": false,
+  "wall_seconds": 114.86586206988432
+}

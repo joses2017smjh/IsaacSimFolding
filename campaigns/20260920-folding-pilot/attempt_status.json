@@ -1,0 +1,10 @@
+{
+  "state": "superseded_runtime_correspondence_guard",
+  "cancelled_only_own_new_jobs": [
+    "21370048",
+    "21370049"
+  ],
+  "reason": "Startup already deforms live particles; compare rest topology before stepping instead of relaxing a world-space tolerance.",
+  "replacement_campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-folding-pilot-v2",
+  "utc": "2026-09-21T00:54:06.050851+00:00"
+}

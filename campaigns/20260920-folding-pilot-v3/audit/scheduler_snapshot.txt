@@ -1,0 +1,20 @@
+             JOBID                     NAME      STATE         TIME               NODELIST(REASON)
+        21370081_1            lh-fold-smoke    RUNNING         0:45                        cn-gpu5
+  21370081_[2-4%1]            lh-fold-smoke    PENDING         0:00            (JobArrayTaskLimit)
+          21370082           lh-switch-diag    PENDING         0:00                   (Dependency)
+JobID             State ExitCode    Elapsed 
+------------ ---------- -------- ---------- 
+21370049     CANCELLED+      0:0   00:00:00 
+21370048_0   CANCELLED+      0:0   00:00:40 
+21370048_1       FAILED      3:0   00:00:50 
+21370048_[3+ CANCELLED+      0:0   00:00:00 
+21370073     CANCELLED+      0:0   00:00:00 
+21370072_0       FAILED      3:0   00:00:32 
+21370072_1       FAILED      3:0   00:00:32 
+21370072_2    COMPLETED      0:0   00:02:08 
+21370072_3       FAILED      3:0   00:00:32 
+21370072_4   CANCELLED+      0:0   00:01:28 
+21370082        PENDING      0:0   00:00:00 
+21370081_0    COMPLETED      0:0   00:01:59 
+21370081_1      RUNNING      0:0   00:00:45 
+21370081_[2+    PENDING      0:0   00:00:00

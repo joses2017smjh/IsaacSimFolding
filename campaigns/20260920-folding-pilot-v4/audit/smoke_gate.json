@@ -1,0 +1,40 @@
+{
+  "passed": false,
+  "status": "incomplete_or_invalid",
+  "rows": [
+    {
+      "index": 0,
+      "passed": true,
+      "garment": "Top_Short_Seen_3",
+      "child_pid": 3792856,
+      "job": "21370104"
+    },
+    {
+      "index": 1,
+      "passed": true,
+      "garment": "Pant_Short_Seen_0",
+      "child_pid": 3795508,
+      "job": "21370116"
+    },
+    {
+      "index": 2,
+      "passed": false,
+      "garment": "Pant_Long_Seen_0",
+      "reason": "infrastructure_error"
+    },
+    {
+      "index": 3,
+      "passed": true,
+      "garment": "Top_Long_Seen_0",
+      "child_pid": 3800618,
+      "job": "21370120"
+    },
+    {
+      "index": 4,
+      "passed": false,
+      "garment": "Top_Short_Seen_0",
+      "reason": "infrastructure_error"
+    }
+  ],
+  "policy_success_is_not_required": true
+}

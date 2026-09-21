@@ -1,0 +1,13 @@
+{
+  "improvement_regressions_passed": 13,
+  "legacy_pure_tests_passed": 51,
+  "policy_or_GPU_tests_run": false,
+  "phase_A_static_checks_passed": true,
+  "notes": [
+    "Runtime landmark correspondence remains a smoke gate",
+    "Pants have four official conditions; tops have five",
+    "No training or grasp-window experiment is included in this phase"
+  ],
+  "prior_attempt": "21370048 stopped before policy: live startup cloth had deformed",
+  "repair": "verify cooked rest topology, not deformed live positions"
+}

@@ -1,0 +1,13 @@
+{
+  "task": "diagnose_switch_Top_Long_0_to_1",
+  "state": "completed",
+  "success": false,
+  "slurm_job_id": "21370082",
+  "slurm_array_task_id": "5",
+  "process_isolated": true,
+  "infrastructure_error": null,
+  "child_pid": 3790204,
+  "returncode": 0,
+  "terminal_success": false,
+  "wall_seconds": 116.42401956696995
+}

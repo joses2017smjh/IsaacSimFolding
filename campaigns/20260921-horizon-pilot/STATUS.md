@@ -100,3 +100,13 @@ cat campaigns/20260921-horizon-pilot/analysis/pilot-results/REPORT.md
 ## First live pilot result
 
 At 2026-09-21 21:30 UTC, array task 1 (slot 0, H10) completed 600 actions and 60 terminal settling steps with 601 fresh camera acquisitions, 60 replans, 59 replan-boundary samples and 600 streamed behavior records. The worker accepted the telemetry and all infrastructure checks. Official ever and settled terminal success were false. This intermediate note is superseded by the completed 24-rollout table above.
+
+## Replan causality diagnostic
+
+The action-5/action-10 causal diagnostic is complete for the four matched diagnostic cases previously successful under H50 (pose slots 1, 3, 5 and 7). The runner snapshots simulator cloth particles and velocities, arm joints/targets, cameras, counters and RNG state, then compares a cached H50 suffix, a fresh H5/H10 replan and repeated same-observation predictions. The implementation is in `scripts/render/policy_rollout51.py`; the GPU captures were produced by diagnostic array **21386674** plus the earlier validation captures.
+
+The snapshot restore is exact at the boundary (zero immediate cloth and joint RMS in all eight rows). Same-observation predictions with the same RNG state are bitwise identical. Changing the Torch inference seed changes actions by roughly 2.46–3.37 radians at maximum pairwise difference. A cached suffix reaches 4/4 while a fresh branch reaches 3/4 for pose 3 at both boundaries and pose 1 at action 10. These are the supported paired separations. Pose 1 at action 5 and both boundaries for poses 5 and 7 are inconclusive because the cached replay does not reproduce the complete success or accumulates deformable-simulation replay drift.
+
+The evidence supports fresh observation-conditioned replanning and inference sampling as contributors to the shorter-horizon divergence. It does not isolate a cloth contact/grasp mechanism: no validated native finger/cloth contact signal was available, so acquisition, retention, release and drop remain unknown. A repository audit found no compatible `actions_to_keep`, `actions_to_execute` or soft-inpainting implementation in the checked reference checkout; no continuity intervention was launched.
+
+Deliverables are in [`analysis/replan-causality/`](analysis/replan-causality/): `REPORT.md`, `README.md`, `branch-results.csv`, `action-plan-comparison.json`, `reference-inference-audit.md` and one SVG plot per pose. Preserve H50 as baseline. The single recommended next experiment is a paired inference-only fixed-RNG diagnostic on the same four poses; do not start training, RL, RECAP, AWR, DAgger or BC from this result.

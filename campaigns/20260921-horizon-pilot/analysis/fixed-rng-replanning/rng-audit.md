@@ -1,0 +1,9 @@
+# RNG semantics audit
+
+The rollout calls `seed_rngs()` after simulator settling and policy construction. That function seeds Python, NumPy, Torch and CUDA and enables deterministic cuDNN. The fixed-RNG capture stores the resulting Torch CPU state and all CUDA generator states before the episode's policy calls. It restores those byte states before the counterfactual first replan and records them in `seed-panel.json`.
+
+The installed SmolVLA implementation uses flow matching. `sample_actions()` creates a `(batch, chunk_size, max_action_dim)` Gaussian tensor with `torch.normal` when no noise is supplied, then integrates `config.num_steps` steps (the checkpoint configuration reports 10) with `dt=-1/num_steps`. The initial noise is therefore the stochastic input; the denoising loop itself is deterministic conditional on the observation, weights and noise. The checked code does not initialize a fresh integer seed inside each policy call; it consumes the current Torch/CUDA generator state. `policy.reset()` clears action-queue state and does not replace the sampler state.
+
+The original successful H50 pilot stored executed targets and telemetry, but not the pre-call Torch/CUDA state bytes. The present experiment reconstructs the reproducible initial state from the frozen episode seed immediately after `seed_rngs()`, records the exact bytes used for the counterfactual, and behaviorally verifies the reconstruction: all 50 postprocessed actions in the reconstructed original H50 chunk match the recorded baseline action stream exactly (maximum absolute error 0 for poses 1, 3, 5 and 7). This is strong verification of the effective call state, while still distinguishing it from having historical RNG bytes on disk. Same integer seed and same exact generator bytes are not conflated.
+
+The four-seed panel is descriptive only. Seeds are fixed in advance (101, 102, 103, 104), are not selected per pose, and are not used to make a performance claim.

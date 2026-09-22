@@ -97,6 +97,10 @@ ap.add_argument("--causal_branch_steps", type=int, default=120,
                 help="steps per fresh-replan branch after a saved H50 state")
 ap.add_argument("--causal_action_jsonl", default="",
                 help="optional completed-pilot behavior JSONL used as the cached H50 control")
+ap.add_argument("--fixed_rng_seed", type=int, default=-1,
+                help="optional fixed Torch/CUDA seed for the causal seed panel")
+ap.add_argument("--seed_panel", default="101,102,103,104",
+                help="comma-separated predetermined Torch/CUDA seeds for causal plan sensitivity")
 args = ap.parse_args()
 if args.terminal_settle_steps < 1:
     ap.error("terminal_settle_steps must be positive")
@@ -567,6 +571,14 @@ try:
     causal_trace = {}
     executed_actions = {}
     causal_enabled = bool(args.causal_out)
+    causal_initial_torch_rng = torch.get_rng_state().cpu().numpy().copy()
+    causal_initial_cuda_rng = [x.cpu().numpy().copy() for x in torch.cuda.get_rng_state_all()]
+    try:
+        causal_seed_panel = [int(x.strip()) for x in args.seed_panel.split(",") if x.strip()]
+    except ValueError as exc:
+        raise ValueError(f"invalid --seed_panel={args.seed_panel!r}") from exc
+    if not causal_enabled:
+        causal_seed_panel = []
     from lehome_fold.behavior_telemetry import BehaviorTelemetry
     behavior = BehaviorTelemetry(args.result_out + ".behavior.jsonl", pts0, args.n_action_steps, step_dt,
         {"left": env.left_arm.body_names, "right": env.right_arm.body_names})
@@ -664,6 +676,7 @@ try:
                 "right_ee": _as_cpu_array(links["right"][0][-1])}
 
     scoring_phase = "policy"
+    reconstructed_original_chunk = None
     for i in range(args.steps):
         current_action = i + 1
         imgs = render_images()
@@ -681,6 +694,20 @@ try:
         # (h, w, c) uint8. Passing the raw array through died in
         # resize_with_pad with "(b,c,h,w) expected, but [256, 640, 3]".
         observation = make_observation(imgs, joint)
+        if causal_enabled and i == 0:
+            # Reconstruct the first H50 sampler call without altering the
+            # cached-control episode. The historical pilot did not persist
+            # its pre-call RNG bytes, so this uses the state captured after
+            # the frozen episode seed and records that limitation explicitly.
+            _torch_before = torch.get_rng_state().cpu().numpy().copy()
+            _cuda_before = [x.cpu().numpy().copy() for x in torch.cuda.get_rng_state_all()]
+            with torch.inference_mode():
+                _chunk = original_predict(policy_batch(imgs, joint))
+            if post:
+                _chunk = post(_chunk)
+            reconstructed_original_chunk = np.asarray(_chunk.detach().cpu().numpy()[0] if hasattr(_chunk, "detach") else _chunk)[0:].copy()
+            torch.set_rng_state(torch.as_tensor(_torch_before, dtype=torch.uint8))
+            torch.cuda.set_rng_state_all([torch.as_tensor(x, dtype=torch.uint8, device="cpu") for x in _cuda_before])
         if replay is not None:
             a = replay[min(i, replay.shape[0] - 1)]
             # Capture the pairing the fine-tune needs: what the renderer SHOWS
@@ -1020,6 +1047,58 @@ try:
                 "joint_rms_rad": float(np.sqrt(np.mean((joints - snapshot["joint"]) ** 2))),
             }
 
+        def _set_policy_rng(torch_state, cuda_state=None):
+            """Restore the exact sampler state used for a reconstructed call."""
+            torch.set_rng_state(torch.as_tensor(np.asarray(torch_state, dtype=np.uint8), device="cpu"))
+            if cuda_state is not None:
+                torch.cuda.set_rng_state_all([
+                    torch.as_tensor(np.asarray(x, dtype=np.uint8), device="cpu")
+                    for x in cuda_state
+                ])
+
+        def _same_rng_chunk(snapshot):
+            fidelity = _restore_and_validate(snapshot)
+            policy.reset()
+            _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+            images, joint = snapshot["images"], snapshot["joint"]
+            return fidelity, _fresh_chunk(policy_batch(images, joint))
+
+        def _run_same_rng(snapshot, horizon):
+            """Execute a branch whose first replan uses the reconstructed original RNG state."""
+            fidelity, first_chunk = _same_rng_chunk(snapshot)
+            boundary = int(snapshot["boundary"])
+            trace, actions, chunks = [], [], [first_chunk.copy()]
+            best = 0
+            last = None
+            current_chunk = first_chunk
+            for local in range(args.causal_branch_steps):
+                global_step = boundary + local + 1
+                if local and local % horizon == 0:
+                    images, joint = _branch_observation()
+                    current_chunk = _fresh_chunk(policy_batch(images, joint))
+                    chunks.append(current_chunk.copy())
+                action = current_chunk[local % horizon].copy()
+                actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = global_step
+                trace.append(row)
+                best = max(best, row["conditions_passed"])
+                last = row
+            return {"restore": fidelity, "actions": actions, "trace": trace, "chunks": chunks,
+                    "best_conditions": best, "terminal": last,
+                    "geometric_ever_success": any(x["geometric_success"] for x in trace)}
+
+        def _seed_panel(snapshot):
+            plans = []
+            batch = policy_batch(snapshot["images"], snapshot["joint"])
+            for seed in causal_seed_panel:
+                _restore_and_validate(snapshot)
+                policy.reset()
+                torch.manual_seed(seed)
+                torch.cuda.manual_seed_all(seed)
+                plans.append({"seed": seed, "chunk": _fresh_chunk(batch)})
+            return plans
+
         def _compare_branch_trace(boundary, trace):
             errors = []
             for local, row in enumerate(trace, start=1):
@@ -1136,13 +1215,17 @@ try:
             old_plan = np.stack([executed_actions[step]
                                  for step in range(boundary + 1, args.steps + 1)])
             fresh = _run_fresh(snapshot, h)
+            same_rng = _run_same_rng(snapshot, h)
             cached = _run_cached(snapshot)
             repeats = _repeat_predictions(snapshot)
+            seed_panel = _seed_panel(snapshot)
             branches[str(boundary)] = {
                 "horizon": h,
                 "cached_plan_control": cached,
                 "fresh_replan": fresh,
+                "same_rng_replan": same_rng,
                 "repeated_prediction": repeats,
+                "seed_panel": seed_panel,
                 "old_vs_fresh_plan_metrics": _plan_metrics(old_plan, fresh["chunks"][0]),
                 "old_plan_suffix_first_50": old_plan[:50],
                 "fresh_plan_first_50": fresh["chunks"][0],
@@ -1161,9 +1244,17 @@ try:
                                  if causal_replay_actions is not None else "fresh H50 policy capture"),
             "branch_steps": args.causal_branch_steps,
             "original_prediction_chunks": original_chunks,
+            "reconstructed_original_h50_chunk": reconstructed_original_chunk,
             "branches": branches,
             "interpretation_guard": "Branch conclusions are valid only when cached-plan restoration errors remain below the stated tolerances.",
             "simulator_bitwise_determinism": False,
+            "rng_audit": {
+                "initial_torch_state": causal_initial_torch_rng,
+                "initial_cuda_state": causal_initial_cuda_rng,
+                "state_provenance": "captured immediately after seed_rngs() in this run; exact original pilot pre-call state was not persisted",
+                "reconstructed_original_call": True,
+                "seed_panel": causal_seed_panel,
+            },
         }
         with open(args.causal_out, "w") as causal_file:
             json.dump(_jsonable(causal_result), causal_file, indent=2, allow_nan=False)

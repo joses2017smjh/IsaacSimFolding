@@ -28,6 +28,12 @@ def main():
                     help="run the observation-component diagnostic; pose slot 3 only")
     ap.add_argument("--observation-execute-best", action="store_true",
                     help="execute at most two candidates after the preregistered gate")
+    ap.add_argument("--boundary-capture", action="store_true",
+                    help="replay cached pose-3 H50 and export exact action-5/10 observations")
+    ap.add_argument("--boundary-eval-trained-path", default="",
+                    help="snapshot-only compare of this trained checkpoint to the baseline")
+    ap.add_argument("--boundary-eval-out", default="",
+                    help="JSON output for the snapshot-only baseline/trained comparison")
     args = ap.parse_args()
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
@@ -48,6 +54,18 @@ def main():
             raise SystemExit("--observation-diagnostic cannot use RTC or queue diagnostics")
     if args.observation_execute_best and not args.observation_diagnostic:
         raise SystemExit("--observation-execute-best requires --observation-diagnostic")
+    if args.boundary_capture:
+        if int(row["development_pose_slot"]) != 3 or int(row["horizon"]) != 50:
+            raise SystemExit("--boundary-capture is restricted to pose-3 H50")
+        if args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
+            raise SystemExit("--boundary-capture cannot use inference diagnostics")
+    if bool(args.boundary_eval_trained_path) != bool(args.boundary_eval_out):
+        raise SystemExit("boundary evaluation requires both trained checkpoint and output path")
+    if args.boundary_eval_trained_path:
+        if int(row["development_pose_slot"]) != 3 or int(row["horizon"]) != 50:
+            raise SystemExit("--boundary-eval is restricted to pose-3 H50")
+        if args.boundary_capture or args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
+            raise SystemExit("--boundary-eval cannot use capture, RTC, queue, or observation diagnostics")
     inventory = json.loads((root / "audit/garment_inventory.json").read_text())
     asset = next(r for r in inventory["garments"] if r["garment_id"] == row["garment"])
     checkpoint = manifest["checkpoint"]
@@ -59,14 +77,19 @@ def main():
         "--lehome", str(root / "external/lehome-challenge"),
         "--policy_path", checkpoint["path"], "--garment", row["garment"],
         "--garment_dir", str(Path(asset["config"]).parent), "--assets", manifest["assets"],
-        "--steps", "600", "--frames_out", str(frames),
+        "--steps", "10" if args.boundary_eval_trained_path else "600",
+        "--frames_out", str(frames),
         "--match_pose=" + row["match_pose"], "--match_scale", str(row["match_scale"]),
         "--settle_steps", "60", "--terminal_settle_steps", "60",
         "--seed", str(row["seed"]), "--n_action_steps", "50",
-        "--policy_variant", "causal_h50_capture", "--task", manifest["task_prompt"],
-        "--gif_every", "12", "--result_out", str(dest / "rollout.json"),
-        "--causal_out", str(dest / "replan-causality.json"),
-        "--causal_branch_steps", str(args.branch_steps)]
+        "--policy_variant", ("boundary_capture" if args.boundary_capture else
+                              "boundary_eval" if args.boundary_eval_trained_path else
+                              "causal_h50_capture"),
+        "--task", manifest["task_prompt"], "--gif_every", "12",
+        "--result_out", str(dest / "rollout.json")]
+    if not args.boundary_capture:
+        command += ["--causal_out", str(dest / "replan-causality.json"),
+                    "--causal_branch_steps", str(args.branch_steps)]
     if args.rtc_guidance:
         command.append("--rtc_guidance")
     if args.queue_diagnostic:
@@ -75,6 +98,12 @@ def main():
         command.append("--observation_diagnostic")
     if args.observation_execute_best:
         command.append("--observation_execute_best")
+    if args.boundary_capture:
+        command += ["--boundary_capture_out",
+                    str(root / "analysis/boundary-replay/pose3-boundary-replay.npz")]
+    if args.boundary_eval_trained_path:
+        command += ["--boundary_eval_trained_path", args.boundary_eval_trained_path,
+                    "--boundary_eval_out", args.boundary_eval_out]
     cached = args.causal_action_jsonl or str(root / "outputs" / row["id"] / "rollout.json.behavior.jsonl")
     if Path(cached).is_file():
         command += ["--causal_action_jsonl", cached]

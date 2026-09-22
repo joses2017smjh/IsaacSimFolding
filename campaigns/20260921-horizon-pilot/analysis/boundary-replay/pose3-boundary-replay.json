@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "boundaries": [
+    5,
+    10
+  ],
+  "garment": "Pant_Short_Seen_3",
+  "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+  "match_scale": 0.45,
+  "seed": 203,
+  "task": "fold the garment on the table",
+  "active_observation_keys": [
+    "observation.images.top_rgb",
+    "observation.images.left_rgb",
+    "observation.images.right_rgb",
+    "observation.state",
+    "task"
+  ],
+  "observation_alignment": "images and state are captured after exactly boundary actions from the cached H50 episode",
+  "target_alignment": "target row j is cached H50 chunk row boundary+j, zero-based; valid rows are boundary:50",
+  "target_source": "successful cached H50 action stream, not a fresh replan, stale/hybrid input, RTC output, demonstration state, or interpolation",
+  "target_storage": "raw executed_action_rad; training applies the unchanged checkpoint preprocessor normalizer",
+  "boundary_rng_storage": "torch_rng and cuda_rng are captured immediately after the boundary action and are restored before each model prediction",
+  "action_dim": 12,
+  "chunk_size": 50,
+  "valid_target_lengths": {
+    "5": 45,
+    "10": 40
+  },
+  "source_successful_h50_episode": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout.json.behavior.jsonl",
+  "source_successful_h50_episode_sha256": "c6c8515179879ed715bd7dff1c0cd11bebc95db5fea350feb6f0c551b8040b7a",
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+  "checkpoint_files": {
+    "config.json": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/config.json",
+      "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+    },
+    "model.safetensors": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/model.safetensors",
+      "sha256": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77"
+    },
+    "policy_preprocessor.json": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor.json",
+      "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+    },
+    "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor_step_5_normalizer_processor.safetensors",
+      "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+    },
+    "policy_postprocessor.json": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor.json",
+      "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+    },
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+      "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+    }
+  },
+  "normalization_statistics": {
+    "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+    "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+  },
+  "source_policy_variant": "boundary_capture",
+  "original_checkpoint_untouched": true
+}

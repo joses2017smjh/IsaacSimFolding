@@ -1,0 +1,42 @@
+{
+  "capture_bind_failure": {
+    "job_id": 21398508,
+    "state": "FAILED",
+    "exit_code": "1:0"
+  },
+  "capture_off_by_one_failure": {
+    "job_id": 21398509,
+    "state": "FAILED",
+    "exit_code": "3:0"
+  },
+  "capture_wrong_campaign_root_failure": {
+    "job_id": 21398510,
+    "state": "FAILED",
+    "exit_code": "2:0"
+  },
+  "boundary_capture": {
+    "job_id": 21398513,
+    "state": "COMPLETED",
+    "exit_code": "0:0"
+  },
+  "boundary_micro_finetune": {
+    "job_id": 21398555,
+    "state": "COMPLETED",
+    "exit_code": "0:0"
+  },
+  "boundary_eval_loader_failure": {
+    "job_id": 21398565,
+    "state": "FAILED",
+    "exit_code": "3:0"
+  },
+  "boundary_eval_loader_failure_rerun": {
+    "job_id": 21398572,
+    "state": "FAILED",
+    "exit_code": "3:0"
+  },
+  "boundary_snapshot_inference_gate": {
+    "job_id": 21399086,
+    "state": "COMPLETED",
+    "exit_code": "0:0"
+  }
+}

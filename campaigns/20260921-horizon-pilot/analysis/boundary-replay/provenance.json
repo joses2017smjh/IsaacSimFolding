@@ -1,0 +1,1554 @@
+{
+  "schema_version": 1,
+  "diagnostic": "boundary-state successful-H50 replay micro-finetune",
+  "baseline_commit_at_run": "7e23b0ccd02dab8bd4af4c92fe36f425de0961c8",
+  "garment": "Pant_Short_Seen_3",
+  "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+  "task": "fold the garment on the table",
+  "boundaries": [
+    5,
+    10
+  ],
+  "source_successful_h50_episode": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout.json.behavior.jsonl",
+  "source_successful_h50_episode_sha256": "c6c8515179879ed715bd7dff1c0cd11bebc95db5fea350feb6f0c551b8040b7a",
+  "capture_npz_sha256": "fb82f66dd8600c6a51eab426d0e9756c507089ef76a66271fcd4ab9142a7153b",
+  "capture_metadata": {
+    "schema_version": 1,
+    "boundaries": [
+      5,
+      10
+    ],
+    "garment": "Pant_Short_Seen_3",
+    "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+    "match_scale": 0.45,
+    "seed": 203,
+    "task": "fold the garment on the table",
+    "active_observation_keys": [
+      "observation.images.top_rgb",
+      "observation.images.left_rgb",
+      "observation.images.right_rgb",
+      "observation.state",
+      "task"
+    ],
+    "observation_alignment": "images and state are captured after exactly boundary actions from the cached H50 episode",
+    "target_alignment": "target row j is cached H50 chunk row boundary+j, zero-based; valid rows are boundary:50",
+    "target_source": "successful cached H50 action stream, not a fresh replan, stale/hybrid input, RTC output, demonstration state, or interpolation",
+    "target_storage": "raw executed_action_rad; training applies the unchanged checkpoint preprocessor normalizer",
+    "boundary_rng_storage": "torch_rng and cuda_rng are captured immediately after the boundary action and are restored before each model prediction",
+    "action_dim": 12,
+    "chunk_size": 50,
+    "valid_target_lengths": {
+      "5": 45,
+      "10": 40
+    },
+    "source_successful_h50_episode": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout.json.behavior.jsonl",
+    "source_successful_h50_episode_sha256": "c6c8515179879ed715bd7dff1c0cd11bebc95db5fea350feb6f0c551b8040b7a",
+    "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+    "checkpoint_files": {
+      "config.json": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/config.json",
+        "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+      },
+      "model.safetensors": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/model.safetensors",
+        "sha256": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77"
+      },
+      "policy_preprocessor.json": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor.json",
+        "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+      },
+      "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor_step_5_normalizer_processor.safetensors",
+        "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+      },
+      "policy_postprocessor.json": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor.json",
+        "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+      },
+      "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+        "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+      }
+    },
+    "normalization_statistics": {
+      "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+      "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+    },
+    "source_policy_variant": "boundary_capture",
+    "original_checkpoint_untouched": true
+  },
+  "checkpoint_controls": {
+    "baseline": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+      "files": {
+        "config.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/config.json",
+          "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+        },
+        "model.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/model.safetensors",
+          "sha256": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77"
+        },
+        "policy_preprocessor.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor.json",
+          "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+        },
+        "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor_step_5_normalizer_processor.safetensors",
+          "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        },
+        "policy_postprocessor.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor.json",
+          "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+        },
+        "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+          "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      }
+    },
+    "trained": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint",
+      "files": {
+        "config.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/config.json",
+          "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+        },
+        "model.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/model.safetensors",
+          "sha256": "90734878d85102b00ba3f407b446ee366c7e5580f06079bd64ceaa836d73e4c2"
+        },
+        "policy_preprocessor.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_preprocessor.json",
+          "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+        },
+        "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_preprocessor_step_5_normalizer_processor.safetensors",
+          "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        },
+        "policy_postprocessor.json": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_postprocessor.json",
+          "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+        },
+        "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+          "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+          "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      }
+    }
+  },
+  "training": {
+    "steps": 300,
+    "val_before": 0.13325396389700472,
+    "val_best": 0.1628073020838201,
+    "val_after": 0.2130441963672638,
+    "heldout_gate": false,
+    "frames": 2,
+    "episodes": 2,
+    "unfreeze": "boundary",
+    "lr": 1e-05,
+    "base": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+    "boundary_mode": true,
+    "trainable_parameter_names": [
+      "model.vlm_with_expert.lm_expert.layers.0.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.0.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.1.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.2.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.3.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.4.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.5.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.6.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.7.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.8.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.9.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.10.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.11.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.12.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.13.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.14.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.self_attn.q_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.self_attn.k_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.self_attn.v_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.self_attn.o_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.mlp.gate_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.mlp.up_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.mlp.down_proj.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.input_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.layers.15.post_attention_layernorm.weight",
+      "model.vlm_with_expert.lm_expert.norm.weight",
+      "model.state_proj.weight",
+      "model.state_proj.bias",
+      "model.action_in_proj.weight",
+      "model.action_in_proj.bias",
+      "model.action_out_proj.weight",
+      "model.action_out_proj.bias",
+      "model.action_time_mlp_in.weight",
+      "model.action_time_mlp_in.bias",
+      "model.action_time_mlp_out.weight",
+      "model.action_time_mlp_out.bias"
+    ],
+    "trainable_parameter_count": 99880992,
+    "checkpoint_sha256": {
+      "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+      "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+      "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+      "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+      "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+      "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+    },
+    "boundary_capture": "/nfs/stak/users/sanchej7/hpc-share/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/pose3-boundary-replay.npz",
+    "heldout_files": [
+      "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep0.npz",
+      "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep10.npz",
+      "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep135.npz",
+      "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep145.npz"
+    ],
+    "heldout_frames_per_file": 8,
+    "seed": 4242,
+    "note": "trained on Storm-rasterised frames with demonstration actions; only the observation distribution differs from the original BC run"
+  },
+  "evaluation": {
+    "schema_version": 1,
+    "mode": "snapshot_only_boundary_replay",
+    "closed_loop_execution": false,
+    "rtc_used": false,
+    "queue_or_retained_prefix_used": false,
+    "observation_substitution_used": false,
+    "checkpoints": {
+      "baseline": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "files": {
+          "config.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/config.json",
+            "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+          },
+          "model.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/model.safetensors",
+            "sha256": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77"
+          },
+          "policy_preprocessor.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor.json",
+            "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+          },
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_preprocessor_step_5_normalizer_processor.safetensors",
+            "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+          },
+          "policy_postprocessor.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor.json",
+            "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+          },
+          "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+            "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+          }
+        }
+      },
+      "trained": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint",
+        "files": {
+          "config.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/config.json",
+            "sha256": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+          },
+          "model.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/model.safetensors",
+            "sha256": "90734878d85102b00ba3f407b446ee366c7e5580f06079bd64ceaa836d73e4c2"
+          },
+          "policy_preprocessor.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_preprocessor.json",
+            "sha256": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b"
+          },
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_preprocessor_step_5_normalizer_processor.safetensors",
+            "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+          },
+          "policy_postprocessor.json": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_postprocessor.json",
+            "sha256": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2"
+          },
+          "policy_postprocessor_step_0_unnormalizer_processor.safetensors": {
+            "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint/policy_postprocessor_step_0_unnormalizer_processor.safetensors",
+            "sha256": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+          }
+        }
+      }
+    },
+    "boundaries": {
+      "5": {
+        "target_source": "cached successful H50 executed actions after this boundary",
+        "target_length": 45,
+        "baseline_and_trained_same_rng": true,
+        "models": {
+          "baseline": {
+            "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+            "rng_source": "reconstructed_initial_rng_after_seed_rngs",
+            "rng_restore_exact": true,
+            "simulator_stepped_during_prediction": false,
+            "snapshot_restore": {
+              "cloth_rms_m": 0.0,
+              "joint_rms_rad": 0.0
+            },
+            "prediction_timing": {
+              "source": "boundary_eval_baseline",
+              "boundary": 5,
+              "elapsed_seconds": 0.3747954638674855,
+              "sim_step_before": 65,
+              "sim_step_after": 65,
+              "sim_step_delta": 0,
+              "episode_length_before": 65,
+              "episode_length_after": 65,
+              "episode_length_delta": 0,
+              "rng_before_digest": "6b19d9639a8ebe31e05989557871afa7fa8ff4388e19052f6dfd86451370e418",
+              "rng_after_digest": "59fae464c190152296f72ee16bfa3ba94a727311c4f8d949500284ea1ec2b1f6",
+              "inference_blocks_before_env_step": true
+            },
+            "chunk_first_10": [
+              [
+                -0.04993081092834473,
+                -1.6487212181091309,
+                1.384307861328125,
+                1.1585475206375122,
+                -0.479255348443985,
+                -0.16392122209072113,
+                0.045993953943252563,
+                -1.545588731765747,
+                1.320181131362915,
+                1.0755882263183594,
+                0.20946548879146576,
+                -0.13568803668022156
+              ],
+              [
+                -0.08956083655357361,
+                -1.6603045463562012,
+                1.4301217794418335,
+                1.1662298440933228,
+                -0.4416089355945587,
+                -0.16252218186855316,
+                0.003218322992324829,
+                -1.5591375827789307,
+                1.3899493217468262,
+                1.081453561782837,
+                0.24141672253608704,
+                -0.14221610128879547
+              ],
+              [
+                -0.08694308996200562,
+                -1.6405246257781982,
+                1.3956801891326904,
+                1.1736092567443848,
+                -0.5196311473846436,
+                -0.16024386882781982,
+                -0.020654380321502686,
+                -1.700453519821167,
+                1.4105653762817383,
+                1.1716232299804688,
+                0.30448994040489197,
+                -0.14336827397346497
+              ],
+              [
+                -0.08391594886779785,
+                -1.6219135522842407,
+                1.4133992195129395,
+                1.1482725143432617,
+                -0.5165587663650513,
+                -0.15971311926841736,
+                -0.008433431386947632,
+                -1.6724433898925781,
+                1.4190574884414673,
+                1.1821686029434204,
+                0.3231075406074524,
+                -0.1427655816078186
+              ],
+              [
+                -0.0945202112197876,
+                -1.6399872303009033,
+                1.4434762001037598,
+                1.1777656078338623,
+                -0.5026987791061401,
+                -0.15543444454669952,
+                0.005941212177276611,
+                -1.6581308841705322,
+                1.4495244026184082,
+                1.1802713871002197,
+                0.3269282281398773,
+                -0.14360041916370392
+              ],
+              [
+                -0.07060462236404419,
+                -1.6394000053405762,
+                1.4709267616271973,
+                1.172985315322876,
+                -0.44720929861068726,
+                -0.1601211428642273,
+                0.007331818342208862,
+                -1.638160228729248,
+                1.4562149047851562,
+                1.1890236139297485,
+                0.32348164916038513,
+                -0.14805452525615692
+              ],
+              [
+                -0.06874850392341614,
+                -1.6490507125854492,
+                1.4743609428405762,
+                1.1649701595306396,
+                -0.48923417925834656,
+                -0.15857575833797455,
+                0.004720896482467651,
+                -1.6800086498260498,
+                1.4481337070465088,
+                1.2094115018844604,
+                0.33729442954063416,
+                -0.1463552862405777
+              ],
+              [
+                -0.11242249608039856,
+                -1.4783849716186523,
+                1.2989869117736816,
+                1.134253740310669,
+                -0.7018419504165649,
+                -0.14756087958812714,
+                0.1065593957901001,
+                -1.4810748100280762,
+                1.2416400909423828,
+                1.1955348253250122,
+                0.4627934694290161,
+                -0.14627303183078766
+              ],
+              [
+                0.010499954223632812,
+                -1.3591055870056152,
+                1.223677158355713,
+                1.14791738986969,
+                -0.694733738899231,
+                -0.1466386318206787,
+                0.07798868417739868,
+                -1.3563462495803833,
+                1.1907882690429688,
+                1.1510218381881714,
+                0.47552192211151123,
+                -0.14062313735485077
+              ],
+              [
+                0.02533257007598877,
+                -1.4887630939483643,
+                1.2998921871185303,
+                1.1559032201766968,
+                -0.6230741739273071,
+                -0.14551948010921478,
+                0.047930628061294556,
+                -1.3922494649887085,
+                1.2144196033477783,
+                1.1606155633926392,
+                0.4513379633426666,
+                -0.13782712817192078
+              ]
+            ],
+            "deviation_from_cached_h50_suffix": {
+              "1": {
+                "width": 1,
+                "rms_rad": 0.09281976154677136,
+                "max_abs_rad": 0.19119596481323242,
+                "mean_abs_rad": 0.07441299657026927,
+                "per_joint_rms_rad": [
+                  0.00840267539024353,
+                  0.03415477275848389,
+                  0.09916806221008301,
+                  0.042826175689697266,
+                  0.10501673817634583,
+                  0.01002831757068634,
+                  0.10960772633552551,
+                  0.13212335109710693,
+                  0.19119596481323242,
+                  0.1077423095703125,
+                  0.03916345536708832,
+                  0.01352640986442566
+                ],
+                "per_joint_max_abs_rad": [
+                  0.00840267539024353,
+                  0.03415477275848389,
+                  0.09916806221008301,
+                  0.042826175689697266,
+                  0.10501673817634583,
+                  0.01002831757068634,
+                  0.10960772633552551,
+                  0.13212335109710693,
+                  0.19119596481323242,
+                  0.1077423095703125,
+                  0.03916345536708832,
+                  0.01352640986442566
+                ],
+                "first_action_delta_rad": [
+                  -0.00840267539024353,
+                  0.03415477275848389,
+                  -0.09916806221008301,
+                  -0.042826175689697266,
+                  -0.10501673817634583,
+                  -0.01002831757068634,
+                  0.10960772633552551,
+                  0.13212335109710693,
+                  -0.19119596481323242,
+                  -0.1077423095703125,
+                  -0.03916345536708832,
+                  0.01352640986442566
+                ]
+              },
+              "10": {
+                "width": 10,
+                "rms_rad": 0.10662444269022245,
+                "max_abs_rad": 0.32939600944519043,
+                "mean_abs_rad": 0.0674449826280276,
+                "per_joint_rms_rad": [
+                  0.05643752950366945,
+                  0.1359778854825754,
+                  0.12112404100965114,
+                  0.030630606835859164,
+                  0.14389686734646664,
+                  0.007708805266096556,
+                  0.07326988534314303,
+                  0.1620274844568487,
+                  0.1863175056969265,
+                  0.05168813307037896,
+                  0.0965180521360746,
+                  0.00721716978042181
+                ],
+                "per_joint_max_abs_rad": [
+                  0.1129617989063263,
+                  0.3187042474746704,
+                  0.2512388229370117,
+                  0.0520097017288208,
+                  0.27186819911003113,
+                  0.01002831757068634,
+                  0.1360432207584381,
+                  0.31434619426727295,
+                  0.32939600944519043,
+                  0.11541879177093506,
+                  0.18481871485710144,
+                  0.01352640986442566
+                ],
+                "first_action_delta_rad": [
+                  -0.00840267539024353,
+                  0.03415477275848389,
+                  -0.09916806221008301,
+                  -0.042826175689697266,
+                  -0.10501673817634583,
+                  -0.01002831757068634,
+                  0.10960772633552551,
+                  0.13212335109710693,
+                  -0.19119596481323242,
+                  -0.1077423095703125,
+                  -0.03916345536708832,
+                  0.01352640986442566
+                ]
+              }
+            }
+          },
+          "trained": {
+            "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint",
+            "rng_source": "reconstructed_initial_rng_after_seed_rngs",
+            "rng_restore_exact": true,
+            "simulator_stepped_during_prediction": false,
+            "snapshot_restore": {
+              "cloth_rms_m": 0.0,
+              "joint_rms_rad": 0.0
+            },
+            "prediction_timing": {
+              "source": "boundary_eval_trained",
+              "boundary": 5,
+              "elapsed_seconds": 0.3381490751635283,
+              "sim_step_before": 65,
+              "sim_step_after": 65,
+              "sim_step_delta": 0,
+              "episode_length_before": 65,
+              "episode_length_after": 65,
+              "episode_length_delta": 0,
+              "rng_before_digest": "6b19d9639a8ebe31e05989557871afa7fa8ff4388e19052f6dfd86451370e418",
+              "rng_after_digest": "59fae464c190152296f72ee16bfa3ba94a727311c4f8d949500284ea1ec2b1f6",
+              "inference_blocks_before_env_step": true
+            },
+            "chunk_first_10": [
+              [
+                -0.03668534755706787,
+                -1.7041654586791992,
+                1.429640769958496,
+                1.2394028902053833,
+                -0.46475663781166077,
+                -0.15143142640590668,
+                -0.08199186623096466,
+                -1.705206036567688,
+                1.4492264986038208,
+                1.2083475589752197,
+                0.2501114308834076,
+                -0.1448678970336914
+              ],
+              [
+                -0.06442439556121826,
+                -1.6832836866378784,
+                1.4421672821044922,
+                1.2349684238433838,
+                -0.43311211466789246,
+                -0.14938296377658844,
+                -0.07419003546237946,
+                -1.6709777116775513,
+                1.4697368144989014,
+                1.19143545627594,
+                0.2769162058830261,
+                -0.1542905569076538
+              ],
+              [
+                -0.051250189542770386,
+                -1.694806694984436,
+                1.4152330160140991,
+                1.2265141010284424,
+                -0.49891701340675354,
+                -0.15210546553134918,
+                -0.07656911015510559,
+                -1.7539112567901611,
+                1.4893913269042969,
+                1.2200839519500732,
+                0.2963692247867584,
+                -0.14999882876873016
+              ],
+              [
+                -0.05595716834068298,
+                -1.6797142028808594,
+                1.4425207376480103,
+                1.2103841304779053,
+                -0.47752299904823303,
+                -0.15015697479248047,
+                -0.058579325675964355,
+                -1.6981853246688843,
+                1.47957181930542,
+                1.2102301120758057,
+                0.2999051809310913,
+                -0.14766034483909607
+              ],
+              [
+                -0.06065651774406433,
+                -1.7003036737442017,
+                1.4650554656982422,
+                1.2294312715530396,
+                -0.46274533867836,
+                -0.15513287484645844,
+                -0.04607859253883362,
+                -1.7051506042480469,
+                1.504132628440857,
+                1.2003300189971924,
+                0.3010844886302948,
+                -0.15320466458797455
+              ],
+              [
+                -0.03325921297073364,
+                -1.6895182132720947,
+                1.4702131748199463,
+                1.2164887189865112,
+                -0.4381697177886963,
+                -0.14856518805027008,
+                -0.05584600567817688,
+                -1.6838971376419067,
+                1.489833116531372,
+                1.209537148475647,
+                0.30491766333580017,
+                -0.14951829612255096
+              ],
+              [
+                -0.02848777174949646,
+                -1.6948587894439697,
+                1.474739670753479,
+                1.2052733898162842,
+                -0.48865875601768494,
+                -0.14998774230480194,
+                -0.05751696228981018,
+                -1.721846342086792,
+                1.4844660758972168,
+                1.2147785425186157,
+                0.31311213970184326,
+                -0.14840178191661835
+              ],
+              [
+                -0.0551811158657074,
+                -1.6812660694122314,
+                1.4619777202606201,
+                1.2061456441879272,
+                -0.515009880065918,
+                -0.14899204671382904,
+                -0.01928389072418213,
+                -1.6929963827133179,
+                1.4731242656707764,
+                1.2016578912734985,
+                0.3322450816631317,
+                -0.14831481873989105
+              ],
+              [
+                -0.019390881061553955,
+                -1.6748738288879395,
+                1.4565997123718262,
+                1.1993614435195923,
+                -0.48074108362197876,
+                -0.15371572971343994,
+                -0.002481013536453247,
+                -1.6925086975097656,
+                1.4815363883972168,
+                1.1718530654907227,
+                0.32576867938041687,
+                -0.14730562269687653
+              ],
+              [
+                -0.01340743899345398,
+                -1.7099374532699585,
+                1.485792636871338,
+                1.2071747779846191,
+                -0.46498873829841614,
+                -0.1540406197309494,
+                -0.0170896053314209,
+                -1.6997710466384888,
+                1.4946010112762451,
+                1.1840542554855347,
+                0.31964659690856934,
+                -0.1526465117931366
+              ]
+            ],
+            "deviation_from_cached_h50_suffix": {
+              "1": {
+                "width": 1,
+                "rms_rad": 0.03939545222673684,
+                "max_abs_rad": 0.0905180275440216,
+                "mean_abs_rad": 0.0291537344455719,
+                "per_joint_rms_rad": [
+                  0.004842787981033325,
+                  0.021289467811584473,
+                  0.053835153579711914,
+                  0.03802919387817383,
+                  0.0905180275440216,
+                  0.002461478114128113,
+                  0.01837809383869171,
+                  0.027493953704833984,
+                  0.06215059757232666,
+                  0.02501702308654785,
+                  0.0014824867248535156,
+                  0.0043465495109558105
+                ],
+                "per_joint_max_abs_rad": [
+                  0.004842787981033325,
+                  0.021289467811584473,
+                  0.053835153579711914,
+                  0.03802919387817383,
+                  0.0905180275440216,
+                  0.002461478114128113,
+                  0.01837809383869171,
+                  0.027493953704833984,
+                  0.06215059757232666,
+                  0.02501702308654785,
+                  0.0014824867248535156,
+                  0.0043465495109558105
+                ],
+                "first_action_delta_rad": [
+                  0.004842787981033325,
+                  -0.021289467811584473,
+                  -0.053835153579711914,
+                  0.03802919387817383,
+                  -0.0905180275440216,
+                  0.002461478114128113,
+                  -0.01837809383869171,
+                  -0.027493953704833984,
+                  -0.06215059757232666,
+                  0.02501702308654785,
+                  0.0014824867248535156,
+                  0.0043465495109558105
+                ]
+              },
+              "10": {
+                "width": 10,
+                "rms_rad": 0.028603873280340784,
+                "max_abs_rad": 0.0905180275440216,
+                "mean_abs_rad": 0.0220745537430048,
+                "per_joint_rms_rad": [
+                  0.027281797720449013,
+                  0.021995456653051693,
+                  0.028362354498816526,
+                  0.032092563736494197,
+                  0.0489083268094163,
+                  0.0027469855739765594,
+                  0.030558507560917048,
+                  0.0366868334956626,
+                  0.032004620355312215,
+                  0.024409499900302504,
+                  0.020930057100301144,
+                  0.004268864310149544
+                ],
+                "per_joint_max_abs_rad": [
+                  0.05572041869163513,
+                  0.03748190402984619,
+                  0.053835153579711914,
+                  0.048996686935424805,
+                  0.0905180275440216,
+                  0.005015179514884949,
+                  0.0616205632686615,
+                  0.08012044429779053,
+                  0.06215059757232666,
+                  0.03596365451812744,
+                  0.036446720361709595,
+                  0.007330089807510376
+                ],
+                "first_action_delta_rad": [
+                  0.004842787981033325,
+                  -0.021289467811584473,
+                  -0.053835153579711914,
+                  0.03802919387817383,
+                  -0.0905180275440216,
+                  0.002461478114128113,
+                  -0.01837809383869171,
+                  -0.027493953704833984,
+                  -0.06215059757232666,
+                  0.02501702308654785,
+                  0.0014824867248535156,
+                  0.0043465495109558105
+                ]
+              }
+            }
+          }
+        }
+      },
+      "10": {
+        "target_source": "cached successful H50 executed actions after this boundary",
+        "target_length": 40,
+        "baseline_and_trained_same_rng": true,
+        "models": {
+          "baseline": {
+            "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+            "rng_source": "reconstructed_initial_rng_after_seed_rngs",
+            "rng_restore_exact": true,
+            "simulator_stepped_during_prediction": false,
+            "snapshot_restore": {
+              "cloth_rms_m": 0.0,
+              "joint_rms_rad": 0.0
+            },
+            "prediction_timing": {
+              "source": "boundary_eval_baseline",
+              "boundary": 10,
+              "elapsed_seconds": 0.3330935910344124,
+              "sim_step_before": 70,
+              "sim_step_after": 70,
+              "sim_step_delta": 0,
+              "episode_length_before": 70,
+              "episode_length_after": 70,
+              "episode_length_delta": 0,
+              "rng_before_digest": "6b19d9639a8ebe31e05989557871afa7fa8ff4388e19052f6dfd86451370e418",
+              "rng_after_digest": "59fae464c190152296f72ee16bfa3ba94a727311c4f8d949500284ea1ec2b1f6",
+              "inference_blocks_before_env_step": true
+            },
+            "chunk_first_10": [
+              [
+                -0.08527499437332153,
+                -1.4765534400939941,
+                1.295341968536377,
+                1.2270358800888062,
+                -0.5600320100784302,
+                -0.1440616399049759,
+                0.07669603824615479,
+                -1.4563097953796387,
+                1.2717905044555664,
+                1.1548912525177002,
+                0.25729262828826904,
+                -0.13709118962287903
+              ],
+              [
+                -0.11023014783859253,
+                -1.372854232788086,
+                1.2050081491470337,
+                1.2172596454620361,
+                -0.5386137366294861,
+                -0.040873896330595016,
+                0.06364557147026062,
+                -1.418140172958374,
+                1.2695679664611816,
+                1.123710036277771,
+                0.28405824303627014,
+                -0.14052262902259827
+              ],
+              [
+                -0.09138798713684082,
+                -1.2165032625198364,
+                1.0796905755996704,
+                1.2160124778747559,
+                -0.6325877904891968,
+                -0.01644282415509224,
+                0.041504740715026855,
+                -1.5291805267333984,
+                1.265076994895935,
+                1.1986966133117676,
+                0.3474327027797699,
+                -0.14331009984016418
+              ],
+              [
+                -0.041636884212493896,
+                -0.9935810565948486,
+                1.0769798755645752,
+                1.1380679607391357,
+                -0.6381850838661194,
+                0.4070848822593689,
+                0.0824967622756958,
+                -1.552579641342163,
+                1.3597298860549927,
+                1.1915626525878906,
+                0.3448317348957062,
+                -0.14464505016803741
+              ],
+              [
+                -0.03163403272628784,
+                -0.9081670045852661,
+                1.0143227577209473,
+                1.169400930404663,
+                -0.649127721786499,
+                0.3378339409828186,
+                0.08205601572990417,
+                -1.5360007286071777,
+                1.3827377557754517,
+                1.1715232133865356,
+                0.3535640239715576,
+                -0.15028969943523407
+              ],
+              [
+                0.061275824904441833,
+                -0.9345065951347351,
+                1.0148297548294067,
+                1.1702929735183716,
+                -0.5696565508842468,
+                0.29198622703552246,
+                0.061016350984573364,
+                -1.3973610401153564,
+                1.2489385604858398,
+                1.20830237865448,
+                0.3734217584133148,
+                -0.14177143573760986
+              ],
+              [
+                0.0454910546541214,
+                -0.9223082065582275,
+                1.1140823364257812,
+                1.0915353298187256,
+                -0.6167652606964111,
+                0.3069835305213928,
+                0.0527348518371582,
+                -1.5084646940231323,
+                1.3090441226959229,
+                1.2236005067825317,
+                0.3821750581264496,
+                -0.13594022393226624
+              ],
+              [
+                -0.026042252779006958,
+                -0.7555960416793823,
+                1.0769295692443848,
+                1.012779712677002,
+                -0.7458384037017822,
+                0.39525991678237915,
+                0.10606497526168823,
+                -1.5116291046142578,
+                1.3533804416656494,
+                1.1967395544052124,
+                0.3996106684207916,
+                -0.13828495144844055
+              ],
+              [
+                0.06958669424057007,
+                -0.651479184627533,
+                1.0310766696929932,
+                0.999973475933075,
+                -0.7315622568130493,
+                0.3972569406032562,
+                0.09800189733505249,
+                -1.4790174961090088,
+                1.357912540435791,
+                1.178122878074646,
+                0.39768412709236145,
+                -0.1368451863527298
+              ],
+              [
+                0.10542909801006317,
+                -0.678063690662384,
+                1.0139704942703247,
+                1.003554344177246,
+                -0.6884243488311768,
+                0.3667527139186859,
+                0.08999615907669067,
+                -1.5176737308502197,
+                1.380309820175171,
+                1.1776481866836548,
+                0.3923267126083374,
+                -0.14082831144332886
+              ]
+            ],
+            "deviation_from_cached_h50_suffix": {
+              "1": {
+                "width": 1,
+                "rms_rad": 0.13338453065344408,
+                "max_abs_rad": 0.237959623336792,
+                "mean_abs_rad": 0.1038592259089152,
+                "per_joint_rms_rad": [
+                  0.06931397318840027,
+                  0.19919109344482422,
+                  0.1777350902557373,
+                  0.034494996070861816,
+                  0.11112856864929199,
+                  0.0060617923736572266,
+                  0.10127457976341248,
+                  0.23399507999420166,
+                  0.237959623336792,
+                  0.03163135051727295,
+                  0.033315420150756836,
+                  0.010209143161773682
+                ],
+                "per_joint_max_abs_rad": [
+                  0.06931397318840027,
+                  0.19919109344482422,
+                  0.1777350902557373,
+                  0.034494996070861816,
+                  0.11112856864929199,
+                  0.0060617923736572266,
+                  0.10127457976341248,
+                  0.23399507999420166,
+                  0.237959623336792,
+                  0.03163135051727295,
+                  0.033315420150756836,
+                  0.010209143161773682
+                ],
+                "first_action_delta_rad": [
+                  -0.06931397318840027,
+                  0.19919109344482422,
+                  -0.1777350902557373,
+                  0.034494996070861816,
+                  -0.11112856864929199,
+                  0.0060617923736572266,
+                  0.10127457976341248,
+                  0.23399507999420166,
+                  -0.237959623336792,
+                  -0.03163135051727295,
+                  -0.033315420150756836,
+                  0.010209143161773682
+                ]
+              },
+              "10": {
+                "width": 10,
+                "rms_rad": 0.2956119911210432,
+                "max_abs_rad": 1.0233989357948303,
+                "mean_abs_rad": 0.19965308060248693,
+                "per_joint_rms_rad": [
+                  0.07072139360456245,
+                  0.7362962654845548,
+                  0.3964369654020564,
+                  0.09626327072579889,
+                  0.2295245056043645,
+                  0.4348734264115266,
+                  0.09782130078413202,
+                  0.1844887236644999,
+                  0.20292572089264985,
+                  0.06787527994323964,
+                  0.0618302773128215,
+                  0.008026449317030148
+                ],
+                "per_joint_max_abs_rad": [
+                  0.11306934058666229,
+                  1.0233989357948303,
+                  0.4691973924636841,
+                  0.17322057485580444,
+                  0.34591177105903625,
+                  0.5623941272497177,
+                  0.12229189276695251,
+                  0.27413904666900635,
+                  0.2801973819732666,
+                  0.1681535243988037,
+                  0.09424185752868652,
+                  0.013015270233154297
+                ],
+                "first_action_delta_rad": [
+                  -0.06931397318840027,
+                  0.19919109344482422,
+                  -0.1777350902557373,
+                  0.034494996070861816,
+                  -0.11112856864929199,
+                  0.0060617923736572266,
+                  0.10127457976341248,
+                  0.23399507999420166,
+                  -0.237959623336792,
+                  -0.03163135051727295,
+                  -0.033315420150756836,
+                  0.010209143161773682
+                ]
+              }
+            }
+          },
+          "trained": {
+            "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/boundary-replay/trained_checkpoint",
+            "rng_source": "reconstructed_initial_rng_after_seed_rngs",
+            "rng_restore_exact": true,
+            "simulator_stepped_during_prediction": false,
+            "snapshot_restore": {
+              "cloth_rms_m": 0.0,
+              "joint_rms_rad": 0.0
+            },
+            "prediction_timing": {
+              "source": "boundary_eval_trained",
+              "boundary": 10,
+              "elapsed_seconds": 0.3334466509986669,
+              "sim_step_before": 70,
+              "sim_step_after": 70,
+              "sim_step_delta": 0,
+              "episode_length_before": 70,
+              "episode_length_after": 70,
+              "episode_length_delta": 0,
+              "rng_before_digest": "6b19d9639a8ebe31e05989557871afa7fa8ff4388e19052f6dfd86451370e418",
+              "rng_after_digest": "59fae464c190152296f72ee16bfa3ba94a727311c4f8d949500284ea1ec2b1f6",
+              "inference_blocks_before_env_step": true
+            },
+            "chunk_first_10": [
+              [
+                -0.04298260807991028,
+                -1.6673802137374878,
+                1.4935818910598755,
+                1.2048641443252563,
+                -0.4769241511821747,
+                -0.15038684010505676,
+                -0.014201849699020386,
+                -1.6936490535736084,
+                1.5004289150238037,
+                1.19577157497406,
+                0.2758164703845978,
+                -0.1391429603099823
+              ],
+              [
+                -0.06270018219947815,
+                -1.6464293003082275,
+                1.4896776676177979,
+                1.195406198501587,
+                -0.45198681950569153,
+                -0.14991861581802368,
+                -0.014172762632369995,
+                -1.6847681999206543,
+                1.5124441385269165,
+                1.1782208681106567,
+                0.2961541712284088,
+                -0.14990438520908356
+              ],
+              [
+                -0.04757964611053467,
+                -1.661798119544983,
+                1.4758554697036743,
+                1.1919535398483276,
+                -0.5057085156440735,
+                -0.15424738824367523,
+                -0.021413326263427734,
+                -1.7487740516662598,
+                1.5387423038482666,
+                1.207338809967041,
+                0.3122418224811554,
+                -0.14626909792423248
+              ],
+              [
+                -0.03887280821800232,
+                -1.6501517295837402,
+                1.4727017879486084,
+                1.1826016902923584,
+                -0.47765040397644043,
+                -0.1516857147216797,
+                -0.008238732814788818,
+                -1.6993504762649536,
+                1.5207347869873047,
+                1.1968461275100708,
+                0.30805063247680664,
+                -0.1428888440132141
+              ],
+              [
+                -0.048861026763916016,
+                -1.674781322479248,
+                1.495765209197998,
+                1.194809079170227,
+                -0.4622824788093567,
+                -0.15385636687278748,
+                0.010728269815444946,
+                -1.6892504692077637,
+                1.5318313837051392,
+                1.181961178779602,
+                0.30842095613479614,
+                -0.1486719697713852
+              ],
+              [
+                -0.02263045310974121,
+                -1.6460559368133545,
+                1.483783483505249,
+                1.1804908514022827,
+                -0.439156174659729,
+                -0.1493319272994995,
+                -0.0065635740756988525,
+                -1.672428846359253,
+                1.5210869312286377,
+                1.1852554082870483,
+                0.3114428222179413,
+                -0.14479368925094604
+              ],
+              [
+                -0.01635873317718506,
+                -1.6579663753509521,
+                1.5029096603393555,
+                1.166152000427246,
+                -0.4801003038883209,
+                -0.15017668902873993,
+                -0.004588812589645386,
+                -1.7022017240524292,
+                1.5184537172317505,
+                1.1923563480377197,
+                0.31653425097465515,
+                -0.1463770568370819
+              ],
+              [
+                -0.04940849542617798,
+                -1.6579636335372925,
+                1.4748303890228271,
+                1.1554741859436035,
+                -0.5204052329063416,
+                -0.1430617868900299,
+                0.031155407428741455,
+                -1.6663705110549927,
+                1.4883384704589844,
+                1.171319842338562,
+                0.3278749883174896,
+                -0.14534533023834229
+              ],
+              [
+                0.011803746223449707,
+                -1.649732232093811,
+                1.4682281017303467,
+                1.1224377155303955,
+                -0.46050897240638733,
+                -0.15143389999866486,
+                0.04329898953437805,
+                -1.6604790687561035,
+                1.4932703971862793,
+                1.1008503437042236,
+                0.3172105848789215,
+                -0.14458300173282623
+              ],
+              [
+                0.01092579960823059,
+                -1.682616949081421,
+                1.4878696203231812,
+                1.142868161201477,
+                -0.4429551959037781,
+                -0.15397773683071136,
+                0.025265783071517944,
+                -1.6774550676345825,
+                1.5116233825683594,
+                1.1316273212432861,
+                0.3193475902080536,
+                -0.15009547770023346
+              ]
+            ],
+            "deviation_from_cached_h50_suffix": {
+              "1": {
+                "width": 1,
+                "rms_rad": 0.015094948689048303,
+                "max_abs_rad": 0.0280207097530365,
+                "mean_abs_rad": 0.012644843508799871,
+                "per_joint_rms_rad": [
+                  0.027021586894989014,
+                  0.008364319801330566,
+                  0.02050483226776123,
+                  0.012323260307312012,
+                  0.0280207097530365,
+                  0.000263407826423645,
+                  0.010376691818237305,
+                  0.0033441781997680664,
+                  0.009321212768554688,
+                  0.009248971939086914,
+                  0.0147915780544281,
+                  0.00815737247467041
+                ],
+                "per_joint_max_abs_rad": [
+                  0.027021586894989014,
+                  0.008364319801330566,
+                  0.02050483226776123,
+                  0.012323260307312012,
+                  0.0280207097530365,
+                  0.000263407826423645,
+                  0.010376691818237305,
+                  0.0033441781997680664,
+                  0.009321212768554688,
+                  0.009248971939086914,
+                  0.0147915780544281,
+                  0.00815737247467041
+                ],
+                "first_action_delta_rad": [
+                  -0.027021586894989014,
+                  0.008364319801330566,
+                  0.02050483226776123,
+                  0.012323260307312012,
+                  -0.0280207097530365,
+                  -0.000263407826423645,
+                  0.010376691818237305,
+                  -0.0033441781997680664,
+                  -0.009321212768554688,
+                  0.009248971939086914,
+                  -0.0147915780544281,
+                  0.00815737247467041
+                ]
+              },
+              "10": {
+                "width": 10,
+                "rms_rad": 0.030279162001913055,
+                "max_abs_rad": 0.14273381233215332,
+                "mean_abs_rad": 0.020962159583965936,
+                "per_joint_rms_rad": [
+                  0.03855106209284541,
+                  0.020930703782439927,
+                  0.013775642686166352,
+                  0.020420394719890853,
+                  0.05820536763706178,
+                  0.00730222588842008,
+                  0.030499615126946683,
+                  0.030126031546830127,
+                  0.017615055300642956,
+                  0.050532474746091134,
+                  0.017499998472265712,
+                  0.0046722017430268735
+                ],
+                "per_joint_max_abs_rad": [
+                  0.05763384699821472,
+                  0.02765810489654541,
+                  0.02335190773010254,
+                  0.05075633525848389,
+                  0.12047860026359558,
+                  0.019144698977470398,
+                  0.06404939293861389,
+                  0.06436371803283691,
+                  0.03066110610961914,
+                  0.14273381233215332,
+                  0.030937880277633667,
+                  0.00815737247467041
+                ],
+                "first_action_delta_rad": [
+                  -0.027021586894989014,
+                  0.008364319801330566,
+                  0.02050483226776123,
+                  0.012323260307312012,
+                  -0.0280207097530365,
+                  -0.000263407826423645,
+                  0.010376691818237305,
+                  -0.0033441781997680664,
+                  -0.009321212768554688,
+                  0.009248971939086914,
+                  -0.0147915780544281,
+                  0.00815737247467041
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "all_snapshot_restores_within_tolerance": true,
+    "all_predictions_zero_sim_steps": true,
+    "all_rng_restores_exact": true
+  },
+  "gate": {
+    "preregistered_inference_relative_first10_rms_reduction": 0.5,
+    "preregistered_heldout_max_regression_fraction": 0.1,
+    "boundary_reductions": {
+      "5": {
+        "baseline_first10_rms_rad": 0.10662444269022245,
+        "trained_first10_rms_rad": 0.028603873280340784,
+        "relative_reduction": 0.731732494363942,
+        "passes_50_percent_inference_gate": true
+      },
+      "10": {
+        "baseline_first10_rms_rad": 0.2956119911210432,
+        "trained_first10_rms_rad": 0.030279162001913055,
+        "relative_reduction": 0.8975712660129719,
+        "passes_50_percent_inference_gate": true
+      }
+    },
+    "inference_gate_passed": true,
+    "heldout_gate_passed": false,
+    "overall_gate_passed": false
+  },
+  "controls": {
+    "cached_h50": true,
+    "same_rng_fresh_replanning": true,
+    "rtc": false,
+    "retained_prefix_queue": false,
+    "observation_substitution": false,
+    "closed_loop_candidate_execution": false,
+    "larger_pose_boundary_dataset": false,
+    "larger_validation_submitted": false
+  },
+  "diagnosis": {
+    "primary": "optimization/generalization overfit to two corrective examples",
+    "dataset_plumbing": "passed exact two-example schema and source alignment assertions",
+    "target_alignment": "passed cached H50 suffix equality at both boundaries",
+    "normalization": "passed unchanged checkpoint pre/postprocessor provenance",
+    "trainable_capacity": "not indicated as primary; action/state path reduced both boundary RMS values substantially",
+    "reason_for_stop": "held-out fixed raster gate failed despite both boundary inference reductions",
+    "recommendation": "stop this intervention; next diagnostic should be a small boundary-state chunk-consistency/on-policy corrective-data experiment with a held-out-preserving objective"
+  },
+  "slurm_jobs": {
+    "capture_bind_failure": {
+      "job_id": 21398508,
+      "state": "FAILED",
+      "exit_code": "1:0"
+    },
+    "capture_off_by_one_failure": {
+      "job_id": 21398509,
+      "state": "FAILED",
+      "exit_code": "3:0"
+    },
+    "capture_wrong_campaign_root_failure": {
+      "job_id": 21398510,
+      "state": "FAILED",
+      "exit_code": "2:0"
+    },
+    "boundary_capture": {
+      "job_id": 21398513,
+      "state": "COMPLETED",
+      "exit_code": "0:0"
+    },
+    "boundary_micro_finetune": {
+      "job_id": 21398555,
+      "state": "COMPLETED",
+      "exit_code": "0:0"
+    },
+    "boundary_eval_loader_failure": {
+      "job_id": 21398565,
+      "state": "FAILED",
+      "exit_code": "3:0"
+    },
+    "boundary_eval_loader_failure_rerun": {
+      "job_id": 21398572,
+      "state": "FAILED",
+      "exit_code": "3:0"
+    },
+    "boundary_snapshot_inference_gate": {
+      "job_id": 21399086,
+      "state": "COMPLETED",
+      "exit_code": "0:0"
+    }
+  }
+}

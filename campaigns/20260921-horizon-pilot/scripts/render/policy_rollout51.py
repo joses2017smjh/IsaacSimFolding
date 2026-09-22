@@ -33,7 +33,9 @@ import hashlib
 import json
 import os
 import random
+import shutil
 import sys
+import tempfile
 import types
 import time
 from pathlib import Path
@@ -98,6 +100,12 @@ ap.add_argument("--causal_branch_steps", type=int, default=120,
                 help="steps per fresh-replan branch after a saved H50 state")
 ap.add_argument("--causal_action_jsonl", default="",
                 help="optional completed-pilot behavior JSONL used as the cached H50 control")
+ap.add_argument("--boundary_capture_out", default="",
+                help="replay-only NPZ of exact post-action-5/10 H50 observations and suffix targets")
+ap.add_argument("--boundary_eval_trained_path", default="",
+                help="trained checkpoint for the two-boundary snapshot-only comparison")
+ap.add_argument("--boundary_eval_out", default="",
+                help="JSON output for the snapshot-only baseline/trained comparison")
 ap.add_argument("--rtc_guidance", action="store_true",
                 help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
 ap.add_argument("--queue_diagnostic", action="store_true",
@@ -146,13 +154,29 @@ except ValueError as exc:
 # its own directory; all camera files belong to that one result.
 for _name in ("lehome", "policy_path", "garment_dir", "assets", "frames_out",
               "result_out", "capture_out", "replay_parquet", "trajectory_out",
-              "causal_action_jsonl"):
+              "causal_action_jsonl", "boundary_capture_out"):
     _value = getattr(args, _name)
     if _value:
         setattr(args, _name, os.path.abspath(os.path.expanduser(_value)))
 if args.causal_out:
     args.causal_out = os.path.abspath(os.path.expanduser(args.causal_out))
     os.makedirs(os.path.dirname(args.causal_out), exist_ok=True)
+if args.boundary_capture_out:
+    if not args.causal_action_jsonl:
+        ap.error("--boundary_capture_out requires the successful cached H50 --causal_action_jsonl")
+    if args.causal_out or args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
+        ap.error("--boundary_capture_out is replay-only and cannot run with causal/inference diagnostics")
+    os.makedirs(os.path.dirname(args.boundary_capture_out), exist_ok=True)
+if bool(args.boundary_eval_trained_path) != bool(args.boundary_eval_out):
+    ap.error("--boundary_eval_trained_path and --boundary_eval_out must be supplied together")
+if args.boundary_eval_trained_path:
+    if not args.causal_out:
+        ap.error("boundary evaluation requires --causal_out for the source H50 snapshot audit")
+    if args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic or args.observation_execute_best:
+        ap.error("boundary evaluation cannot use RTC, queue, or observation diagnostics")
+    args.boundary_eval_trained_path = os.path.abspath(os.path.expanduser(args.boundary_eval_trained_path))
+    args.boundary_eval_out = os.path.abspath(os.path.expanduser(args.boundary_eval_out))
+    os.makedirs(os.path.dirname(args.boundary_eval_out), exist_ok=True)
 for _path in (args.result_out, args.capture_out, args.trajectory_out):
     if _path:
         os.makedirs(os.path.dirname(_path), exist_ok=True)
@@ -682,6 +706,9 @@ try:
     executed_actions = {}
     causal_initial_observation = None
     causal_enabled = bool(args.causal_out)
+    boundary_capture_enabled = bool(args.boundary_capture_out)
+    snapshot_enabled = causal_enabled or boundary_capture_enabled
+    boundary_capture_rows = {}
     causal_initial_torch_rng = torch.get_rng_state().cpu().numpy().copy()
     causal_initial_cuda_rng = [x.cpu().numpy().copy() for x in torch.cuda.get_rng_state_all()]
     try:
@@ -928,7 +955,7 @@ try:
                            ).reshape(-1)[:12]
         if np.asarray(a).shape != (12,) or not np.isfinite(a).all():
             raise ValueError("executed action must contain twelve finite joint targets")
-        if causal_enabled:
+        if snapshot_enabled:
             executed_actions[i + 1] = np.asarray(a, dtype=np.float32).copy()
         if args.trajectory_out and i % args.trajectory_every == 0:
             trajectory.append((i, np.stack([imgs[k] for k in camera_keys]).copy(),
@@ -962,12 +989,40 @@ try:
 
         if causal_enabled:
             causal_trace[i + 1] = _trace_state(i + 1)
-            if i + 1 in (5, 10):
-                if not prediction_chunks and causal_replay_actions is None:
-                    raise RuntimeError("causal snapshot reached before first policy chunk")
-                boundary_images = render_images()
-                causal_snapshots[i + 1] = _snapshot_state(i + 1, boundary_images)
+        if snapshot_enabled and i + 1 in (5, 10):
+            if causal_enabled and not prediction_chunks and causal_replay_actions is None:
+                raise RuntimeError("causal snapshot reached before first policy chunk")
+            boundary_images = render_images()
+            snapshot = _snapshot_state(i + 1, boundary_images)
+            if causal_enabled:
+                causal_snapshots[i + 1] = snapshot
                 log(f"CAUSAL_SNAPSHOT boundary={i + 1} chunks={len(prediction_chunks)}")
+            if boundary_capture_enabled:
+                if len(causal_replay_actions) < 50:
+                    raise RuntimeError("boundary capture requires at least one complete cached H50 chunk")
+                boundary = i + 1
+                valid_target = np.asarray(causal_replay_actions[boundary:50], dtype=np.float32)
+                if len(valid_target) != 50 - boundary:
+                    raise RuntimeError(
+                        f"boundary {boundary} target length {len(valid_target)} does not match H50 suffix")
+                padded = np.concatenate([
+                    valid_target,
+                    np.repeat(valid_target[-1:, :], boundary, axis=0),
+                ], axis=0)
+                target_mask = np.zeros(50, dtype=np.bool_)
+                target_mask[:len(valid_target)] = True
+                target_indices = np.full(50, -1, dtype=np.int32)
+                target_indices[:len(valid_target)] = np.arange(boundary, 50, dtype=np.int32)
+                boundary_capture_rows[boundary] = {
+                    "images": np.stack([boundary_images[k] for k in camera_keys]).astype(np.uint8),
+                    "state": np.asarray(snapshot["joint"], dtype=np.float32),
+                    "target_actions_rad": padded.astype(np.float32),
+                    "target_valid_mask": target_mask,
+                    "target_chunk_indices": target_indices,
+                    "boundary": int(boundary),
+                    "torch_rng": np.asarray(snapshot["torch_rng"], dtype=np.uint8),
+                    "cuda_rng": [np.asarray(x, dtype=np.uint8) for x in snapshot["cuda_rng"]],
+                }
 
         # "success=False" says nothing about WHY. These three numbers separate
         # the candidate explanations: a policy emitting near-zero actions, a
@@ -1149,6 +1204,70 @@ try:
         # broken ffmpeg pipe must not discard a completed simulator branch.
         log(f"MEDIA_WARNING {type(exc).__name__}: {exc}")
         media["mp4"] = {"error": repr(exc), "path": None}
+
+    if boundary_capture_enabled:
+        if set(boundary_capture_rows) != {5, 10}:
+            raise RuntimeError(
+                f"boundary capture expected action-5 and action-10 rows, got {sorted(boundary_capture_rows)}")
+        rows = [boundary_capture_rows[b] for b in (5, 10)]
+        checkpoint_files = {}
+        for name in ("config.json", "model.safetensors", "policy_preprocessor.json",
+                     "policy_preprocessor_step_5_normalizer_processor.safetensors",
+                     "policy_postprocessor.json",
+                     "policy_postprocessor_step_0_unnormalizer_processor.safetensors"):
+            path = Path(args.policy_path) / name
+            if path.exists():
+                digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                checkpoint_files[name] = {"path": str(path), "sha256": digest}
+        source_path = Path(args.causal_action_jsonl)
+        metadata = {
+            "schema_version": 1,
+            "boundaries": [5, 10],
+            "garment": args.garment,
+            "match_pose": args.match_pose,
+            "match_scale": args.match_scale,
+            "seed": args.seed,
+            "task": args.task,
+            "active_observation_keys": [
+                "observation.images.top_rgb", "observation.images.left_rgb",
+                "observation.images.right_rgb", "observation.state", "task",
+            ],
+            "observation_alignment": "images and state are captured after exactly boundary actions from the cached H50 episode",
+            "target_alignment": "target row j is cached H50 chunk row boundary+j, zero-based; valid rows are boundary:50",
+            "target_source": "successful cached H50 action stream, not a fresh replan, stale/hybrid input, RTC output, demonstration state, or interpolation",
+            "target_storage": "raw executed_action_rad; training applies the unchanged checkpoint preprocessor normalizer",
+            "boundary_rng_storage": "torch_rng and cuda_rng are captured immediately after the boundary action and are restored before each model prediction",
+            "action_dim": 12,
+            "chunk_size": 50,
+            "valid_target_lengths": {"5": 45, "10": 40},
+            "source_successful_h50_episode": str(source_path),
+            "source_successful_h50_episode_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
+            "checkpoint": str(args.policy_path),
+            "checkpoint_files": checkpoint_files,
+            "normalization_statistics": {
+                name: checkpoint_files[name]["sha256"] for name in (
+                    "policy_preprocessor.json",
+                    "policy_preprocessor_step_5_normalizer_processor.safetensors",
+                ) if name in checkpoint_files
+            },
+            "source_policy_variant": args.policy_variant,
+            "original_checkpoint_untouched": True,
+        }
+        np.savez_compressed(
+            args.boundary_capture_out,
+            images=np.stack([row["images"] for row in rows]),
+            state=np.stack([row["state"] for row in rows]),
+            target_actions_rad=np.stack([row["target_actions_rad"] for row in rows]),
+            target_valid_mask=np.stack([row["target_valid_mask"] for row in rows]),
+            target_chunk_indices=np.stack([row["target_chunk_indices"] for row in rows]),
+            boundaries=np.asarray([5, 10], dtype=np.int32),
+            task=np.asarray([args.task, args.task]),
+            torch_rng=np.stack([row["torch_rng"] for row in rows]),
+            cuda_rng=np.stack([np.stack(row["cuda_rng"]) for row in rows]),
+        )
+        Path(args.boundary_capture_out).with_suffix(".json").write_text(
+            json.dumps(metadata, indent=2) + "\n")
+        log(f"BOUNDARY_CAPTURE_WRITTEN {args.boundary_capture_out}")
 
     causal_result = None
     if causal_enabled:
@@ -1963,55 +2082,216 @@ try:
 
         branches = {}
         observation_component_records = {}
-        for boundary, snapshot in sorted(causal_snapshots.items()):
-            h = 10 if boundary == 10 else 5
-            _restore_and_validate(snapshot)
-            old_plan = np.stack([executed_actions[step]
-                                 for step in range(boundary + 1, args.steps + 1)])
-            fresh = _run_fresh(snapshot, h)
-            same_rng = _run_same_rng(snapshot, h)
-            cached = _run_cached(snapshot)
-            repeats = _repeat_predictions(snapshot)
-            seed_panel = _seed_panel(snapshot)
-            branch_record = {
-                "horizon": h,
-                "cached_plan_control": cached,
-                "fresh_replan": fresh,
-                "same_rng_replan": same_rng,
-                "repeated_prediction": repeats,
-                "seed_panel": seed_panel,
-                "old_vs_fresh_plan_metrics": _plan_metrics(old_plan, fresh["chunks"][0]),
-                "old_plan_suffix_first_50": old_plan[:50],
-                "fresh_plan_first_50": fresh["chunks"][0],
-                "deterministic_repeat_first_50": repeats["deterministic_repeat"],
-                "varied_seed_first_50": repeats["varied_seed"],
+
+        def _checkpoint_hashes(checkpoint):
+            names = ("config.json", "model.safetensors", "policy_preprocessor.json",
+                     "policy_preprocessor_step_5_normalizer_processor.safetensors",
+                     "policy_postprocessor.json",
+                     "policy_postprocessor_step_0_unnormalizer_processor.safetensors")
+            return {
+                name: {"path": str(Path(checkpoint) / name),
+                       "sha256": hashlib.sha256((Path(checkpoint) / name).read_bytes()).hexdigest()}
+                for name in names if (Path(checkpoint) / name).exists()
             }
-            if args.observation_diagnostic:
-                observation_component_records[str(boundary)] = _probe_observation_components(
-                    snapshot, old_plan, same_rng["chunks"][0])
-                branch_record["observation_component_probes"] = observation_component_records[str(boundary)]
-            if args.queue_diagnostic:
-                queue_branches = {}
-                for delay in args.queue_delays:
-                    queued = _run_queue(snapshot, h, delay, old_plan)
-                    queued["first_fresh_vs_same_rng"] = _action_identity(
-                        queued["first_fresh_chunk"], same_rng["chunks"][0]
+
+        def _deviation_metrics(target, candidate):
+            target = np.asarray(target, dtype=np.float64)
+            candidate = np.asarray(candidate, dtype=np.float64)
+            output = {}
+            for width in (1, 10):
+                delta = candidate[:width] - target[:width]
+                output[str(width)] = {
+                    "width": width,
+                    "rms_rad": float(np.sqrt(np.mean(delta * delta))),
+                    "max_abs_rad": float(np.abs(delta).max(initial=0.0)),
+                    "mean_abs_rad": float(np.abs(delta).mean()),
+                    "per_joint_rms_rad": np.sqrt(np.mean(delta * delta, axis=0)).tolist(),
+                    "per_joint_max_abs_rad": np.abs(delta).max(axis=0).tolist(),
+                    "first_action_delta_rad": delta[0].tolist(),
+                }
+            return output
+
+        def _run_boundary_checkpoint_eval():
+            """Compare base/trained plans on restored sim snapshots only."""
+            trained_path = Path(args.boundary_eval_trained_path)
+            if not trained_path.is_dir():
+                raise RuntimeError(f"trained boundary checkpoint is missing: {trained_path}")
+            # save_pretrained() preserves the model config but this older
+            # LeRobot checkout writes a standalone config.json without the
+            # top-level policy-choice `type`. Reuse the already parsed
+            # baseline policy config; processors still read their files from
+            # the explicit trained checkpoint path below.
+            trained_cfg = pcfg
+            trained_cfg.pretrained_path = str(trained_path)
+            # The fine-tuner's save_pretrained config is model-shaped but this
+            # checkout's loader also requires the baseline policy-choice
+            # `type`. Use a temporary compatibility directory so the trained
+            # artifact itself stays unchanged: all trained files are symlinked
+            # and only config.json is replaced with the untouched baseline
+            # policy config for parsing.
+            compat_dir = Path(tempfile.mkdtemp(prefix="boundary-eval-"))
+            for file in trained_path.iterdir():
+                os.symlink(file, compat_dir / file.name)
+            shutil.copy2(Path(args.policy_path) / "config.json", compat_dir / "config.json")
+            trained_model = SmolVLAPolicy.from_pretrained(str(compat_dir)).eval().to(dev)
+            trained_pre, trained_post = make_pre_post_processors(
+                policy_cfg=trained_cfg, pretrained_path=str(trained_path))
+            checkpoints = {
+                "baseline": {"path": args.policy_path, "model": policy,
+                              "pre": pre, "post": post},
+                "trained": {"path": str(trained_path), "model": trained_model,
+                             "pre": trained_pre, "post": trained_post},
+            }
+            records = {}
+            for boundary, snapshot in sorted(causal_snapshots.items()):
+                if boundary not in (5, 10):
+                    continue
+                target = np.asarray(causal_replay_actions[boundary:50], dtype=np.float32)
+                model_records = {}
+                rng_source = "reconstructed_initial_rng_after_seed_rngs"
+                for label, item in checkpoints.items():
+                    fidelity = _restore_and_validate(snapshot)
+                    model = item["model"]
+                    model.reset()
+                    _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+                    rng_before = _rng_digest()
+                    sim_before = _sim_counter()
+                    episode_before = _episode_counter()
+                    started = time.monotonic()
+                    batch = make_observation(snapshot["images"], snapshot["joint"])
+                    batch = item["pre"](batch) if item["pre"] else batch
+                    predictor = original_predict if label == "baseline" else model._get_action_chunk
+                    with torch.inference_mode():
+                        raw = predictor(batch)
+                    torch.cuda.synchronize()
+                    if item["post"]:
+                        raw = item["post"](raw)
+                    chunk = np.asarray(raw.detach().cpu().numpy()[0] if hasattr(raw, "detach") else raw).copy()
+                    sim_after = _sim_counter()
+                    episode_after = _episode_counter()
+                    rng_after = _rng_digest()
+                    timing = {
+                        "source": f"boundary_eval_{label}",
+                        "boundary": boundary,
+                        "elapsed_seconds": time.monotonic() - started,
+                        "sim_step_before": sim_before,
+                        "sim_step_after": sim_after,
+                        "sim_step_delta": sim_after - sim_before,
+                        "episode_length_before": episode_before,
+                        "episode_length_after": episode_after,
+                        "episode_length_delta": (None if episode_before is None or episode_after is None
+                                                   else episode_after - episode_before),
+                        "rng_before_digest": rng_before,
+                        "rng_after_digest": rng_after,
+                        "inference_blocks_before_env_step": True,
+                    }
+                    prediction_timing_audit.append(timing)
+                    if chunk.shape != (50, 12):
+                        raise RuntimeError(f"{label} boundary chunk has shape {chunk.shape}, expected (50, 12)")
+                    if sim_after != sim_before or (episode_before is not None and episode_after != episode_before):
+                        raise RuntimeError(f"{label} boundary inference advanced simulator state")
+                    model_records[label] = {
+                        "checkpoint": item["path"],
+                        "rng_source": rng_source,
+                        "rng_restore_exact": rng_before == _rng_state_digest(
+                            causal_initial_torch_rng, causal_initial_cuda_rng),
+                        "simulator_stepped_during_prediction": False,
+                        "snapshot_restore": fidelity,
+                        "prediction_timing": timing,
+                        "chunk_first_10": chunk[:10],
+                        "deviation_from_cached_h50_suffix": _deviation_metrics(target, chunk),
+                    }
+                if model_records["baseline"]["prediction_timing"]["rng_before_digest"] != model_records["trained"]["prediction_timing"]["rng_before_digest"]:
+                    raise RuntimeError(f"boundary {boundary} baseline/trained RNG streams differ")
+                records[str(boundary)] = {
+                    "target_source": "cached successful H50 executed actions after this boundary",
+                    "target_length": len(target),
+                    "baseline_and_trained_same_rng": True,
+                    "models": model_records,
+                }
+            del trained_model
+            torch.cuda.empty_cache()
+            shutil.rmtree(compat_dir, ignore_errors=True)
+            return {
+                "schema_version": 1,
+                "mode": "snapshot_only_boundary_replay",
+                "closed_loop_execution": False,
+                "rtc_used": False,
+                "queue_or_retained_prefix_used": False,
+                "observation_substitution_used": False,
+                "checkpoints": {label: {"path": item["path"],
+                                         "files": _checkpoint_hashes(item["path"])}
+                                 for label, item in checkpoints.items()},
+                "boundaries": records,
+                "all_snapshot_restores_within_tolerance": all(
+                    row["models"][label]["snapshot_restore"]["cloth_rms_m"] <= 1e-5 and
+                    row["models"][label]["snapshot_restore"]["joint_rms_rad"] <= 1e-5
+                    for row in records.values() for label in ("baseline", "trained")),
+                "all_predictions_zero_sim_steps": all(
+                    not row["models"][label]["simulator_stepped_during_prediction"]
+                    for row in records.values() for label in ("baseline", "trained")),
+                "all_rng_restores_exact": all(
+                    row["models"][label]["rng_restore_exact"]
+                    for row in records.values() for label in ("baseline", "trained")),
+            }
+
+        if args.boundary_eval_trained_path:
+            boundary_eval_result = _run_boundary_checkpoint_eval()
+            branches["boundary_eval"] = boundary_eval_result
+            with open(args.boundary_eval_out, "w") as boundary_eval_file:
+                json.dump(_jsonable(boundary_eval_result), boundary_eval_file, indent=2, allow_nan=False)
+            log(f"BOUNDARY_EVAL_WRITTEN {args.boundary_eval_out}")
+        else:
+            boundary_eval_result = None
+            for boundary, snapshot in sorted(causal_snapshots.items()):
+                h = 10 if boundary == 10 else 5
+                _restore_and_validate(snapshot)
+                old_plan = np.stack([executed_actions[step]
+                                     for step in range(boundary + 1, args.steps + 1)])
+                fresh = _run_fresh(snapshot, h)
+                same_rng = _run_same_rng(snapshot, h)
+                cached = _run_cached(snapshot)
+                repeats = _repeat_predictions(snapshot)
+                seed_panel = _seed_panel(snapshot)
+                branch_record = {
+                    "horizon": h,
+                    "cached_plan_control": cached,
+                    "fresh_replan": fresh,
+                    "same_rng_replan": same_rng,
+                    "repeated_prediction": repeats,
+                    "seed_panel": seed_panel,
+                    "old_vs_fresh_plan_metrics": _plan_metrics(old_plan, fresh["chunks"][0]),
+                    "old_plan_suffix_first_50": old_plan[:50],
+                    "fresh_plan_first_50": fresh["chunks"][0],
+                    "deterministic_repeat_first_50": repeats["deterministic_repeat"],
+                    "varied_seed_first_50": repeats["varied_seed"],
+                }
+                if args.observation_diagnostic:
+                    observation_component_records[str(boundary)] = _probe_observation_components(
+                        snapshot, old_plan, same_rng["chunks"][0])
+                    branch_record["observation_component_probes"] = observation_component_records[str(boundary)]
+                if args.queue_diagnostic:
+                    queue_branches = {}
+                    for delay in args.queue_delays:
+                        queued = _run_queue(snapshot, h, delay, old_plan)
+                        queued["first_fresh_vs_same_rng"] = _action_identity(
+                            queued["first_fresh_chunk"], same_rng["chunks"][0]
+                        )
+                        queued["same_rng_first_chunk_exact"] = queued["first_fresh_vs_same_rng"]["exact"]
+                        queued["rng_reconstruction_invariant"] = (
+                            queued["handoff_events"][0]["rng_before_generation"]
+                            == same_rng["first_prediction_timing"]["rng_before_digest"]
+                        )
+                        queue_branches[str(delay)] = queued
+                    branch_record["queue_diagnostic"] = queue_branches
+                if args.rtc_guidance:
+                    branch_record["rtc_no_previous_check"] = _rtc_no_previous_check(snapshot)
+                    rtc = _run_rtc(snapshot, 10)
+                    branch_record["rtc_guided_replan"] = rtc
+                    branch_record["rtc_plan_metrics_vs_cached_suffix"] = _plan_metrics(
+                        old_plan, rtc["chunks"][0]["processed"]
                     )
-                    queued["same_rng_first_chunk_exact"] = queued["first_fresh_vs_same_rng"]["exact"]
-                    queued["rng_reconstruction_invariant"] = (
-                        queued["handoff_events"][0]["rng_before_generation"]
-                        == same_rng["first_prediction_timing"]["rng_before_digest"]
-                    )
-                    queue_branches[str(delay)] = queued
-                branch_record["queue_diagnostic"] = queue_branches
-            if args.rtc_guidance:
-                branch_record["rtc_no_previous_check"] = _rtc_no_previous_check(snapshot)
-                rtc = _run_rtc(snapshot, 10)
-                branch_record["rtc_guided_replan"] = rtc
-                branch_record["rtc_plan_metrics_vs_cached_suffix"] = _plan_metrics(
-                    old_plan, rtc["chunks"][0]["processed"]
-                )
-            branches[str(boundary)] = branch_record
+                branches[str(boundary)] = branch_record
 
         observation_selection = None
         observation_executions = {}
@@ -2098,6 +2378,7 @@ try:
             "reconstructed_original_h50_chunk": reconstructed_original_chunk,
             "reconstructed_original_h50_chunk_raw": reconstructed_original_chunk_raw,
             "branches": branches,
+            "boundary_evaluation": boundary_eval_result,
             "interpretation_guard": "Branch conclusions are valid only when cached-plan restoration errors remain below the stated tolerances.",
             "simulator_bitwise_determinism": False,
             "rng_audit": {

@@ -26,6 +26,8 @@ The raw stream records the executed 12-joint target, pre-action measured joint s
 
 The frozen pilot did not instantiate a validated Isaac Lab `ContactSensor` for the particle cloth and did not expose a validated cloth-to-rigid contact-pair stream. Particle positions and velocities alone cannot establish contact. Therefore `native_contact`, contact start/end, contacting gripper, acquisition, retention, release/drop and binary grasp labels are null/unknown in the event file. No ambiguous episode has been relabeled as contact or grasp.
 
+The recorder persisted the nearest particle for each named gripper link and terminal/maximum displacement summaries, rather than the complete near-gripper particle set or a full cloth center/keypoint trajectory at every action. It also persisted pre-action robot joints rather than a calibrated fingertip force/aperture signal. Those unavailable signals are called out as measurement gaps rather than reconstructed from images.
+
 The paired informative poses are summarized below. Empty approach fields mean that the named gripper-origin did not reach the stated proxy threshold.
 
 | pose | horizon | terminal | first <=5 cm proxy | first <=3 cm proxy | minimum named-origin distance (L/R m) | best / terminal conditions | first divergence vs H50 | boundary mean jump (rad) |

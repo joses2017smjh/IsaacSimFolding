@@ -116,6 +116,14 @@ ap.add_argument("--boundary_ceiling_trained_paths", nargs="+", default=[],
                 help="existing checkpoints for the closed-loop ceiling panel")
 ap.add_argument("--boundary_ceiling_out", default="",
                 help="JSON output for the cached/fresh/checkpoint ceiling panel")
+ap.add_argument("--onpolicy_oracle", action="store_true",
+                help="run the pose-3 student-state fresh-H50 rescue-oracle audit")
+ap.add_argument("--onpolicy_oracle_out", default="",
+                help="JSON output for the on-policy H50 rescue-oracle audit")
+ap.add_argument("--onpolicy_oracle_examples_out", default="",
+                help="NPZ output for successful H50 observation-to-suffix examples")
+ap.add_argument("--onpolicy_oracle_roots_out", default="",
+                help="NPZ output for exact student-visited root snapshots and observations")
 ap.add_argument("--rtc_guidance", action="store_true",
                 help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
 ap.add_argument("--queue_diagnostic", action="store_true",
@@ -185,6 +193,17 @@ if args.boundary_ceiling_trained_paths and (
     ap.error("boundary ceiling cannot be combined with boundary evaluation or execution")
 if bool(args.boundary_ceiling_trained_paths) != bool(args.boundary_ceiling_out):
     ap.error("boundary ceiling requires checkpoints and output path")
+if args.onpolicy_oracle and (
+        args.boundary_eval_trained_path or args.boundary_eval_trained_paths
+        or args.boundary_execute_trained_path or args.boundary_ceiling_trained_paths
+        or args.boundary_capture_out):
+    ap.error("on-policy oracle cannot be combined with boundary evaluation, execution, ceiling, or capture")
+if bool(args.onpolicy_oracle) != bool(args.onpolicy_oracle_out):
+    ap.error("on-policy oracle requires --onpolicy_oracle_out")
+if bool(args.onpolicy_oracle) != bool(args.onpolicy_oracle_examples_out):
+    ap.error("on-policy oracle requires --onpolicy_oracle_examples_out")
+if bool(args.onpolicy_oracle) != bool(args.onpolicy_oracle_roots_out):
+    ap.error("on-policy oracle requires --onpolicy_oracle_roots_out")
 if bool(args.boundary_execute_trained_path) != bool(args.boundary_execute_out):
     ap.error("boundary execution requires both trained checkpoint and output path")
 boundary_eval_paths = ([args.boundary_eval_trained_path]
@@ -224,6 +243,19 @@ if args.boundary_ceiling_trained_paths:
     ]
     args.boundary_ceiling_out = os.path.abspath(os.path.expanduser(args.boundary_ceiling_out))
     os.makedirs(os.path.dirname(args.boundary_ceiling_out), exist_ok=True)
+if args.onpolicy_oracle:
+    if not args.causal_out:
+        ap.error("on-policy oracle requires --causal_out for exact source snapshots")
+    if args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic or args.observation_execute_best:
+        ap.error("on-policy oracle cannot use RTC, queue, or observation diagnostics")
+    args.onpolicy_oracle_out = os.path.abspath(os.path.expanduser(args.onpolicy_oracle_out))
+    args.onpolicy_oracle_examples_out = os.path.abspath(
+        os.path.expanduser(args.onpolicy_oracle_examples_out))
+    args.onpolicy_oracle_roots_out = os.path.abspath(
+        os.path.expanduser(args.onpolicy_oracle_roots_out))
+    os.makedirs(os.path.dirname(args.onpolicy_oracle_out), exist_ok=True)
+    os.makedirs(os.path.dirname(args.onpolicy_oracle_examples_out), exist_ok=True)
+    os.makedirs(os.path.dirname(args.onpolicy_oracle_roots_out), exist_ok=True)
 for _path in (args.result_out, args.capture_out, args.trajectory_out):
     if _path:
         os.makedirs(os.path.dirname(_path), exist_ok=True)
@@ -2484,8 +2516,452 @@ try:
                 },
             }
 
+        def _digest_value(digest, value):
+            value = np.asarray(_as_cpu_array(value))
+            digest.update(str(value.shape).encode("utf-8"))
+            digest.update(str(value.dtype).encode("utf-8"))
+            digest.update(value.tobytes())
+
+        def _snapshot_state_digest(snapshot):
+            digest = hashlib.sha256()
+            _digest_value(digest, snapshot["cloth_positions"])
+            _digest_value(digest, snapshot["cloth_velocities"])
+            for side in ("left", "right"):
+                for key in ("joint_pos", "joint_vel", "joint_pos_target", "joint_vel_target"):
+                    _digest_value(digest, snapshot["arms"][side][key])
+            digest.update(str(int(snapshot["common_step_counter"])).encode("utf-8"))
+            digest.update(str(int(snapshot["sim_step_counter"])).encode("utf-8"))
+            return digest.hexdigest()
+
+        def _live_state_digest():
+            digest = hashlib.sha256()
+            view = getattr(obj, "_cloth_prim_view", None)
+            if view is None:
+                raise RuntimeError("oracle state digest requires the cloth prim view")
+            _digest_value(digest, view.get_world_positions())
+            _digest_value(digest, view.get_velocities())
+            for side, arm in (("left", env.left_arm), ("right", env.right_arm)):
+                for key, getter in (
+                    ("joint_pos", lambda: arm.data.joint_pos),
+                    ("joint_vel", lambda: arm.data.joint_vel),
+                    ("joint_pos_target", lambda: arm.data.joint_pos_target),
+                    ("joint_vel_target", lambda: arm.data.joint_vel_target),
+                ):
+                    _digest_value(digest, getter())
+            digest.update(str(int(getattr(env, "common_step_counter", 0))).encode("utf-8"))
+            digest.update(str(int(getattr(env, "_sim_step_counter", 0))).encode("utf-8"))
+            return digest.hexdigest()
+
+        def _observation_digest(images, joint):
+            digest = hashlib.sha256()
+            for key in camera_keys:
+                _digest_value(digest, images[key])
+            _digest_value(digest, joint)
+            digest.update(args.task.encode("utf-8"))
+            return digest.hexdigest()
+
+        def _timing_zero(timing):
+            return bool(
+                timing["sim_step_delta"] == 0
+                and timing["episode_length_delta"] in (0, None)
+            )
+
+        def _oracle_condition_identity(root_condition):
+            return {
+                "checker": "fresh_geometry",
+                "condition_count": 4,
+                "condition_keys": [f"condition_{index}" for index in range(1, 5)],
+                "garment": args.garment,
+                "task": args.task,
+                "root_condition_details": root_condition,
+            }
+
+        def _oracle_student_roots(initial_boundary, initial_snapshot):
+            """Roll exactly 30 ordinary H10 actions and save roots at +10/+20/+30."""
+            _restore_and_validate(initial_snapshot)
+            initial_chunk = _fresh_chunk(
+                policy_batch(initial_snapshot["images"], initial_snapshot["joint"]),
+                audit_label=f"onpolicy_oracle_student_boundary{initial_boundary}_replan0",
+            )
+            student_prediction_timing = [dict(prediction_timing_audit[-1])]
+            student_trace, student_actions, roots = [], [], []
+            current_chunk = initial_chunk
+
+            def capture_root(global_action, replan_index, chunk):
+                images, joint = _branch_observation()
+                root_snapshot = _snapshot_state(global_action, images)
+                root_condition = checker_details()
+                timing_start = len(prediction_timing_audit)
+                next_chunk = _fresh_chunk(
+                    policy_batch(images, joint),
+                    audit_label=(f"onpolicy_oracle_student_boundary{initial_boundary}_"
+                                 f"replan{replan_index}"),
+                )
+                timing = dict(prediction_timing_audit[timing_start])
+                root_id = f"pose3_boundary{initial_boundary}_plus{global_action - initial_boundary}"
+                roots.append({
+                    "root_id": root_id,
+                    "initial_boundary_action": int(initial_boundary),
+                    "student_global_action": int(global_action),
+                    "offset_from_initial_boundary": int(global_action - initial_boundary),
+                    "replan_index": int(replan_index),
+                    "observation_digest": _observation_digest(images, joint),
+                    "rng_state_digest": _rng_state_digest(
+                        root_snapshot["torch_rng"], root_snapshot["cuda_rng"]),
+                    "state_digest": _snapshot_state_digest(root_snapshot),
+                    "current_generated_chunk": next_chunk.copy(),
+                    "current_generated_chunk_sha256": hashlib.sha256(
+                        next_chunk.tobytes()).hexdigest(),
+                    "current_chunk_prediction_timing": timing,
+                    "current_chunk_rng_matches_root": (
+                        timing["rng_before_digest"] == _rng_state_digest(
+                            root_snapshot["torch_rng"], root_snapshot["cuda_rng"])),
+                    "condition_identity": _oracle_condition_identity(root_condition),
+                    "trajectory_provenance": {
+                        "source": "baseline_student_ordinary_fresh_h10",
+                        "initial_snapshot_source": "validated_cached_successful_h50_replay",
+                        "student_actions_before_root": int(global_action - initial_boundary),
+                        "student_replan_index": int(replan_index),
+                    },
+                    "_snapshot": root_snapshot,
+                })
+                return next_chunk
+
+            for local in range(30):
+                if local and local % 10 == 0:
+                    current_chunk = capture_root(
+                        initial_boundary + local, local // 10, current_chunk)
+                    student_prediction_timing.append(dict(prediction_timing_audit[-1]))
+                action = current_chunk[local % 10].copy()
+                student_actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = int(initial_boundary + local + 1)
+                row["source"] = "ordinary_fresh_h10_student_rollout"
+                student_trace.append(row)
+
+            # The third requested root is reached after the 30th student
+            # action. Generate and save the chunk at that root even though it
+            # is reserved for the subsequent branch audit.
+            capture_root(initial_boundary + 30, 3, current_chunk)
+            student_prediction_timing.append(dict(prediction_timing_audit[-1]))
+            return {
+                "initial_boundary_action": int(initial_boundary),
+                "actions": student_actions,
+                "trace": student_trace,
+                "prediction_timing": student_prediction_timing,
+                "roots": roots,
+                "best_conditions": max(row["conditions_passed"] for row in student_trace),
+                "terminal": student_trace[-1],
+            }
+
+        def _oracle_h10_branch(root):
+            snapshot = root["_snapshot"]
+            restore = _restore_and_validate(snapshot)
+            state_digest = _live_state_digest()
+            rng_exact = _rng_digest() == _rng_state_digest(
+                snapshot["torch_rng"], snapshot["cuda_rng"])
+            trace, actions, chunks, prediction_events = [], [], [
+                root["current_generated_chunk"].copy()
+            ], []
+            current_chunk = root["current_generated_chunk"].copy()
+            boundary = int(root["student_global_action"])
+            for local in range(50):
+                if local and local % 10 == 0:
+                    images, joint = _branch_observation()
+                    timing_start = len(prediction_timing_audit)
+                    current_chunk = _fresh_chunk(
+                        policy_batch(images, joint),
+                        audit_label=f"onpolicy_oracle_h10_{root['root_id']}_replan{local // 10}",
+                    )
+                    chunks.append(current_chunk.copy())
+                    prediction_events.append(dict(prediction_timing_audit[timing_start]))
+                action = current_chunk[local % 10].copy()
+                actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = int(boundary + local + 1)
+                row["source"] = "ordinary_fresh_h10_continuation"
+                trace.append(row)
+            settled = _settle_branch(actions[-1])
+            timings = [root["current_chunk_prediction_timing"]] + prediction_events
+            return {
+                "mode": "ordinary_fresh_h10_continuation",
+                "restore": restore,
+                "root_state_digest_after_restore": state_digest,
+                "root_state_matches": state_digest == root["state_digest"],
+                "rng_restore_exact": bool(rng_exact),
+                "actions": actions,
+                "chunks": chunks,
+                "prediction_events": prediction_events,
+                "prediction_timing": timings,
+                "all_predictions_zero_sim_steps": all(_timing_zero(row) for row in timings),
+                "trace": trace,
+                "best_conditions": max(row["conditions_passed"] for row in trace),
+                "terminal": trace[-1],
+                "geometric_ever_success": any(row["geometric_success"] for row in trace),
+                "settled": settled,
+            }
+
+        def _oracle_h50_branch(root, offsets=(10, 20, 30, 40)):
+            snapshot = root["_snapshot"]
+            restore = _restore_and_validate(snapshot)
+            state_digest = _live_state_digest()
+            rng_exact = _rng_digest() == _rng_state_digest(
+                snapshot["torch_rng"], snapshot["cuda_rng"])
+            timing_start = len(prediction_timing_audit)
+            chunk = _fresh_chunk(
+                policy_batch(snapshot["images"], snapshot["joint"]),
+                audit_label=f"onpolicy_oracle_h50_{root['root_id']}_open_loop",
+            )
+            prediction_timing = dict(prediction_timing_audit[timing_start])
+            trace, actions, candidate_payloads = [], [], []
+            boundary = int(root["student_global_action"])
+            for local in range(50):
+                action = chunk[local].copy()
+                actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = int(boundary + local + 1)
+                row["source"] = "fresh_h50_open_loop_no_replanning"
+                trace.append(row)
+                if local + 1 in offsets:
+                    images, joint = _branch_observation()
+                    suffix = chunk[local + 1:].copy()
+                    candidate_payloads.append({
+                        "root_id": root["root_id"],
+                        "initial_boundary_action": int(root["initial_boundary_action"]),
+                        "student_global_action": boundary,
+                        "offset_from_root": int(local + 1),
+                        "global_action": int(boundary + local + 1),
+                        "observation_digest": _observation_digest(images, joint),
+                        "source_plan_sha256": hashlib.sha256(chunk.tobytes()).hexdigest(),
+                        "target_valid_length": int(len(suffix)),
+                        "target_chunk_indices": np.arange(local + 1, 50, dtype=np.int32),
+                        "images": {key: np.asarray(images[key], dtype=np.uint8).copy()
+                                   for key in camera_keys},
+                        "state": np.asarray(joint, dtype=np.float32).copy(),
+                        "target_actions_rad": suffix,
+                    })
+            settled = _settle_branch(actions[-1])
+            return {
+                "mode": "fresh_h50_open_loop_continuation",
+                "restore": restore,
+                "root_state_digest_after_restore": state_digest,
+                "root_state_matches": state_digest == root["state_digest"],
+                "rng_restore_exact": bool(rng_exact),
+                "prediction_timing": [prediction_timing],
+                "all_predictions_zero_sim_steps": _timing_zero(prediction_timing),
+                "root_chunk_matches_current_h10_chunk": _action_identity(
+                    chunk, root["current_generated_chunk"]),
+                "generated_chunk_sha256": hashlib.sha256(chunk.tobytes()).hexdigest(),
+                "generated_chunk": chunk,
+                "actions": actions,
+                "trace": trace,
+                "best_conditions": max(row["conditions_passed"] for row in trace),
+                "terminal": trace[-1],
+                "geometric_ever_success": any(row["geometric_success"] for row in trace),
+                "settled": settled,
+                "candidate_payloads": candidate_payloads,
+            }
+
+        def _oracle_trace_divergence(h10_trace, h50_trace):
+            rows = []
+            for h10_row, h50_row in zip(h10_trace, h50_trace):
+                rows.append({
+                    "local_step": int(h10_row["global_step"] - h10_trace[0]["global_step"] + 1),
+                    "global_step_h10": int(h10_row["global_step"]),
+                    "global_step_h50": int(h50_row["global_step"]),
+                    "joint_rms_rad": float(np.sqrt(np.mean((h10_row["joint"] - h50_row["joint"]) ** 2))),
+                    "cloth_centroid_error_m": float(np.linalg.norm(
+                        h10_row["cloth_centroid"] - h50_row["cloth_centroid"])),
+                    "left_ee_error_m": float(np.linalg.norm(
+                        h10_row["left_ee"] - h50_row["left_ee"])),
+                    "right_ee_error_m": float(np.linalg.norm(
+                        h10_row["right_ee"] - h50_row["right_ee"])),
+                    "h10_conditions_passed": int(h10_row["conditions_passed"]),
+                    "h50_conditions_passed": int(h50_row["conditions_passed"]),
+                })
+            return rows
+
+        def _oracle_root_public(root):
+            return {key: value for key, value in root.items() if key != "_snapshot"}
+
+        def _oracle_write_roots_npz(roots):
+            snapshots = [root["_snapshot"] for root in roots]
+            def arm_stack(key):
+                return np.stack([
+                    np.concatenate([
+                        snapshots[index]["arms"]["left"][key].reshape(-1),
+                        snapshots[index]["arms"]["right"][key].reshape(-1),
+                    ]) for index in range(len(snapshots))
+                ])
+            np.savez_compressed(
+                args.onpolicy_oracle_roots_out,
+                root_id=np.asarray([root["root_id"] for root in roots]),
+                initial_boundary_action=np.asarray(
+                    [root["initial_boundary_action"] for root in roots], dtype=np.int32),
+                student_global_action=np.asarray(
+                    [root["student_global_action"] for root in roots], dtype=np.int32),
+                offset_from_initial_boundary=np.asarray(
+                    [root["offset_from_initial_boundary"] for root in roots], dtype=np.int32),
+                images=np.stack([
+                    np.stack([snapshot["images"][key] for key in camera_keys])
+                    for snapshot in snapshots
+                ]).astype(np.uint8),
+                state=np.stack([snapshot["joint"] for snapshot in snapshots]).astype(np.float32),
+                cloth_positions=np.stack([snapshot["cloth_positions"] for snapshot in snapshots]),
+                cloth_velocities=np.stack([snapshot["cloth_velocities"] for snapshot in snapshots]),
+                joint_vel=arm_stack("joint_vel"),
+                joint_pos_target=arm_stack("joint_pos_target"),
+                joint_vel_target=arm_stack("joint_vel_target"),
+                torch_rng=np.stack([snapshot["torch_rng"] for snapshot in snapshots]),
+                cuda_rng=np.stack([np.stack(snapshot["cuda_rng"]) for snapshot in snapshots]),
+                current_generated_chunk=np.stack([
+                    root["current_generated_chunk"] for root in roots]).astype(np.float32),
+                episode_length=np.stack([snapshot["episode_length"] for snapshot in snapshots]),
+                common_step_counter=np.asarray(
+                    [snapshot["common_step_counter"] for snapshot in snapshots], dtype=np.int64),
+                sim_step_counter=np.asarray(
+                    [snapshot["sim_step_counter"] for snapshot in snapshots], dtype=np.int64),
+            )
+
+        def _oracle_write_examples_npz(examples):
+            if examples:
+                images = np.stack([
+                    np.stack([example["images"][key] for key in camera_keys])
+                    for example in examples
+                ]).astype(np.uint8)
+                states = np.stack([example["state"] for example in examples]).astype(np.float32)
+                targets = np.zeros((len(examples), 50, 12), dtype=np.float32)
+                masks = np.zeros((len(examples), 50), dtype=np.bool_)
+                indices = np.full((len(examples), 50), -1, dtype=np.int32)
+                for index, example in enumerate(examples):
+                    length = example["target_valid_length"]
+                    targets[index, :length] = example["target_actions_rad"]
+                    if length < 50:
+                        targets[index, length:] = example["target_actions_rad"][-1]
+                    masks[index, :length] = True
+                    indices[index, :length] = example["target_chunk_indices"]
+            else:
+                images = np.empty((0, 3, 0, 0, 3), dtype=np.uint8)
+                states = np.empty((0, 12), dtype=np.float32)
+                targets = np.empty((0, 50, 12), dtype=np.float32)
+                masks = np.empty((0, 50), dtype=np.bool_)
+                indices = np.empty((0, 50), dtype=np.int32)
+            np.savez_compressed(
+                args.onpolicy_oracle_examples_out,
+                images=images,
+                state=states,
+                target_actions_rad=targets,
+                target_valid_mask=masks,
+                target_chunk_indices=indices,
+                root_id=np.asarray([example["root_id"] for example in examples]),
+                initial_boundary_action=np.asarray(
+                    [example["initial_boundary_action"] for example in examples], dtype=np.int32),
+                student_global_action=np.asarray(
+                    [example["student_global_action"] for example in examples], dtype=np.int32),
+                offset_from_root=np.asarray(
+                    [example["offset_from_root"] for example in examples], dtype=np.int32),
+                global_action=np.asarray(
+                    [example["global_action"] for example in examples], dtype=np.int32),
+                source_plan_sha256=np.asarray(
+                    [example["source_plan_sha256"] for example in examples]),
+                observation_digest=np.asarray(
+                    [example["observation_digest"] for example in examples]),
+                task=np.asarray([args.task for _ in examples]),
+            )
+
+        def _run_onpolicy_oracle():
+            if set(causal_snapshots) != {5, 10}:
+                raise RuntimeError(
+                    f"on-policy oracle expected exact action-5/action-10 snapshots, got {sorted(causal_snapshots)}")
+            root_groups, all_roots, examples = [], [], []
+            for initial_boundary, initial_snapshot in sorted(causal_snapshots.items()):
+                student = _oracle_student_roots(initial_boundary, initial_snapshot)
+                public_roots = []
+                for root in student["roots"]:
+                    h10 = _oracle_h10_branch(root)
+                    h50 = _oracle_h50_branch(root)
+                    h10_success = bool(h10["settled"]["settled_4_of_4"])
+                    h50_success = bool(h50["settled"]["settled_4_of_4"])
+                    rescue = bool((not h10_success) and h50_success)
+                    h50["rescues_h10_failure"] = rescue
+                    h50["successful_recovery"] = h50_success
+                    h50_public = {key: value for key, value in h50.items()
+                                  if key != "candidate_payloads"}
+                    root_public = _oracle_root_public(root)
+                    root_public["branches"] = {
+                        "normal_h10": h10,
+                        "fresh_h50_open_loop": h50_public,
+                    }
+                    root_public["branches_start_from_identical_root"] = bool(
+                        root_public["state_digest"] == h10["root_state_digest_after_restore"]
+                        == h50["root_state_digest_after_restore"]
+                        and h10["root_state_matches"] and h50["root_state_matches"])
+                    root_public["trajectory_divergence_h10_vs_h50"] = _oracle_trace_divergence(
+                        h10["trace"], h50["trace"])
+                    public_roots.append(root_public)
+                    all_roots.append(root)
+                    if h50_success:
+                        examples.extend(h50["candidate_payloads"])
+                root_groups.append({
+                    "initial_boundary_action": int(initial_boundary),
+                    "student_rollout": {
+                        key: value for key, value in student.items() if key != "roots"
+                    },
+                    "visited_roots": public_roots,
+                })
+
+            _oracle_write_roots_npz(all_roots)
+            _oracle_write_examples_npz(examples)
+            all_h50_success = all(
+                root["branches"]["fresh_h50_open_loop"]["successful_recovery"]
+                for group in root_groups for root in group["visited_roots"])
+            rescue_count = sum(
+                root["branches"]["fresh_h50_open_loop"]["rescues_h10_failure"]
+                for group in root_groups for root in group["visited_roots"])
+            return {
+                "schema_version": 1,
+                "mode": "onpolicy_h50_rescue_oracle",
+                "checkpoint": args.policy_path,
+                "snapshot_source": "validated pose-3 cached successful-H50 replay",
+                "initial_boundaries": [5, 10],
+                "student_root_offsets": [10, 20, 30],
+                "branch_horizon_actions": 50,
+                "candidate_example_offsets": [10, 20, 30, 40],
+                "root_groups": root_groups,
+                "student_visited_root_count": len(all_roots),
+                "fresh_h50_successful_recovery_root_count": int(sum(
+                    root["branches"]["fresh_h50_open_loop"]["successful_recovery"]
+                    for group in root_groups for root in group["visited_roots"])),
+                "fresh_h50_rescue_root_count": int(rescue_count),
+                "validated_intermediate_example_count": len(examples),
+                "fresh_h50_recovery_reliable_gate": bool(all_h50_success),
+                "reliable_gate_definition": "all six actual student-visited roots settle at 4/4 under fresh H50 open-loop continuation",
+                "all_branches_start_from_identical_root": all(
+                    root["branches_start_from_identical_root"]
+                    for group in root_groups for root in group["visited_roots"]),
+                "all_snapshot_restores_within_tolerance": all(
+                    root["branches"][branch]["restore"]["cloth_rms_m"] <= 1e-5
+                    and root["branches"][branch]["restore"]["joint_rms_rad"] <= 1e-5
+                    for group in root_groups for root in group["visited_roots"]
+                    for branch in ("normal_h10", "fresh_h50_open_loop")),
+                "all_rng_restores_exact": all(
+                    root["branches"][branch]["rng_restore_exact"]
+                    for group in root_groups for root in group["visited_roots"]
+                    for branch in ("normal_h10", "fresh_h50_open_loop")),
+                "all_predictions_zero_sim_steps": all(
+                    root["branches"][branch]["all_predictions_zero_sim_steps"]
+                    for group in root_groups for root in group["visited_roots"]
+                    for branch in ("normal_h10", "fresh_h50_open_loop")),
+                "rtc_used": False,
+                "queue_used": False,
+                "training_launched": False,
+                "examples_npz": args.onpolicy_oracle_examples_out,
+                "roots_npz": args.onpolicy_oracle_roots_out,
+            }
+
         boundary_execution_result = None
         boundary_ceiling_result = None
+        onpolicy_oracle_result = None
         if args.boundary_eval_trained_path:
             boundary_eval_result = _run_boundary_checkpoint_eval()
             branches["boundary_eval"] = boundary_eval_result
@@ -2509,10 +2985,21 @@ try:
                 json.dump(_jsonable(boundary_ceiling_result), boundary_ceiling_file,
                           indent=2, allow_nan=False)
             log(f"BOUNDARY_CEILING_WRITTEN {args.boundary_ceiling_out}")
+        elif args.onpolicy_oracle:
+            boundary_eval_result = None
+            boundary_execution_result = None
+            boundary_ceiling_result = None
+            onpolicy_oracle_result = _run_onpolicy_oracle()
+            branches["onpolicy_oracle"] = onpolicy_oracle_result
+            with open(args.onpolicy_oracle_out, "w") as oracle_file:
+                json.dump(_jsonable(onpolicy_oracle_result), oracle_file,
+                          indent=2, allow_nan=False)
+            log(f"ONPOLICY_ORACLE_WRITTEN {args.onpolicy_oracle_out}")
         else:
             boundary_eval_result = None
             boundary_execution_result = None
             boundary_ceiling_result = None
+            onpolicy_oracle_result = None
             for boundary, snapshot in sorted(causal_snapshots.items()):
                 h = 10 if boundary == 10 else 5
                 _restore_and_validate(snapshot)
@@ -2651,6 +3138,7 @@ try:
             "boundary_evaluation": boundary_eval_result,
             "boundary_execution": boundary_execution_result,
             "boundary_ceiling": boundary_ceiling_result,
+            "onpolicy_oracle": onpolicy_oracle_result,
             "interpretation_guard": "Branch conclusions are valid only when cached-plan restoration errors remain below the stated tolerances.",
             "simulator_bitwise_determinism": False,
             "rng_audit": {

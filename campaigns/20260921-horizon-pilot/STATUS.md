@@ -191,3 +191,22 @@ The completed diagnostic is Slurm job **21399454**. Cached H50 settled **4/4 at 
 The decision is to **stop static boundary-suffix adaptation** and not launch PEFT or parameter anchoring. The next recommended diagnostic is a small on-policy corrective-data experiment: roll the selected H10 student from the exact snapshots, capture the exact simulator snapshot and observation at every subsequent H10 replan state, query a fresh H50 plan from that actual student-visited state, branch-execute each H50 candidate, and retain labels only when that branch demonstrably recovers the target condition. Do not reuse the original time-aligned cached H50 suffix after student-state divergence.
 
 Raw output, condition trajectories, settled outcomes, provenance and the complete job ledger are in [`analysis/boundary-ceiling/`](analysis/boundary-ceiling/). Jobs **21399451** and **21399452** are recorded as non-result wrapper/diagnostic failures; neither launched training or produced a policy result. No poses 1/3/5/7 validation was submitted.
+
+## On-policy H50 rescue-oracle diagnostic
+
+Starting from commit `2ed1deb`, the inference-only rescue-oracle audit used the untouched original baseline checkpoint and the exact validated pose-3 action-5/action-10 snapshots. From each snapshot, ordinary fresh H10 replanning reached actual student-visited roots after **+10, +20 and +30** executed actions. Each of the six roots was restored exactly and branched into normal H10 continuation versus one deterministic fresh H50 chunk executed open-loop without replanning.
+
+| initial boundary | student root | H10 terminal | fresh H50 terminal | H50 rescue |
+|---:|---:|---:|---:|:---:|
+| 5 | +10 | 2/4 | 2/4 | no |
+| 5 | +20 | 1/4 | 2/4 | no |
+| 5 | +30 | 1/4 | 2/4 | no |
+| 10 | +10 | 2/4 | 2/4 | no |
+| 10 | +20 | 2/4 | 2/4 | no |
+| 10 | +30 | 2/4 | 2/4 | no |
+
+All six roots had exact restoration/equivalence, exact reconstructed RNG restoration, zero simulator advancement during prediction, and identical H10-root/H50-generated chunks. Fresh H50 recovered **0/6** roots and produced **0** validated intermediate observation→unconsumed-plan-suffix examples at offsets 10/20/30/40. The reliable all-root recovery gate therefore failed.
+
+Do not launch self-distillation or another static suffix intervention. The next recovery source should be validated simulator DAgger/teleoperation, a privileged scripted recovery if available, or a separately preregistered branch-evaluated candidate search. No training, PEFT/LoRA, RTC, broad DAgger collection, or multi-pose validation was launched.
+
+The completed audit is Slurm job **21399500**. Root snapshots/observations are in `analysis/onpolicy-h50-oracle/student-roots.npz`; successful-H50 example storage is `successful-h50-examples.npz` and is empty by gate; raw outcomes, trajectories, CSV summaries and provenance are in [`analysis/onpolicy-h50-oracle/`](analysis/onpolicy-h50-oracle/).

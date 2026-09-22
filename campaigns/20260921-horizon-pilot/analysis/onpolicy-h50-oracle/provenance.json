@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "diagnostic": "on-policy H50 rescue-oracle audit",
+  "baseline_commit_at_report": "2ed1deb9048f4ed5b86781e4a768ca302d2399f4",
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+  "source_successful_h50_episode": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout.json.behavior.jsonl",
+  "source_successful_h50_episode_sha256": "c6c8515179879ed715bd7dff1c0cd11bebc95db5fea350feb6f0c551b8040b7a",
+  "evaluation_sha256": "76a5746bd0e68085673bd889ce2314745f0f783091b1532420d52ca44f2eeabb",
+  "roots_npz_sha256": "b239ca789dd695aa0cccfa16606c549d1ae9a45303311872d2b645a6e6df5e27",
+  "examples_npz_sha256": "c903b9425110de69a89d8d39a9a55c7857277b44a900ad185e85b7053d84d078",
+  "initial_boundaries": [
+    5,
+    10
+  ],
+  "student_root_offsets": [
+    10,
+    20,
+    30
+  ],
+  "candidate_example_offsets": [
+    10,
+    20,
+    30,
+    40
+  ],
+  "student_visited_root_count": 6,
+  "fresh_h50_successful_recovery_root_count": 0,
+  "fresh_h50_rescue_root_count": 0,
+  "validated_intermediate_example_count": 0,
+  "controls": {
+    "original_checkpoint_untouched": true,
+    "training_launched": false,
+    "self_distillation_launched": false,
+    "rtc": false,
+    "queue": false,
+    "candidate_seed_tuning": false,
+    "multi_pose_validation": false,
+    "fresh_h50_open_loop_replanned": false,
+    "h10_branch_replanned_every_10_actions": true
+  },
+  "verification": {
+    "all_branches_start_from_identical_root": true,
+    "all_snapshot_restores_within_tolerance": true,
+    "all_rng_restores_exact": true,
+    "all_predictions_zero_sim_steps": true,
+    "h50_chunk_matches_root_h10_chunk_per_root": true
+  },
+  "reliable_gate": {
+    "definition": "all six actual student-visited roots settle at 4/4 under fresh H50 open-loop continuation",
+    "passed": false
+  },
+  "decision": "stop_self_distillation_h50_insufficient_oracle",
+  "recommendation": "Fresh H50 did not recover every student-visited failure root reliably. Do not launch self-distillation. Use a true recovery source next: validated simulator DAgger/teleoperation, privileged scripted recovery if available, or a separately preregistered branch-evaluated candidate search.",
+  "slurm_jobs": {
+    "onpolicy_h50_rescue_oracle": {
+      "job_id": 21399500,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/slurm/onpolicy_oracle.sbatch"
+    }
+  }
+}

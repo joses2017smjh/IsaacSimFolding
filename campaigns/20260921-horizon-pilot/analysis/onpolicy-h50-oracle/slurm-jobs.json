@@ -1,0 +1,8 @@
+{
+  "onpolicy_h50_rescue_oracle": {
+    "job_id": 21399500,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/slurm/onpolicy_oracle.sbatch"
+  }
+}

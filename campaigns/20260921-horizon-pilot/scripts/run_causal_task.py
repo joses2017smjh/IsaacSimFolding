@@ -44,6 +44,14 @@ def main():
                     help="existing checkpoints for the closed-loop ceiling panel")
     ap.add_argument("--boundary-ceiling-out", default="",
                     help="JSON output for the cached/fresh/checkpoint ceiling panel")
+    ap.add_argument("--onpolicy-oracle", action="store_true",
+                    help="run the pose-3 student-state fresh-H50 rescue-oracle audit")
+    ap.add_argument("--onpolicy-oracle-out", default="",
+                    help="JSON output for the on-policy H50 rescue-oracle audit")
+    ap.add_argument("--onpolicy-oracle-examples-out", default="",
+                    help="NPZ output for successful H50 observation-to-suffix examples")
+    ap.add_argument("--onpolicy-oracle-roots-out", default="",
+                    help="NPZ output for exact student-visited root snapshots and observations")
     args = ap.parse_args()
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
@@ -102,6 +110,17 @@ def main():
             raise SystemExit("--boundary-ceiling is restricted to pose-3 H50")
         if args.boundary_capture or args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
             raise SystemExit("--boundary-ceiling cannot use capture, RTC, queue, or observation diagnostics")
+    if args.onpolicy_oracle:
+        if int(row["development_pose_slot"]) != 3 or int(row["horizon"]) != 50:
+            raise SystemExit("--onpolicy-oracle is restricted to pose-3 H50")
+        if (args.boundary_capture or args.rtc_guidance or args.queue_diagnostic
+                or args.observation_diagnostic or args.boundary_eval_trained_path
+                or args.boundary_eval_trained_paths or args.boundary_execute_trained_path
+                or args.boundary_ceiling_trained_paths):
+            raise SystemExit("--onpolicy-oracle cannot use another diagnostic mode")
+        if (not args.onpolicy_oracle_out or not args.onpolicy_oracle_examples_out
+                or not args.onpolicy_oracle_roots_out):
+            raise SystemExit("--onpolicy-oracle requires JSON and two NPZ output paths")
     inventory = json.loads((root / "audit/garment_inventory.json").read_text())
     asset = next(r for r in inventory["garments"] if r["garment_id"] == row["garment"])
     checkpoint = manifest["checkpoint"]
@@ -115,7 +134,7 @@ def main():
         "--garment_dir", str(Path(asset["config"]).parent), "--assets", manifest["assets"],
         "--steps", "10" if (
             boundary_eval_paths or args.boundary_execute_trained_path
-            or args.boundary_ceiling_trained_paths
+            or args.boundary_ceiling_trained_paths or args.onpolicy_oracle
         ) else "600",
         "--frames_out", str(frames),
         "--match_pose=" + row["match_pose"], "--match_scale", str(row["match_scale"]),
@@ -125,6 +144,7 @@ def main():
                               "boundary_eval" if boundary_eval_paths else
                               "boundary_execute" if args.boundary_execute_trained_path else
                               "boundary_ceiling" if args.boundary_ceiling_trained_paths else
+                              "onpolicy_oracle" if args.onpolicy_oracle else
                               "causal_h50_capture"),
         "--task", manifest["task_prompt"], "--gif_every", "12",
         "--result_out", str(dest / "rollout.json")]
@@ -151,6 +171,10 @@ def main():
     if args.boundary_ceiling_trained_paths:
         command += ["--boundary_ceiling_trained_paths", *args.boundary_ceiling_trained_paths,
                     "--boundary_ceiling_out", args.boundary_ceiling_out]
+    if args.onpolicy_oracle:
+        command += ["--onpolicy_oracle", "--onpolicy_oracle_out", args.onpolicy_oracle_out,
+                    "--onpolicy_oracle_examples_out", args.onpolicy_oracle_examples_out,
+                    "--onpolicy_oracle_roots_out", args.onpolicy_oracle_roots_out]
     cached = args.causal_action_jsonl or str(root / "outputs" / row["id"] / "rollout.json.behavior.jsonl")
     if Path(cached).is_file():
         command += ["--causal_action_jsonl", cached]

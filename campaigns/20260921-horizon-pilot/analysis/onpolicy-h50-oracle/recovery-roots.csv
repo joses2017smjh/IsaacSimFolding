@@ -1,0 +1,7 @@
+root_id,initial_boundary_action,student_global_action,offset_from_initial_boundary,h10_best_conditions,h10_terminal_conditions,h10_settled_4_of_4,h50_best_conditions,h50_terminal_conditions,h50_settled_4_of_4,h50_rescues_h10_failure,h10_h50_root_identical,h50_chunk_matches_h10_root_chunk,h10_all_predictions_zero_sim_steps,h50_all_predictions_zero_sim_steps,h10_rng_restore_exact,h50_rng_restore_exact
+pose3_boundary5_plus10,5,15,10,2,2,False,2,2,False,False,True,True,True,True,True,True
+pose3_boundary5_plus20,5,25,20,2,1,False,2,2,False,False,True,True,True,True,True,True
+pose3_boundary5_plus30,5,35,30,2,1,False,2,2,False,False,True,True,True,True,True,True
+pose3_boundary10_plus10,10,20,10,2,2,False,2,2,False,False,True,True,True,True,True,True
+pose3_boundary10_plus20,10,30,20,2,2,False,2,2,False,False,True,True,True,True,True,True
+pose3_boundary10_plus30,10,40,30,2,2,False,2,2,False,False,True,True,True,True,True,True

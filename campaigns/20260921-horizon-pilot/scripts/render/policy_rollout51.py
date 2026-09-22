@@ -97,6 +97,8 @@ ap.add_argument("--causal_branch_steps", type=int, default=120,
                 help="steps per fresh-replan branch after a saved H50 state")
 ap.add_argument("--causal_action_jsonl", default="",
                 help="optional completed-pilot behavior JSONL used as the cached H50 control")
+ap.add_argument("--rtc_guidance", action="store_true",
+                help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
 ap.add_argument("--fixed_rng_seed", type=int, default=-1,
                 help="optional fixed Torch/CUDA seed for the causal seed panel")
 ap.add_argument("--seed_panel", default="101,102,103,104",
@@ -677,6 +679,7 @@ try:
 
     scoring_phase = "policy"
     reconstructed_original_chunk = None
+    reconstructed_original_chunk_raw = None
     for i in range(args.steps):
         current_action = i + 1
         imgs = render_images()
@@ -703,6 +706,9 @@ try:
             _cuda_before = [x.cpu().numpy().copy() for x in torch.cuda.get_rng_state_all()]
             with torch.inference_mode():
                 _chunk = original_predict(policy_batch(imgs, joint))
+            reconstructed_original_chunk_raw = np.asarray(
+                _chunk.detach().cpu().numpy()[0] if hasattr(_chunk, "detach") else _chunk
+            ).copy()
             if post:
                 _chunk = post(_chunk)
             reconstructed_original_chunk = np.asarray(_chunk.detach().cpu().numpy()[0] if hasattr(_chunk, "detach") else _chunk)[0:].copy()
@@ -1063,6 +1069,108 @@ try:
             images, joint = snapshot["images"], snapshot["joint"]
             return fidelity, _fresh_chunk(policy_batch(images, joint))
 
+        def _rtc_configure(enabled):
+            """Attach the installed LeRobot RTCProcessor without changing weights."""
+            from lerobot.configs.types import RTCAttentionSchedule
+            from lerobot.policies.rtc.configuration_rtc import RTCConfig
+
+            if enabled:
+                policy.config.rtc_config = RTCConfig(
+                    enabled=True,
+                    prefix_attention_schedule=RTCAttentionSchedule.EXP,
+                    max_guidance_weight=10.0,
+                    execution_horizon=10,
+                    debug=False,
+                )
+            else:
+                policy.config.rtc_config = None
+            policy.init_rtc_processor()
+
+        def _rtc_chunk(batch, previous_raw):
+            kwargs = {
+                "prev_chunk_left_over": None if previous_raw is None else torch.as_tensor(
+                    previous_raw, dtype=torch.float32, device=dev).unsqueeze(0),
+                "inference_delay": 0,
+                "execution_horizon": 10,
+            }
+            # RTC's upstream processor temporarily enables autograd for its
+            # prefix correction, so use no_grad here rather than inference_mode.
+            with torch.no_grad():
+                chunk = original_predict(batch, **kwargs)
+            raw = np.asarray(chunk.detach().cpu().numpy()[0] if hasattr(chunk, "detach") else chunk).copy()
+            processed = post(chunk) if post else chunk
+            processed = np.asarray(processed.detach().cpu().numpy()[0] if hasattr(processed, "detach") else processed).copy()
+            return raw, processed
+
+        def _rng_digest():
+            import hashlib
+
+            h = hashlib.sha256()
+            h.update(torch.get_rng_state().cpu().numpy().tobytes())
+            for state in torch.cuda.get_rng_state_all():
+                h.update(state.cpu().numpy().tobytes())
+            return h.hexdigest()
+
+        def _rtc_no_previous_check(snapshot):
+            """RTC with no previous chunk must equal ordinary inference and not step sim."""
+            fidelity = _restore_and_validate(snapshot)
+            policy.reset()
+            _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+            _rtc_configure(False)
+            ordinary_raw, ordinary = _rtc_chunk(policy_batch(snapshot["images"], snapshot["joint"]), None)
+            ordinary_rng_after = _rng_digest()
+            _restore_and_validate(snapshot)
+            policy.reset()
+            _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+            _rtc_configure(True)
+            rtc_raw, rtc = _rtc_chunk(policy_batch(snapshot["images"], snapshot["joint"]), None)
+            rtc_rng_after = _rng_digest()
+            return {
+                "restore": fidelity,
+                "max_abs_postprocessed_action": float(np.max(np.abs(ordinary - rtc))),
+                "max_abs_raw_action": float(np.max(np.abs(ordinary_raw - rtc_raw))),
+                "ordinary_rng_after": ordinary_rng_after,
+                "rtc_rng_after": rtc_rng_after,
+                "rng_after_equal": ordinary_rng_after == rtc_rng_after,
+                "simulator_stepped": False,
+                "config": {"execution_horizon": 10, "prefix_attention_schedule": "EXP", "max_guidance_weight": 10.0},
+            }
+
+        def _run_rtc(snapshot, horizon):
+            fidelity = _restore_and_validate(snapshot)
+            policy.reset()
+            _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+            _rtc_configure(True)
+            boundary = int(snapshot["boundary"])
+            previous_raw = None
+            if reconstructed_original_chunk_raw is not None:
+                previous_raw = np.asarray(reconstructed_original_chunk_raw)[boundary:].copy()
+            trace, actions, chunks = [], [], []
+            best = 0
+            last = None
+            current_processed = None
+            for local in range(args.causal_branch_steps):
+                global_step = boundary + local + 1
+                if local % horizon == 0:
+                    if local == 0:
+                        images, joint = snapshot["images"], snapshot["joint"]
+                    else:
+                        images, joint = _branch_observation()
+                    raw, current_processed = _rtc_chunk(policy_batch(images, joint), previous_raw)
+                    chunks.append({"raw": raw.copy(), "processed": current_processed.copy(), "previous_raw_length": 0 if previous_raw is None else len(previous_raw)})
+                    previous_raw = raw[horizon:].copy()
+                action = current_processed[local % horizon].copy()
+                actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = global_step
+                trace.append(row)
+                best = max(best, row["conditions_passed"])
+                last = row
+            return {"restore": fidelity, "actions": actions, "trace": trace, "chunks": chunks,
+                    "best_conditions": best, "terminal": last,
+                    "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                    "config": {"execution_horizon": 10, "prefix_attention_schedule": "EXP", "max_guidance_weight": 10.0, "inference_delay": 0}}
+
         def _run_same_rng(snapshot, horizon):
             """Execute a branch whose first replan uses the reconstructed original RNG state."""
             fidelity, first_chunk = _same_rng_chunk(snapshot)
@@ -1219,7 +1327,7 @@ try:
             cached = _run_cached(snapshot)
             repeats = _repeat_predictions(snapshot)
             seed_panel = _seed_panel(snapshot)
-            branches[str(boundary)] = {
+            branch_record = {
                 "horizon": h,
                 "cached_plan_control": cached,
                 "fresh_replan": fresh,
@@ -1232,6 +1340,14 @@ try:
                 "deterministic_repeat_first_50": repeats["deterministic_repeat"],
                 "varied_seed_first_50": repeats["varied_seed"],
             }
+            if args.rtc_guidance:
+                branch_record["rtc_no_previous_check"] = _rtc_no_previous_check(snapshot)
+                rtc = _run_rtc(snapshot, 10)
+                branch_record["rtc_guided_replan"] = rtc
+                branch_record["rtc_plan_metrics_vs_cached_suffix"] = _plan_metrics(
+                    old_plan, rtc["chunks"][0]["processed"]
+                )
+            branches[str(boundary)] = branch_record
 
         causal_result = {
             "schema_version": 1,
@@ -1245,6 +1361,7 @@ try:
             "branch_steps": args.causal_branch_steps,
             "original_prediction_chunks": original_chunks,
             "reconstructed_original_h50_chunk": reconstructed_original_chunk,
+            "reconstructed_original_h50_chunk_raw": reconstructed_original_chunk_raw,
             "branches": branches,
             "interpretation_guard": "Branch conclusions are valid only when cached-plan restoration errors remain below the stated tolerances.",
             "simulator_bitwise_determinism": False,
@@ -1254,6 +1371,12 @@ try:
                 "state_provenance": "captured immediately after seed_rngs() in this run; exact original pilot pre-call state was not persisted",
                 "reconstructed_original_call": True,
                 "seed_panel": causal_seed_panel,
+            },
+            "rtc_reference": {
+                "enabled": bool(args.rtc_guidance),
+                "implementation": "installed LeRobot RTCProcessor via SmolVLAPolicy.init_rtc_processor",
+                "source_root": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome51-site/lerobot/policies/rtc",
+                "configuration": {"execution_horizon": 10, "prefix_attention_schedule": "EXP", "max_guidance_weight": 10.0, "inference_delay": 0},
             },
         }
         with open(args.causal_out, "w") as causal_file:

@@ -12,6 +12,10 @@ set -euo pipefail
 campaign=${1:?absolute campaign root}
 index=${SLURM_ARRAY_TASK_ID:-${2:-0}}
 branch_steps=${3:-600}
+output_prefix=${4:-causal}
+rtc_flag=${5:-0}
+rtc_args=()
+if [ "$rtc_flag" = 1 ]; then rtc_args+=(--rtc-guidance); fi
 workspace=/nfs/hpc/share/sanchej7/Humanoid_Lite
 runtime="$campaign/runtime/${SLURM_JOB_ID}_${index}"
 mkdir -p "$runtime/home" "$runtime/cache" "$runtime/ov" "$runtime/nv" "$runtime/tmp"
@@ -33,4 +37,4 @@ apptainer exec --nv --cleanenv --home "$runtime/home" \
   --env "PYTHONPATH=$workspace/lehome51-site:$campaign/external/lehome-challenge/source/lehome:$campaign/external/lehome-challenge:$campaign/src" \
   --env "PXR_PLUGINPATH_NAME=${libs[0]}/bin/usd" "${mask[@]}" \
   "$workspace/container/bhl.sif" "$workspace/venv/bin/python" -u \
-  "$campaign/scripts/run_causal_task.py" --campaign "$campaign" --index "$index" --branch-steps "$branch_steps"
+  "$campaign/scripts/run_causal_task.py" --campaign "$campaign" --index "$index" --branch-steps "$branch_steps" --output-prefix "$output_prefix" "${rtc_args[@]}"

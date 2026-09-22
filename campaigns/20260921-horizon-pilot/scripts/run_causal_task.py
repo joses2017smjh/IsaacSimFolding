@@ -17,6 +17,10 @@ def main():
     ap.add_argument("--branch-steps", type=int, default=120)
     ap.add_argument("--causal-action-jsonl", default="",
                     help="completed pilot H50 behavior stream used as control")
+    ap.add_argument("--output-prefix", default="causal",
+                    help="output directory prefix, e.g. rtc")
+    ap.add_argument("--rtc-guidance", action="store_true",
+                    help="enable the installed LeRobot SmolVLA RTC branch")
     args = ap.parse_args()
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
@@ -28,7 +32,7 @@ def main():
     inventory = json.loads((root / "audit/garment_inventory.json").read_text())
     asset = next(r for r in inventory["garments"] if r["garment_id"] == row["garment"])
     checkpoint = manifest["checkpoint"]
-    dest = root / "outputs" / ("causal_" + row["id"])
+    dest = root / "outputs" / (args.output_prefix + "_" + row["id"])
     dest.mkdir(parents=True, exist_ok=True)
     frames = dest / "frames"
     frames.mkdir(exist_ok=True)
@@ -44,6 +48,8 @@ def main():
         "--gif_every", "12", "--result_out", str(dest / "rollout.json"),
         "--causal_out", str(dest / "replan-causality.json"),
         "--causal_branch_steps", str(args.branch_steps)]
+    if args.rtc_guidance:
+        command.append("--rtc_guidance")
     cached = args.causal_action_jsonl or str(root / "outputs" / row["id"] / "rollout.json.behavior.jsonl")
     if Path(cached).is_file():
         command += ["--causal_action_jsonl", cached]

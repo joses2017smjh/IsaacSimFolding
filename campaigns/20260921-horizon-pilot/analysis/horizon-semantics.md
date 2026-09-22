@@ -19,3 +19,13 @@ The local path matches the ordinary upstream LeRobot policy abstraction: the ref
 The horizon is therefore an execution/re-observation interval, not a change to the model's predicted horizon. The independent variable is how many leading rows of each unchanged 50-row prediction are executed before the next observation and fresh 50-row prediction.
 
 The audit was performed from the frozen v5 source, the installed `modeling_smolvla.py`, `policies/utils.py`, and the upstream LeHome `scripts/utils/evaluation.py` and `scripts/eval_policy/lerobot_policy.py`. Source paths and exact hashes are preserved in the pilot manifest.
+
+## Active-controller timing check
+
+The active controller in `scripts/render/policy_rollout51.py` has the following ordering for every ordinary policy action: render/build the observation, call `policy.select_action(batch)` (the inference call is inside the `torch.inference_mode()` block), validate the returned 12-joint target, then call `env.step(...)`. The `env.step` call is after inference in the same loop; there is no background worker or simulator tick between those statements. The causal diagnostic uses the same boundary: `_predict_observed()` samples the simulator and episode counters before and after `_get_action_chunk`, synchronizes CUDA, and fails if either counter changes.
+
+Each timing record stores `sim_step_delta`, `episode_length_delta`, `rng_before_digest`, `rng_after_digest`, and `inference_blocks_before_env_step`. The required dynamic audit result is therefore `sim_step_delta == 0` and `episode_length_delta == 0` for every prediction call. Inference wall time may increase, but zero simulator actions elapse while the model is blocked.
+
+## Hard queue diagnostic semantics
+
+The new `--queue_diagnostic` branch is inference-only and is restricted by its launcher to the exact pose-3 snapshots at action 5 and action 10. It preserves the cached H50 suffix and same-reconstructed-RNG fresh H10 controls. For each delay `d` in `{2,5,10}`, it generates a postprocessed 50-row fresh chunk from the saved boundary observation and reconstructed RNG stream, executes exactly `d` rows from the current previous-plan remainder, discards fresh rows `[0:d]`, executes fresh rows `[d:10]`, and carries fresh rows `[10:50]` as the current previous-plan remainder at the next H10 boundary. Every executed row records its source and index; the run fails closed if retained identity, fresh suffix indexing, snapshot restoration, RNG reconstruction, or zero-step inference checks fail. RTC is rejected for this branch.

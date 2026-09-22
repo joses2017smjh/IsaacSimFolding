@@ -29,6 +29,7 @@ policy.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import random
@@ -99,6 +100,12 @@ ap.add_argument("--causal_action_jsonl", default="",
                 help="optional completed-pilot behavior JSONL used as the cached H50 control")
 ap.add_argument("--rtc_guidance", action="store_true",
                 help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
+ap.add_argument("--queue_diagnostic", action="store_true",
+                help="run the deterministic hard retained-prefix queue diagnostic")
+ap.add_argument("--queue_delays", default="2,5,10",
+                help="comma-separated retained-prefix delays for queue diagnostic")
+ap.add_argument("--hard_queue_delay", type=int, default=0,
+                help="online H10 hard retained-prefix delay for conditional validation")
 ap.add_argument("--fixed_rng_seed", type=int, default=-1,
                 help="optional fixed Torch/CUDA seed for the causal seed panel")
 ap.add_argument("--seed_panel", default="101,102,103,104",
@@ -106,6 +113,20 @@ ap.add_argument("--seed_panel", default="101,102,103,104",
 args = ap.parse_args()
 if args.terminal_settle_steps < 1:
     ap.error("terminal_settle_steps must be positive")
+try:
+    args.queue_delays = tuple(sorted({int(x.strip()) for x in args.queue_delays.split(",") if x.strip()}))
+except ValueError as exc:
+    ap.error(f"invalid --queue_delays={args.queue_delays!r}")
+if args.queue_diagnostic and (not args.causal_out):
+    ap.error("--queue_diagnostic requires --causal_out")
+if args.queue_diagnostic and args.rtc_guidance:
+    ap.error("--queue_diagnostic cannot be combined with --rtc_guidance")
+if args.queue_diagnostic and any(x < 1 or x > 50 for x in args.queue_delays):
+    ap.error("queue delays must be in [1, 50]")
+if args.hard_queue_delay < 0 or args.hard_queue_delay > 10:
+    ap.error("--hard_queue_delay must be 0..10")
+if args.hard_queue_delay and (args.causal_out or args.rtc_guidance):
+    ap.error("--hard_queue_delay cannot be combined with causal or RTC diagnostics")
 try:
     pinned_pose = validate_arguments(args)
 except ValueError as exc:
@@ -456,14 +477,64 @@ try:
     dev = args.sim_device
     policy = policy.to(dev)
     queue_metadata = configure_action_queue(policy, args.n_action_steps)
+    hard_queue_enabled = bool(args.hard_queue_delay)
+    if hard_queue_enabled:
+        queue_metadata = {**queue_metadata, "effective_n_action_steps": 10,
+                          "hard_retained_prefix_delay": args.hard_queue_delay,
+                          "internal_prediction_queue_length": 50}
     inference_times = []
     prediction_count = [0]
     prediction_chunks = []
+    prediction_timing_audit = []
+
+    def _sim_counter():
+        value = getattr(env, "_sim_step_counter", 0)
+        try:
+            return int(value)
+        except Exception:
+            return int(value.item()) if hasattr(value, "item") else 0
+
+    def _episode_counter():
+        value = getattr(env, "episode_length_buf", None)
+        if value is None:
+            return None
+        try:
+            return int(value.reshape(-1)[0].item())
+        except Exception:
+            return None
+
+    def _rng_digest():
+        digest = hashlib.sha256()
+        digest.update(torch.get_rng_state().cpu().numpy().tobytes())
+        for state in torch.cuda.get_rng_state_all():
+            digest.update(state.cpu().numpy().tobytes())
+        return digest.hexdigest()
+
     original_predict = policy._get_action_chunk
     def measured_predict(*a, **kw):
         started = time.monotonic()
+        sim_before = _sim_counter()
+        episode_before = _episode_counter()
+        rng_before = _rng_digest()
         chunk = original_predict(*a, **kw)
         torch.cuda.synchronize()
+        sim_after = _sim_counter()
+        episode_after = _episode_counter()
+        prediction_timing_audit.append({
+            "source": "active_rollout_controller",
+            "sim_step_before": sim_before,
+            "sim_step_after": sim_after,
+            "sim_step_delta": sim_after - sim_before,
+            "episode_length_before": episode_before,
+            "episode_length_after": episode_after,
+            "episode_length_delta": (None if episode_before is None or episode_after is None
+                                       else episode_after - episode_before),
+            "rng_before_digest": rng_before,
+            "rng_after_digest": _rng_digest(),
+            "inference_blocks_before_env_step": True,
+        })
+        if sim_after != sim_before or (episode_before is not None and episode_after != episode_before):
+            raise RuntimeError("policy inference advanced simulator state before env.step()")
         inference_times.append(time.monotonic() - started)
         if chunk.shape[1] != 50:
             raise ValueError(f"Prediction chunk changed: {tuple(chunk.shape)}")
@@ -569,6 +640,10 @@ try:
     manipulation_trajectory = []
     previous_action = None
     action_jumps = []
+    hard_queue_previous_plan = None
+    hard_queue_period = None
+    hard_queue_sources = None
+    hard_queue_handoffs = []
     causal_snapshots = {}
     causal_trace = {}
     executed_actions = {}
@@ -582,7 +657,8 @@ try:
     if not causal_enabled:
         causal_seed_panel = []
     from lehome_fold.behavior_telemetry import BehaviorTelemetry
-    behavior = BehaviorTelemetry(args.result_out + ".behavior.jsonl", pts0, args.n_action_steps, step_dt,
+    telemetry_horizon = 10 if hard_queue_enabled else args.n_action_steps
+    behavior = BehaviorTelemetry(args.result_out + ".behavior.jsonl", pts0, telemetry_horizon, step_dt,
         {"left": env.left_arm.body_names, "right": env.right_arm.body_names})
 
     def _as_cpu_array(value):
@@ -761,6 +837,47 @@ try:
                 shadow.append((a.copy(), sa))
         elif causal_replay_actions is not None:
             a = np.asarray(causal_replay_actions[i], dtype=np.float32)
+        elif hard_queue_enabled:
+            # Conditional validation path: predict a full 50-row chunk at each
+            # H10 observation, then apply the exact hard handoff rule used by
+            # the pose-3 inference-only diagnostic. The first chunk has no
+            # previous plan; subsequent chunks retain d rows from the current
+            # remainder and discard fresh rows [0:d].
+            if i % 10 == 0:
+                batch = pre(observation) if pre else observation
+                with torch.inference_mode():
+                    chunk = policy._get_action_chunk(batch)
+                if post:
+                    chunk = post(chunk)
+                if hasattr(chunk, "detach"):
+                    chunk = chunk.detach().cpu().numpy()
+                fresh = np.asarray(chunk)[0].astype(np.float32, copy=True)
+                if fresh.shape != (50, 12):
+                    raise RuntimeError(f"hard queue fresh chunk has shape {fresh.shape}, expected (50, 12)")
+                if i == 0:
+                    hard_queue_period = fresh[:10].copy()
+                    hard_queue_sources = [{"source": "fresh_chunk", "source_index": j} for j in range(10)]
+                else:
+                    if hard_queue_previous_plan is None or len(hard_queue_previous_plan) < args.hard_queue_delay:
+                        raise RuntimeError("hard queue previous-plan remainder is shorter than retained delay")
+                    retained = hard_queue_previous_plan[:args.hard_queue_delay].copy()
+                    hard_queue_period = np.concatenate([retained, fresh[args.hard_queue_delay:10]], axis=0)
+                    hard_queue_sources = ([{"source": "previous_plan_remainder", "source_index": j}
+                                           for j in range(args.hard_queue_delay)]
+                                          + [{"source": "fresh_chunk_suffix", "source_index": j}
+                                             for j in range(args.hard_queue_delay, 10)])
+                    hard_queue_handoffs.append({
+                        "boundary_action": i,
+                        "delay": args.hard_queue_delay,
+                        "retained_actions_exact": bool(np.array_equal(retained, hard_queue_period[:args.hard_queue_delay])),
+                        "discarded_fresh_indices": list(range(args.hard_queue_delay)),
+                        "executed_fresh_indices": list(range(args.hard_queue_delay, 10)),
+                        "next_previous_indices": list(range(10, 50)),
+                        "fresh_chunk_sha256": hashlib.sha256(fresh.tobytes()).hexdigest(),
+                        "fresh_chunk": fresh.copy(),
+                    })
+                hard_queue_previous_plan = fresh[10:].copy()
+            a = hard_queue_period[i % 10].copy()
         else:
             batch = pre(observation) if pre else observation
             with torch.inference_mode():
@@ -1041,6 +1158,23 @@ try:
                 "conditions_passed": int(geometric["conditions_passed"]),
                 "conditions_total": int(geometric["conditions_total"]),
                 "geometric_success": bool(geometric["success"]),
+                "condition_details": geometric.get("details", {}),
+            }
+
+        def _settle_branch(last_action):
+            """Apply the same fixed hold-settle protocol used by the episode."""
+            settled_trace = []
+            for settle_step in range(1, args.terminal_settle_steps + 1):
+                row = _branch_step(last_action)
+                row["settle_step"] = settle_step
+                settled_trace.append(row)
+            terminal = settled_trace[-1] if settled_trace else None
+            return {
+                "steps": args.terminal_settle_steps,
+                "trace": settled_trace,
+                "terminal": terminal,
+                "settled_4_of_4": bool(terminal and terminal["conditions_passed"] == 4),
+                "settled_success": bool(terminal and terminal["geometric_success"]),
             }
 
         def _restore_and_validate(snapshot):
@@ -1061,6 +1195,36 @@ try:
                     torch.as_tensor(np.asarray(x, dtype=np.uint8), device="cpu")
                     for x in cuda_state
                 ])
+
+        def _predict_observed(batch, audit_label="causal_diagnostic", **kwargs):
+            """Call inference and prove that no simulator action elapsed."""
+            sim_before = _sim_counter()
+            episode_before = _episode_counter()
+            rng_before = _rng_digest()
+            started = time.monotonic()
+            chunk = original_predict(batch, **kwargs)
+            torch.cuda.synchronize()
+            sim_after = _sim_counter()
+            episode_after = _episode_counter()
+            timing = {
+                "source": audit_label,
+                "prediction_index": len(prediction_timing_audit),
+                "sim_step_before": sim_before,
+                "sim_step_after": sim_after,
+                "sim_step_delta": sim_after - sim_before,
+                "episode_length_before": episode_before,
+                "episode_length_after": episode_after,
+                "episode_length_delta": (None if episode_before is None or episode_after is None
+                                           else episode_after - episode_before),
+                "elapsed_seconds": time.monotonic() - started,
+                "rng_before_digest": rng_before,
+                "rng_after_digest": _rng_digest(),
+                "inference_blocks_before_env_step": True,
+            }
+            prediction_timing_audit.append(timing)
+            if sim_after != sim_before or (episode_before is not None and episode_after != episode_before):
+                raise RuntimeError("policy inference advanced simulator state before env.step()")
+            return chunk
 
         def _same_rng_chunk(snapshot):
             fidelity = _restore_and_validate(snapshot)
@@ -1096,20 +1260,11 @@ try:
             # RTC's upstream processor temporarily enables autograd for its
             # prefix correction, so use no_grad here rather than inference_mode.
             with torch.no_grad():
-                chunk = original_predict(batch, **kwargs)
+                chunk = _predict_observed(batch, **kwargs)
             raw = np.asarray(chunk.detach().cpu().numpy()[0] if hasattr(chunk, "detach") else chunk).copy()
             processed = post(chunk) if post else chunk
             processed = np.asarray(processed.detach().cpu().numpy()[0] if hasattr(processed, "detach") else processed).copy()
             return raw, processed
-
-        def _rng_digest():
-            import hashlib
-
-            h = hashlib.sha256()
-            h.update(torch.get_rng_state().cpu().numpy().tobytes())
-            for state in torch.cuda.get_rng_state_all():
-                h.update(state.cpu().numpy().tobytes())
-            return h.hexdigest()
 
         def _rtc_no_previous_check(snapshot):
             """RTC with no previous chunk must equal ordinary inference and not step sim."""
@@ -1169,11 +1324,13 @@ try:
             return {"restore": fidelity, "actions": actions, "trace": trace, "chunks": chunks,
                     "best_conditions": best, "terminal": last,
                     "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                    "settled": _settle_branch(actions[-1]),
                     "config": {"execution_horizon": 10, "prefix_attention_schedule": "EXP", "max_guidance_weight": 10.0, "inference_delay": 0}}
 
         def _run_same_rng(snapshot, horizon):
             """Execute a branch whose first replan uses the reconstructed original RNG state."""
             fidelity, first_chunk = _same_rng_chunk(snapshot)
+            first_prediction_timing = dict(prediction_timing_audit[-1])
             boundary = int(snapshot["boundary"])
             trace, actions, chunks = [], [], [first_chunk.copy()]
             best = 0
@@ -1194,7 +1351,9 @@ try:
                 last = row
             return {"restore": fidelity, "actions": actions, "trace": trace, "chunks": chunks,
                     "best_conditions": best, "terminal": last,
-                    "geometric_ever_success": any(x["geometric_success"] for x in trace)}
+                    "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                    "first_prediction_timing": first_prediction_timing,
+                    "settled": _settle_branch(actions[-1])}
 
         def _seed_panel(snapshot):
             plans = []
@@ -1240,11 +1399,12 @@ try:
             return {"restore": fidelity, "actions": actions, "trace": trace,
                     "restore_fidelity_errors": _compare_branch_trace(boundary, trace),
                     "best_conditions": best, "terminal": last,
-                    "geometric_ever_success": any(x["geometric_success"] for x in trace)}
+                    "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                    "settled": _settle_branch(actions[-1])}
 
-        def _fresh_chunk(batch):
+        def _fresh_chunk(batch, audit_label="causal_fresh_replan"):
             with torch.inference_mode():
-                chunk = original_predict(batch)
+                chunk = _predict_observed(batch, audit_label=audit_label)
             # _get_action_chunk returns the model-space normalized chunk. The
             # rollout applies the postprocessor to each selected action, so
             # apply the same postprocessor to the whole saved chunk here.
@@ -1279,7 +1439,179 @@ try:
                 last = row
             return {"restore": fidelity, "actions": actions, "trace": trace, "chunks": chunks,
                     "best_conditions": best, "terminal": last,
-                    "geometric_ever_success": any(x["geometric_success"] for x in trace)}
+                    "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                    "settled": _settle_branch(actions[-1])}
+
+        def _action_identity(actual, expected):
+            actual = np.asarray(actual)
+            expected = np.asarray(expected)
+            if actual.shape != expected.shape:
+                return {"exact": False, "shape_actual": list(actual.shape),
+                        "shape_expected": list(expected.shape), "max_abs": None, "l2": None}
+            delta = actual.astype(np.float64) - expected.astype(np.float64)
+            return {"exact": bool(np.array_equal(actual, expected)),
+                    "shape_actual": list(actual.shape), "shape_expected": list(expected.shape),
+                    "max_abs": float(np.max(np.abs(delta), initial=0.0)),
+                    "l2": float(np.linalg.norm(delta))}
+
+        def _run_queue(snapshot, horizon, delay, old_plan):
+            """Run a hard retained-prefix handoff with a deterministic fresh plan.
+
+            At every H10 boundary the previous plan contributes exactly ``delay``
+            actions. The fresh 50-row plan is generated from the current
+            observation/RNG stream, its rows [0:delay] are discarded, and rows
+            [delay:10] fill the remainder of that ten-action execution period.
+            The unconsumed fresh suffix [10:50] becomes the previous-plan
+            remainder at the next boundary.
+            """
+            fidelity = _restore_and_validate(snapshot)
+            policy.reset()
+            _set_policy_rng(causal_initial_torch_rng, causal_initial_cuda_rng)
+            boundary = int(snapshot["boundary"])
+            branch_steps = min(args.causal_branch_steps, args.steps - boundary)
+            previous_plan = np.asarray(old_plan, dtype=np.float32).copy()
+            previous_indices = np.arange(boundary, boundary + len(previous_plan), dtype=np.int32)
+            previous_source = {"kind": "cached_h50", "replan_index": None,
+                               "indices": previous_indices.tolist()}
+            trace, actions, handoffs = [], [], []
+            best = 0
+            last = None
+            period_previous = None
+            period_previous_indices = None
+            period_fresh = None
+            period_event = None
+            for local in range(branch_steps):
+                global_step = boundary + local + 1
+                if local % horizon == 0:
+                    replan_index = local // horizon
+                    if local == 0:
+                        images, joint = snapshot["images"], snapshot["joint"]
+                    else:
+                        images, joint = _branch_observation()
+                    period_previous = previous_plan.copy()
+                    period_previous_indices = previous_indices.copy()
+                    if len(period_previous) < delay:
+                        raise RuntimeError(
+                            f"queue delay {delay} exceeds previous-plan remainder "
+                            f"length {len(period_previous)} at boundary {boundary}+{local}"
+                        )
+                    fresh = _fresh_chunk(
+                        policy_batch(images, joint),
+                        audit_label=f"queue_d{delay}_pose_boundary{boundary}_replan{replan_index}",
+                    )
+                    if fresh.shape != (50, 12):
+                        raise RuntimeError(f"queue fresh chunk has shape {fresh.shape}, expected (50, 12)")
+                    timing = dict(prediction_timing_audit[-1])
+                    period_fresh = fresh.copy()
+                    period_event = {
+                        "replan_index": replan_index,
+                        "boundary_action": boundary,
+                        "global_action_start": global_step,
+                        "delay": delay,
+                        "horizon": horizon,
+                        "previous_plan_source": previous_source,
+                        "previous_plan_length": int(len(period_previous)),
+                        "retained_previous_indices": period_previous_indices[:delay].tolist(),
+                        "discarded_previous_suffix_count": int(len(period_previous) - delay),
+                        "fresh_chunk_length": int(len(fresh)),
+                        "fresh_chunk_sha256": hashlib.sha256(fresh.tobytes()).hexdigest(),
+                        "fresh_chunk": fresh.copy(),
+                        "discarded_fresh_indices": list(range(delay)),
+                        "executed_fresh_indices": list(range(delay, horizon)),
+                        "next_previous_indices": list(range(horizon, len(fresh))),
+                        "prediction_timing": timing,
+                        "rng_before_generation": timing["rng_before_digest"],
+                        "rng_after_generation": timing["rng_after_digest"],
+                        "simulator_stepped_during_prediction": bool(timing["sim_step_delta"]),
+                    }
+                    handoffs.append(period_event)
+                    previous_plan = fresh[horizon:].copy()
+                    previous_indices = np.arange(horizon, len(fresh), dtype=np.int32)
+                    previous_source = {"kind": "fresh_chunk_remainder",
+                                       "replan_index": replan_index,
+                                       "indices": previous_indices.tolist()}
+                offset = local % horizon
+                if offset < delay:
+                    action = period_previous[offset].copy()
+                    expected = period_previous[offset]
+                    source = "previous_plan_remainder"
+                    source_index = int(period_previous_indices[offset])
+                else:
+                    action = period_fresh[offset].copy()
+                    expected = period_fresh[offset]
+                    source = "fresh_chunk_suffix"
+                    source_index = offset
+                identity = _action_identity(action, expected)
+                if not identity["exact"]:
+                    raise RuntimeError(f"queue action identity failed at global action {global_step}")
+                actions.append(action)
+                row = _branch_step(action)
+                row.update({"global_step": global_step, "queue_delay": delay,
+                            "replan_index": local // horizon, "period_offset": offset,
+                            "action_source": source, "source_index": source_index,
+                            "action_identity": identity})
+                trace.append(row)
+                best = max(best, row["conditions_passed"])
+                last = row
+            if period_event is None or last is None:
+                raise RuntimeError("queue branch produced no action period")
+            for event in handoffs:
+                event["fresh_prefix_executed"] = any(
+                    row["replan_index"] == event["replan_index"]
+                    and row["period_offset"] < delay
+                    and row["action_source"] == "fresh_chunk_suffix"
+                    for row in trace
+                )
+                event["retained_actions_exact"] = all(
+                    row["replan_index"] == event["replan_index"]
+                    and row["period_offset"] < delay
+                    and row["action_source"] == "previous_plan_remainder"
+                    and row["action_identity"]["exact"]
+                    for row in trace
+                    if row["replan_index"] == event["replan_index"]
+                    and row["period_offset"] < delay
+                )
+                event["fresh_suffix_indexing_exact"] = all(
+                    row["replan_index"] == event["replan_index"]
+                    and row["period_offset"] >= delay
+                    and row["action_source"] == "fresh_chunk_suffix"
+                    and row["source_index"] == row["period_offset"]
+                    for row in trace
+                    if row["replan_index"] == event["replan_index"]
+                    and row["period_offset"] >= delay
+                )
+            settled = _settle_branch(actions[-1])
+            return {
+                "restore": fidelity,
+                "delay": delay,
+                "horizon": horizon,
+                "branch_steps": branch_steps,
+                "actions": actions,
+                "trace": trace,
+                "condition_trajectory": [
+                    {"global_step": row["global_step"],
+                     "conditions_passed": row["conditions_passed"],
+                     "conditions_total": row["conditions_total"],
+                     "geometric_success": row["geometric_success"],
+                     "condition_details": row["condition_details"]}
+                    for row in trace
+                ],
+                "handoff_events": handoffs,
+                "first_fresh_chunk": handoffs[0]["fresh_chunk"],
+                "divergence_from_h50": _compare_branch_trace(boundary, trace),
+                "best_conditions": best,
+                "terminal": last,
+                "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                "settled": settled,
+                "all_retained_actions_exact": all(x["retained_actions_exact"] for x in handoffs),
+                "all_fresh_prefixes_discarded": all(not x["fresh_prefix_executed"] for x in handoffs),
+                "all_fresh_suffix_indices_exact": all(x["fresh_suffix_indexing_exact"] for x in handoffs),
+                "all_predictions_zero_sim_steps": all(
+                    int(x["prediction_timing"]["sim_step_delta"]) == 0
+                    and (x["prediction_timing"]["episode_length_delta"] in (0, None))
+                    for x in handoffs
+                ),
+            }
 
         def _repeat_predictions(snapshot, count=4):
             deterministic, varied = [], []
@@ -1288,7 +1620,7 @@ try:
                 _restore_and_validate(snapshot)
                 policy.reset()
                 with torch.inference_mode():
-                    chunk = original_predict(batch)
+                    chunk = _predict_observed(batch)
                 deterministic.append(np.asarray(chunk.detach().cpu().numpy()[0]).copy())
             for seed in range(count):
                 _restore_and_validate(snapshot)
@@ -1296,7 +1628,7 @@ try:
                 torch.manual_seed(seed + 101)
                 torch.cuda.manual_seed_all(seed + 101)
                 with torch.inference_mode():
-                    chunk = original_predict(batch)
+                    chunk = _predict_observed(batch)
                 varied.append(np.asarray(chunk.detach().cpu().numpy()[0]).copy())
             return {"deterministic_repeat": deterministic, "varied_seed": varied}
 
@@ -1340,6 +1672,20 @@ try:
                 "deterministic_repeat_first_50": repeats["deterministic_repeat"],
                 "varied_seed_first_50": repeats["varied_seed"],
             }
+            if args.queue_diagnostic:
+                queue_branches = {}
+                for delay in args.queue_delays:
+                    queued = _run_queue(snapshot, h, delay, old_plan)
+                    queued["first_fresh_vs_same_rng"] = _action_identity(
+                        queued["first_fresh_chunk"], same_rng["chunks"][0]
+                    )
+                    queued["same_rng_first_chunk_exact"] = queued["first_fresh_vs_same_rng"]["exact"]
+                    queued["rng_reconstruction_invariant"] = (
+                        queued["handoff_events"][0]["rng_before_generation"]
+                        == same_rng["first_prediction_timing"]["rng_before_digest"]
+                    )
+                    queue_branches[str(delay)] = queued
+                branch_record["queue_diagnostic"] = queue_branches
             if args.rtc_guidance:
                 branch_record["rtc_no_previous_check"] = _rtc_no_previous_check(snapshot)
                 rtc = _run_rtc(snapshot, 10)
@@ -1378,6 +1724,14 @@ try:
                 "source_root": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome51-site/lerobot/policies/rtc",
                 "configuration": {"execution_horizon": 10, "prefix_attention_schedule": "EXP", "max_guidance_weight": 10.0, "inference_delay": 0},
             },
+            "queue_reference": {
+                "enabled": bool(args.queue_diagnostic),
+                "rtc_guidance_used": False if args.queue_diagnostic else None,
+                "execution_horizon": 10,
+                "delays": list(args.queue_delays) if args.queue_diagnostic else [],
+                "handoff_rule": "execute exactly d actions from the unconsumed previous-plan remainder; discard fresh_chunk[:d]; execute fresh_chunk[d:10]; retain fresh_chunk[10:50] for the next H10 replan",
+            },
+            "prediction_timing_audit": prediction_timing_audit,
         }
         with open(args.causal_out, "w") as causal_file:
             json.dump(_jsonable(causal_result), causal_file, indent=2, allow_nan=False)
@@ -1400,6 +1754,7 @@ try:
         "failure_category": failure, "failure_classification_basis": "geometry and gripper-link proximity; no unsupported grasp-region claims",
         "replanning_count": prediction_count[0],
         "inference_seconds": inference_times,
+        "prediction_timing_audit": prediction_timing_audit,
         "max_action_discontinuity_l2": max(action_jumps, default=0.0),
         "wall_seconds": time.monotonic() - wall_started,
         "physics_finite": True, "robot_finite": True,
@@ -1418,13 +1773,20 @@ try:
         "bitwise_simulation_determinism_guaranteed": False,
         "sim_device": args.sim_device, "physics_dt": float(cfg.sim.dt),
         "decimation": int(cfg.decimation), **queue_metadata,
+        "hard_queue": ({"enabled": True, "delay": args.hard_queue_delay,
+                        "execution_horizon": 10, "prediction_chunk_size": 50,
+                        "handoff_rule": "retain previous remainder[:d], discard fresh[:d], execute fresh[d:10], retain fresh[10:50]",
+                        "handoffs": hard_queue_handoffs}
+                       if hard_queue_enabled else None),
         "first_success_checker": first_success_details, "terminal_checker": terminal_details,
         "cloth_motion": cloth_motion, "renderer": "storm",
         "render_integrity": render_integrity, "n_rendered": n_rendered,
         "gif_views": media["gifs"], "media": media,
         "trajectory": trajectory_metadata,
         "causal_replan": {"path": args.causal_out, "enabled": causal_enabled,
-                          "branch_steps": args.causal_branch_steps} if causal_enabled else None,
+                          "branch_steps": args.causal_branch_steps,
+                          "queue_diagnostic": bool(args.queue_diagnostic),
+                          "prediction_timing_audit": prediction_timing_audit} if causal_enabled else None,
         "note": "Fixed-budget single-garment rollout with official geometric scoring and Storm rasterized observations; success records attainment, terminal_success records the final state.",
     }
 

@@ -1,25 +1,17 @@
 #!/bin/bash
-#SBATCH --job-name=lh-replan-causal
+#SBATCH --job-name=lh-queue-val
 #SBATCH --account=eecs
 #SBATCH --partition=gpu,ampere
 #SBATCH --constraint=a40|rtx8000
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --gres=gpu:1
-#SBATCH --time=00:45:00
+#SBATCH --time=00:20:00
 
 set -euo pipefail
 campaign=${1:?absolute campaign root}
-index=${SLURM_ARRAY_TASK_ID:-${2:-0}}
-branch_steps=${3:-600}
-output_prefix=${4:-causal}
-rtc_flag=${5:-0}
-queue_flag=${6:-0}
-queue_delays=${7:-2,5,10}
-rtc_args=()
-if [ "$rtc_flag" = 1 ]; then rtc_args+=(--rtc-guidance); fi
-queue_args=()
-if [ "$queue_flag" = 1 ]; then queue_args+=(--queue-diagnostic --queue-delays "$queue_delays"); fi
+delay=${2:?selected passing delay}
+index=${SLURM_ARRAY_TASK_ID:-${3:-0}}
 workspace=/nfs/hpc/share/sanchej7/Humanoid_Lite
 runtime="$campaign/runtime/${SLURM_JOB_ID}_${index}"
 mkdir -p "$runtime/home" "$runtime/cache" "$runtime/ov" "$runtime/nv" "$runtime/tmp"
@@ -41,4 +33,4 @@ apptainer exec --nv --cleanenv --home "$runtime/home" \
   --env "PYTHONPATH=$workspace/lehome51-site:$campaign/external/lehome-challenge/source/lehome:$campaign/external/lehome-challenge:$campaign/src" \
   --env "PXR_PLUGINPATH_NAME=${libs[0]}/bin/usd" "${mask[@]}" \
   "$workspace/container/bhl.sif" "$workspace/venv/bin/python" -u \
-  "$campaign/scripts/run_causal_task.py" --campaign "$campaign" --index "$index" --branch-steps "$branch_steps" --output-prefix "$output_prefix" "${rtc_args[@]}" "${queue_args[@]}"
+  "$campaign/scripts/run_queue_validation_task.py" --campaign "$campaign" --index "$index" --delay "$delay"

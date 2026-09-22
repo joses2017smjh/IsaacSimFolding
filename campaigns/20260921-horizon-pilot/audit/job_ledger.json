@@ -1,0 +1,91 @@
+{
+  "updated_utc": "2026-09-22T18:19:17.254539+00:00",
+  "certification_jobs": {
+    "smoke_array": "21383691",
+    "switch": "21383692",
+    "states": "all completed, experiment gate 5/5 passed"
+  },
+  "pilot_array": "21384164",
+  "pilot_array_indices": "0-23%1",
+  "pilot_dependency": "none; original v5 evidence validated before submission and hash-checked by each worker",
+  "cpu_analysis": "21384190",
+  "cpu_analysis_dependency": "afterany:21384164",
+  "entries": [
+    {
+      "kind": "horizon_pilot",
+      "job_id": "21384164",
+      "utc": "2026-09-21T21:24:10.398185+00:00",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--job-name=lh-horizon-dev",
+        "--array=0-23%1",
+        "--output=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/logs/pilot-%A_%a.out",
+        "--error=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/logs/pilot-%A_%a.err",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/slurm/improvement.sbatch",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot",
+        "pilot_tasks"
+      ],
+      "output_root": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs",
+      "stdout": "21384164"
+    },
+    {
+      "kind": "matched_analysis",
+      "job_id": "21384190",
+      "utc": "2026-09-21T21:27:52.912364+00:00",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--dependency=afterany:21384164",
+        "--output=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/logs/analysis-%j.out",
+        "--error=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/logs/analysis-%j.err",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/analysis/analyze.sbatch",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot",
+        "pilot"
+      ],
+      "output_root": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs",
+      "stdout": "21384190"
+    },
+    {
+      "kind": "hard_queue_pose3_diagnostic",
+      "job_id": "21397662",
+      "array": "21397662_1",
+      "utc": "2026-09-22T17:47:57Z",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:19:48",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "--job-name=lh-queue-p3",
+        "--array=1%1",
+        "campaigns/20260921-horizon-pilot/slurm/causal.sbatch",
+        "/nfs/stak/users/sanchej7/hpc-share/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot",
+        "1",
+        "600",
+        "queue",
+        "0",
+        "1",
+        "2,5,10"
+      ],
+      "pose_slots": [3],
+      "rtc_guidance": false,
+      "larger_rollout_submitted": false
+    }
+  ],
+  "unrelated_jobs_preserved": true,
+  "training_submitted": false,
+  "public_claims_updated": false,
+  "snapshot_utc": "2026-09-21T21:30:17Z",
+  "pilot_states": {
+    "21384164_[0-23]": "COMPLETED: 24/24 valid rollout results",
+    "21384190": "COMPLETED: matched analysis written"
+  },
+  "final_result": {
+    "h50_ever_and_terminal": "4/8 and 4/8",
+    "h10_ever_and_terminal": "0/8 and 0/8",
+    "h5_ever_and_terminal": "0/8 and 0/8",
+    "improvement_supported": false,
+    "retraining_submitted": false
+  }
+}

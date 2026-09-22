@@ -126,3 +126,17 @@ The minimal inference-only RTC diagnostic ran on pose 3 at action-5 and action-1
 RTC with no previous chunk exactly reproduced ordinary inference: raw/postprocessed maximum absolute differences were zero, post-call RNG digests matched, and the simulator did not step. With previous-plan guidance, cached H50 reached 4/4 at both boundaries, same-RNG fresh reached 3/4 at both, RTC reached 2/4 at action 5 and 3/4 at action 10. Neither boundary recovered the preregistered criterion, so the conditional full validation on poses 1, 3, 5 and 7 was not submitted.
 
 Results are in [`analysis/rtc-continuity/`](analysis/rtc-continuity/): `REPORT.md`, `README.md` and `comparison.csv`. No environment upgrade, training, RL, RECAP, AWR, DAgger or finetuning was launched.
+
+## Hard retained-prefix queue diagnostic
+
+The active-controller timing audit is now documented in [`analysis/horizon-semantics.md`](analysis/horizon-semantics.md). `policy_rollout51.py` performs policy inference before the following `env.step()`; the diagnostic records simulator and episode counters around every prediction and fails closed if either advances. In the completed pose-3 capture, all **918** prediction records had zero simulator-step delta and zero episode-length delta. This verifies that inference wall time does not consume simulator actions.
+
+The deterministic hard queue diagnostic ran under Slurm job **21397662** on only development pose slot 3, using the exact action-5 and action-10 in-process snapshots, cached H50 and same-reconstructed-RNG fresh H10 controls. RTC guidance was disabled. For delays `d={2,5,10}`, each H10 handoff retained exactly `d` actions from the current previous-plan remainder, discarded fresh rows `[0:d]`, executed fresh rows `[d:10]`, and carried fresh rows `[10:50]` into the next replan. Snapshot restore was zero joint/cloth RMS at both boundaries; first fresh chunks matched same-RNG fresh exactly; all retained-action identity, fresh-prefix discard, suffix-indexing and zero-step prediction checks passed.
+
+| delay | action-5 settled | action-10 settled | both-boundary gate |
+|---:|---:|---:|:---:|
+| 2 | 2/4 | 2/4 | fail |
+| 5 | 3/4 | 2/4 | fail |
+| 10 | 2/4 | 3/4 | fail |
+
+Condition trajectories, settled outcomes, divergence from cached H50 at local actions 2/10/20, first-ten action differences, provenance and the raw gate are in [`analysis/queue-continuity/`](analysis/queue-continuity/). No delay passed both pose-3 boundaries, so the smallest passing delay is none and the conditional pose 1/3/5/7 validation was **not submitted**. Stop and recommend an observation-component ablation rather than another continuity intervention. No training, RL, RECAP, AWR, DAgger, finetuning, environment upgrade or broad rollout was launched.

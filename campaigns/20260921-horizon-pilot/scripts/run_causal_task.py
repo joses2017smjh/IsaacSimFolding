@@ -40,6 +40,10 @@ def main():
                     help="selected checkpoint for ordinary fresh H10 snapshot branches")
     ap.add_argument("--boundary-execute-out", default="",
                     help="JSON output for the selected checkpoint branches")
+    ap.add_argument("--boundary-ceiling-trained-paths", nargs="+", default=[],
+                    help="existing checkpoints for the closed-loop ceiling panel")
+    ap.add_argument("--boundary-ceiling-out", default="",
+                    help="JSON output for the cached/fresh/checkpoint ceiling panel")
     args = ap.parse_args()
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
@@ -69,8 +73,15 @@ def main():
         raise SystemExit("use only one boundary trained path option")
     if args.boundary_execute_trained_path and (args.boundary_eval_trained_path or args.boundary_eval_trained_paths):
         raise SystemExit("boundary execution cannot be combined with boundary evaluation")
+    if args.boundary_ceiling_trained_paths and (
+        args.boundary_eval_trained_path or args.boundary_eval_trained_paths
+        or args.boundary_execute_trained_path
+    ):
+        raise SystemExit("boundary ceiling cannot be combined with boundary evaluation or execution")
     if bool(args.boundary_execute_trained_path) != bool(args.boundary_execute_out):
         raise SystemExit("boundary execution requires both trained checkpoint and output path")
+    if bool(args.boundary_ceiling_trained_paths) != bool(args.boundary_ceiling_out):
+        raise SystemExit("boundary ceiling requires checkpoints and output path")
     boundary_eval_paths = ([args.boundary_eval_trained_path]
                            if args.boundary_eval_trained_path
                            else list(args.boundary_eval_trained_paths))
@@ -86,6 +97,11 @@ def main():
             raise SystemExit("--boundary-execute is restricted to pose-3 H50")
         if args.boundary_capture or args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
             raise SystemExit("--boundary-execute cannot use capture, RTC, queue, or observation diagnostics")
+    if args.boundary_ceiling_trained_paths:
+        if int(row["development_pose_slot"]) != 3 or int(row["horizon"]) != 50:
+            raise SystemExit("--boundary-ceiling is restricted to pose-3 H50")
+        if args.boundary_capture or args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic:
+            raise SystemExit("--boundary-ceiling cannot use capture, RTC, queue, or observation diagnostics")
     inventory = json.loads((root / "audit/garment_inventory.json").read_text())
     asset = next(r for r in inventory["garments"] if r["garment_id"] == row["garment"])
     checkpoint = manifest["checkpoint"]
@@ -97,7 +113,10 @@ def main():
         "--lehome", str(root / "external/lehome-challenge"),
         "--policy_path", checkpoint["path"], "--garment", row["garment"],
         "--garment_dir", str(Path(asset["config"]).parent), "--assets", manifest["assets"],
-        "--steps", "10" if (boundary_eval_paths or args.boundary_execute_trained_path) else "600",
+        "--steps", "10" if (
+            boundary_eval_paths or args.boundary_execute_trained_path
+            or args.boundary_ceiling_trained_paths
+        ) else "600",
         "--frames_out", str(frames),
         "--match_pose=" + row["match_pose"], "--match_scale", str(row["match_scale"]),
         "--settle_steps", "60", "--terminal_settle_steps", "60",
@@ -105,6 +124,7 @@ def main():
         "--policy_variant", ("boundary_capture" if args.boundary_capture else
                               "boundary_eval" if boundary_eval_paths else
                               "boundary_execute" if args.boundary_execute_trained_path else
+                              "boundary_ceiling" if args.boundary_ceiling_trained_paths else
                               "causal_h50_capture"),
         "--task", manifest["task_prompt"], "--gif_every", "12",
         "--result_out", str(dest / "rollout.json")]
@@ -128,6 +148,9 @@ def main():
     if args.boundary_execute_trained_path:
         command += ["--boundary_execute_trained_path", args.boundary_execute_trained_path,
                     "--boundary_execute_out", args.boundary_execute_out]
+    if args.boundary_ceiling_trained_paths:
+        command += ["--boundary_ceiling_trained_paths", *args.boundary_ceiling_trained_paths,
+                    "--boundary_ceiling_out", args.boundary_ceiling_out]
     cached = args.causal_action_jsonl or str(root / "outputs" / row["id"] / "rollout.json.behavior.jsonl")
     if Path(cached).is_file():
         command += ["--causal_action_jsonl", cached]

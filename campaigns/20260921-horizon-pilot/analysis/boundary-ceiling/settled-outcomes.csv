@@ -1,0 +1,9 @@
+controller,boundary_action,best_conditions,terminal_conditions_passed,terminal_conditions_total,settled_4_of_4,snapshot_restore_cloth_rms_m,snapshot_restore_joint_rms_rad,all_predictions_zero_sim_steps
+cached_h50,5,4,4,4,True,0.0,0.0,True
+cached_h50,10,4,4,4,True,0.0,0.0,True
+baseline_fresh_h10,5,3,3,4,False,0.0,0.0,True
+baseline_fresh_h10,10,2,2,4,False,0.0,0.0,True
+boundary_only_300,5,2,2,4,False,0.0,0.0,True
+boundary_only_300,10,2,2,4,False,0.0,0.0,True
+mixed_step_000300,5,2,2,4,False,0.0,0.0,True
+mixed_step_000300,10,2,2,4,False,0.0,0.0,True

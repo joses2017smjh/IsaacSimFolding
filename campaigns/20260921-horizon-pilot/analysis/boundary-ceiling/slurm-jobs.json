@@ -1,0 +1,20 @@
+{
+  "wrapper_wrong_campaign_root": {
+    "job_id": 21399451,
+    "state": "FAILED",
+    "exit_code": "2:0",
+    "note": "wrapper-only failure: repository root passed instead of campaign root; no simulator result"
+  },
+  "ceiling_cached_control_lookup_bug": {
+    "job_id": 21399452,
+    "state": "FAILED",
+    "exit_code": "3:0",
+    "note": "diagnostic code failure after exact snapshots: short reconstruction action map did not fall back to the 600-action cached stream"
+  },
+  "existing_checkpoint_closed_loop_ceiling": {
+    "job_id": 21399454,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/slurm/boundary_ceiling.sbatch"
+  }
+}

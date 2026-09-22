@@ -174,3 +174,20 @@ The snapshot-only panel was Slurm job **21399222**. Every checkpoint passed exac
 The selected `step_000150` checkpoint was run under Slurm job **21399265** from the exact two snapshots using ordinary fresh H10 replanning only. The baseline cached H50 stream was used only to reconstruct the snapshots; no cached H50 actions, RTC, retained-prefix queue, stale/hybrid observation or other inference modification was used in either branch. Both 120-action branches reached at most and settled at **2/4**, so the required two-boundary settled `4/4` gate failed. Stop and do not launch larger pose validation or construct the larger pose 1/3/5/7 boundary dataset. The next recommendation is parameter-anchored or parameter-efficient adaptation rather than increasing replay duration.
 
 The complete Slurm ledger is [`analysis/mixed-replay/slurm-jobs.json`](analysis/mixed-replay/slurm-jobs.json); selected execution trajectories are in `analysis/mixed-replay/condition-trajectories.csv`, and the original baseline checkpoint remains untouched.
+
+## Existing-checkpoint closed-loop ceiling diagnostic
+
+Continuing from commit `d6512952fd1d5e51145965b0517043f9a21a7d25`, the minimal ceiling diagnostic compared the retained 300-step boundary-only checkpoint and mixed-replay `step_000300` from the exact validated pose-3 action-5/action-10 snapshots. Fresh branches used ordinary H10 replanning only. Cached H50 was preserved as a control and snapshot reconstruction source; no RTC, retained-prefix queue, stale/hybrid observation, cached-H50 execution assistance or new training was used in fresh branches.
+
+The completed diagnostic is Slurm job **21399454**. Cached H50 settled **4/4 at both boundaries**. Baseline fresh H10, boundary-only 300 and mixed step300 all failed the settled gate at both boundaries; both trained branches reached at most **2/4**. The boundary-only checkpoint remains a diagnostic upper bound only because its held-out retention gate had already failed. Exact snapshot restoration passed, the reconstructed RNG stream was invariant across baseline and both checkpoints at every H10 prediction, and all fresh predictions had zero simulator-step and episode-counter deltas.
+
+| controller | action 5 | action 10 | both-boundary settled gate |
+|---|---:|---:|:---:|
+| cached H50 | 4/4 | 4/4 | pass |
+| baseline fresh H10 | 3/4 terminal | 2/4 terminal | fail |
+| boundary-only 300 | 2/4 terminal | 2/4 terminal | fail |
+| mixed step300 | 2/4 terminal | 2/4 terminal | fail |
+
+The decision is to **stop static boundary-suffix adaptation** and not launch PEFT or parameter anchoring. The next recommended diagnostic is a small on-policy corrective-data experiment: roll the selected H10 student from the exact snapshots, capture the exact simulator snapshot and observation at every subsequent H10 replan state, query a fresh H50 plan from that actual student-visited state, branch-execute each H50 candidate, and retain labels only when that branch demonstrably recovers the target condition. Do not reuse the original time-aligned cached H50 suffix after student-state divergence.
+
+Raw output, condition trajectories, settled outcomes, provenance and the complete job ledger are in [`analysis/boundary-ceiling/`](analysis/boundary-ceiling/). Jobs **21399451** and **21399452** are recorded as non-result wrapper/diagnostic failures; neither launched training or produced a policy result. No poses 1/3/5/7 validation was submitted.

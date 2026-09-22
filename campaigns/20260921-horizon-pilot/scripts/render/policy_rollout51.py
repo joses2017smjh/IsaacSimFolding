@@ -112,6 +112,10 @@ ap.add_argument("--boundary_execute_trained_path", default="",
                 help="selected checkpoint for ordinary fresh H10 execution from pose-3 snapshots")
 ap.add_argument("--boundary_execute_out", default="",
                 help="JSON output for the selected-checkpoint closed-loop snapshot branches")
+ap.add_argument("--boundary_ceiling_trained_paths", nargs="+", default=[],
+                help="existing checkpoints for the closed-loop ceiling panel")
+ap.add_argument("--boundary_ceiling_out", default="",
+                help="JSON output for the cached/fresh/checkpoint ceiling panel")
 ap.add_argument("--rtc_guidance", action="store_true",
                 help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
 ap.add_argument("--queue_diagnostic", action="store_true",
@@ -175,6 +179,12 @@ if args.boundary_capture_out:
     os.makedirs(os.path.dirname(args.boundary_capture_out), exist_ok=True)
 if args.boundary_eval_trained_path and args.boundary_eval_trained_paths:
     ap.error("use only one of --boundary_eval_trained_path and --boundary_eval_trained_paths")
+if args.boundary_ceiling_trained_paths and (
+        args.boundary_eval_trained_path or args.boundary_eval_trained_paths
+        or args.boundary_execute_trained_path):
+    ap.error("boundary ceiling cannot be combined with boundary evaluation or execution")
+if bool(args.boundary_ceiling_trained_paths) != bool(args.boundary_ceiling_out):
+    ap.error("boundary ceiling requires checkpoints and output path")
 if bool(args.boundary_execute_trained_path) != bool(args.boundary_execute_out):
     ap.error("boundary execution requires both trained checkpoint and output path")
 boundary_eval_paths = ([args.boundary_eval_trained_path]
@@ -203,6 +213,17 @@ if args.boundary_execute_trained_path:
     args.boundary_execute_trained_path = os.path.abspath(os.path.expanduser(args.boundary_execute_trained_path))
     args.boundary_execute_out = os.path.abspath(os.path.expanduser(args.boundary_execute_out))
     os.makedirs(os.path.dirname(args.boundary_execute_out), exist_ok=True)
+if args.boundary_ceiling_trained_paths:
+    if not args.causal_out:
+        ap.error("boundary ceiling requires --causal_out for exact source snapshots")
+    if args.rtc_guidance or args.queue_diagnostic or args.observation_diagnostic or args.observation_execute_best:
+        ap.error("boundary ceiling cannot use RTC, queue, or observation diagnostics")
+    args.boundary_ceiling_trained_paths = [
+        os.path.abspath(os.path.expanduser(path))
+        for path in args.boundary_ceiling_trained_paths
+    ]
+    args.boundary_ceiling_out = os.path.abspath(os.path.expanduser(args.boundary_ceiling_out))
+    os.makedirs(os.path.dirname(args.boundary_ceiling_out), exist_ok=True)
 for _path in (args.result_out, args.capture_out, args.trajectory_out):
     if _path:
         os.makedirs(os.path.dirname(_path), exist_ok=True)
@@ -1320,9 +1341,15 @@ try:
             return value
 
         def _original_action(global_step):
-            if int(global_step) not in executed_actions:
-                raise RuntimeError(f"missing cached H50 executed action {global_step}")
-            return executed_actions[int(global_step)].copy()
+            global_step = int(global_step)
+            if global_step in executed_actions:
+                return executed_actions[global_step].copy()
+            # Ceiling runs reconstruct only the first ten actions in order to
+            # reach the two exact snapshots, while the cached control must
+            # continue from the complete successful-H50 behavior stream.
+            if causal_replay_actions is not None and 1 <= global_step <= len(causal_replay_actions):
+                return np.asarray(causal_replay_actions[global_step - 1], dtype=np.float32).copy()
+            raise RuntimeError(f"missing cached H50 executed action {global_step}")
 
         def _branch_observation():
             images = render_images()
@@ -2337,7 +2364,128 @@ try:
                     for boundary in (5, 10)),
             }
 
+        def _run_boundary_ceiling():
+            """Compare existing checkpoints and controls from identical snapshots."""
+            trained_paths = [Path(path) for path in args.boundary_ceiling_trained_paths]
+            if len(trained_paths) != 2 or any(not path.is_dir() for path in trained_paths):
+                raise RuntimeError(
+                    "boundary ceiling requires exactly two existing checkpoint directories: "
+                    + ", ".join(str(path) for path in trained_paths))
+            labels = []
+            for path in trained_paths:
+                if path.name == "trained_checkpoint":
+                    labels.append("boundary_only_300")
+                elif path.name == "step_000300":
+                    labels.append("mixed_step_000300")
+                else:
+                    labels.append(path.name)
+            if len(set(labels)) != 2:
+                raise RuntimeError(f"ceiling checkpoint labels are not unique: {labels}")
+
+            records = {}
+            for boundary, snapshot in sorted(causal_snapshots.items()):
+                if boundary not in (5, 10):
+                    continue
+                cached = _run_cached(snapshot)
+                cached["controller"] = "cached_h50"
+                cached["ordinary_fresh_h10"] = False
+                cached["cached_h50_execution_assistance"] = True
+                timing_start = len(prediction_timing_audit)
+                policy.reset()
+                fresh = _run_fresh(snapshot, 10)
+                fresh["controller"] = "baseline_fresh_h10"
+                fresh["ordinary_fresh_h10"] = True
+                fresh["cached_h50_execution_assistance"] = False
+                fresh["prediction_timing"] = prediction_timing_audit[timing_start:]
+                fresh["all_predictions_zero_sim_steps"] = all(
+                    row["sim_step_delta"] == 0
+                    and row["episode_length_delta"] in (0, None)
+                    for row in fresh["prediction_timing"])
+                records[str(boundary)] = {
+                    "cached_h50": cached,
+                    "baseline_fresh_h10": fresh,
+                }
+
+            for path, label in zip(trained_paths, labels):
+                compat_dir = Path(tempfile.mkdtemp(prefix="boundary-ceiling-"))
+                for file in path.iterdir():
+                    if file.name != "config.json":
+                        os.symlink(file, compat_dir / file.name)
+                shutil.copy2(Path(args.policy_path) / "config.json", compat_dir / "config.json")
+                trained_model = SmolVLAPolicy.from_pretrained(str(compat_dir)).eval().to(dev)
+                trained_cfg = pcfg
+                trained_cfg.pretrained_path = str(path)
+                trained_pre, trained_post = make_pre_post_processors(
+                    policy_cfg=trained_cfg, pretrained_path=str(path))
+                try:
+                    for boundary, snapshot in sorted(causal_snapshots.items()):
+                        if boundary not in (5, 10):
+                            continue
+                        timing_start = len(prediction_timing_audit)
+                        trained_model.reset()
+                        branch = _run_fresh(
+                            snapshot, 10, branch_pre=trained_pre,
+                            branch_predictor=trained_model._get_action_chunk,
+                            branch_post=trained_post)
+                        branch["controller"] = label
+                        branch["checkpoint"] = str(path)
+                        branch["ordinary_fresh_h10"] = True
+                        branch["cached_h50_execution_assistance"] = False
+                        branch["deployable"] = label != "boundary_only_300"
+                        branch["heldout_retention_gate_passed"] = label != "boundary_only_300"
+                        branch["prediction_timing"] = prediction_timing_audit[timing_start:]
+                        branch["all_predictions_zero_sim_steps"] = all(
+                            row["sim_step_delta"] == 0
+                            and row["episode_length_delta"] in (0, None)
+                            for row in branch["prediction_timing"])
+                        records[str(boundary)][label] = branch
+                finally:
+                    del trained_model
+                    torch.cuda.empty_cache()
+                    shutil.rmtree(compat_dir, ignore_errors=True)
+
+            controller_labels = ["cached_h50", "baseline_fresh_h10"] + labels
+            for boundary in ("5", "10"):
+                if set(records[boundary]) != set(controller_labels):
+                    raise RuntimeError(f"ceiling boundary {boundary} missing controller result")
+            return {
+                "schema_version": 1,
+                "mode": "closed_loop_existing_checkpoint_ceiling",
+                "snapshot_source": "same validated pose-3 action-5/action-10 cached-H50 replay snapshots",
+                "horizon": 10,
+                "branch_steps": args.causal_branch_steps,
+                "controllers": controller_labels,
+                "boundary_only_300_is_diagnostic_upper_bound": True,
+                "boundary_only_300_deployable": False,
+                "rtc_used": False,
+                "retained_prefix_queue_used": False,
+                "stale_or_hybrid_observations_used": False,
+                "cached_h50_execution_assistance_used_only_by_control": True,
+                "boundaries": records,
+                "all_snapshot_restores_within_tolerance": all(
+                    branch["restore"]["cloth_rms_m"] <= 1e-5
+                    and branch["restore"]["joint_rms_rad"] <= 1e-5
+                    for row in records.values() for branch in row.values()),
+                "all_fresh_predictions_zero_sim_steps": all(
+                    branch.get("all_predictions_zero_sim_steps", True)
+                    for row in records.values() for branch in row.values()),
+                "settled_4_of_4": {
+                    label: {
+                        boundary: bool(records[boundary][label]["settled"]["settled_4_of_4"])
+                        for boundary in ("5", "10")
+                    }
+                    for label in controller_labels
+                },
+                "both_boundaries_settled_4_of_4": {
+                    label: all(
+                        records[boundary][label]["settled"]["settled_4_of_4"]
+                        for boundary in ("5", "10"))
+                    for label in controller_labels
+                },
+            }
+
         boundary_execution_result = None
+        boundary_ceiling_result = None
         if args.boundary_eval_trained_path:
             boundary_eval_result = _run_boundary_checkpoint_eval()
             branches["boundary_eval"] = boundary_eval_result
@@ -2352,9 +2500,19 @@ try:
                 json.dump(_jsonable(boundary_execution_result), boundary_execute_file,
                           indent=2, allow_nan=False)
             log(f"BOUNDARY_EXECUTION_WRITTEN {args.boundary_execute_out}")
+        elif args.boundary_ceiling_trained_paths:
+            boundary_eval_result = None
+            boundary_execution_result = None
+            boundary_ceiling_result = _run_boundary_ceiling()
+            branches["boundary_ceiling"] = boundary_ceiling_result
+            with open(args.boundary_ceiling_out, "w") as boundary_ceiling_file:
+                json.dump(_jsonable(boundary_ceiling_result), boundary_ceiling_file,
+                          indent=2, allow_nan=False)
+            log(f"BOUNDARY_CEILING_WRITTEN {args.boundary_ceiling_out}")
         else:
             boundary_eval_result = None
             boundary_execution_result = None
+            boundary_ceiling_result = None
             for boundary, snapshot in sorted(causal_snapshots.items()):
                 h = 10 if boundary == 10 else 5
                 _restore_and_validate(snapshot)
@@ -2492,6 +2650,7 @@ try:
             "branches": branches,
             "boundary_evaluation": boundary_eval_result,
             "boundary_execution": boundary_execution_result,
+            "boundary_ceiling": boundary_ceiling_result,
             "interpretation_guard": "Branch conclusions are valid only when cached-plan restoration errors remain below the stated tolerances.",
             "simulator_bitwise_determinism": False,
             "rng_audit": {

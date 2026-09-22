@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "diagnostic": "existing-checkpoint closed-loop ceiling diagnostic",
+  "baseline_commit_at_report": "d6512952fd1d5e51145965b0517043f9a21a7d25",
+  "evaluation_sha256": "4c42c13258b1274e8f280b52522b8a8a82864d0aaf33845da862e187e33d0eaa",
+  "source": "same validated pose-3 action-5/action-10 cached-H50 replay snapshots",
+  "boundaries": [
+    5,
+    10
+  ],
+  "horizon": 10,
+  "controllers": [
+    "cached_h50",
+    "baseline_fresh_h10",
+    "boundary_only_300",
+    "mixed_step_000300"
+  ],
+  "controls": {
+    "cached_h50_control_only": true,
+    "baseline_fresh_h10": true,
+    "ordinary_fresh_h10_for_checkpoints": true,
+    "rtc": false,
+    "retained_prefix_queue": false,
+    "stale_or_hybrid_observations": false,
+    "cached_h50_execution_assistance_in_fresh_branches": false,
+    "boundary_only_deployable": false,
+    "new_training_launched": false,
+    "broad_validation_launched": false
+  },
+  "verification": {
+    "snapshot_restoration_within_tolerance": true,
+    "fresh_prediction_zero_sim_steps": true,
+    "rng_before_digest_invariant_by_boundary": {
+      "5": true,
+      "10": true
+    },
+    "rng_invariant": true,
+    "inference_blocks_before_env_step": true
+  },
+  "settled_4_of_4": {
+    "cached_h50": true,
+    "baseline_fresh_h10": false,
+    "boundary_only_300": false,
+    "mixed_step_000300": false
+  },
+  "decision": "stop_static_boundary_suffix_adaptation",
+  "recommendation": "Do not launch PEFT or parameter anchoring. Run only a small on-policy corrective-data experiment: roll the selected H10 student from the exact pose-3 snapshots; at each student-visited H10 replan state capture the exact simulator snapshot and observation, query a fresh H50 plan from that actual state, branch-execute each H50 candidate, and retain labels only when the H50 branch demonstrably recovers the target condition. Do not reuse the original time-aligned cached H50 suffix after state divergence.",
+  "slurm_jobs": {
+    "wrapper_wrong_campaign_root": {
+      "job_id": 21399451,
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "note": "wrapper-only failure: repository root passed instead of campaign root; no simulator result"
+    },
+    "ceiling_cached_control_lookup_bug": {
+      "job_id": 21399452,
+      "state": "FAILED",
+      "exit_code": "3:0",
+      "note": "diagnostic code failure after exact snapshots: short reconstruction action map did not fall back to the 600-action cached stream"
+    },
+    "existing_checkpoint_closed_loop_ceiling": {
+      "job_id": 21399454,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/slurm/boundary_ceiling.sbatch"
+    }
+  }
+}

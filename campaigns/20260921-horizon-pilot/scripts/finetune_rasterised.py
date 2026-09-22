@@ -111,12 +111,63 @@ def load_boundary_capture(path: str):
     return X, S, A, M, boundaries, tasks.tolist()
 
 
+def load_raster_replay_subset(pattern: str, file_count: int, frames_per_file: int,
+                              heldout_files):
+    """Load a deterministic, held-out-disjoint subset of raster TRAIN data."""
+    files = [Path(p).resolve() for p in sorted(glob.glob(pattern))]
+    heldout = {Path(p).resolve() for p in heldout_files}
+    if not files:
+        raise SystemExit(f"no raster replay files matching {pattern}")
+    if file_count < 1 or file_count > len(files):
+        raise SystemExit(f"raster replay file count {file_count} is invalid for {len(files)} files")
+    if frames_per_file < 1:
+        raise SystemExit("raster replay frames per file must be positive")
+    selected = files[:file_count]
+    overlap = sorted(str(p) for p in selected if p in heldout)
+    if overlap:
+        raise SystemExit(f"raster replay overlaps held-out files: {overlap}")
+    imgs, states, acts, records = [], [], [], []
+    for path in selected:
+        d = np.load(path, allow_pickle=True)
+        required = {"images", "state", "action", "garment", "episode", "success"}
+        missing = required - set(d.files)
+        if missing:
+            raise SystemExit(f"raster replay file {path} missing {sorted(missing)}")
+        n = min(frames_per_file, len(d["images"]))
+        if n != frames_per_file:
+            raise SystemExit(f"raster replay file {path} has only {n} frames")
+        if (d["images"].shape[1:] != (3, 480, 640, 3) or
+                d["state"].shape[1:] != (12,) or
+                d["action"].shape[1:] != (50, 12)):
+            raise SystemExit(f"unexpected raster replay shapes in {path}")
+        imgs.append(np.asarray(d["images"][:n], dtype=np.uint8))
+        states.append(np.asarray(d["state"][:n], dtype=np.float32))
+        acts.append(np.asarray(d["action"][:n], dtype=np.float32))
+        records.append({
+            "path": str(path),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "frames_used": n,
+            "garment": str(d["garment"]),
+            "episode": int(d["episode"]),
+            "success": bool(d["success"]),
+        })
+    X = np.concatenate(imgs)
+    S = np.concatenate(states)
+    A = np.concatenate(acts)
+    print(f"[ft] fixed raster replay {len(selected)} files / {len(X)} frames", flush=True)
+    return X, S, A, records
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--policy_path", required=True)
     ap.add_argument("--capture_glob", required=True)
     ap.add_argument("--boundary_capture", default="",
                     help="two-example masked pose-3 suffix NPZ; enables boundary mode")
+    ap.add_argument("--raster_replay_glob", default="",
+                    help="fixed original raster TRAINING files for mixed replay")
+    ap.add_argument("--raster_replay_files", type=int, default=4)
+    ap.add_argument("--raster_replay_frames_per_file", type=int, default=8)
     ap.add_argument("--heldout_glob", default="",
                     help="fixed raster capture glob used only for boundary held-out loss")
     ap.add_argument("--heldout_files", type=int, default=4)
@@ -126,6 +177,8 @@ def main() -> int:
     ap.add_argument("--steps", type=int, default=1500)
     ap.add_argument("--batch_size", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-5)
+    ap.add_argument("--save_every", type=int, default=25,
+                    help="mixed-replay checkpoint interval in optimizer steps")
     ap.add_argument("--val_fraction", type=float, default=0.15)
     ap.add_argument("--unfreeze", default="vision",
                     choices=["vision", "vision+action", "boundary", "all"],
@@ -135,8 +188,15 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
     boundary_mode = bool(args.boundary_capture)
+    mixed_replay_mode = boundary_mode and bool(args.raster_replay_glob)
     if boundary_mode and not args.heldout_glob:
         raise SystemExit("boundary mode requires --heldout_glob for the fixed held-out gate")
+    if mixed_replay_mode and args.batch_size != 5:
+        raise SystemExit("mixed replay requires batch_size=5 for one corrective + four raster samples")
+    if mixed_replay_mode and (args.steps < 1 or args.steps > 300):
+        raise SystemExit("mixed replay is capped at 300 optimizer steps")
+    if mixed_replay_mode and args.save_every < 1:
+        raise SystemExit("mixed replay save_every must be positive")
     if boundary_mode and args.unfreeze == "vision":
         args.unfreeze = "boundary"
 
@@ -184,6 +244,15 @@ def main() -> int:
         train_idx = np.arange(len(X), dtype=np.int64)
         val_idx = np.arange(len(heldout[0]), dtype=np.int64)
         print(f"[ft] boundary train {len(train_idx)} examples; fixed held-out {len(val_idx)} frames", flush=True)
+        raster_replay = None
+        raster_manifest = []
+        if mixed_replay_mode:
+            raster_replay = load_raster_replay_subset(
+                args.raster_replay_glob, args.raster_replay_files,
+                args.raster_replay_frames_per_file, heldout_files)
+            raster_manifest = raster_replay[3]
+            if not raster_manifest:
+                raise SystemExit("mixed replay has no fixed raster files")
     else:
         X, S, A, meta = load_capture(args.capture_glob)
         target_mask = np.ones((len(X), A.shape[1]), dtype=np.bool_)
@@ -192,6 +261,8 @@ def main() -> int:
         perm = rng.permutation(len(X))
         val_idx, train_idx = perm[:n_val], perm[n_val:]
         heldout = None
+        raster_replay = None
+        raster_manifest = []
         print(f"[ft] train {len(train_idx)} / val {len(val_idx)}", flush=True)
 
     # Freeze everything, then re-enable only the vision pathway. The action
@@ -241,6 +312,22 @@ def main() -> int:
     keys = ["observation.images.top_rgb", "observation.images.left_rgb",
             "observation.images.right_rgb"]
 
+    mixed_source = None
+    mixed_replay_count = 0
+    if mixed_replay_mode:
+        replay_x, replay_s, replay_a, _ = raster_replay
+        boundary_mask = target_mask
+        replay_mask = np.ones((len(replay_x), replay_a.shape[1]), dtype=np.bool_)
+        mixed_source = (
+            np.concatenate([X, replay_x]),
+            np.concatenate([S, replay_s]),
+            np.concatenate([A, replay_a]),
+            np.concatenate([boundary_mask, replay_mask]),
+        )
+        mixed_replay_count = len(replay_x)
+        if len(X) != 2 or mixed_replay_count < 4:
+            raise SystemExit("mixed replay expects two corrective examples and at least four raster frames")
+
     def batch_from(idx, source=None):
         if source is None:
             source = (X, S, A, target_mask)
@@ -281,8 +368,11 @@ def main() -> int:
             source = (X, S, A, target_mask)
             indices = val_idx
         with torch.no_grad():
-            for i in range(0, len(indices), args.batch_size):
-                idx = indices[i:i + args.batch_size]
+            # Keep the exact pre-existing held-out gate batching (two samples),
+            # independent of the mixed-training batch size.
+            eval_batch_size = 2 if boundary_mode else args.batch_size
+            for i in range(0, len(indices), eval_batch_size):
+                idx = indices[i:i + eval_batch_size]
                 if len(idx) < 2:
                     continue
                 out = policy.forward(batch_from(idx, source=source))
@@ -297,48 +387,105 @@ def main() -> int:
     v0 = val_loss()
     print(f"[ft] val loss before any training: {v0:.4f}", flush=True)
 
+    checkpoint_records = []
+
+    def source_checkpoint_hashes(path):
+        return {
+            name: hashlib.sha256((Path(path) / name).read_bytes()).hexdigest()
+            for name in ("config.json", "model.safetensors", "policy_preprocessor.json",
+                         "policy_preprocessor_step_5_normalizer_processor.safetensors",
+                         "policy_postprocessor.json",
+                         "policy_postprocessor_step_0_unnormalizer_processor.safetensors")
+            if (Path(path) / name).exists()
+        }
+
+    def save_mixed_checkpoint(step_number, train_loss, heldout_loss):
+        checkpoint_dir = Path(args.out) / "checkpoints" / f"step_{step_number:06d}"
+        if checkpoint_dir.exists():
+            raise SystemExit(f"refusing to overwrite retained checkpoint {checkpoint_dir}")
+        checkpoint_dir.mkdir(parents=True)
+        policy.save_pretrained(str(checkpoint_dir))
+        _copy_processors(args.policy_path, str(checkpoint_dir))
+        record = {
+            "step": int(step_number),
+            "path": str(checkpoint_dir),
+            "train_loss": float(train_loss),
+            "heldout_loss": float(heldout_loss),
+            "heldout_loss_before": float(v0),
+            "heldout_gate": bool(heldout_loss <= v0 * 1.10),
+            "boundary_examples": 2,
+            "raster_replay_examples": int(mixed_replay_count),
+            "corrective_fraction": 0.20,
+            "raster_fraction": 0.80,
+            "checkpoint_sha256": source_checkpoint_hashes(checkpoint_dir),
+        }
+        (checkpoint_dir / "checkpoint.json").write_text(json.dumps(record, indent=2) + "\n")
+        checkpoint_records.append(record)
+        print(f"[ft] saved {checkpoint_dir} heldout={heldout_loss:.6f} "
+              f"gate={record['heldout_gate']}", flush=True)
+
     policy.train()
     step = 0
     rng = np.random.default_rng(args.seed)
-    while step < args.steps:
-        rng.shuffle(train_idx)
-        for i in range(0, len(train_idx), args.batch_size):
-            idx = train_idx[i:i + args.batch_size]
-            if len(idx) < args.batch_size and len(train_idx) >= args.batch_size:
-                continue
-            out = policy.forward(batch_from(idx))
+    if mixed_replay_mode:
+        # One corrective example plus four fixed raster examples per optimizer
+        # step gives exactly 20/80 while the fixed seed determines ordering.
+        raster_order = rng.permutation(mixed_replay_count)
+        raster_cursor = 0
+        while step < args.steps:
+            if raster_cursor + 4 > mixed_replay_count:
+                raster_order = rng.permutation(mixed_replay_count)
+                raster_cursor = 0
+            raster_idx = raster_order[raster_cursor:raster_cursor + 4]
+            raster_cursor += 4
+            boundary_idx = np.asarray([step % 2], dtype=np.int64)
+            idx = np.concatenate([boundary_idx, 2 + raster_idx]).astype(np.int64)
+            rng.shuffle(idx)
+            out = policy.forward(batch_from(idx, source=mixed_source))
             loss = out[0] if isinstance(out, tuple) else out["loss"]
             opt.zero_grad(set_to_none=True)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(trainable, 1.0)
             opt.step()
             step += 1
-            if step % 100 == 0:
+            if step % args.save_every == 0 or step == args.steps:
                 v = val_loss()
-                flag = ""
-                if v < best:
-                    best = v
-                    policy.save_pretrained(args.out)
-                    _copy_processors(args.policy_path, args.out)
-                    flag = "  <- saved"
+                save_mixed_checkpoint(step, float(loss), v)
                 print(f"[ft] step {step}/{args.steps} train={float(loss):.4f} "
-                      f"val={v:.4f}{flag}", flush=True)
-            if step >= args.steps:
-                break
+                      f"val={v:.4f}", flush=True)
+    else:
+        while step < args.steps:
+            rng.shuffle(train_idx)
+            for i in range(0, len(train_idx), args.batch_size):
+                idx = train_idx[i:i + args.batch_size]
+                if len(idx) < args.batch_size and len(train_idx) >= args.batch_size:
+                    continue
+                out = policy.forward(batch_from(idx))
+                loss = out[0] if isinstance(out, tuple) else out["loss"]
+                opt.zero_grad(set_to_none=True)
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(trainable, 1.0)
+                opt.step()
+                step += 1
+                if step % 100 == 0:
+                    v = val_loss()
+                    flag = ""
+                    if v < best:
+                        best = v
+                        policy.save_pretrained(args.out)
+                        _copy_processors(args.policy_path, args.out)
+                        flag = "  <- saved"
+                    print(f"[ft] step {step}/{args.steps} train={float(loss):.4f} "
+                          f"val={v:.4f}{flag}", flush=True)
+                if step >= args.steps:
+                    break
 
     final_val = val_loss()
-    if boundary_mode:
+    if boundary_mode and not mixed_replay_mode:
         policy.save_pretrained(args.out)
         _copy_processors(args.policy_path, args.out)
-    checkpoint_sha256 = {
-        name: hashlib.sha256((Path(args.policy_path) / name).read_bytes()).hexdigest()
-        for name in ("config.json", "model.safetensors", "policy_preprocessor.json",
-                     "policy_preprocessor_step_5_normalizer_processor.safetensors",
-                     "policy_postprocessor.json",
-                     "policy_postprocessor_step_0_unnormalizer_processor.safetensors")
-        if (Path(args.policy_path) / name).exists()
-    }
-    json.dump({"steps": step, "val_before": v0, "val_best": best,
+    checkpoint_sha256 = source_checkpoint_hashes(args.policy_path)
+    summary = {"steps": step, "val_before": v0, "val_best": best,
                "val_after": final_val,
                "heldout_gate": (final_val <= v0 * 1.10 if boundary_mode else None),
                "frames": int(len(X)), "episodes": (2 if boundary_mode else len(meta)),
@@ -352,10 +499,18 @@ def main() -> int:
                "heldout_files": heldout_files if boundary_mode else [],
                "heldout_frames_per_file": args.heldout_frames_per_file if boundary_mode else None,
                "seed": args.seed,
-               "note": "trained on Storm-rasterised frames with demonstration "
-                       "actions; only the observation distribution differs from "
-                       "the original BC run"},
-              open(os.path.join(args.out, "finetune.json"), "w"), indent=2)
+               "mixed_replay_mode": mixed_replay_mode,
+               "raster_replay_glob": args.raster_replay_glob if mixed_replay_mode else None,
+               "raster_replay_files": raster_manifest,
+               "raster_replay_frames_per_file": args.raster_replay_frames_per_file if mixed_replay_mode else None,
+               "corrective_sampling_fraction": 0.20 if mixed_replay_mode else None,
+               "raster_sampling_fraction": 0.80 if mixed_replay_mode else None,
+               "save_every": args.save_every if mixed_replay_mode else None,
+               "checkpoints": checkpoint_records,
+               "note": "mixed replay keeps the validated H50 corrective examples and "
+                       "a fixed disjoint subset of the original raster TRAINING distribution; "
+                       "the held-out raster files are never sampled"}
+    json.dump(summary, open(os.path.join(args.out, "finetune.json"), "w"), indent=2)
     print(f"[ft] done. val {v0:.4f} -> {final_val:.4f}", flush=True)
     return 0
 

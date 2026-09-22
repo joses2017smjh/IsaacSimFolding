@@ -59,3 +59,35 @@ def test_boundary_capture_rejects_misaligned_target_indices(tmp_path):
     np.savez(path, **data)
     with pytest.raises(SystemExit, match="target indices"):
         MODULE.load_boundary_capture(str(path))
+
+
+def _write_raster_file(path: Path, episode: int):
+    np.savez(
+        path,
+        images=np.zeros((3, 3, 480, 640, 3), dtype=np.uint8),
+        state=np.zeros((3, 12), dtype=np.float32),
+        action=np.zeros((3, 50, 12), dtype=np.float32),
+        garment=np.asarray("Pant_Short_Seen_0"),
+        episode=np.asarray(episode),
+        success=np.asarray(True),
+    )
+
+
+def test_raster_replay_subset_is_fixed_and_heldout_disjoint(tmp_path):
+    _write_raster_file(tmp_path / "ep0.npz", 0)
+    _write_raster_file(tmp_path / "ep1.npz", 1)
+    X, S, A, records = MODULE.load_raster_replay_subset(
+        str(tmp_path / "ep*.npz"), 2, 2, [str(tmp_path / "heldout.npz")]
+    )
+    assert X.shape == (4, 3, 480, 640, 3)
+    assert S.shape == (4, 12)
+    assert A.shape == (4, 50, 12)
+    assert [Path(row["path"]).name for row in records] == ["ep0.npz", "ep1.npz"]
+
+
+def test_raster_replay_subset_rejects_heldout_overlap(tmp_path):
+    _write_raster_file(tmp_path / "ep0.npz", 0)
+    with pytest.raises(SystemExit, match="overlaps held-out"):
+        MODULE.load_raster_replay_subset(
+            str(tmp_path / "ep*.npz"), 1, 2, [str(tmp_path / "ep0.npz")]
+        )

@@ -1,0 +1,26 @@
+{
+  "retained_checkpoint_snapshot_audit": {
+    "job_id": 21399177,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:03:59"
+  },
+  "mixed_replay_training": {
+    "job_id": 21399191,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:06:09"
+  },
+  "mixed_replay_checkpoint_panel": {
+    "job_id": 21399222,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:13:09"
+  },
+  "selected_checkpoint_fresh_h10_execution": {
+    "job_id": 21399265,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:04:19"
+  }
+}

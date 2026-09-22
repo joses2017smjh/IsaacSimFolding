@@ -102,6 +102,10 @@ ap.add_argument("--rtc_guidance", action="store_true",
                 help="enable the installed LeRobot SmolVLA RTC branch in causal diagnostics")
 ap.add_argument("--queue_diagnostic", action="store_true",
                 help="run the deterministic hard retained-prefix queue diagnostic")
+ap.add_argument("--observation_diagnostic", action="store_true",
+                help="run the pose-3 observation-component causal diagnostic")
+ap.add_argument("--observation_execute_best", action="store_true",
+                help="execute at most the preregistered best two observation probes")
 ap.add_argument("--queue_delays", default="2,5,10",
                 help="comma-separated retained-prefix delays for queue diagnostic")
 ap.add_argument("--hard_queue_delay", type=int, default=0,
@@ -121,6 +125,12 @@ if args.queue_diagnostic and (not args.causal_out):
     ap.error("--queue_diagnostic requires --causal_out")
 if args.queue_diagnostic and args.rtc_guidance:
     ap.error("--queue_diagnostic cannot be combined with --rtc_guidance")
+if args.observation_diagnostic and not args.causal_out:
+    ap.error("--observation_diagnostic requires --causal_out")
+if args.observation_diagnostic and (args.rtc_guidance or args.queue_diagnostic):
+    ap.error("--observation_diagnostic cannot be combined with RTC or queue diagnostics")
+if args.observation_execute_best and not args.observation_diagnostic:
+    ap.error("--observation_execute_best requires --observation_diagnostic")
 if args.queue_diagnostic and any(x < 1 or x > 50 for x in args.queue_delays):
     ap.error("queue delays must be in [1, 50]")
 if args.hard_queue_delay < 0 or args.hard_queue_delay > 10:
@@ -544,6 +554,29 @@ try:
     policy._get_action_chunk = measured_predict
     pcfg.n_action_steps = queue_metadata["effective_n_action_steps"]
     pre, post = make_pre_post_processors(policy_cfg=pcfg, pretrained_path=args.policy_path)
+    observation_feature_tap = None
+    observation_feature_status = {
+        "requested": bool(args.observation_diagnostic),
+        "available": False,
+        "path": "model.embed_prefix",
+        "output_unchanged": None,
+        "error": None,
+    }
+    if args.observation_diagnostic:
+        # This is the repository's existing passive prefix-feature hook. It
+        # wraps the method and returns its original value; it is not a second
+        # policy, a feature substitution, or a change to action production.
+        try:
+            from lehome_fold.policy_wrap import (DEFAULT_FEATURE_PATH,
+                                                 FeatureTap,
+                                                 probe_feature_source)
+            observation_feature_status["path"] = DEFAULT_FEATURE_PATH
+            observation_feature_status["source"] = probe_feature_source(policy)
+            observation_feature_tap = FeatureTap(policy, DEFAULT_FEATURE_PATH).install()
+            observation_feature_status["available"] = True
+            observation_feature_status["output_unchanged"] = True
+        except Exception as exc:  # noqa: BLE001 - record unavailable, do not alter policy
+            observation_feature_status["error"] = f"{type(exc).__name__}: {exc}"
     log(f"policy loaded from {args.policy_path} "
         f"(params={sum(q.numel() for q in policy.parameters())/1e6:.0f}M)")
     log(f"AUDIT variant={args.policy_variant} seed={args.seed} queue={queue_metadata}")
@@ -647,6 +680,7 @@ try:
     causal_snapshots = {}
     causal_trace = {}
     executed_actions = {}
+    causal_initial_observation = None
     causal_enabled = bool(args.causal_out)
     causal_initial_torch_rng = torch.get_rng_state().cpu().numpy().copy()
     causal_initial_cuda_rng = [x.cpu().numpy().copy() for x in torch.cuda.get_rng_state_all()]
@@ -774,6 +808,12 @@ try:
         # resize_with_pad with "(b,c,h,w) expected, but [256, 640, 3]".
         observation = make_observation(imgs, joint)
         if causal_enabled and i == 0:
+            causal_initial_observation = {
+                "images": {k: np.asarray(imgs[k], dtype=np.uint8).copy() for k in camera_keys},
+                "joint": np.asarray(joint, dtype=np.float32).copy(),
+                "task": args.task,
+                "source": "original_action_0_H50_observation",
+            }
             # Reconstruct the first H50 sampler call without altering the
             # cached-control episode. The historical pilot did not persist
             # its pre-call RNG bytes, so this uses the state captured after
@@ -1414,6 +1454,279 @@ try:
                 chunk = chunk.detach().cpu().numpy()
             return np.asarray(chunk)[0].copy()
 
+        observation_probe_specs = (
+            ("current-all", "control", "current images and current state"),
+            ("old-all-images-current-state", "attribution_probe",
+             "action-0 H50 images with current state"),
+            ("current-images-old-state", "attribution_probe",
+             "current images with action-0 H50 state"),
+            ("old-top-only", "attribution_probe",
+             "action-0 top image with current wrists and state"),
+            ("old-left-only", "attribution_probe",
+             "action-0 left-wrist image with current top/right and state"),
+            ("old-right-only", "attribution_probe",
+             "action-0 right-wrist image with current top/left and state"),
+            ("old-both-wrists", "attribution_probe",
+             "action-0 left/right-wrist images with current top and state"),
+        )
+
+        def _prefix_feature_vector():
+            """Return the existing passive prefix feature tap, if available."""
+            if observation_feature_tap is None or observation_feature_tap.last is None:
+                return None
+            value = observation_feature_tap.last.detach().float()
+            mask = observation_feature_tap.last_mask
+            if value.dim() == 3:
+                if mask is None:
+                    value = value.mean(dim=1)
+                else:
+                    mask = mask.to(value.dtype)
+                    if mask.dim() == 2:
+                        mask = mask.unsqueeze(-1)
+                    value = (value * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1.0)
+            if value.dim() != 2:
+                return None
+            return value[0].detach().cpu().numpy().astype(np.float32, copy=True)
+
+        def _feature_distance(reference, candidate):
+            if reference is None or candidate is None:
+                return {"available": False, "rms": None, "l2": None}
+            reference = np.asarray(reference, dtype=np.float64).reshape(-1)
+            candidate = np.asarray(candidate, dtype=np.float64).reshape(-1)
+            if reference.shape != candidate.shape:
+                return {"available": False, "rms": None, "l2": None,
+                        "shape_reference": list(reference.shape),
+                        "shape_candidate": list(candidate.shape)}
+            delta = candidate - reference
+            return {"available": True,
+                    "rms": float(np.sqrt(np.mean(delta * delta))),
+                    "l2": float(np.linalg.norm(delta)),
+                    "dimension": int(delta.size)}
+
+        def _counterfactual_observation(name, current_images, current_joint):
+            if causal_initial_observation is None:
+                raise RuntimeError("action-0 H50 observation was not captured")
+            old_images = causal_initial_observation["images"]
+            old_joint = causal_initial_observation["joint"]
+            images = {key: np.asarray(current_images[key], dtype=np.uint8).copy()
+                      for key in camera_keys}
+            joint = np.asarray(current_joint, dtype=np.float32).copy()
+            if name == "old-all-images-current-state":
+                images = {key: old_images[key].copy() for key in camera_keys}
+            elif name == "current-images-old-state":
+                joint = old_joint.copy()
+            elif name == "old-top-only":
+                images["top_rgb"] = old_images["top_rgb"].copy()
+            elif name == "old-left-only":
+                images["left_rgb"] = old_images["left_rgb"].copy()
+            elif name == "old-right-only":
+                images["right_rgb"] = old_images["right_rgb"].copy()
+            elif name == "old-both-wrists":
+                images["left_rgb"] = old_images["left_rgb"].copy()
+                images["right_rgb"] = old_images["right_rgb"].copy()
+            elif name != "current-all":
+                raise KeyError(f"unknown observation component probe {name!r}")
+            return images, joint
+
+        def _observation_action_metrics(old_plan, chunk):
+            """Preregis­tered suffix-distance metrics, including per-joint deltas."""
+            old_plan = np.asarray(old_plan, dtype=np.float64)
+            chunk = np.asarray(chunk, dtype=np.float64)
+            metrics = {}
+            for width in (1, 5, 10):
+                width = min(width, len(old_plan), len(chunk))
+                delta = chunk[:width] - old_plan[:width]
+                metrics[str(width)] = {
+                    "width": width,
+                    "rms_rad": float(np.sqrt(np.mean(delta * delta))),
+                    "mean_abs_rad": float(np.abs(delta).mean()),
+                    "max_abs_rad": float(np.abs(delta).max(initial=0.0)),
+                    "per_joint_rms_rad": np.sqrt(np.mean(delta * delta, axis=0)).tolist(),
+                    "per_joint_mean_abs_rad": np.abs(delta).mean(axis=0).tolist(),
+                    "action_l2_rad": np.linalg.norm(delta, axis=1).tolist(),
+                }
+            return metrics
+
+        def _rng_state_digest(torch_state, cuda_state):
+            digest = hashlib.sha256()
+            digest.update(np.asarray(torch_state, dtype=np.uint8).tobytes())
+            for state in cuda_state:
+                digest.update(np.asarray(state, dtype=np.uint8).tobytes())
+            return digest.hexdigest()
+
+        def _predict_exact_observation(snapshot, images, joint, audit_label,
+                                       use_initial_rng):
+            """Restore simulator/RNG, then predict; prediction itself cannot step sim."""
+            fidelity = _restore_and_validate(snapshot)
+            policy.reset()
+            if use_initial_rng:
+                torch_state, cuda_state = causal_initial_torch_rng, causal_initial_cuda_rng
+                rng_source = "reconstructed_initial_rng"
+            else:
+                torch_state, cuda_state = snapshot["torch_rng"], snapshot["cuda_rng"]
+                rng_source = "reconstructed_continuation_rng"
+            _set_policy_rng(torch_state, cuda_state)
+            rng_restore_exact = _rng_digest() == _rng_state_digest(torch_state, cuda_state)
+            if observation_feature_tap is not None:
+                # Prevent a missing forward-hook call from reusing the prior
+                # candidate's feature vector.
+                observation_feature_tap.last = None
+                observation_feature_tap.last_mask = None
+            chunk = _fresh_chunk(policy_batch(images, joint), audit_label=audit_label)
+            timing = dict(prediction_timing_audit[-1])
+            feature = _prefix_feature_vector()
+            return {
+                "chunk": chunk,
+                "feature": feature,
+                "restore": fidelity,
+                "prediction_timing": timing,
+                "rng_source": rng_source,
+                "rng_restore_exact": bool(rng_restore_exact),
+                "simulator_stepped_during_prediction": bool(
+                    timing["sim_step_delta"] or timing["episode_length_delta"] not in (0, None)),
+            }
+
+        def _probe_observation_components(snapshot, old_plan, same_rng_chunk):
+            """Evaluate all stale/hybrid inputs without executing any probe action."""
+            boundary = int(snapshot["boundary"])
+            records = {}
+            reference_feature = None
+            for name, kind, description in observation_probe_specs:
+                images, joint = _counterfactual_observation(
+                    name, snapshot["images"], snapshot["joint"])
+                prediction = _predict_exact_observation(
+                    snapshot, images, joint,
+                    audit_label=f"observation_probe_{name}_boundary{boundary}",
+                    use_initial_rng=True)
+                if name == "current-all":
+                    reference_feature = prediction["feature"]
+                action_identity = _action_identity(prediction["chunk"][:10],
+                                                   same_rng_chunk[:10])
+                records[name] = {
+                    "name": name,
+                    "classification": kind,
+                    "description": description,
+                    "deployable_controller": False if kind == "attribution_probe" else True,
+                    "input_components": {
+                        "state": "old_action_0_H50" if name == "current-images-old-state" else "current",
+                        "top_rgb": "old_action_0_H50" if name in ("old-all-images-current-state", "old-top-only") else "current",
+                        "left_rgb": "old_action_0_H50" if name in ("old-all-images-current-state", "old-left-only", "old-both-wrists") else "current",
+                        "right_rgb": "old_action_0_H50" if name in ("old-all-images-current-state", "old-right-only", "old-both-wrists") else "current",
+                        "task": "unchanged",
+                    },
+                    "restore": prediction["restore"],
+                    "prediction_timing": prediction["prediction_timing"],
+                    "rng_source": prediction["rng_source"],
+                    "rng_restore_exact": prediction["rng_restore_exact"],
+                    "simulator_stepped_during_prediction": prediction["simulator_stepped_during_prediction"],
+                    "same_rng_current_all_first10_exact": action_identity["exact"],
+                    "first10_chunk_vs_same_rng": action_identity,
+                    "action_metrics_vs_cached_h50_suffix": _observation_action_metrics(
+                        old_plan, prediction["chunk"]),
+                    "prefix_feature_distance_to_current_all": None,
+                    "chunk_first_10": prediction["chunk"][:10].copy(),
+                }
+                records[name]["_feature"] = prediction["feature"]
+            for name in records:
+                records[name]["prefix_feature_distance_to_current_all"] = _feature_distance(
+                    reference_feature, records[name].pop("_feature"))
+            timing_records = [records[name]["prediction_timing"] for name, _, _ in observation_probe_specs]
+            return {
+                "boundary": boundary,
+                "probes": records,
+                "all_snapshot_restores_within_tolerance": all(
+                    row["restore"]["cloth_rms_m"] <= 1e-5 and row["restore"]["joint_rms_rad"] <= 1e-5
+                    for row in records.values()),
+                "all_predictions_zero_sim_steps": all(
+                    not row["simulator_stepped_during_prediction"] for row in records.values()),
+                "all_rng_restores_exact": all(row["rng_restore_exact"] for row in records.values()),
+                "current_all_matches_same_rng_control": records["current-all"]["same_rng_current_all_first10_exact"],
+                "feature_status": observation_feature_status,
+                "prediction_timing_records": len(timing_records),
+            }
+
+        def _run_observation_candidate(snapshot, horizon, name):
+            """Execute one selected attribution probe, auditing each H10 prediction."""
+            boundary = int(snapshot["boundary"])
+            branch_steps = min(args.causal_branch_steps, args.steps - boundary)
+            trace, actions, chunks, prediction_events = [], [], [], []
+            current_chunk = None
+            best = 0
+            last = None
+            for local in range(branch_steps):
+                global_step = boundary + local + 1
+                if local % horizon == 0:
+                    if local == 0:
+                        images, joint = snapshot["images"], snapshot["joint"]
+                        prediction_snapshot = snapshot
+                        use_initial_rng = True
+                    else:
+                        images, joint = _branch_observation()
+                        prediction_snapshot = _snapshot_state(global_step - 1, images)
+                        use_initial_rng = False
+                    probe_images, probe_joint = _counterfactual_observation(name, images, joint)
+                    prediction = _predict_exact_observation(
+                        prediction_snapshot, probe_images, probe_joint,
+                        audit_label=f"observation_execute_{name}_boundary{boundary}_replan{local // horizon}",
+                        use_initial_rng=use_initial_rng)
+                    current_chunk = prediction["chunk"]
+                    chunks.append(current_chunk.copy())
+                    prediction_events.append({
+                        "replan_index": local // horizon,
+                        "global_action_start": global_step,
+                        "observation_name": name,
+                        "restore": prediction["restore"],
+                        "prediction_timing": prediction["prediction_timing"],
+                        "rng_source": prediction["rng_source"],
+                        "rng_restore_exact": prediction["rng_restore_exact"],
+                        "simulator_stepped_during_prediction": prediction["simulator_stepped_during_prediction"],
+                        "chunk_first_10": current_chunk[:10].copy(),
+                    })
+                action = current_chunk[local % horizon].copy()
+                actions.append(action)
+                row = _branch_step(action)
+                row["global_step"] = global_step
+                trace.append(row)
+                best = max(best, row["conditions_passed"])
+                last = row
+            if not actions:
+                raise RuntimeError("observation candidate branch produced no action")
+            settled = _settle_branch(actions[-1])
+            return {
+                "observation_name": name,
+                "classification": "attribution_probe",
+                "deployable_controller": False,
+                "restore": prediction_events[0]["restore"],
+                "branch_steps": branch_steps,
+                "horizon": horizon,
+                "actions": actions,
+                "chunks": chunks,
+                "trace": trace,
+                "condition_trajectory": [
+                    {"global_step": row["global_step"],
+                     "conditions_passed": row["conditions_passed"],
+                     "conditions_total": row["conditions_total"],
+                     "geometric_success": row["geometric_success"],
+                     "condition_details": row["condition_details"]}
+                    for row in trace
+                ],
+                "prediction_events": prediction_events,
+                "divergence_from_h50": _compare_branch_trace(boundary, trace),
+                "best_conditions": best,
+                "terminal": last,
+                "geometric_ever_success": any(x["geometric_success"] for x in trace),
+                "settled": settled,
+                "all_snapshot_restores_within_tolerance": all(
+                    event["restore"]["cloth_rms_m"] <= 1e-5
+                    and event["restore"]["joint_rms_rad"] <= 1e-5
+                    for event in prediction_events),
+                "all_predictions_zero_sim_steps": all(
+                    not event["simulator_stepped_during_prediction"]
+                    for event in prediction_events),
+                "all_rng_restores_exact": all(
+                    event["rng_restore_exact"] for event in prediction_events),
+            }
+
         def _run_fresh(snapshot, horizon):
             fidelity = _restore_and_validate(snapshot)
             boundary = int(snapshot["boundary"])
@@ -1649,6 +1962,7 @@ try:
             return output
 
         branches = {}
+        observation_component_records = {}
         for boundary, snapshot in sorted(causal_snapshots.items()):
             h = 10 if boundary == 10 else 5
             _restore_and_validate(snapshot)
@@ -1672,6 +1986,10 @@ try:
                 "deterministic_repeat_first_50": repeats["deterministic_repeat"],
                 "varied_seed_first_50": repeats["varied_seed"],
             }
+            if args.observation_diagnostic:
+                observation_component_records[str(boundary)] = _probe_observation_components(
+                    snapshot, old_plan, same_rng["chunks"][0])
+                branch_record["observation_component_probes"] = observation_component_records[str(boundary)]
             if args.queue_diagnostic:
                 queue_branches = {}
                 for delay in args.queue_delays:
@@ -1694,6 +2012,77 @@ try:
                     old_plan, rtc["chunks"][0]["processed"]
                 )
             branches[str(boundary)] = branch_record
+
+        observation_selection = None
+        observation_executions = {}
+        if args.observation_diagnostic:
+            # The gate was written before any probe prediction. It is a fixed
+            # 0.05-rad first-10 RMS improvement at BOTH validated boundaries,
+            # measured against the same-RNG current-all control. No seed or
+            # candidate-specific tuning is allowed.
+            meaningful_improvement_rad = 0.05
+            candidate_names = [name for name, kind, _ in observation_probe_specs
+                               if kind == "attribution_probe"]
+            ranking = []
+            for name in candidate_names:
+                boundary_rows = []
+                for boundary in (5, 10):
+                    record = observation_component_records[str(boundary)]["probes"][name]
+                    control = observation_component_records[str(boundary)]["probes"]["current-all"]
+                    control_rms = control["action_metrics_vs_cached_h50_suffix"]["10"]["rms_rad"]
+                    candidate_rms = record["action_metrics_vs_cached_h50_suffix"]["10"]["rms_rad"]
+                    improvement = control_rms - candidate_rms
+                    boundary_rows.append({
+                        "boundary": boundary,
+                        "control_first10_rms_rad": control_rms,
+                        "candidate_first10_rms_rad": candidate_rms,
+                        "improvement_rad": improvement,
+                        "meaningful_threshold_rad": meaningful_improvement_rad,
+                        "passes_meaningful_threshold": bool(improvement >= meaningful_improvement_rad),
+                    })
+                ranking.append({
+                    "name": name,
+                    "classification": "attribution_probe",
+                    "deployable_controller": False,
+                    "boundary_scores": boundary_rows,
+                    "min_improvement_rad": min(x["improvement_rad"] for x in boundary_rows),
+                    "mean_improvement_rad": float(np.mean([x["improvement_rad"] for x in boundary_rows])),
+                    "passes_both_boundary_improvement_gate": all(
+                        x["passes_meaningful_threshold"] for x in boundary_rows),
+                })
+            ranking.sort(key=lambda row: (-row["min_improvement_rad"],
+                                          -row["mean_improvement_rad"], row["name"]))
+            selected = [row["name"] for row in ranking
+                        if row["passes_both_boundary_improvement_gate"]][:2]
+            observation_selection = {
+                "preregistered_meaningful_first10_rms_improvement_rad": meaningful_improvement_rad,
+                "baseline": "same-RNG current-all fresh H10 at each boundary",
+                "ranking_metric": "descending minimum first-10 RMS improvement across action-5 and action-10; mean improvement and name are tie-breakers",
+                "seed_tuning": False,
+                "ranking": ranking,
+                "selected_at_most_two": selected,
+                "execution_requested": bool(args.observation_execute_best),
+            }
+            if args.observation_execute_best:
+                for name in selected:
+                    observation_executions[name] = {}
+                    for boundary, snapshot in sorted(causal_snapshots.items()):
+                        h = 10 if boundary == 10 else 5
+                        observation_executions[name][str(boundary)] = _run_observation_candidate(
+                            snapshot, h, name)
+                for name, by_boundary in observation_executions.items():
+                    by_boundary["both_boundaries_settled_4_of_4"] = all(
+                        by_boundary[str(boundary)]["settled"]["settled_4_of_4"]
+                        for boundary in (5, 10))
+            observation_selection["executions"] = observation_executions
+            observation_selection["candidate_settled_4_of_4_both_boundaries"] = {
+                name: bool(by_boundary.get("both_boundaries_settled_4_of_4", False))
+                for name, by_boundary in observation_executions.items()
+            }
+            observation_selection["larger_validation_submitted"] = False
+            observation_selection["larger_validation_reason"] = (
+                "broad pose validation is prohibited in this diagnostic; candidate settling is recorded only"
+            )
 
         causal_result = {
             "schema_version": 1,
@@ -1730,6 +2119,21 @@ try:
                 "execution_horizon": 10,
                 "delays": list(args.queue_delays) if args.queue_diagnostic else [],
                 "handoff_rule": "execute exactly d actions from the unconsumed previous-plan remainder; discard fresh_chunk[:d]; execute fresh_chunk[d:10]; retain fresh_chunk[10:50] for the next H10 replan",
+            },
+            "observation_component_reference": {
+                "enabled": bool(args.observation_diagnostic),
+                "initial_observation": causal_initial_observation,
+                "active_observation_keys": [
+                    "observation.state", "observation.images.top_rgb",
+                    "observation.images.left_rgb", "observation.images.right_rgb", "task",
+                ],
+                "task_unchanged": True,
+                "rtc_guidance_used": False if args.observation_diagnostic else None,
+                "probes_not_initially_executed": True,
+                "attribution_probe_warning": "stale/hybrid observations are causal attribution probes, not deployable controllers",
+                "feature_hook": observation_feature_status,
+                "records": observation_component_records,
+                "selection": observation_selection,
             },
             "prediction_timing_audit": prediction_timing_audit,
         }

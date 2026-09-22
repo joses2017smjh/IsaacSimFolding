@@ -24,6 +24,10 @@ def main():
     ap.add_argument("--queue-diagnostic", action="store_true",
                     help="run the hard retained-prefix diagnostic; pose slot 3 only")
     ap.add_argument("--queue-delays", default="2,5,10")
+    ap.add_argument("--observation-diagnostic", action="store_true",
+                    help="run the observation-component diagnostic; pose slot 3 only")
+    ap.add_argument("--observation-execute-best", action="store_true",
+                    help="execute at most two candidates after the preregistered gate")
     args = ap.parse_args()
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
@@ -37,6 +41,13 @@ def main():
             raise SystemExit("--queue-diagnostic is restricted to exact development pose slot 3")
         if args.rtc_guidance:
             raise SystemExit("--queue-diagnostic cannot use RTC guidance")
+    if args.observation_diagnostic:
+        if int(row["development_pose_slot"]) != 3:
+            raise SystemExit("--observation-diagnostic is restricted to exact development pose slot 3")
+        if args.rtc_guidance or args.queue_diagnostic:
+            raise SystemExit("--observation-diagnostic cannot use RTC or queue diagnostics")
+    if args.observation_execute_best and not args.observation_diagnostic:
+        raise SystemExit("--observation-execute-best requires --observation-diagnostic")
     inventory = json.loads((root / "audit/garment_inventory.json").read_text())
     asset = next(r for r in inventory["garments"] if r["garment_id"] == row["garment"])
     checkpoint = manifest["checkpoint"]
@@ -60,6 +71,10 @@ def main():
         command.append("--rtc_guidance")
     if args.queue_diagnostic:
         command += ["--queue_diagnostic", "--queue_delays", args.queue_delays]
+    if args.observation_diagnostic:
+        command.append("--observation_diagnostic")
+    if args.observation_execute_best:
+        command.append("--observation_execute_best")
     cached = args.causal_action_jsonl or str(root / "outputs" / row["id"] / "rollout.json.behavior.jsonl")
     if Path(cached).is_file():
         command += ["--causal_action_jsonl", cached]

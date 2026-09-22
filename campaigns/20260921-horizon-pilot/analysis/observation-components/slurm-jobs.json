@@ -1,0 +1,36 @@
+{
+  "diagnostic": {
+    "job_id": "21398036",
+    "superseded_submission": {
+      "job_id": "21398016",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:00:06",
+      "reason": "submission used repository root instead of campaign root; no simulator startup"
+    },
+    "array": null,
+    "pose_slots": [3],
+    "boundaries": [5, 10],
+    "branch_steps": 600,
+    "rtc_guidance": false,
+    "queue_diagnostic": false,
+    "observation_execute_best": true,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:15:30",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "campaigns/20260921-horizon-pilot/slurm/observation.sbatch",
+      "/nfs/stak/users/sanchej7/hpc-share/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot"
+    ],
+    "purpose": "pose-3 action-5/action-10 observation-component inference-only causal diagnostic",
+    "larger_rollout_submitted": false
+  },
+  "validation": {
+    "submitted": false,
+    "reason": "broad pose validation is explicitly out of scope",
+    "condition": "candidate must settle 4/4 at both pose-3 boundaries before any separately authorized validation",
+    "pose_slots": [1, 3, 5, 7]
+  }
+}

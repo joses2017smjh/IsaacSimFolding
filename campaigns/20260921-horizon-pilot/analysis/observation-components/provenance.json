@@ -1,0 +1,107 @@
+{
+  "source": "outputs/observation_dev03_h50_Pant_Short_Seen_3/replan-causality.json",
+  "source_sha256": "74a77e62a31a93ef44e72908bfbd14de6bf42b9bf48ef04dba6f1bbb1def2c37",
+  "controller": "scripts/render/policy_rollout51.py",
+  "controller_sha256": "7173cf3eb3a2e218c9148551d0726ec1205672b3591b74b224217a7ab133acb6",
+  "launcher": "slurm/observation.sbatch",
+  "slurm_jobs": {
+    "diagnostic": {
+      "job_id": "21398036",
+      "superseded_submission": {
+        "job_id": "21398016",
+        "state": "FAILED",
+        "exit_code": "2:0",
+        "elapsed": "00:00:06",
+        "reason": "submission used repository root instead of campaign root; no simulator startup"
+      },
+      "array": null,
+      "pose_slots": [
+        3
+      ],
+      "boundaries": [
+        5,
+        10
+      ],
+      "branch_steps": 600,
+      "rtc_guidance": false,
+      "queue_diagnostic": false,
+      "observation_execute_best": true,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:15:30",
+      "command": [
+        "sbatch",
+        "--parsable",
+        "campaigns/20260921-horizon-pilot/slurm/observation.sbatch",
+        "/nfs/stak/users/sanchej7/hpc-share/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot"
+      ],
+      "purpose": "pose-3 action-5/action-10 observation-component inference-only causal diagnostic",
+      "larger_rollout_submitted": false
+    },
+    "validation": {
+      "submitted": false,
+      "reason": "broad pose validation is explicitly out of scope",
+      "condition": "candidate must settle 4/4 at both pose-3 boundaries before any separately authorized validation",
+      "pose_slots": [
+        1,
+        3,
+        5,
+        7
+      ]
+    }
+  },
+  "garment": "Pant_Short_Seen_3",
+  "seed": 203,
+  "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+  "boundaries": [
+    5,
+    10
+  ],
+  "active_observation_keys": [
+    "observation.state",
+    "observation.images.top_rgb",
+    "observation.images.left_rgb",
+    "observation.images.right_rgb",
+    "task"
+  ],
+  "controls": [
+    "cached H50 suffix",
+    "same-reconstructed-RNG fresh H10"
+  ],
+  "rtc_guidance_used": false,
+  "feature_hook": {
+    "requested": true,
+    "available": true,
+    "path": "model.embed_prefix",
+    "output_unchanged": true,
+    "error": null,
+    "source": {
+      "model.embed_prefix": {
+        "type": "method",
+        "callable": true,
+        "is_module": false
+      },
+      "model.vlm_with_expert": {
+        "type": "SmolVLMWithExpertModel",
+        "callable": true,
+        "is_module": true
+      },
+      "_modules": [
+        "model"
+      ]
+    }
+  },
+  "prediction_timing_records": 576,
+  "prediction_timing_failures": [],
+  "probe_restore_and_zero_step_gate": true,
+  "preregistered_meaningful_first10_rms_improvement_rad": 0.05,
+  "selected_at_most_two": [
+    "current-images-old-state"
+  ],
+  "selected_candidate_settled_4_of_4_both_boundaries": {
+    "current-images-old-state": false
+  },
+  "larger_validation_submitted": false,
+  "larger_validation_reason": "broad pose validation is prohibited in this diagnostic; candidate settling is recorded only",
+  "recommendation": "small boundary-state chunk-consistency/on-policy corrective-data experiment"
+}

@@ -1,0 +1,10 @@
+{
+  "submitted": false,
+  "reason": "broad pose validation was explicitly out of scope for this diagnostic",
+  "selected_candidates": [
+    "current-images-old-state"
+  ],
+  "settled_4_of_4_both_boundaries": {
+    "current-images-old-state": false
+  }
+}

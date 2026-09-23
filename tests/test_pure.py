@@ -196,6 +196,82 @@ def awr_weights_are_clipped_and_finite_on_extremes():
 
 
 @test
+def awr_cap_actually_binds_and_changes_the_weights():
+    """The regression that made w_max dead: max-subtraction before exp().
+
+    Under the old formulation every weight landed in (0, 1], so clipping at
+    any w_max >= 1 was a no-op and two very different caps produced byte
+    identical weights. Assert the opposite of that here.
+    """
+    from lehome_fold import awr
+
+    adv = [3.0, 1.0, 0.0, -1.0, -3.0]
+    tight = awr.weights(adv, beta=0.5, w_max=2.0)
+    loose = awr.weights(adv, beta=0.5, w_max=1000.0)
+
+    # The cap binds: the top sample is pinned to w_max exactly.
+    close(float(tight.max()), 2.0, 1e-5)
+    # ... and it is a live parameter -- relaxing it changes the answer.
+    assert not np.allclose(tight, loose), (tight, loose)
+    assert loose.max() > tight.max()
+    # Capping compresses the spread, which is the entire point of having one.
+    assert (loose.max() / loose.min()) > (tight.max() / tight.min())
+
+
+@test
+def awr_weight_summary_reports_whether_the_cap_fired():
+    from lehome_fold import awr
+
+    adv = [3.0, 1.0, 0.0, -1.0, -3.0]
+    bound = awr.weight_summary(awr.weights(adv, beta=0.5, w_max=2.0), w_max=2.0)
+    assert bound["capped"] >= 1.0, bound
+    # A cap far outside the batch's z-range is inert, and that must be visible
+    # rather than silently recorded as an applied hyperparameter.
+    inert = awr.weight_summary(awr.weights(adv, beta=0.5, w_max=1e6), w_max=1e6)
+    close(inert["capped"], 0.0)
+
+
+@test
+def awr_weights_stay_positive_so_every_row_can_be_sampled():
+    """A zero weight is not a small weight: it removes a rollout entirely."""
+    from lehome_fold import awr
+
+    w = awr.weights([0.0, -200.0], beta=0.001, w_max=20.0, w_min=1e-6)
+    assert np.all(w > 0.0), w
+    close(float(w.min()), 1e-6, 1e-9)
+    p = w.astype(np.float64) / w.astype(np.float64).sum()
+    close(float(p.sum()), 1.0, 1e-12)
+
+
+@test
+def awr_weights_reject_an_impossible_floor():
+    from lehome_fold import awr
+
+    for bad in (0.0, -1.0, 50.0):
+        try:
+            awr.weights([1.0, 0.0], w_max=20.0, w_min=bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"w_min={bad} should have been rejected")
+
+
+@test
+def awr_uniform_weights_are_maximally_unconcentrated():
+    """ESS alone cannot detect a dead signal -- uniform weights maximise it.
+
+    This is why the collection gate checks ESS from BOTH sides. Pin the fact
+    the gate depends on.
+    """
+    from lehome_fold import awr
+
+    flat = awr.weights([0.5] * 8)
+    close(awr.effective_sample_size(flat), 8.0, 1e-6)
+    summary = awr.weight_summary(flat, w_max=3.0)
+    close(summary["ess_fraction"], 1.0, 1e-6)
+    close(summary["ratio"], 1.0, 1e-6)
+
+
+@test
 def awr_handles_zero_variance_advantages():
     from lehome_fold import awr
 

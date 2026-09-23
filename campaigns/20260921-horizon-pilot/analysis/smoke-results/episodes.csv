@@ -1,0 +1,6 @@
+id,pose,garment,horizon,infrastructure_valid,official_ever_success,terminal_success,best_policy_conditions,terminal_conditions,conditions_total,worst_margin_cm,closest_threshold_margin_cm,replans,worker_wall_seconds,failure_category
+smoke_Top_Short_Seen_3,,Top_Short_Seen_3,50,True,False,False,2,2,5,-5.878062621325082,-5.534061406653635,3,131.43252245592885,never_approached_cloth_proxy
+smoke_Pant_Short_Seen_0,,Pant_Short_Seen_0,50,True,False,False,2,1,4,-6.2836039631604645,-2.9760988583426933,3,102.20760429906659,never_approached_cloth_proxy
+smoke_Pant_Long_Seen_0,,Pant_Long_Seen_0,50,True,False,False,2,2,4,-27.047402354613094,1.3218282188908024,3,111.0757224119734,never_approached_cloth_proxy
+smoke_Top_Long_Seen_0,,Top_Long_Seen_0,50,True,False,False,2,2,5,-31.878423118024752,-1.8544239673968308,3,120.80179795296863,never_approached_cloth_proxy
+smoke_Top_Short_Seen_0,,Top_Short_Seen_0,50,True,False,False,2,2,5,-26.048663348249683,6.208682769463014,3,112.63357999990694,never_approached_cloth_proxy

@@ -1,0 +1,3730 @@
+{
+  "mode": "pilot",
+  "complete_valid_protocol": true,
+  "valid": 24,
+  "expected": 24,
+  "aggregate": {
+    "50": {
+      "valid_episodes": 8,
+      "invalid_or_missing": 0,
+      "ever_successes": 4,
+      "terminal_successes": 4,
+      "mean_best_conditions": 3.375,
+      "mean_terminal_conditions": 3
+    },
+    "10": {
+      "valid_episodes": 8,
+      "invalid_or_missing": 0,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": 2.875,
+      "mean_terminal_conditions": 2.375
+    },
+    "5": {
+      "valid_episodes": 8,
+      "invalid_or_missing": 0,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": 2.75,
+      "mean_terminal_conditions": 2
+    }
+  },
+  "matched_comparisons_vs_50": {
+    "10": {
+      "complete_pairs": 8,
+      "pairs": [
+        {
+          "pose": 0,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": 1.458645937981725,
+          "closest_threshold_margin_delta_cm": 5.088908756380842,
+          "terminal_mean_cloth_displacement_delta_m": -0.04609650373458862,
+          "minimum_gripper_origin_distance_delta_m": 0.014080952852964401,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 13.57343218731694,
+          "boundary_jump_mean_delta_rad": -0.0006054843186138192,
+          "worker_wall_seconds_delta": -10.438344453228638
+        },
+        {
+          "pose": 1,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -8.212175732211684,
+          "closest_threshold_margin_delta_cm": 2.825137089179006,
+          "terminal_mean_cloth_displacement_delta_m": -0.020698297768831253,
+          "minimum_gripper_origin_distance_delta_m": -0.00016770511865615845,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.457559320610017,
+          "boundary_jump_mean_delta_rad": -0.11275993491047981,
+          "worker_wall_seconds_delta": 7.362140164012089
+        },
+        {
+          "pose": 2,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": 1,
+          "worst_margin_delta_cm": 2.294437444278495,
+          "closest_threshold_margin_delta_cm": 2.3655402536973895,
+          "terminal_mean_cloth_displacement_delta_m": 0.029396107885986567,
+          "minimum_gripper_origin_distance_delta_m": -0.022391177713871002,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.494628955842927,
+          "boundary_jump_mean_delta_rad": 0.0843215467026586,
+          "worker_wall_seconds_delta": 21.480954686179757
+        },
+        {
+          "pose": 3,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -4.864510051361107,
+          "closest_threshold_margin_delta_cm": -4.864510051361107,
+          "terminal_mean_cloth_displacement_delta_m": -0.03388465568423271,
+          "minimum_gripper_origin_distance_delta_m": 0.005090642720460892,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.351140680955723,
+          "boundary_jump_mean_delta_rad": 0.06514739544232748,
+          "worker_wall_seconds_delta": 17.92337003792636
+        },
+        {
+          "pose": 4,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": 1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": 5.669472854397776,
+          "closest_threshold_margin_delta_cm": -0.1711310522236147,
+          "terminal_mean_cloth_displacement_delta_m": -0.0213555539958179,
+          "minimum_gripper_origin_distance_delta_m": 0.01823030412197113,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.370135796954855,
+          "boundary_jump_mean_delta_rad": -0.06489277232972149,
+          "worker_wall_seconds_delta": 18.56029260996729
+        },
+        {
+          "pose": 5,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -5.362302616381739,
+          "closest_threshold_margin_delta_cm": -5.362302616381739,
+          "terminal_mean_cloth_displacement_delta_m": -0.028878014534711838,
+          "minimum_gripper_origin_distance_delta_m": -0.006623387336730957,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.387927116360515,
+          "boundary_jump_mean_delta_rad": -0.20679876119621637,
+          "worker_wall_seconds_delta": 14.013913751812652
+        },
+        {
+          "pose": 6,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": 0,
+          "best_conditions_delta": 0,
+          "worst_margin_delta_cm": -0.3387671057757302,
+          "closest_threshold_margin_delta_cm": 4.768594112469632,
+          "terminal_mean_cloth_displacement_delta_m": 0.06497467402368784,
+          "minimum_gripper_origin_distance_delta_m": -0.008731011301279068,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.13429558929056,
+          "boundary_jump_mean_delta_rad": -0.03284164375764745,
+          "worker_wall_seconds_delta": 21.423384333960712
+        },
+        {
+          "pose": 7,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": 0,
+          "worst_margin_delta_cm": -3.466444972895359,
+          "closest_threshold_margin_delta_cm": -3.466444972895359,
+          "terminal_mean_cloth_displacement_delta_m": -0.017137277871370316,
+          "minimum_gripper_origin_distance_delta_m": 0.01860097050666809,
+          "replans_delta": 48,
+          "total_inference_seconds_delta": 18.299038298195228,
+          "boundary_jump_mean_delta_rad": -0.04110343687132989,
+          "worker_wall_seconds_delta": 16.67253599013202
+        }
+      ],
+      "terminal_wins": 0,
+      "terminal_losses": 4,
+      "ever_wins": 0,
+      "ever_losses": 4
+    },
+    "5": {
+      "complete_pairs": 8,
+      "pairs": [
+        {
+          "pose": 0,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": 0,
+          "best_conditions_delta": 0,
+          "worst_margin_delta_cm": 18.658032066290126,
+          "closest_threshold_margin_delta_cm": 1.0164490051537136,
+          "terminal_mean_cloth_displacement_delta_m": -0.05541384406387806,
+          "minimum_gripper_origin_distance_delta_m": -0.0020933449268341064,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 37.365151185542345,
+          "boundary_jump_mean_delta_rad": 0.0298053175381707,
+          "worker_wall_seconds_delta": 6.202617663191631
+        },
+        {
+          "pose": 1,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -2,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -8.930152361472981,
+          "closest_threshold_margin_delta_cm": 0.021431724493796267,
+          "terminal_mean_cloth_displacement_delta_m": 0.02457885816693306,
+          "minimum_gripper_origin_distance_delta_m": -0.021273422986268997,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 37.50699380598962,
+          "boundary_jump_mean_delta_rad": -0.09982391508300403,
+          "worker_wall_seconds_delta": 25.683965347940102
+        },
+        {
+          "pose": 2,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": 1,
+          "best_conditions_delta": 1,
+          "worst_margin_delta_cm": 0.2663394223550668,
+          "closest_threshold_margin_delta_cm": 2.8033235911722656,
+          "terminal_mean_cloth_displacement_delta_m": 0.062413176987320185,
+          "minimum_gripper_origin_distance_delta_m": -0.040265003219246864,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 38.05507762194611,
+          "boundary_jump_mean_delta_rad": 0.06563613112130814,
+          "worker_wall_seconds_delta": 37.15337527520023
+        },
+        {
+          "pose": 3,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -3,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -7.6070145934895255,
+          "closest_threshold_margin_delta_cm": -4.415260474936318,
+          "terminal_mean_cloth_displacement_delta_m": -4.07882034778595e-05,
+          "minimum_gripper_origin_distance_delta_m": -0.008858814835548401,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 38.06506208633073,
+          "boundary_jump_mean_delta_rad": 0.12087969500158835,
+          "worker_wall_seconds_delta": 40.79081123904325
+        },
+        {
+          "pose": 4,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": 1,
+          "best_conditions_delta": 0,
+          "worst_margin_delta_cm": 6.718497314910662,
+          "closest_threshold_margin_delta_cm": 2.367579403005985,
+          "terminal_mean_cloth_displacement_delta_m": -0.009341387078166008,
+          "minimum_gripper_origin_distance_delta_m": -0.0010672472417354584,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 38.0204435181804,
+          "boundary_jump_mean_delta_rad": -0.017047007021055216,
+          "worker_wall_seconds_delta": 41.75548204081133
+        },
+        {
+          "pose": 5,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -2,
+          "best_conditions_delta": -2,
+          "worst_margin_delta_cm": -7.049625057227108,
+          "closest_threshold_margin_delta_cm": -2.7947093823580547,
+          "terminal_mean_cloth_displacement_delta_m": -0.04820712748914957,
+          "minimum_gripper_origin_distance_delta_m": -0.001828715205192566,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 38.33132581366226,
+          "boundary_jump_mean_delta_rad": -0.19230696503457173,
+          "worker_wall_seconds_delta": 36.79725649394095
+        },
+        {
+          "pose": 6,
+          "ever_delta": 0,
+          "terminal_delta": 0,
+          "terminal_conditions_delta": -1,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": 0.3886432581033219,
+          "closest_threshold_margin_delta_cm": -0.1031946235434944,
+          "terminal_mean_cloth_displacement_delta_m": -0.0035579712130129337,
+          "minimum_gripper_origin_distance_delta_m": 0.019913244992494583,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 37.61588654690422,
+          "boundary_jump_mean_delta_rad": -0.0856686002433277,
+          "worker_wall_seconds_delta": 35.99040245381184
+        },
+        {
+          "pose": 7,
+          "ever_delta": -1,
+          "terminal_delta": -1,
+          "terminal_conditions_delta": -2,
+          "best_conditions_delta": -1,
+          "worst_margin_delta_cm": -13.1955894808153,
+          "closest_threshold_margin_delta_cm": -2.5819211487477878,
+          "terminal_mean_cloth_displacement_delta_m": -0.017084095627069473,
+          "minimum_gripper_origin_distance_delta_m": 0.0038642510771751404,
+          "replans_delta": 108,
+          "total_inference_seconds_delta": 38.00941120274365,
+          "boundary_jump_mean_delta_rad": -0.009316410879320669,
+          "worker_wall_seconds_delta": 36.25484371208586
+        }
+      ],
+      "terminal_wins": 0,
+      "terminal_losses": 4,
+      "ever_wins": 0,
+      "ever_losses": 4
+    }
+  },
+  "rows": [
+    {
+      "id": "dev00_h50_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 0.171739564787579,
+        "condition_2": -23.616786859532557,
+        "condition_3": -14.462773349983683,
+        "condition_4": 4.930467096347041
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -23.616786859532557,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": 0.171739564787579,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.005235010292381048,
+          -0.020191846415400505,
+          0.5286085605621338
+        ],
+        "terminal_centroid": [
+          -0.03537433221936226,
+          0.010330450721085072,
+          0.5322154760360718
+        ],
+        "terminal_centroid_displacement": 0.04304647818207741,
+        "max_particle_displacement": 0.34038493037223816,
+        "peak_mean_particle_displacement": 0.07408083975315094,
+        "terminal_mean_particle_displacement": 0.07449650764465332,
+        "terminal_max_particle_displacement": 0.3413327932357788,
+        "peak_step_particle_displacement": 0.020856091752648354,
+        "cumulative_mean_particle_motion": 0.16804894650704227
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05187031999230385,
+        "right": 0.061081353574991226
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.13662099838256836,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 29,
+          "right": 19
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.5093379059690051,
+        "max": 1.8475707990583032,
+        "p95": 0.3906329581514001
+      },
+      "total_inference_seconds": 6.112054871628061,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.24737803367051212,
+        "max": 0.580573320388794,
+        "p95": 0.41951239109039307
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.12107010306727116,
+        "max": 1.0031358003616333,
+        "p95": 0.3911587595939636
+      },
+      "all_action_jump_max_l2_rad": 1.0031358003616333,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 17.87753787878788,
+          "max": 89.206875,
+          "p95": 28.902569444444445
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 27.313939393939393,
+          "max": 109.74277777777777,
+          "p95": 44.770694444444445
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 1.059425505050505,
+          "max": 1.5476388888888888,
+          "p95": 1.511111111111111
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 3,
+          "mean": 24.144953703703703,
+          "max": 28.902569444444445,
+          "p95": 26.85298611111111
+        },
+        "right_rgb": {
+          "n": 3,
+          "mean": 31.973958333333332,
+          "max": 44.770694444444445,
+          "p95": 35.53958333333333
+        },
+        "top_rgb": {
+          "n": 3,
+          "mean": 1.2375925925925926,
+          "max": 1.424236111111111,
+          "p95": 1.2796527777777778
+        }
+      },
+      "rollout_wall_seconds": 324.930514336098,
+      "worker_wall_seconds": 325.91427109600045,
+      "telemetry_wall_seconds": 1.24149504234083,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 6096,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h50_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "406f92afa787dd3f633297b43c40833b7048ef91bc828476afd9667a8c60b50b",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev00_h10_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -7.509965056754098,
+        "condition_2": -22.15814092155083,
+        "condition_3": -16.36460284819226,
+        "condition_4": 5.260648321168421
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -22.15814092155083,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": 5.260648321168421,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.005235010292381048,
+          -0.020191846415400505,
+          0.5286085605621338
+        ],
+        "terminal_centroid": [
+          -0.02729114703834057,
+          -0.014023722149431705,
+          0.5302293300628662
+        ],
+        "terminal_centroid_displacement": 0.02295965515077114,
+        "max_particle_displacement": 0.3240751028060913,
+        "peak_mean_particle_displacement": 0.029117537662386894,
+        "terminal_mean_particle_displacement": 0.028400003910064697,
+        "terminal_max_particle_displacement": 0.3152666985988617,
+        "peak_step_particle_displacement": 0.01992540992796421,
+        "cumulative_mean_particle_motion": 0.061827541278034914
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.10732089728116989,
+        "right": 0.06595127284526825
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.12353408336639404,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 27,
+          "right": 12
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.32809145098241665,
+        "max": 2.712537980172783,
+        "p95": 0.29780096421018243
+      },
+      "total_inference_seconds": 19.685487058945,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.2467725493518983,
+        "max": 0.9379345178604126,
+        "p95": 0.6626579165458679
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.12418541717774201,
+        "max": 0.9050679206848145,
+        "p95": 0.32225456833839417
+      },
+      "all_action_jump_max_l2_rad": 0.9379345178604126,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 4.878685263653484,
+          "max": 91.94569444444444,
+          "p95": 13.100694444444445
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 19.330737994350283,
+          "max": 91.645625,
+          "p95": 59.06625
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 1.1052718926553673,
+          "max": 5.271319444444444,
+          "p95": 3.5327777777777776
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 2,
+          "mean": 2.279826388888889,
+          "max": 2.3841666666666668,
+          "p95": 2.1754861111111112
+        },
+        "right_rgb": {
+          "n": 2,
+          "mean": 29.746979166666666,
+          "max": 33.043055555555554,
+          "p95": 26.450902777777777
+        },
+        "top_rgb": {
+          "n": 2,
+          "mean": 1.4979166666666666,
+          "max": 1.7365277777777777,
+          "p95": 1.2593055555555555
+        }
+      },
+      "rollout_wall_seconds": 314.4497550036758,
+      "worker_wall_seconds": 315.4759266427718,
+      "telemetry_wall_seconds": 0.9959710231050849,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5599,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h10_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "1aaa4b60de7827d5be22a18a70fe12d1f676056aa828d28359fb09e5e110d7b2",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev00_h05_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -4.123914595103718,
+        "condition_2": -4.958754793242431,
+        "condition_3": 5.368367767896601,
+        "condition_4": 1.1881885699412926
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -4.958754793242431,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": 1.1881885699412926,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.005235010292381048,
+          -0.020191846415400505,
+          0.5286085605621338
+        ],
+        "terminal_centroid": [
+          -0.0035311742685735226,
+          -0.030534110963344574,
+          0.5311093330383301
+        ],
+        "terminal_centroid_displacement": 0.010775868780910969,
+        "max_particle_displacement": 0.16962380707263947,
+        "peak_mean_particle_displacement": 0.03766338899731636,
+        "terminal_mean_particle_displacement": 0.01908266358077526,
+        "terminal_max_particle_displacement": 0.07398445159196854,
+        "peak_step_particle_displacement": 0.018609972670674324,
+        "cumulative_mean_particle_motion": 0.3740429806202883
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.04977697506546974,
+        "right": 0.05722593516111374
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.12106448411941528,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 14,
+          "right": 9
+        }
+      },
+      "failure_category": "partial_fold_2_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.36231005047642006,
+        "max": 0.6162092189770192,
+        "p95": 0.3848081207834184
+      },
+      "total_inference_seconds": 43.477206057170406,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.2771833512086828,
+        "max": 0.8807314038276672,
+        "p95": 0.5636565685272217
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.15577464026088517,
+        "max": 0.9189432859420776,
+        "p95": 0.33100488781929016
+      },
+      "all_action_jump_max_l2_rad": 0.9189432859420776,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 7.186996381886088,
+          "max": 56.10256944444444,
+          "p95": 10.824166666666667
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 6.771372549019608,
+          "max": 45.03256944444445,
+          "p95": 14.960972222222223
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.7793253968253968,
+          "max": 1.79625,
+          "p95": 1.4988194444444445
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 54,
+          "mean": 7.392809927983539,
+          "max": 11.429375,
+          "p95": 10.309166666666666
+        },
+        "right_rgb": {
+          "n": 54,
+          "mean": 6.866464763374486,
+          "max": 19.283055555555556,
+          "p95": 14.960972222222223
+        },
+        "top_rgb": {
+          "n": 54,
+          "mean": 0.9195164609053498,
+          "max": 1.7751388888888888,
+          "p95": 1.452986111111111
+        }
+      },
+      "rollout_wall_seconds": 331.0190529299434,
+      "worker_wall_seconds": 332.1168887591921,
+      "telemetry_wall_seconds": 1.3289675735868514,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 7112,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h05_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "5b639e6e5860806f72ff9db446e4dd60a43257c914301c6900f9b30f47ca3494",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h05_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev01_h50_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": true,
+      "terminal_success": true,
+      "first_official_success_action": 595,
+      "first_official_success_simulation_seconds": 6.611111111111112,
+      "fresh_geometric_ever_success": true,
+      "geometric_first_success_action": 583,
+      "geometric_success_persisted": true,
+      "best_policy_conditions": 4,
+      "best_including_settle_conditions": 4,
+      "terminal_conditions": 4,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 1.6830451322362894,
+        "condition_2": 5.81971070301593,
+        "condition_3": 1.981826864332092,
+        "condition_4": 5.119111572168194
+      },
+      "worst_condition": "condition_1",
+      "worst_margin_cm": 1.6830451322362894,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": 1.6830451322362894,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.05036356300115585,
+          0.02435421757400036,
+          0.5289257168769836
+        ],
+        "terminal_centroid": [
+          -0.049527350813150406,
+          0.029232207685709,
+          0.5338773131370544
+        ],
+        "terminal_centroid_displacement": 0.007000881712883711,
+        "max_particle_displacement": 0.2533104717731476,
+        "peak_mean_particle_displacement": 0.05130651220679283,
+        "terminal_mean_particle_displacement": 0.04817843809723854,
+        "terminal_max_particle_displacement": 0.24791963398456573,
+        "peak_step_particle_displacement": 0.0242837555706501,
+        "cumulative_mean_particle_motion": 0.1674439776561485
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05281967669725418,
+        "right": 0.05609594285488129
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.13151615858078003,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 35,
+          "right": 39
+        }
+      },
+      "failure_category": null,
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.40895911540913704,
+        "max": 0.6837183451279998,
+        "p95": 0.3891400389838964
+      },
+      "total_inference_seconds": 4.907509384909645,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.3314270532943986,
+        "max": 0.7081894278526306,
+        "p95": 0.5810549259185791
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.14679948240201793,
+        "max": 1.343003511428833,
+        "p95": 0.37334251403808594
+      },
+      "all_action_jump_max_l2_rad": 1.343003511428833,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 24.047146464646463,
+          "max": 93.59902777777778,
+          "p95": 38.38861111111111
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 32.77055555555555,
+          "max": 96.911875,
+          "p95": 63.00798611111111
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 1.8324684343434343,
+          "max": 3.1064583333333333,
+          "p95": 3.0775694444444444
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 1,
+          "mean": 12.432291666666666,
+          "max": 12.432291666666666,
+          "p95": 12.432291666666666
+        },
+        "right_rgb": {
+          "n": 1,
+          "mean": 15.984583333333333,
+          "max": 15.984583333333333,
+          "p95": 15.984583333333333
+        },
+        "top_rgb": {
+          "n": 1,
+          "mean": 2.1893055555555554,
+          "max": 2.1893055555555554,
+          "p95": 2.1893055555555554
+        }
+      },
+      "rollout_wall_seconds": 302.46587387495674,
+      "worker_wall_seconds": 303.53393242903985,
+      "telemetry_wall_seconds": 1.2593887289986014,
+      "fresh_camera_acquisitions": 602,
+      "minimum_garment_pixels": 3856,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h50_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "9d6ec3a87f024f82c0d2239d95057d5f8662c36841e4943a051da18c39c7b499",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h50_Pant_Short_Seen_0/rollout_policy_success.mp4"
+    },
+    {
+      "id": "dev01_h10_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -6.529130599975394,
+        "condition_2": 4.508182221415296,
+        "condition_3": 5.369971263561116,
+        "condition_4": 5.934885937766278
+      },
+      "worst_condition": "condition_1",
+      "worst_margin_cm": -6.529130599975394,
+      "closest_threshold_condition": "condition_2",
+      "closest_threshold_margin_cm": 4.508182221415296,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.05036356300115585,
+          0.02435421757400036,
+          0.5289257168769836
+        ],
+        "terminal_centroid": [
+          -0.05721345543861389,
+          0.04855668172240257,
+          0.530864417552948
+        ],
+        "terminal_centroid_displacement": 0.02522774040699005,
+        "max_particle_displacement": 0.26981037855148315,
+        "peak_mean_particle_displacement": 0.030421756207942963,
+        "terminal_mean_particle_displacement": 0.027480140328407288,
+        "terminal_max_particle_displacement": 0.25587525963783264,
+        "peak_step_particle_displacement": 0.022758137434720993,
+        "cumulative_mean_particle_motion": 0.07244146000084584
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06936769932508469,
+        "right": 0.05265197157859802
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.12507563829421997,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 52,
+          "right": 54
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.389417811758661,
+        "max": 0.6204382248688489,
+        "p95": 0.3899817238561809
+      },
+      "total_inference_seconds": 23.36506870551966,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.21866711838391878,
+        "max": 1.1246137619018555,
+        "p95": 0.790427029132843
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.09340443448077336,
+        "max": 0.7653242945671082,
+        "p95": 0.2593171298503876
+      },
+      "all_action_jump_max_l2_rad": 1.1246137619018555,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 5.6706862052730695,
+          "max": 93.6151388888889,
+          "p95": 15.217152777777779
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 12.840815677966102,
+          "max": 87.56416666666667,
+          "p95": 47.09451388888889
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.8139536252354049,
+          "max": 3.905972222222222,
+          "p95": 2.9471527777777777
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 3,
+          "mean": 12.223449074074074,
+          "max": 13.26875,
+          "p95": 12.024930555555555
+        },
+        "right_rgb": {
+          "n": 3,
+          "mean": 33.320347222222225,
+          "max": 43.7575,
+          "p95": 36.30048611111111
+        },
+        "top_rgb": {
+          "n": 3,
+          "mean": 2.147546296296296,
+          "max": 2.543888888888889,
+          "p95": 2.1802083333333333
+        }
+      },
+      "rollout_wall_seconds": 309.8272355450317,
+      "worker_wall_seconds": 310.89607259305194,
+      "telemetry_wall_seconds": 1.2641342296265066,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 4071,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h10_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "c03f43fd5c57be1e3420bec1ae6f7f5bb95948e312aa1559691f9c28799964d8",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev01_h05_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 2.661013385755189,
+        "condition_2": -7.247107229236692,
+        "condition_3": 1.7044768567300856,
+        "condition_4": -4.844315800033488
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -7.247107229236692,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": 1.7044768567300856,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.05036356300115585,
+          0.02435421757400036,
+          0.5289257168769836
+        ],
+        "terminal_centroid": [
+          -0.05211272090673447,
+          -0.02833310328423977,
+          0.5377637147903442
+        ],
+        "terminal_centroid_displacement": 0.05345206707715988,
+        "max_particle_displacement": 0.20174050331115723,
+        "peak_mean_particle_displacement": 0.0875948816537857,
+        "terminal_mean_particle_displacement": 0.0727572962641716,
+        "terminal_max_particle_displacement": 0.1797671616077423,
+        "peak_step_particle_displacement": 0.017920589074492455,
+        "cumulative_mean_particle_motion": 0.3687710475005588
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.031546253710985184,
+        "right": 0.06575895845890045
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.11831909418106079,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 19,
+          "right": 14
+        }
+      },
+      "failure_category": "partial_fold_2_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.3534541932574939,
+        "max": 0.6130609840620309,
+        "p95": 0.3527606821153313
+      },
+      "total_inference_seconds": 42.41450319089927,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.23160313821139455,
+        "max": 0.8365687131881714,
+        "p95": 0.5713494420051575
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.14028044427395797,
+        "max": 0.8197795152664185,
+        "p95": 0.3156038522720337
+      },
+      "all_action_jump_max_l2_rad": 0.8365687131881714,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 6.8694275210084035,
+          "max": 54.72034722222222,
+          "p95": 11.931041666666667
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 6.92453256302521,
+          "max": 61.999722222222225,
+          "p95": 22.031388888888888
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.7309803921568627,
+          "max": 3.899375,
+          "p95": 1.5568055555555556
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 43,
+          "mean": 8.645269702842377,
+          "max": 13.744166666666667,
+          "p95": 12.20513888888889
+        },
+        "right_rgb": {
+          "n": 43,
+          "mean": 5.797979651162791,
+          "max": 18.666527777777777,
+          "p95": 12.198958333333334
+        },
+        "top_rgb": {
+          "n": 43,
+          "mean": 0.8557897286821705,
+          "max": 1.7214583333333333,
+          "p95": 1.4054861111111112
+        }
+      },
+      "rollout_wall_seconds": 328.23761617415585,
+      "worker_wall_seconds": 329.21789777697995,
+      "telemetry_wall_seconds": 1.3084675017744303,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 6303,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h05_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "99d5d35a4a82b9421c26a4becfc126f73e69e6f13fbaf47bff60d47b5091c11f",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h05_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev02_h50_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -2.374351022729279,
+        "condition_2": -6.574026237009596,
+        "condition_3": 7.618807768006064,
+        "condition_4": 6.803813932681791
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -6.574026237009596,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -2.374351022729279,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04876706004142761,
+          -0.01294652558863163,
+          0.5285069942474365
+        ],
+        "terminal_centroid": [
+          -0.047124676406383514,
+          -0.012430364266037941,
+          0.5282574892044067
+        ],
+        "terminal_centroid_displacement": 0.0017395686591044068,
+        "max_particle_displacement": 0.1634005457162857,
+        "peak_mean_particle_displacement": 0.007414752617478371,
+        "terminal_mean_particle_displacement": 0.004061789717525244,
+        "terminal_max_particle_displacement": 0.02293860726058483,
+        "peak_step_particle_displacement": 0.021491888910531998,
+        "cumulative_mean_particle_motion": 0.03243133124124142
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.13345839083194733,
+        "right": 0.07123416662216187
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.08402454853057861,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 36,
+          "right": 28
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.4030305157066323,
+        "max": 0.6057848029304296,
+        "p95": 0.38632852397859097
+      },
+      "total_inference_seconds": 4.836366188479587,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.18991420180960136,
+        "max": 0.4653679430484772,
+        "p95": 0.4122217297554016
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.09480758465123268,
+        "max": 1.4786139726638794,
+        "p95": 0.2896934747695923
+      },
+      "all_action_jump_max_l2_rad": 1.4786139726638794,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 12.025675505050504,
+          "max": 92.72465277777778,
+          "p95": 11.218263888888888
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 25.69037878787879,
+          "max": 104.32652777777778,
+          "p95": 69.91486111111111
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 0.891729797979798,
+          "max": 2.5641666666666665,
+          "p95": 1.8572222222222223
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 286.14330019499175,
+      "worker_wall_seconds": 287.11539363185875,
+      "telemetry_wall_seconds": 1.1119355508126318,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 6244,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h50_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "640102b62d85bcf5897b2bd91a27bddd91474299ea783885fd24d2013ed51904",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h50_Pant_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev02_h10_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -0.008810769031889265,
+        "condition_2": -4.279588792731101,
+        "condition_3": -1.9341726044446332,
+        "condition_4": 4.746509525290811
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -4.279588792731101,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -0.008810769031889265,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04876706004142761,
+          -0.01294652558863163,
+          0.5285069942474365
+        ],
+        "terminal_centroid": [
+          -0.05803574621677399,
+          -0.02180059440433979,
+          0.5322243571281433
+        ],
+        "terminal_centroid_displacement": 0.013346230611205101,
+        "max_particle_displacement": 0.1753273457288742,
+        "peak_mean_particle_displacement": 0.05250487104058266,
+        "terminal_mean_particle_displacement": 0.03345789760351181,
+        "terminal_max_particle_displacement": 0.14195404946804047,
+        "peak_step_particle_displacement": 0.022932428866624832,
+        "cumulative_mean_particle_motion": 0.4156689662777353
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.04884298890829086,
+        "right": 0.051091939210891724
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.14027291536331177,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 12,
+          "right": 29
+        }
+      },
+      "failure_category": "partial_fold_1_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.3888499190720419,
+        "max": 0.6277286980766803,
+        "p95": 0.3878591889515519
+      },
+      "total_inference_seconds": 23.330995144322515,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.27423574851225996,
+        "max": 1.0644789934158325,
+        "p95": 0.6241722106933594
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.14173877989459369,
+        "max": 0.5952705144882202,
+        "p95": 0.307841032743454
+      },
+      "all_action_jump_max_l2_rad": 1.0644789934158325,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 10.716047551789076,
+          "max": 93.14097222222222,
+          "p95": 15.912430555555556
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 8.341477165725047,
+          "max": 86.6504861111111,
+          "p95": 18.86895833333333
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.8946362994350282,
+          "max": 2.5581944444444447,
+          "p95": 1.848125
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 15,
+          "mean": 10.681106481481482,
+          "max": 16.988125,
+          "p95": 14.134444444444444
+        },
+        "right_rgb": {
+          "n": 15,
+          "mean": 12.454115740740741,
+          "max": 29.911180555555557,
+          "p95": 17.281041666666667
+        },
+        "top_rgb": {
+          "n": 15,
+          "mean": 1.3256296296296297,
+          "max": 2.3065277777777777,
+          "p95": 1.9290277777777778
+        }
+      },
+      "rollout_wall_seconds": 307.55399490194395,
+      "worker_wall_seconds": 308.5963483180385,
+      "telemetry_wall_seconds": 1.127712495625019,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5013,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h10_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "a5f7ef824e1249e8a0a454e2dc9307d165f994c3ab0c17a40e309bbb0ff2073a",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev02_h05_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 1.0036977137952547,
+        "condition_2": -6.307686814654529,
+        "condition_3": 4.816900524424405,
+        "condition_4": 0.4289725684429868
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -6.307686814654529,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": 0.4289725684429868,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04876706004142761,
+          -0.01294652558863163,
+          0.5285069942474365
+        ],
+        "terminal_centroid": [
+          -0.05716722458600998,
+          -0.05094593018293381,
+          0.5563603043556213
+        ],
+        "terminal_centroid_displacement": 0.047857336699962616,
+        "max_particle_displacement": 0.19027239084243774,
+        "peak_mean_particle_displacement": 0.06665528565645218,
+        "terminal_mean_particle_displacement": 0.06647496670484543,
+        "terminal_max_particle_displacement": 0.16968339681625366,
+        "peak_step_particle_displacement": 0.022076528519392014,
+        "cumulative_mean_particle_motion": 0.6135901297875535
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.030969163402915,
+        "right": 0.06737865507602692
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.15013521909713745,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 7,
+          "right": 21
+        }
+      },
+      "failure_category": "partial_fold_3_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.35742869842021413,
+        "max": 0.6189103999640793,
+        "p95": 0.3582196719944477
+      },
+      "total_inference_seconds": 42.8914438104257,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.2555503329309095,
+        "max": 1.0404692888259888,
+        "p95": 0.4929714798927307
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.16011929063436886,
+        "max": 0.737729012966156,
+        "p95": 0.360622376203537
+      },
+      "all_action_jump_max_l2_rad": 1.0404692888259888,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 7.748014122315593,
+          "max": 56.14951388888889,
+          "p95": 11.450138888888889
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 5.563428454715219,
+          "max": 45.88409722222222,
+          "p95": 13.688402777777778
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.6750682773109243,
+          "max": 1.7889583333333334,
+          "p95": 1.2910416666666666
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 81,
+          "mean": 7.358960905349794,
+          "max": 13.58201388888889,
+          "p95": 11.450138888888889
+        },
+        "right_rgb": {
+          "n": 81,
+          "mean": 4.772734910836762,
+          "max": 19.682777777777776,
+          "p95": 13.459861111111111
+        },
+        "top_rgb": {
+          "n": 81,
+          "mean": 0.7248242455418381,
+          "max": 1.5186805555555556,
+          "p95": 1.2910416666666666
+        }
+      },
+      "rollout_wall_seconds": 323.268157877028,
+      "worker_wall_seconds": 324.268768907059,
+      "telemetry_wall_seconds": 1.169069904834032,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 6230,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h05_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "4e6a07d9ea03267ac0a3f0c32e7468ffb3db5700dee44eefbc91652b51042378",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h05_Pant_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev03_h50_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": true,
+      "terminal_success": true,
+      "first_official_success_action": 120,
+      "first_official_success_simulation_seconds": 1.3333333333333335,
+      "fresh_geometric_ever_success": true,
+      "geometric_first_success_action": 115,
+      "geometric_success_persisted": true,
+      "best_policy_conditions": 4,
+      "best_including_settle_conditions": 4,
+      "terminal_conditions": 4,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 7.600342620904893,
+        "condition_2": 7.424140810328703,
+        "condition_3": 4.570118025234567,
+        "condition_4": 6.399527480798248
+      },
+      "worst_condition": "condition_3",
+      "worst_margin_cm": 4.570118025234567,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": 4.570118025234567,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04678379371762276,
+          0.024627411738038063,
+          0.528710663318634
+        ],
+        "terminal_centroid": [
+          -0.04244258254766464,
+          0.07330732047557831,
+          0.531761646270752
+        ],
+        "terminal_centroid_displacement": 0.04896823689341545,
+        "max_particle_displacement": 0.20210273563861847,
+        "peak_mean_particle_displacement": 0.049869246780872345,
+        "terminal_mean_particle_displacement": 0.05044426769018173,
+        "terminal_max_particle_displacement": 0.1960388720035553,
+        "peak_step_particle_displacement": 0.022481264546513557,
+        "cumulative_mean_particle_motion": 0.10400327685965749
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06238293647766113,
+        "right": 0.05814439430832863
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.11683279275894165,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 45,
+          "right": 45
+        }
+      },
+      "failure_category": null,
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.4039288304047659,
+        "max": 0.6148472661152482,
+        "p95": 0.38820884888991714
+      },
+      "total_inference_seconds": 4.847145964857191,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.14924393932927738,
+        "max": 0.41714462637901306,
+        "p95": 0.2494346797466278
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.06422263588819678,
+        "max": 0.9065223336219788,
+        "p95": 0.22233900427818298
+      },
+      "all_action_jump_max_l2_rad": 0.9065223336219788,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 12.121395202020203,
+          "max": 88.76631944444445,
+          "p95": 14.275625
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 13.260808080808081,
+          "max": 88.77638888888889,
+          "p95": 17.917083333333334
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 0.7049242424242425,
+          "max": 1.8706944444444444,
+          "p95": 1.8520138888888888
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 1,
+          "mean": 14.275625,
+          "max": 14.275625,
+          "p95": 14.275625
+        },
+        "right_rgb": {
+          "n": 1,
+          "mean": 17.917083333333334,
+          "max": 17.917083333333334,
+          "p95": 17.917083333333334
+        },
+        "top_rgb": {
+          "n": 1,
+          "mean": 1.8520138888888888,
+          "max": 1.8520138888888888,
+          "p95": 1.8520138888888888
+        }
+      },
+      "rollout_wall_seconds": 285.2908341549337,
+      "worker_wall_seconds": 286.27500203996897,
+      "telemetry_wall_seconds": 1.1020004169549793,
+      "fresh_camera_acquisitions": 602,
+      "minimum_garment_pixels": 3853,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "f6da310935c8aaf0871b0a4e6156f405581f74f39a908251443c226612ffbe85",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/rollout_policy_success.mp4"
+    },
+    {
+      "id": "dev03_h10_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -0.29439202612653936,
+        "condition_2": 4.228656519587038,
+        "condition_3": 3.2974746715078496,
+        "condition_4": 6.005685495283316
+      },
+      "worst_condition": "condition_1",
+      "worst_margin_cm": -0.29439202612653936,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -0.29439202612653936,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04678379371762276,
+          0.024627411738038063,
+          0.528710663318634
+        ],
+        "terminal_centroid": [
+          -0.04879273846745491,
+          0.03851098567247391,
+          0.5301145315170288
+        ],
+        "terminal_centroid_displacement": 0.014098238199949265,
+        "max_particle_displacement": 0.23250757157802582,
+        "peak_mean_particle_displacement": 0.018827559426426888,
+        "terminal_mean_particle_displacement": 0.01655961200594902,
+        "terminal_max_particle_displacement": 0.21177397668361664,
+        "peak_step_particle_displacement": 0.022393828257918358,
+        "cumulative_mean_particle_motion": 0.0536305917903519
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06323503702878952,
+        "right": 0.06814415007829666
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.0939561128616333,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 21,
+          "right": 23
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.38663811076354854,
+        "max": 0.5962832670193166,
+        "p95": 0.38684746297076344
+      },
+      "total_inference_seconds": 23.198286645812914,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.21439133477160485,
+        "max": 0.9135576486587524,
+        "p95": 0.47341620922088623
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.10142762125469744,
+        "max": 0.6431241631507874,
+        "p95": 0.32127100229263306
+      },
+      "all_action_jump_max_l2_rad": 0.9135576486587524,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 7.898787664783428,
+          "max": 90.95159722222222,
+          "p95": 25.31361111111111
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 11.982350517890772,
+          "max": 88.40645833333333,
+          "p95": 64.1913888888889
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.8651518361581921,
+          "max": 3.908125,
+          "p95": 3.105625
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 2,
+          "mean": 10.911041666666666,
+          "max": 12.249027777777778,
+          "p95": 9.573055555555555
+        },
+        "right_rgb": {
+          "n": 2,
+          "mean": 28.64024305555556,
+          "max": 40.54131944444445,
+          "p95": 16.739166666666666
+        },
+        "top_rgb": {
+          "n": 2,
+          "mean": 1.645,
+          "max": 1.9902777777777778,
+          "p95": 1.2997222222222222
+        }
+      },
+      "rollout_wall_seconds": 303.2245101761073,
+      "worker_wall_seconds": 304.1983720778953,
+      "telemetry_wall_seconds": 1.137092160526663,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 4059,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h10_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "881e528c0eaab3664825880cf8b5b4f04cd6dd53c6dc284ce78a7b426be97433",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev03_h05_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -0.3471322084497963,
+        "condition_2": -3.0368965682549582,
+        "condition_3": 0.15485755029824944,
+        "condition_4": -1.0826879544671648
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -3.0368965682549582,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": 0.15485755029824944,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10033,
+        "initial_centroid": [
+          -0.04678379371762276,
+          0.024627411738038063,
+          0.528710663318634
+        ],
+        "terminal_centroid": [
+          -0.023984644562005997,
+          -0.012297781184315681,
+          0.5321274995803833
+        ],
+        "terminal_centroid_displacement": 0.04353097453713417,
+        "max_particle_displacement": 0.1838463544845581,
+        "peak_mean_particle_displacement": 0.06401728093624115,
+        "terminal_mean_particle_displacement": 0.05040347948670387,
+        "terminal_max_particle_displacement": 0.13217684626579285,
+        "peak_step_particle_displacement": 0.01960223913192749,
+        "cumulative_mean_particle_motion": 0.343136930372566
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.04928557947278023,
+        "right": 0.05252956226468086
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.10429471731185913,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 17,
+          "right": 13
+        }
+      },
+      "failure_category": "partial_fold_1_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.3576017337598993,
+        "max": 0.607029807055369,
+        "p95": 0.35846174298785627
+      },
+      "total_inference_seconds": 42.91220805118792,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.2701236343308657,
+        "max": 0.8623359203338623,
+        "p95": 0.468121737241745
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.14615681722837812,
+        "max": 0.7095973491668701,
+        "p95": 0.3049317002296448
+      },
+      "all_action_jump_max_l2_rad": 0.8623359203338623,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 7.525168067226891,
+          "max": 56.630069444444445,
+          "p95": 11.636458333333334
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 5.4397263071895425,
+          "max": 47.67,
+          "p95": 12.837361111111111
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.6321095938375351,
+          "max": 1.793611111111111,
+          "p95": 1.1727777777777777
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 46,
+          "mean": 7.813051026570048,
+          "max": 12.534236111111111,
+          "p95": 11.636458333333334
+        },
+        "right_rgb": {
+          "n": 46,
+          "mean": 6.192486413043478,
+          "max": 19.66548611111111,
+          "p95": 12.571875
+        },
+        "top_rgb": {
+          "n": 46,
+          "mean": 0.8044202898550725,
+          "max": 1.5747222222222221,
+          "p95": 1.1947222222222222
+        }
+      },
+      "rollout_wall_seconds": 326.0023235878907,
+      "worker_wall_seconds": 327.0658132790122,
+      "telemetry_wall_seconds": 1.179612050531432,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5422,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h05_Pant_Short_Seen_3/rollout.json",
+      "result_sha256": "5501978ce9ae4c73b795dc209d79fe77e12310665f22d0b544b08270112443d3",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h05_Pant_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev04_h50_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -2.4466651420405903,
+        "condition_2": -7.308245897471021,
+        "condition_3": -9.462089575997917,
+        "condition_4": 4.313831885856814
+      },
+      "worst_condition": "condition_3",
+      "worst_margin_cm": -9.462089575997917,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -2.4466651420405903,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          0.0196295864880085,
+          -0.023316409438848495,
+          0.532738983631134
+        ],
+        "terminal_centroid": [
+          0.005624381825327873,
+          -0.031902410089969635,
+          0.534647524356842
+        ],
+        "terminal_centroid_displacement": 0.016538068652153015,
+        "max_particle_displacement": 0.21970586478710175,
+        "peak_mean_particle_displacement": 0.030790578573942184,
+        "terminal_mean_particle_displacement": 0.025396952405571938,
+        "terminal_max_particle_displacement": 0.1975327730178833,
+        "peak_step_particle_displacement": 0.02499573305249214,
+        "cumulative_mean_particle_motion": 0.1013003796342673
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.07399400323629379,
+        "right": 0.04748211055994034
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.10242807865142822,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 48,
+          "right": 48
+        }
+      },
+      "failure_category": "partial_fold_1_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.40672614524373785,
+        "max": 0.634888316038996,
+        "p95": 0.39242540393024683
+      },
+      "total_inference_seconds": 4.880713742924854,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.29595401273532346,
+        "max": 0.7942565083503723,
+        "p95": 0.6299747228622437
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.11638876009846524,
+        "max": 0.9312713742256165,
+        "p95": 0.37242376804351807
+      },
+      "all_action_jump_max_l2_rad": 0.9312713742256165,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 17.85705808080808,
+          "max": 91.60298611111111,
+          "p95": 33.545833333333334
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 33.680625,
+          "max": 95.14006944444445,
+          "p95": 83.42430555555555
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 1.373358585858586,
+          "max": 3.03125,
+          "p95": 2.9999305555555558
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 6,
+          "mean": 12.78212962962963,
+          "max": 33.545833333333334,
+          "p95": 32.800069444444446
+        },
+        "right_rgb": {
+          "n": 6,
+          "mean": 33.124652777777776,
+          "max": 83.42430555555555,
+          "p95": 74.38756944444444
+        },
+        "top_rgb": {
+          "n": 6,
+          "mean": 1.454375,
+          "max": 3.03125,
+          "p95": 2.9999305555555558
+        }
+      },
+      "rollout_wall_seconds": 289.4067889379803,
+      "worker_wall_seconds": 290.3776021930389,
+      "telemetry_wall_seconds": 1.3929061575327069,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5402,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h50_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "a0fe8f320013cd4ae8c23a19468bc1758cd081b32bc38d64a0a1003cf637cd02",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h50_Pant_Short_Seen_7/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev04_h10_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -2.617796194264205,
+        "condition_2": -3.7926167216001403,
+        "condition_3": 5.544999195527403,
+        "condition_4": 5.984027469255803
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -3.7926167216001403,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -2.617796194264205,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          0.0196295864880085,
+          -0.023316409438848495,
+          0.532738983631134
+        ],
+        "terminal_centroid": [
+          0.02056744508445263,
+          -0.022390009835362434,
+          0.5321857929229736
+        ],
+        "terminal_centroid_displacement": 0.0014296205481514335,
+        "max_particle_displacement": 0.02427523583173752,
+        "peak_mean_particle_displacement": 0.0038741931784898043,
+        "terminal_mean_particle_displacement": 0.004041398409754038,
+        "terminal_max_particle_displacement": 0.022748244926333427,
+        "peak_step_particle_displacement": 0.013254275545477867,
+        "cumulative_mean_particle_motion": 0.018479796535757487
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.14916856586933136,
+        "right": 0.06571241468191147
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.011616766452789307,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 246,
+          "right": 24
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.3875141589979952,
+        "max": 0.619421720970422,
+        "p95": 0.3876024710480124
+      },
+      "total_inference_seconds": 23.25084953987971,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.23106124040560197,
+        "max": 1.282462477684021,
+        "p95": 0.6950777769088745
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.11748319465184101,
+        "max": 1.3517769575119019,
+        "p95": 0.35678720474243164
+      },
+      "all_action_jump_max_l2_rad": 1.3517769575119019,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 3.771177024482109,
+          "max": 93.14222222222222,
+          "p95": 4.96875
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 16.956218220338982,
+          "max": 92.18673611111112,
+          "p95": 59.57958333333333
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.9165454331450095,
+          "max": 3.1061805555555555,
+          "p95": 2.5681944444444444
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 307.9389427350834,
+      "worker_wall_seconds": 308.9378948030062,
+      "telemetry_wall_seconds": 1.4232891064602882,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5306,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h10_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "3d9648ab832e0aa3865e919b458d389f6ab87f45cedf96c02bf94eb98a3dbcef",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev04_h05_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -0.07908573903460514,
+        "condition_2": -2.7435922610872545,
+        "condition_3": 5.470829174127243,
+        "condition_4": 5.213654640486148
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -2.7435922610872545,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -0.07908573903460514,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          0.0196295864880085,
+          -0.023316409438848495,
+          0.532738983631134
+        ],
+        "terminal_centroid": [
+          0.011591102927923203,
+          -0.029134387150406837,
+          0.5337353944778442
+        ],
+        "terminal_centroid_displacement": 0.009972909465432167,
+        "max_particle_displacement": 0.12439899146556854,
+        "peak_mean_particle_displacement": 0.021431488916277885,
+        "terminal_mean_particle_displacement": 0.01605556532740593,
+        "terminal_max_particle_displacement": 0.07139021903276443,
+        "peak_step_particle_displacement": 0.020595619454979897,
+        "cumulative_mean_particle_motion": 0.1340262104968133
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05329788476228714,
+        "right": 0.04641486331820488
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.108367919921875,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 120,
+          "right": 14
+        }
+      },
+      "failure_category": "partial_fold_2_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.3575096438425438,
+        "max": 0.632750784046948,
+        "p95": 0.3792354839388281
+      },
+      "total_inference_seconds": 42.901157261105254,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.27890700571426824,
+        "max": 0.8951179385185242,
+        "p95": 0.5332181453704834
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.16292796757382652,
+        "max": 0.7791079878807068,
+        "p95": 0.37683120369911194
+      },
+      "all_action_jump_max_l2_rad": 0.8951179385185242,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 7.923943744164332,
+          "max": 55.288125,
+          "p95": 14.794791666666667
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 9.846929855275443,
+          "max": 51.826458333333335,
+          "p95": 30.33111111111111
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.8670553221288515,
+          "max": 3.909375,
+          "p95": 1.8095833333333333
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 14,
+          "mean": 8.496775793650794,
+          "max": 11.565555555555555,
+          "p95": 10.96625
+        },
+        "right_rgb": {
+          "n": 14,
+          "mean": 9.77061011904762,
+          "max": 20.060833333333335,
+          "p95": 18.968263888888888
+        },
+        "top_rgb": {
+          "n": 14,
+          "mean": 1.1306994047619048,
+          "max": 1.8125694444444445,
+          "p95": 1.4269444444444443
+        }
+      },
+      "rollout_wall_seconds": 331.0374343099538,
+      "worker_wall_seconds": 332.13308423385024,
+      "telemetry_wall_seconds": 1.4548919934313744,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5575,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h05_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "54b440f8318d2c611c30d4edf6d6f9d268ead8ff30f04f76895f60f8e2f32710",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h05_Pant_Short_Seen_7/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev05_h50_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": true,
+      "terminal_success": true,
+      "first_official_success_action": 395,
+      "first_official_success_simulation_seconds": 4.388888888888889,
+      "fresh_geometric_ever_success": true,
+      "geometric_first_success_action": 393,
+      "geometric_success_persisted": true,
+      "best_policy_conditions": 4,
+      "best_including_settle_conditions": 4,
+      "terminal_conditions": 4,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 5.50931673198959,
+        "condition_2": 2.856258984258745,
+        "condition_3": 4.891709826667075,
+        "condition_4": 4.630900050605952
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": 2.856258984258745,
+      "closest_threshold_condition": "condition_2",
+      "closest_threshold_margin_cm": 2.856258984258745,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          -0.02801802009344101,
+          -0.016025889664888382,
+          0.5323492884635925
+        ],
+        "terminal_centroid": [
+          -0.03199644759297371,
+          0.031194180250167847,
+          0.5371729731559753
+        ],
+        "terminal_centroid_displacement": 0.04763224348425865,
+        "max_particle_displacement": 0.2986295521259308,
+        "peak_mean_particle_displacement": 0.06201116368174553,
+        "terminal_mean_particle_displacement": 0.061321232467889786,
+        "terminal_max_particle_displacement": 0.29405924677848816,
+        "peak_step_particle_displacement": 0.025284094735980034,
+        "cumulative_mean_particle_motion": 0.1671143815601681
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05539456009864807,
+        "right": 0.054558031260967255
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.12158089876174927,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 32,
+          "right": 32
+        }
+      },
+      "failure_category": null,
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.4045514310322081,
+        "max": 0.622455629054457,
+        "p95": 0.3880855201277882
+      },
+      "total_inference_seconds": 4.854617172386497,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.37669797377152875,
+        "max": 1.1782108545303345,
+        "p95": 0.7424951791763306
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.1588397408886274,
+        "max": 1.038501262664795,
+        "p95": 0.4326988756656647
+      },
+      "all_action_jump_max_l2_rad": 1.1782108545303345,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 20.66957702020202,
+          "max": 96.34229166666667,
+          "p95": 24.189652777777777
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 44.96346590909091,
+          "max": 91.8723611111111,
+          "p95": 78.99444444444444
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 2.4382196969696968,
+          "max": 3.763888888888889,
+          "p95": 3.591736111111111
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 5,
+          "mean": 11.528652777777777,
+          "max": 20.255555555555556,
+          "p95": 16.57125
+        },
+        "right_rgb": {
+          "n": 5,
+          "mean": 33.73916666666667,
+          "max": 57.928472222222226,
+          "p95": 52.22645833333333
+        },
+        "top_rgb": {
+          "n": 5,
+          "mean": 2.407,
+          "max": 3.763888888888889,
+          "p95": 3.591736111111111
+        }
+      },
+      "rollout_wall_seconds": 295.18986568506807,
+      "worker_wall_seconds": 296.1719958120957,
+      "telemetry_wall_seconds": 1.3591244330164045,
+      "fresh_camera_acquisitions": 602,
+      "minimum_garment_pixels": 3917,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h50_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "b9a984fc44b7790f3539717e4cc8fe36e265f32dcaf40eaac9120a4472990667",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h50_Pant_Short_Seen_7/rollout_policy_success.mp4"
+    },
+    {
+      "id": "dev05_h10_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -2.506043632122994,
+        "condition_2": 4.474349309995266,
+        "condition_3": 5.233780957514039,
+        "condition_4": 6.099439975803186
+      },
+      "worst_condition": "condition_1",
+      "worst_margin_cm": -2.506043632122994,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -2.506043632122994,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          -0.02801802009344101,
+          -0.016025889664888382,
+          0.5323492884635925
+        ],
+        "terminal_centroid": [
+          -0.02661018632352352,
+          0.013628355227410793,
+          0.5362123250961304
+        ],
+        "terminal_centroid_displacement": 0.029937924817204475,
+        "max_particle_displacement": 0.24404959380626678,
+        "peak_mean_particle_displacement": 0.03897222504019737,
+        "terminal_mean_particle_displacement": 0.03244321793317795,
+        "terminal_max_particle_displacement": 0.22646744549274445,
+        "peak_step_particle_displacement": 0.025284042581915855,
+        "cumulative_mean_particle_motion": 0.08056631292856764
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06644515693187714,
+        "right": 0.0479346439242363
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.10111922025680542,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 262,
+          "right": 17
+        }
+      },
+      "failure_category": "partial_fold_3_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.3873757381457835,
+        "max": 0.6542601049877703,
+        "p95": 0.3861346049234271
+      },
+      "total_inference_seconds": 23.242544288747013,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.16989921257531237,
+        "max": 0.7192394137382507,
+        "p95": 0.35834547877311707
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.08409668396882437,
+        "max": 0.6651476621627808,
+        "p95": 0.26443567872047424
+      },
+      "all_action_jump_max_l2_rad": 0.7192394137382507,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 8.08344868173258,
+          "max": 93.98979166666666,
+          "p95": 40.01048611111111
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 12.686281779661018,
+          "max": 86.28777777777778,
+          "p95": 46.59854166666667
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.7750929849340866,
+          "max": 4.366388888888889,
+          "p95": 2.971597222222222
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 14,
+          "mean": 16.203725198412698,
+          "max": 59.39590277777778,
+          "p95": 41.03923611111111
+        },
+        "right_rgb": {
+          "n": 14,
+          "mean": 18.546919642857144,
+          "max": 80.75548611111111,
+          "p95": 46.59854166666667
+        },
+        "top_rgb": {
+          "n": 14,
+          "mean": 1.412420634920635,
+          "max": 4.366388888888889,
+          "p95": 3.242847222222222
+        }
+      },
+      "rollout_wall_seconds": 309.1539093439933,
+      "worker_wall_seconds": 310.18590956390835,
+      "telemetry_wall_seconds": 1.4228378746192902,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 4932,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h10_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "490115b81ad9d06f7e8703bcba5e54ec29e30263f0a8d2cb76c8aaee10df11ea",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h10_Pant_Short_Seen_7/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev05_h05_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -4.193366072968363,
+        "condition_2": -3.5480931119018617,
+        "condition_3": 0.061549601900690476,
+        "condition_4": 5.602306352515981
+      },
+      "worst_condition": "condition_1",
+      "worst_margin_cm": -4.193366072968363,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": 0.061549601900690476,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 13985,
+        "initial_centroid": [
+          -0.02801802009344101,
+          -0.016025889664888382,
+          0.5323492884635925
+        ],
+        "terminal_centroid": [
+          -0.0272184107452631,
+          -0.01891268417239189,
+          0.5360678434371948
+        ],
+        "terminal_centroid_displacement": 0.0047749984078109264,
+        "max_particle_displacement": 0.12246861308813095,
+        "peak_mean_particle_displacement": 0.015319562517106533,
+        "terminal_mean_particle_displacement": 0.013114104978740215,
+        "terminal_max_particle_displacement": 0.09470907598733902,
+        "peak_step_particle_displacement": 0.016189591959118843,
+        "cumulative_mean_particle_motion": 0.05257246453402331
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05272931605577469,
+        "right": 0.06626083701848984
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.110653817653656,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 13,
+          "right": 51
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.359882858217073,
+        "max": 0.6224807950202376,
+        "p95": 0.3615730938035995
+      },
+      "total_inference_seconds": 43.18594298604876,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.18439100873695702,
+        "max": 0.9476144909858704,
+        "p95": 0.41438716650009155
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.11506610153980243,
+        "max": 0.8826296329498291,
+        "p95": 0.30460551381111145
+      },
+      "all_action_jump_max_l2_rad": 0.9476144909858704,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 4.245641339869281,
+          "max": 55.34902777777778,
+          "p95": 13.157638888888888
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 9.96233485060691,
+          "max": 58.39118055555556,
+          "p95": 40.23659722222222
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.7593971755368815,
+          "max": 3.8774305555555557,
+          "p95": 2.615763888888889
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 3,
+          "mean": 12.494791666666666,
+          "max": 14.769166666666667,
+          "p95": 13.157638888888888
+        },
+        "right_rgb": {
+          "n": 3,
+          "mean": 9.273032407407408,
+          "max": 11.679583333333333,
+          "p95": 8.36375
+        },
+        "top_rgb": {
+          "n": 3,
+          "mean": 1.1750925925925926,
+          "max": 1.3477083333333333,
+          "p95": 1.1260416666666666
+        }
+      },
+      "rollout_wall_seconds": 331.9302572561428,
+      "worker_wall_seconds": 332.96925230603665,
+      "telemetry_wall_seconds": 1.4645440836902708,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 6668,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h05_Pant_Short_Seen_7/rollout.json",
+      "result_sha256": "624cf2302a508f20270b912d481782b1b7b41281a33e4f9513386b5401f78b31",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h05_Pant_Short_Seen_7/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev06_h50_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 0.03864821252864914,
+        "condition_2": -5.092829068568703,
+        "condition_3": 4.660866337998346,
+        "condition_4": 6.163724218835991
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -5.092829068568703,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": 0.03864821252864914,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          0.02158549055457115,
+          -0.022958779707551003,
+          0.5290433764457703
+        ],
+        "terminal_centroid": [
+          0.0205986388027668,
+          -0.02709265612065792,
+          0.5286334753036499
+        ],
+        "terminal_centroid_displacement": 0.004269757773727179,
+        "max_particle_displacement": 0.09565436094999313,
+        "peak_mean_particle_displacement": 0.009715958498418331,
+        "terminal_mean_particle_displacement": 0.009891620837152004,
+        "terminal_max_particle_displacement": 0.04167178273200989,
+        "peak_step_particle_displacement": 0.022927619516849518,
+        "cumulative_mean_particle_motion": 0.042197584893074236
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.07740198820829391,
+        "right": 0.05435933545231819
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.03960758447647095,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 44,
+          "right": 39
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.413451618689578,
+        "max": 0.6882895319722593,
+        "p95": 0.4090640980284661
+      },
+      "total_inference_seconds": 4.961419424274936,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.2790871760384603,
+        "max": 0.9078528881072998,
+        "p95": 0.7668004035949707
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.09812597902238268,
+        "max": 0.8484006524085999,
+        "p95": 0.31758737564086914
+      },
+      "all_action_jump_max_l2_rad": 0.9078528881072998,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 12.727512626262627,
+          "max": 86.60604166666667,
+          "p95": 11.370625
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 22.982493686868686,
+          "max": 102.68152777777777,
+          "p95": 35.29958333333333
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 0.9573926767676768,
+          "max": 2.168888888888889,
+          "p95": 1.8603472222222222
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 290.2086271829903,
+      "worker_wall_seconds": 291.3181969060097,
+      "telemetry_wall_seconds": 1.4057645804714411,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 4225,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h50_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "c683fdb006af5f95e522a04af3dfe2b5a69463006db81eaa2521719da3201f31",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev06_h10_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 4.807242324998281,
+        "condition_2": -5.431596174344433,
+        "condition_3": 5.6981526700784215,
+        "condition_4": 5.453234295577211
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -5.431596174344433,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": 4.807242324998281,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          0.02158549055457115,
+          -0.022958779707551003,
+          0.5290433764457703
+        ],
+        "terminal_centroid": [
+          0.022101230919361115,
+          0.0478152260184288,
+          0.5322733521461487
+        ],
+        "terminal_centroid_displacement": 0.07084954530000687,
+        "max_particle_displacement": 0.31432288885116577,
+        "peak_mean_particle_displacement": 0.07413814961910248,
+        "terminal_mean_particle_displacement": 0.07486629486083984,
+        "terminal_max_particle_displacement": 0.3229946494102478,
+        "peak_step_particle_displacement": 0.022761689499020576,
+        "cumulative_mean_particle_motion": 0.12505287279600452
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06390944123268127,
+        "right": 0.045628324151039124
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.104877769947052,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 21,
+          "right": 14
+        }
+      },
+      "failure_category": "partial_fold_3_of_4",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.38492858355942494,
+        "max": 0.6110099689103663,
+        "p95": 0.38430417887866497
+      },
+      "total_inference_seconds": 23.095715013565496,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.24624553228081283,
+        "max": 0.9720656871795654,
+        "p95": 0.5540511012077332
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.12248271758909579,
+        "max": 0.7398976683616638,
+        "p95": 0.35557040572166443
+      },
+      "all_action_jump_max_l2_rad": 0.9720656871795654,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 9.165380178907721,
+          "max": 90.79409722222222,
+          "p95": 29.837291666666665
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 16.327100988700565,
+          "max": 88.66840277777777,
+          "p95": 54.99944444444444
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 1.0587064500941619,
+          "max": 4.079791666666667,
+          "p95": 3.1410416666666667
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 13,
+          "mean": 17.12778846153846,
+          "max": 77.88701388888889,
+          "p95": 42.39541666666667
+        },
+        "right_rgb": {
+          "n": 13,
+          "mean": 20.891084401709403,
+          "max": 87.0826388888889,
+          "p95": 49.86756944444444
+        },
+        "top_rgb": {
+          "n": 13,
+          "mean": 1.404241452991453,
+          "max": 4.079791666666667,
+          "p95": 3.1410416666666667
+        }
+      },
+      "rollout_wall_seconds": 311.7174638961442,
+      "worker_wall_seconds": 312.7415812399704,
+      "telemetry_wall_seconds": 1.4530196599662304,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 2721,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h10_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "f401ded80ad918f3e5fdeee50279e6b666644a6051be946138e17012a7ba03dd",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev06_h05_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -0.06454641101484526,
+        "condition_2": -4.704185810465381,
+        "condition_3": 6.492260934989385,
+        "condition_4": 5.946024281449834
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -4.704185810465381,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -0.06454641101484526,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          0.02158549055457115,
+          -0.022958779707551003,
+          0.5290433764457703
+        ],
+        "terminal_centroid": [
+          0.024547602981328964,
+          -0.023111656308174133,
+          0.5285372734069824
+        ],
+        "terminal_centroid_displacement": 0.003008923726156354,
+        "max_particle_displacement": 0.02343733236193657,
+        "peak_mean_particle_displacement": 0.006021135486662388,
+        "terminal_mean_particle_displacement": 0.0063336496241390705,
+        "terminal_max_particle_displacement": 0.024902014061808586,
+        "peak_step_particle_displacement": 0.004022364970296621,
+        "cumulative_mean_particle_motion": 0.016156509658685536
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.16328661143779755,
+        "right": 0.07427258044481277
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.014238715171813965,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": null,
+          "right": 10
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.35481088309315967,
+        "max": 0.646062842104584,
+        "p95": 0.35455970000475645
+      },
+      "total_inference_seconds": 42.57730597117916,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.19341857579513258,
+        "max": 0.7598680853843689,
+        "p95": 0.5246361494064331
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.1162196491592719,
+        "max": 0.9166831970214844,
+        "p95": 0.3343127965927124
+      },
+      "all_action_jump_max_l2_rad": 0.9166831970214844,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 2.2927544351073763,
+          "max": 55.910555555555554,
+          "p95": 3.297361111111111
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 11.558757002801121,
+          "max": 52.02840277777778,
+          "p95": 40.54069444444445
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.8060387488328665,
+          "max": 3.7022916666666665,
+          "p95": 2.6235416666666667
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 326.2438708289992,
+      "worker_wall_seconds": 327.3085993598215,
+      "telemetry_wall_seconds": 1.5104345893487334,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 4229,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h05_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "06a78518d3a16971aef5ff9118309f6e1bd6fe0c61605b6dbf6cc89f91bf10fe",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h05_Pant_Short_Seen_9/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev07_h50_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": true,
+      "terminal_success": true,
+      "first_official_success_action": 245,
+      "first_official_success_simulation_seconds": 2.7222222222222223,
+      "fresh_geometric_ever_success": true,
+      "geometric_first_success_action": 235,
+      "geometric_success_persisted": true,
+      "best_policy_conditions": 4,
+      "best_including_settle_conditions": 4,
+      "terminal_conditions": 4,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 6.931470713525741,
+        "condition_2": 1.5845890934467581,
+        "condition_3": 6.800390162673853,
+        "condition_4": 6.006055624378103
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": 1.5845890934467581,
+      "closest_threshold_condition": "condition_2",
+      "closest_threshold_margin_cm": 1.5845890934467581,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          -0.02610444463789463,
+          -0.016732577234506607,
+          0.5291818976402283
+        ],
+        "terminal_centroid": [
+          -0.02253434993326664,
+          0.040094390511512756,
+          0.5321853160858154
+        ],
+        "terminal_centroid_displacement": 0.057018157094717026,
+        "max_particle_displacement": 0.26577648520469666,
+        "peak_mean_particle_displacement": 0.061051491647958755,
+        "terminal_mean_particle_displacement": 0.06043928489089012,
+        "terminal_max_particle_displacement": 0.2602042555809021,
+        "peak_step_particle_displacement": 0.02792089805006981,
+        "cumulative_mean_particle_motion": 0.12143551840381406
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.0682762861251831,
+        "right": 0.04674763232469559
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.13086360692977905,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 39,
+          "right": 16
+        }
+      },
+      "failure_category": null,
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 12,
+      "inference_seconds": {
+        "n": 12,
+        "mean": 0.4069622333239143,
+        "max": 0.6630496480502188,
+        "p95": 0.40152977709658444
+      },
+      "total_inference_seconds": 4.883546799886972,
+      "boundary_action_jump_l2_rad": {
+        "n": 11,
+        "mean": 0.2771788000721823,
+        "max": 0.7470803260803223,
+        "p95": 0.6061801910400391
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 588,
+        "mean": 0.08306336364563123,
+        "max": 0.8116073608398438,
+        "p95": 0.3062419295310974
+      },
+      "all_action_jump_max_l2_rad": 0.8116073608398438,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 11,
+          "mean": 14.726938131313132,
+          "max": 94.15395833333334,
+          "p95": 21.592916666666667
+        },
+        "right_rgb": {
+          "n": 11,
+          "mean": 27.277083333333334,
+          "max": 94.69659722222222,
+          "p95": 60.93006944444444
+        },
+        "top_rgb": {
+          "n": 11,
+          "mean": 1.2339772727272726,
+          "max": 3.4743055555555555,
+          "p95": 3.3540277777777776
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 292.8382380330004,
+      "worker_wall_seconds": 293.9639849849045,
+      "telemetry_wall_seconds": 1.4085539372172207,
+      "fresh_camera_acquisitions": 602,
+      "minimum_garment_pixels": 2949,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h50_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "13acecb41f34def52a0985bfca859de79d6ce8c4bdd62015f626f00e2a80e3f3",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h50_Pant_Short_Seen_9/rollout_policy_success.mp4"
+    },
+    {
+      "id": "dev07_h10_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": true,
+      "geometric_first_success_action": 287,
+      "geometric_success_persisted": false,
+      "best_policy_conditions": 4,
+      "best_including_settle_conditions": 4,
+      "terminal_conditions": 3,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 2.6146017933877284,
+        "condition_2": 5.234151218074308,
+        "condition_3": -1.8818558794486009,
+        "condition_4": 5.051963828200403
+      },
+      "worst_condition": "condition_3",
+      "worst_margin_cm": -1.8818558794486009,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": -1.8818558794486009,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          -0.02610444463789463,
+          -0.016732577234506607,
+          0.5291818976402283
+        ],
+        "terminal_centroid": [
+          -0.01913556642830372,
+          0.021327737718820572,
+          0.5334606170654297
+        ],
+        "terminal_centroid_displacement": 0.038928914815187454,
+        "max_particle_displacement": 0.2136555165052414,
+        "peak_mean_particle_displacement": 0.04497973248362541,
+        "terminal_mean_particle_displacement": 0.043302007019519806,
+        "terminal_max_particle_displacement": 0.20484307408332825,
+        "peak_step_particle_displacement": 0.01779380440711975,
+        "cumulative_mean_particle_motion": 0.0993309352252254
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06534860283136368,
+        "right": 0.06559790670871735
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.09560734033584595,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 16,
+          "right": 12
+        }
+      },
+      "failure_category": "success_then_unfolded",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.38637641830137,
+        "max": 0.6302884519100189,
+        "p95": 0.38568284804932773
+      },
+      "total_inference_seconds": 23.1825850980822,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.23607536320085243,
+        "max": 0.8855036497116089,
+        "p95": 0.6431717276573181
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.10889961347156377,
+        "max": 0.896565854549408,
+        "p95": 0.3207416236400604
+      },
+      "all_action_jump_max_l2_rad": 0.896565854549408,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 7.293411016949152,
+          "max": 93.49194444444444,
+          "p95": 23.583541666666665
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 13.81016713747646,
+          "max": 85.56465277777778,
+          "p95": 39.092013888888886
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 0.9634310263653484,
+          "max": 3.282986111111111,
+          "p95": 2.8068055555555556
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 12,
+          "mean": 13.221331018518518,
+          "max": 48.59652777777778,
+          "p95": 25.875555555555554
+        },
+        "right_rgb": {
+          "n": 12,
+          "mean": 18.75945023148148,
+          "max": 73.21576388888889,
+          "p95": 39.092013888888886
+        },
+        "top_rgb": {
+          "n": 12,
+          "mean": 1.355787037037037,
+          "max": 3.282986111111111,
+          "p95": 3.0561805555555557
+        }
+      },
+      "rollout_wall_seconds": 309.5208408718463,
+      "worker_wall_seconds": 310.63652097503655,
+      "telemetry_wall_seconds": 1.4541493926662952,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 2445,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h10_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "4368770e50b84c810cb4e314cf1ac58bd1979bbfa3b8df5311e6b682b4ba36b1",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h10_Pant_Short_Seen_9/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev07_h05_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 5,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 3,
+      "best_including_settle_conditions": 3,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": 4.086527083913646,
+        "condition_2": -11.611000387368543,
+        "condition_3": 5.2884825349395115,
+        "condition_4": -0.9973320553010296
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -11.611000387368543,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": -0.9973320553010296,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14258,
+        "initial_centroid": [
+          -0.02610444463789463,
+          -0.016732577234506607,
+          0.5291818976402283
+        ],
+        "terminal_centroid": [
+          -0.04056151583790779,
+          -0.03393467143177986,
+          0.5321550369262695
+        ],
+        "terminal_centroid_displacement": 0.022666241973638535,
+        "max_particle_displacement": 0.16296391189098358,
+        "peak_mean_particle_displacement": 0.04596662148833275,
+        "terminal_mean_particle_displacement": 0.04335518926382065,
+        "terminal_max_particle_displacement": 0.16576875746250153,
+        "peak_step_particle_displacement": 0.021751537919044495,
+        "cumulative_mean_particle_motion": 0.2509232876363967
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05061188340187073,
+        "right": 0.061379626393318176
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.11345744132995605,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 36,
+          "right": 20
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 120,
+      "inference_seconds": {
+        "n": 120,
+        "mean": 0.35744131668858853,
+        "max": 0.6582304700277746,
+        "p95": 0.3597709541209042
+      },
+      "total_inference_seconds": 42.89295800263062,
+      "boundary_action_jump_l2_rad": {
+        "n": 119,
+        "mean": 0.26786238919286165,
+        "max": 1.0987595319747925,
+        "p95": 0.7335410118103027
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 480,
+        "mean": 0.14856493266997858,
+        "max": 0.7141402363777161,
+        "p95": 0.34478387236595154
+      },
+      "all_action_jump_max_l2_rad": 1.0987595319747925,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 119,
+          "mean": 7.115550887021476,
+          "max": 54.58506944444444,
+          "p95": 11.360277777777778
+        },
+        "right_rgb": {
+          "n": 119,
+          "mean": 4.386303688141924,
+          "max": 46.17298611111111,
+          "p95": 10.749652777777778
+        },
+        "top_rgb": {
+          "n": 119,
+          "mean": 0.603782096171802,
+          "max": 1.7518055555555556,
+          "p95": 1.2428472222222222
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 35,
+          "mean": 7.750007936507936,
+          "max": 12.204305555555555,
+          "p95": 11.988333333333333
+        },
+        "right_rgb": {
+          "n": 35,
+          "mean": 5.344670634920635,
+          "max": 11.802916666666667,
+          "p95": 9.201180555555556
+        },
+        "top_rgb": {
+          "n": 35,
+          "mean": 0.8638055555555556,
+          "max": 1.4225,
+          "p95": 1.1764583333333334
+        }
+      },
+      "rollout_wall_seconds": 329.20543801481836,
+      "worker_wall_seconds": 330.2188286969904,
+      "telemetry_wall_seconds": 1.5004015599843115,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5278,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h05_Pant_Short_Seen_9/rollout.json",
+      "result_sha256": "34740da70ccd09bceea27535f3f46e61f42f6d10e17426bab5fef7e69307fc5c",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h05_Pant_Short_Seen_9/rollout_policy_failure.mp4"
+    }
+  ],
+  "historical_8_of_24_comparison_valid": false,
+  "contact_ground_truth_measured": false,
+  "interpretation": "No inference from missing/invalid episodes. Pilot is exploratory; no public improvement claim or training release.",
+  "next_step": "Inspect matched terminal/ever wins and margins, action boundaries and footage before freezing any formal evaluation horizon."
+}

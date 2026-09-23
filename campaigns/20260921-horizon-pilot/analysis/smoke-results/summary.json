@@ -1,0 +1,696 @@
+{
+  "mode": "smoke",
+  "complete_valid_protocol": true,
+  "valid": 5,
+  "expected": 5,
+  "aggregate": {
+    "50": {
+      "valid_episodes": 5,
+      "invalid_or_missing": 0,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": 2,
+      "mean_terminal_conditions": 1.8
+    }
+  },
+  "matched_comparisons_vs_50": {},
+  "rows": [
+    {
+      "id": "smoke_Top_Short_Seen_3",
+      "pose": null,
+      "garment": "Top_Short_Seen_3",
+      "seed": 100,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 5,
+      "terminal_margins_cm": {
+        "condition_1": -5.534061406653635,
+        "condition_2": -5.852808466595114,
+        "condition_3": -5.878062621325082,
+        "condition_4": 12.607441155798464,
+        "condition_5": 7.2867332678583
+      },
+      "worst_condition": "condition_3",
+      "worst_margin_cm": -5.878062621325082,
+      "closest_threshold_condition": "condition_1",
+      "closest_threshold_margin_cm": -5.534061406653635,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 10869,
+        "initial_centroid": [
+          -0.03950513154268265,
+          0.015360084362328053,
+          0.5328220129013062
+        ],
+        "terminal_centroid": [
+          -0.03984091430902481,
+          0.015252821147441864,
+          0.5322664380073547
+        ],
+        "terminal_centroid_displacement": 0.0006579657201655209,
+        "max_particle_displacement": 0.05432596430182457,
+        "peak_mean_particle_displacement": 0.002282581990584731,
+        "terminal_mean_particle_displacement": 0.002889635507017374,
+        "terminal_max_particle_displacement": 0.03417901322245598,
+        "peak_step_particle_displacement": 0.01300450786948204,
+        "cumulative_mean_particle_motion": 0.00737087763081945
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05343431979417801,
+        "right": 0.062138695269823074
+      },
+      "distance_basis": "legacy last-link origin",
+      "maximum_particle_lift_m": null,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": null,
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 3,
+      "inference_seconds": {
+        "n": 3,
+        "mean": 0.7376166970934719,
+        "max": 1.484101781155914,
+        "p95": 0.3648416150826961
+      },
+      "total_inference_seconds": 2.2128500912804157,
+      "boundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "all_action_jump_max_l2_rad": 0.8450973033905029,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 130.6596528829541,
+      "worker_wall_seconds": 131.43252245592885,
+      "telemetry_wall_seconds": null,
+      "fresh_camera_acquisitions": 121,
+      "minimum_garment_pixels": 5080,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_3/rollout.json",
+      "result_sha256": "9b9ea13b2f7af06f074c9271b650fd2e20c561608a7d546a36b098fbc9b0e867",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_3/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "smoke_Pant_Short_Seen_0",
+      "pose": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 100,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -4.847346212389187,
+        "condition_2": -2.9760988583426933,
+        "condition_3": -6.2836039631604645,
+        "condition_4": 5.639578128858826
+      },
+      "worst_condition": "condition_3",
+      "worst_margin_cm": -6.2836039631604645,
+      "closest_threshold_condition": "condition_2",
+      "closest_threshold_margin_cm": -2.9760988583426933,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.005235010292381048,
+          -0.020191846415400505,
+          0.5286085605621338
+        ],
+        "terminal_centroid": [
+          -0.01146926824003458,
+          0.016643913462758064,
+          0.5340250134468079
+        ],
+        "terminal_centroid_displacement": 0.03775019198656082,
+        "max_particle_displacement": 0.2359708845615387,
+        "peak_mean_particle_displacement": 0.04636481776833534,
+        "terminal_mean_particle_displacement": 0.044847436249256134,
+        "terminal_max_particle_displacement": 0.22687683999538422,
+        "peak_step_particle_displacement": 0.02523849904537201,
+        "cumulative_mean_particle_motion": 0.07484808025219536
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.07263245433568954,
+        "right": 0.05617816746234894
+      },
+      "distance_basis": "legacy last-link origin",
+      "maximum_particle_lift_m": null,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": null,
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 3,
+      "inference_seconds": {
+        "n": 3,
+        "mean": 0.44393966199519735,
+        "max": 0.6051720490213484,
+        "p95": 0.3663064029533416
+      },
+      "total_inference_seconds": 1.331818985985592,
+      "boundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "all_action_jump_max_l2_rad": 0.8399118185043335,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 101.37125193001702,
+      "worker_wall_seconds": 102.20760429906659,
+      "telemetry_wall_seconds": null,
+      "fresh_camera_acquisitions": 121,
+      "minimum_garment_pixels": 6138,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "744210f8be04f5b31abb1317d6a8f93a7cf1a5b0999a5a051769c9017c7a9c00",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "smoke_Pant_Long_Seen_0",
+      "pose": null,
+      "garment": "Pant_Long_Seen_0",
+      "seed": 100,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -3.8029525523131333,
+        "condition_2": 1.3218282188908024,
+        "condition_3": 5.703049396474425,
+        "condition_4": -27.047402354613094
+      },
+      "worst_condition": "condition_4",
+      "worst_margin_cm": -27.047402354613094,
+      "closest_threshold_condition": "condition_2",
+      "closest_threshold_margin_cm": 1.3218282188908024,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 9904,
+        "initial_centroid": [
+          0.03342116251587868,
+          -0.03604663535952568,
+          0.5287798047065735
+        ],
+        "terminal_centroid": [
+          0.019931254908442497,
+          0.011430193670094013,
+          0.535007655620575
+        ],
+        "terminal_centroid_displacement": 0.049747493118047714,
+        "max_particle_displacement": 0.23172114789485931,
+        "peak_mean_particle_displacement": 0.062133900821208954,
+        "terminal_mean_particle_displacement": 0.05855939909815788,
+        "terminal_max_particle_displacement": 0.20421189069747925,
+        "peak_step_particle_displacement": 0.02094314992427826,
+        "cumulative_mean_particle_motion": 0.09630363954238419
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.07213854044675827,
+        "right": 0.05528363585472107
+      },
+      "distance_basis": "legacy last-link origin",
+      "maximum_particle_lift_m": null,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": null,
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 3,
+      "inference_seconds": {
+        "n": 3,
+        "mean": 0.4726074483866493,
+        "max": 0.6484884968958795,
+        "p95": 0.4039870831184089
+      },
+      "total_inference_seconds": 1.4178223451599479,
+      "boundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "all_action_jump_max_l2_rad": 0.8429853320121765,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 110.22855533100665,
+      "worker_wall_seconds": 111.0757224119734,
+      "telemetry_wall_seconds": null,
+      "fresh_camera_acquisitions": 121,
+      "minimum_garment_pixels": 6265,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Long_Seen_0/rollout.json",
+      "result_sha256": "0224250c78daec2c76c148f7cb737c7393ed40998276f2227f92454026071213",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Long_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "smoke_Top_Long_Seen_0",
+      "pose": null,
+      "garment": "Top_Long_Seen_0",
+      "seed": 100,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 5,
+      "terminal_margins_cm": {
+        "condition_1": -9.99314715818808,
+        "condition_2": -31.878423118024752,
+        "condition_3": -1.8544239673968308,
+        "condition_4": 12.140294127418569,
+        "condition_5": 2.6074889922115503
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -31.878423118024752,
+      "closest_threshold_condition": "condition_3",
+      "closest_threshold_margin_cm": -1.8544239673968308,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 14544,
+        "initial_centroid": [
+          0.02393103949725628,
+          0.020221849903464317,
+          0.5299580693244934
+        ],
+        "terminal_centroid": [
+          0.03428855165839195,
+          0.06190544366836548,
+          0.5341277122497559
+        ],
+        "terminal_centroid_displacement": 0.043153051286935806,
+        "max_particle_displacement": 0.219956174492836,
+        "peak_mean_particle_displacement": 0.04503867030143738,
+        "terminal_mean_particle_displacement": 0.04775509610772133,
+        "terminal_max_particle_displacement": 0.22918878495693207,
+        "peak_step_particle_displacement": 0.02066623419523239,
+        "cumulative_mean_particle_motion": 0.05913657521523419
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.06863591074943542,
+        "right": 0.05520229414105415
+      },
+      "distance_basis": "legacy last-link origin",
+      "maximum_particle_lift_m": null,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": null,
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 3,
+      "inference_seconds": {
+        "n": 3,
+        "mean": 0.45550122663068277,
+        "max": 0.621872338000685,
+        "p95": 0.3754071390721947
+      },
+      "total_inference_seconds": 1.3665036798920482,
+      "boundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "all_action_jump_max_l2_rad": 0.8523375391960144,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 119.92191986599937,
+      "worker_wall_seconds": 120.80179795296863,
+      "telemetry_wall_seconds": null,
+      "fresh_camera_acquisitions": 121,
+      "minimum_garment_pixels": 9165,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Long_Seen_0/rollout.json",
+      "result_sha256": "2f70e3d67ad7e10b867c03035a977745a92b38f19528df8615da75793d64dc68",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Long_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "smoke_Top_Short_Seen_0",
+      "pose": null,
+      "garment": "Top_Short_Seen_0",
+      "seed": 100,
+      "horizon": 50,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 2,
+      "conditions_total": 5,
+      "terminal_margins_cm": {
+        "condition_1": -9.150418785813615,
+        "condition_2": -26.048663348249683,
+        "condition_3": -9.761566054388581,
+        "condition_4": 6.208682769463014,
+        "condition_5": 11.86500862060333
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -26.048663348249683,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": 6.208682769463014,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 9774,
+        "initial_centroid": [
+          -0.04244561120867729,
+          -0.01068845298141241,
+          0.5298650860786438
+        ],
+        "terminal_centroid": [
+          -0.05109289288520813,
+          0.025618689134716988,
+          0.5344622135162354
+        ],
+        "terminal_centroid_displacement": 0.03760475665330887,
+        "max_particle_displacement": 0.19147592782974243,
+        "peak_mean_particle_displacement": 0.04731167480349541,
+        "terminal_mean_particle_displacement": 0.039330512285232544,
+        "terminal_max_particle_displacement": 0.17657393217086792,
+        "peak_step_particle_displacement": 0.021282711997628212,
+        "cumulative_mean_particle_motion": 0.0718272134909057
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.05907905846834183,
+        "right": 0.06342776119709015
+      },
+      "distance_basis": "legacy last-link origin",
+      "maximum_particle_lift_m": null,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": null,
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 3,
+      "inference_seconds": {
+        "n": 3,
+        "mean": 0.4550594844234486,
+        "max": 0.6244802670553327,
+        "p95": 0.37224745913408697
+      },
+      "total_inference_seconds": 1.365178453270346,
+      "boundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 0,
+        "mean": null,
+        "max": null,
+        "p95": null
+      },
+      "all_action_jump_max_l2_rad": 0.8493696451187134,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "right_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        },
+        "top_rgb": {
+          "n": 0,
+          "mean": null,
+          "max": null,
+          "p95": null
+        }
+      },
+      "rollout_wall_seconds": 111.76803965680301,
+      "worker_wall_seconds": 112.63357999990694,
+      "telemetry_wall_seconds": null,
+      "fresh_camera_acquisitions": 121,
+      "minimum_garment_pixels": 8219,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_0/rollout.json",
+      "result_sha256": "4fcce15dbace06b3fdcf7e936de1b34f1c9361314abdc5e66288fc488cac3b59",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_0/rollout_policy_failure.mp4"
+    }
+  ],
+  "historical_8_of_24_comparison_valid": false,
+  "contact_ground_truth_measured": false,
+  "interpretation": "No inference from missing/invalid episodes. Pilot is exploratory; no public improvement claim or training release.",
+  "next_step": "Inspect matched terminal/ever wins and margins, action boundaries and footage before freezing any formal evaluation horizon."
+}

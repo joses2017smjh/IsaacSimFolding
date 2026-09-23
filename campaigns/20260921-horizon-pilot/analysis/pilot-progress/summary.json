@@ -1,0 +1,429 @@
+{
+  "mode": "pilot",
+  "complete_valid_protocol": false,
+  "valid": 1,
+  "expected": 24,
+  "aggregate": {
+    "50": {
+      "valid_episodes": 0,
+      "invalid_or_missing": 8,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": null,
+      "mean_terminal_conditions": null
+    },
+    "10": {
+      "valid_episodes": 1,
+      "invalid_or_missing": 7,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": 2,
+      "mean_terminal_conditions": 1
+    },
+    "5": {
+      "valid_episodes": 0,
+      "invalid_or_missing": 8,
+      "ever_successes": 0,
+      "terminal_successes": 0,
+      "mean_best_conditions": null,
+      "mean_terminal_conditions": null
+    }
+  },
+  "matched_comparisons_vs_50": {
+    "10": {
+      "complete_pairs": 0,
+      "pairs": [],
+      "terminal_wins": 0,
+      "terminal_losses": 0,
+      "ever_wins": 0,
+      "ever_losses": 0
+    },
+    "5": {
+      "complete_pairs": 0,
+      "pairs": [],
+      "terminal_wins": 0,
+      "terminal_losses": 0,
+      "ever_wins": 0,
+      "ever_losses": 0
+    }
+  },
+  "rows": [
+    {
+      "id": "dev00_h50_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "running",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev00_h10_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 10,
+      "infrastructure_valid": true,
+      "status": "completed",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "first_official_success_action": null,
+      "first_official_success_simulation_seconds": null,
+      "fresh_geometric_ever_success": false,
+      "geometric_first_success_action": null,
+      "geometric_success_persisted": null,
+      "best_policy_conditions": 2,
+      "best_including_settle_conditions": 2,
+      "terminal_conditions": 1,
+      "conditions_total": 4,
+      "terminal_margins_cm": {
+        "condition_1": -7.509965056754098,
+        "condition_2": -22.15814092155083,
+        "condition_3": -16.36460284819226,
+        "condition_4": 5.260648321168421
+      },
+      "worst_condition": "condition_2",
+      "worst_margin_cm": -22.15814092155083,
+      "closest_threshold_condition": "condition_4",
+      "closest_threshold_margin_cm": 5.260648321168421,
+      "cloth_motion": {
+        "units": "meters",
+        "reference": "immediately before first policy action, after optional settling",
+        "particle_count": 11385,
+        "initial_centroid": [
+          -0.005235010292381048,
+          -0.020191846415400505,
+          0.5286085605621338
+        ],
+        "terminal_centroid": [
+          -0.02729114703834057,
+          -0.014023722149431705,
+          0.5302293300628662
+        ],
+        "terminal_centroid_displacement": 0.02295965515077114,
+        "max_particle_displacement": 0.3240751028060913,
+        "peak_mean_particle_displacement": 0.029117537662386894,
+        "terminal_mean_particle_displacement": 0.028400003910064697,
+        "terminal_max_particle_displacement": 0.3152666985988617,
+        "peak_step_particle_displacement": 0.01992540992796421,
+        "cumulative_mean_particle_motion": 0.061827541278034914
+      },
+      "minimum_gripper_link_origin_distance_m": {
+        "left": 0.10732089728116989,
+        "right": 0.06595127284526825
+      },
+      "distance_basis": "named jaw/gripper origins",
+      "maximum_particle_lift_m": 0.12353408336639404,
+      "first_contact": null,
+      "first_grasp": null,
+      "failed_grasp_count": null,
+      "contact_status": "unmeasured; proximity does not establish contact or grasp",
+      "decreasing_command_events_proxy": {
+        "near": {
+          "left": null,
+          "right": null
+        },
+        "away": {
+          "left": 27,
+          "right": 12
+        }
+      },
+      "failure_category": "never_approached_cloth_proxy",
+      "failure_basis": "earliest identifiable lack of approach from origin proximity, otherwise geometric outcome; no grasp claims",
+      "replans": 60,
+      "inference_seconds": {
+        "n": 60,
+        "mean": 0.32809145098241665,
+        "max": 2.712537980172783,
+        "p95": 0.29780096421018243
+      },
+      "total_inference_seconds": 19.685487058945,
+      "boundary_action_jump_l2_rad": {
+        "n": 59,
+        "mean": 0.2467725493518983,
+        "max": 0.9379345178604126,
+        "p95": 0.6626579165458679
+      },
+      "nonboundary_action_jump_l2_rad": {
+        "n": 540,
+        "mean": 0.12418541717774201,
+        "max": 0.9050679206848145,
+        "p95": 0.32225456833839417
+      },
+      "all_action_jump_max_l2_rad": 0.9379345178604126,
+      "camera_change_mean_abs_rgb": {
+        "left_rgb": {
+          "n": 59,
+          "mean": 4.878685263653484,
+          "max": 91.94569444444444,
+          "p95": 13.100694444444445
+        },
+        "right_rgb": {
+          "n": 59,
+          "mean": 19.330737994350283,
+          "max": 91.645625,
+          "p95": 59.06625
+        },
+        "top_rgb": {
+          "n": 59,
+          "mean": 1.1052718926553673,
+          "max": 5.271319444444444,
+          "p95": 3.5327777777777776
+        }
+      },
+      "camera_change_during_p95_lift_over_2cm_proxy": {
+        "left_rgb": {
+          "n": 2,
+          "mean": 2.279826388888889,
+          "max": 2.3841666666666668,
+          "p95": 2.1754861111111112
+        },
+        "right_rgb": {
+          "n": 2,
+          "mean": 29.746979166666666,
+          "max": 33.043055555555554,
+          "p95": 26.450902777777777
+        },
+        "top_rgb": {
+          "n": 2,
+          "mean": 1.4979166666666666,
+          "max": 1.7365277777777777,
+          "p95": 1.2593055555555555
+        }
+      },
+      "rollout_wall_seconds": 314.4497550036758,
+      "worker_wall_seconds": 315.4759266427718,
+      "telemetry_wall_seconds": 0.9959710231050849,
+      "fresh_camera_acquisitions": 601,
+      "minimum_garment_pixels": 5599,
+      "result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h10_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "1aaa4b60de7827d5be22a18a70fe12d1f676056aa828d28359fb09e5e110d7b2",
+      "policy_mp4": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4"
+    },
+    {
+      "id": "dev00_h05_Pant_Short_Seen_0",
+      "pose": 0,
+      "garment": "Pant_Short_Seen_0",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev00_h05_Pant_Short_Seen_0/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev01_h50_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h50_Pant_Short_Seen_0/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev01_h10_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h10_Pant_Short_Seen_0/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev01_h05_Pant_Short_Seen_0",
+      "pose": 1,
+      "garment": "Pant_Short_Seen_0",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev01_h05_Pant_Short_Seen_0/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev02_h50_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h50_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev02_h10_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h10_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev02_h05_Pant_Short_Seen_3",
+      "pose": 2,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev02_h05_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev03_h50_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h50_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev03_h10_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h10_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev03_h05_Pant_Short_Seen_3",
+      "pose": 3,
+      "garment": "Pant_Short_Seen_3",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev03_h05_Pant_Short_Seen_3/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev04_h50_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h50_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev04_h10_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h10_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev04_h05_Pant_Short_Seen_7",
+      "pose": 4,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev04_h05_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev05_h50_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h50_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev05_h10_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h10_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev05_h05_Pant_Short_Seen_7",
+      "pose": 5,
+      "garment": "Pant_Short_Seen_7",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev05_h05_Pant_Short_Seen_7/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev06_h50_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h50_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev06_h10_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h10_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev06_h05_Pant_Short_Seen_9",
+      "pose": 6,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev06_h05_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev07_h50_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 50,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h50_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev07_h10_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 10,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h10_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    },
+    {
+      "id": "dev07_h05_Pant_Short_Seen_9",
+      "pose": 7,
+      "garment": "Pant_Short_Seen_9",
+      "horizon": 5,
+      "infrastructure_valid": false,
+      "reason": "[Errno 2] No such file or directory: '/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/outputs/dev07_h05_Pant_Short_Seen_9/status.json'",
+      "official_ever_success": null,
+      "terminal_success": null
+    }
+  ],
+  "historical_8_of_24_comparison_valid": false,
+  "contact_ground_truth_measured": false,
+  "interpretation": "No inference from missing/invalid episodes. Pilot is exploratory; no public improvement claim or training release.",
+  "next_step": "Wait for all results or repair infrastructure; do not select a horizon from incomplete pairs."
+}

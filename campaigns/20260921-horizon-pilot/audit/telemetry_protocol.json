@@ -1,0 +1,7 @@
+{
+  "certification_source": "original five v5 GPU smokes",
+  "cpu_validation": "2 telemetry tests including exact controller AST equivalence",
+  "source_changes": "new telemetry module plus read-only hook calls and result field; worker validates provenance and complete telemetry",
+  "scorer_simulation_cameras_actions_checkpoints_unchanged": true,
+  "pilot_rows_exactly_equal_to_v5": true
+}

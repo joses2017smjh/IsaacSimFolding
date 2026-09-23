@@ -54,24 +54,76 @@ def normalise(advantages, *, eps: float = 1e-6) -> np.ndarray:
 
 
 def weights(advantages, *, beta: float = 1.0, w_max: float = 20.0,
-            normalise_first: bool = True) -> np.ndarray:
-    """exp(A / beta), clipped at w_max.
+            w_min: float = 1e-6, normalise_first: bool = True) -> np.ndarray:
+    """min(exp(A / beta), w_max), floored at w_min.
 
     The clip is not cosmetic. Unclipped exponential weights let a single
     high-advantage sample dominate a batch, and with a small beta that happens
     routinely; the run then trains on effectively one trajectory and the loss
     curve looks smooth while doing it.
+
+    It is applied in LOG SPACE so that it actually binds. A previous version
+    subtracted the batch maximum before exponentiating:
+
+        w = exp(clip((A - A.max()) / beta, -50, 0))
+
+    which bounds every weight to (0, 1], so `np.clip(w, 0, w_max)` could never
+    fire for any w_max >= 1. The cap was dead code, and runs recorded `w_max`
+    in their provenance as though it had been applied. Clipping the exponent
+    instead removes the overflow that motivated the max-subtraction -- exp() is
+    never called on anything above log(w_max) -- while leaving the cap real.
+
+    `w_min` floors the result so every weight stays strictly positive and the
+    array can be normalised into a sampling distribution. Without it, a very
+    negative advantage underflows to exactly 0 and that row can never be drawn.
+
+    `w_max` is only meaningful relative to `beta` AND to `normalise_first`.
+    With standardisation on, the exponent is a z-score divided by beta, so the
+    cap binds only where z / beta > log(w_max). A batch of 8 has a z-range of
+    roughly +/-2, so the default w_max=20 (log 3.0) never binds at beta=1 on a
+    small batch. Choose w_max against the batch size actually being used and
+    record the pair -- `weight_summary` reports whether it bound.
     """
     if beta <= 0:
         raise ValueError(f"beta must be positive, got {beta}")
     if w_max <= 0:
         raise ValueError(f"w_max must be positive, got {w_max}")
+    if not 0 < w_min <= w_max:
+        raise ValueError(f"w_min must lie in (0, w_max], got {w_min}")
     a = normalise(advantages) if normalise_first else np.asarray(advantages, dtype=np.float64)
     a = np.asarray(a, dtype=np.float64).reshape(-1)
-    # Subtract the max before exponentiating: exp(large/beta) overflows to inf
-    # and the clip below would then be applied to inf/inf.
-    w = np.exp(np.clip((a - a.max()) / beta, -50.0, 0.0))
-    return np.clip(w, 0.0, w_max).astype(np.float32)
+    if a.size == 0:
+        return a.astype(np.float32)
+    log_w = np.clip(a / beta, np.log(w_min), np.log(w_max))
+    # Re-clip in linear space so the reported maximum is exactly w_max rather
+    # than w_max * (1 + eps) from the exp/log round trip.
+    return np.clip(np.exp(log_w), w_min, w_max).astype(np.float32)
+
+
+def weight_summary(w, *, w_max: float, w_min: float = 1e-6,
+                   rtol: float = 1e-6) -> dict[str, float]:
+    """How concentrated a weight vector is, and whether the cap/floor bound.
+
+    Reported before training rather than inferred afterwards. `capped` > 0 is
+    the evidence that `w_max` was a live parameter for this batch; `capped` of
+    exactly 0 means the recorded w_max had no effect on the run.
+    """
+    w = np.asarray(w, dtype=np.float64).reshape(-1)
+    if w.size == 0:
+        return {"n": 0.0, "ess": 0.0, "ess_fraction": float("nan"),
+                "capped": 0.0, "floored": 0.0, "max": float("nan"),
+                "min": float("nan"), "ratio": float("nan")}
+    ess = effective_sample_size(w)
+    return {
+        "n": float(w.size),
+        "ess": ess,
+        "ess_fraction": ess / float(w.size),
+        "capped": float(np.sum(w >= w_max * (1.0 - rtol))),
+        "floored": float(np.sum(w <= w_min * (1.0 + rtol))),
+        "max": float(w.max()),
+        "min": float(w.min()),
+        "ratio": float(w.max() / w.min()) if w.min() > 0 else float("inf"),
+    }
 
 
 def effective_sample_size(w) -> float:

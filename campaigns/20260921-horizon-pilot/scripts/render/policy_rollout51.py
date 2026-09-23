@@ -161,6 +161,8 @@ if args.queue_diagnostic and any(x < 1 or x > 50 for x in args.queue_delays):
     ap.error("queue delays must be in [1, 50]")
 if args.hard_queue_delay < 0 or args.hard_queue_delay > 10:
     ap.error("--hard_queue_delay must be 0..10")
+if args.trajectory_every < 1:
+    ap.error("--trajectory_every must be positive")
 if args.hard_queue_delay and (args.causal_out or args.rtc_guidance):
     ap.error("--hard_queue_delay cannot be combined with causal or RTC diagnostics")
 try:
@@ -775,6 +777,13 @@ try:
     shadow = []
     cap = []
     trajectory = []
+    # Keep the complete action stream separately from sampled observations.
+    # A rollout-training sample at observation t needs the *next 50 executed
+    # targets*, whereas retaining an image at every t would make an otherwise
+    # small all-failure rollout corpus needlessly large.  The stream is saved
+    # only when --trajectory_out is requested and is deliberately still named
+    # executed_action_stream: it is not a fresh policy plan or an H50 target.
+    trajectory_action_stream = []
     geometry_trajectory = []
     manipulation_trajectory = []
     previous_action = None
@@ -1039,6 +1048,8 @@ try:
             raise ValueError("executed action must contain twelve finite joint targets")
         if snapshot_enabled:
             executed_actions[i + 1] = np.asarray(a, dtype=np.float32).copy()
+        if args.trajectory_out:
+            trajectory_action_stream.append(np.asarray(a, dtype=np.float32).copy())
         if args.trajectory_out and i % args.trajectory_every == 0:
             trajectory.append((i, np.stack([imgs[k] for k in camera_keys]).copy(),
                                joint.astype(np.float32).copy(),
@@ -1241,6 +1252,7 @@ try:
                 images=np.stack([row[1] for row in trajectory]),
                 state=np.stack([row[2] for row in trajectory]),
                 executed_action=np.stack([row[3] for row in trajectory]),
+                executed_action_stream=np.stack(trajectory_action_stream),
                 camera_keys=np.asarray(camera_keys),
                 success=np.asarray(success), terminal_success=np.asarray(terminal_success),
                 first_success_step=np.asarray(audit.first_success_step if success else -1),
@@ -1248,6 +1260,8 @@ try:
         trajectory_metadata = {"path": args.trajectory_out, "samples": len(trajectory),
                                "sample_every": args.trajectory_every,
                                "action_semantics": "one executed target per sampled observation; not future action chunks",
+                               "action_stream_semantics": "one executed target for every policy action, aligned so stream[t] was applied after sampled observation step_index=t",
+                               "action_stream_length": len(trajectory_action_stream),
                                "post_action_final_rgb": media["snapshots"]["final"]}
 
     final_displacement = np.linalg.norm(pts - pts0, axis=1)

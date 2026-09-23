@@ -210,3 +210,12 @@ All six roots had exact restoration/equivalence, exact reconstructed RNG restora
 Do not launch self-distillation or another static suffix intervention. The next recovery source should be validated simulator DAgger/teleoperation, a privileged scripted recovery if available, or a separately preregistered branch-evaluated candidate search. No training, PEFT/LoRA, RTC, broad DAgger collection, or multi-pose validation was launched.
 
 The completed audit is Slurm job **21399500**. Root snapshots/observations are in `analysis/onpolicy-h50-oracle/student-roots.npz`; successful-H50 example storage is `successful-h50-examples.npz` and is empty by gate; raw outcomes, trajectories, CSV summaries and provenance are in [`analysis/onpolicy-h50-oracle/`](analysis/onpolicy-h50-oracle/).
+
+## Campaign closure
+
+The horizon-pilot diagnostic campaign is closed at `0e83a7b`. Its completed
+evidence rules out the inference and static-suffix interventions in scope,
+including fresh-H50 self-oracle recovery (`0/6` student-visited roots). New
+work proceeds only in `20260922-closed-loop-training-v1`, which starts from the
+untouched baseline checkpoint and uses autonomous H10 rollout data rather than
+H50 plans as labels.

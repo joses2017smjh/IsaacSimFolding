@@ -1,0 +1,6 @@
+runtime/
+outputs/
+logs/
+__pycache__/
+external/lehome-challenge/Assets/
+analysis/cache/

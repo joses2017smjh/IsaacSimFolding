@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "source_campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5",
+  "certified_utc": "2026-09-21T21:11:29.182883+00:00",
+  "rows": [
+    {
+      "garment": "Top_Short_Seen_3",
+      "job": "21383706",
+      "completed_actions": 120,
+      "conditions": "2/5",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "minimum_visible_pixels": 5080,
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_3/rollout.json",
+      "result_sha256": "9b9ea13b2f7af06f074c9271b650fd2e20c561608a7d546a36b098fbc9b0e867"
+    },
+    {
+      "garment": "Pant_Short_Seen_0",
+      "job": "21383707",
+      "completed_actions": 120,
+      "conditions": "1/4",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "minimum_visible_pixels": 6138,
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Short_Seen_0/rollout.json",
+      "result_sha256": "744210f8be04f5b31abb1317d6a8f93a7cf1a5b0999a5a051769c9017c7a9c00"
+    },
+    {
+      "garment": "Pant_Long_Seen_0",
+      "job": "21383748",
+      "completed_actions": 120,
+      "conditions": "2/4",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "minimum_visible_pixels": 6265,
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Pant_Long_Seen_0/rollout.json",
+      "result_sha256": "0224250c78daec2c76c148f7cb737c7393ed40998276f2227f92454026071213"
+    },
+    {
+      "garment": "Top_Long_Seen_0",
+      "job": "21383779",
+      "completed_actions": 120,
+      "conditions": "2/5",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "minimum_visible_pixels": 9165,
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Long_Seen_0/rollout.json",
+      "result_sha256": "2f70e3d67ad7e10b867c03035a977745a92b38f19528df8615da75793d64dc68"
+    },
+    {
+      "garment": "Top_Short_Seen_0",
+      "job": "21383691",
+      "completed_actions": 120,
+      "conditions": "2/5",
+      "official_ever_success": false,
+      "terminal_success": false,
+      "minimum_visible_pixels": 8219,
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-folding-pilot-v5/outputs/smoke_Top_Short_Seen_0/rollout.json",
+      "result_sha256": "4fcce15dbace06b3fdcf7e936de1b34f1c9361314abdc5e66288fc488cac3b59"
+    }
+  ],
+  "switch_returned": true,
+  "switch_seconds": 1.1816027930472046,
+  "scope": "v5 full infrastructure certification, no policy success required; native switch only, no post-switch policy episode"
+}

@@ -597,12 +597,22 @@ class Driver:
         # -- reload exactly as the evaluator does
         reload_out = self.root / "audit" / f"reload_{label}.json"
         dataset = self.root / "datasets" / f"{scope}.npz"
+        reload_args = [C, chosen["path"], str(dataset), str(reload_out)]
         if self.stage(f"{tag}.reload") is None:
-            self.submit(f"{tag}.reload", "reload.sbatch",
-                        [C, chosen["path"], str(dataset), str(reload_out)], gpu_tasks=0)
+            self.submit(f"{tag}.reload", "reload.sbatch", reload_args, gpu_tasks=1)
             return "wait"
         if self.stage_status(f"{tag}.reload") == "active":
             return "wait"
+        if not reload_out.is_file():
+            # No output means the job itself failed (node, CUDA, I/O) -- an
+            # infrastructure fault, not evidence about the checkpoint. A
+            # checkpoint that genuinely fails writes finite/config verdicts.
+            retry = f"{tag}.reload.retry1"
+            if self.stage(retry) is None:
+                self.submit(retry, "reload.sbatch", reload_args, gpu_tasks=1)
+                return "wait"
+            if self.stage_status(retry) == "active":
+                return "wait"
         reload = json.loads(reload_out.read_text()) if reload_out.is_file() else {}
         cand["reload_ok"] = bool(reload.get("finite") and reload.get("config_matches_baseline"))
         if not cand["reload_ok"]:
@@ -758,7 +768,10 @@ class Driver:
         if chain is None and (waiting or self.begin_at) and not self.state["done"]:
             argv = [f"--chdir={self.root}", f"--output={self.root}/ledger/ticks/tick-%j.out"]
             if waiting:
-                argv.append("--dependency=afterany:" + ":".join(waiting))
+                # "?" is Slurm's OR: the tick runs when ANY waited job ends, so a
+                # short job (a reload) is acted on without waiting for a long
+                # array (a benchmark) that happens to be running alongside it.
+                argv.append("--dependency=" + "?".join(f"afterany:{j}" for j in waiting))
             if self.begin_at:
                 argv.append(f"--begin={self.begin_at.strftime('%Y-%m-%dT%H:%M:%S')}")
             (self.root / "ledger/ticks").mkdir(parents=True, exist_ok=True)
@@ -790,7 +803,8 @@ class Driver:
         path.write_text(head + block + tail)
 
     def describe(self) -> tuple[str, str, str, str]:
-        live = [f"`{k}`" for k, v in self.state["stages"].items() if v.get("status") == "submitted"]
+        live = [f"`{','.join(v['job_ids'])}` {k}" for k, v in self.state["stages"].items()
+                if v.get("status") == "submitted"]
         active = ", ".join(live) if live else ("none — campaign complete" if self.state["done"] else "none")
         base = self.state.get("baseline_dev")
         best = self.state.get("best")

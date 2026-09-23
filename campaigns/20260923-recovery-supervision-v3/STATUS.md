@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21401701` baseline.h10, `21401702` search.collect |
-| **Current result** | starting |
+| **Active job** | `21401800` a1.train |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 32 settled successes of 128 attempts (gate pass); attempt 1 |
 | **Limitation / blocker** | none |
 | **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-23T14:40:43Z by scripts/driver.py._
+_Updated 2026-09-23T15:13:23Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -42,3 +42,21 @@ config as rows).
 
 The driver has submitted the fresh baseline H10 repeat and the 8-row
 recovery search.
+
+### 2026-09-23 — recovery search: gate passed
+
+Baseline H10 repeat (fresh, this campaign): **0/8** settled (mean conditions
+2.50). Preregistered pooled baseline with v2's run: **2/16**.
+
+Recovery search, 8 training-only rows x 4 roots x 4 fixed candidates = **128
+attempts, all completed, 32 settled successes (25%)** — 16/64 at H10 and
+16/64 at H50 — from **17 of 32 roots across 6 of 8 rows**, including every
+P_A garment (the pose the baseline fails even at H50). 16 further attempts
+crossed full conditions only transiently and did not settle; they are
+recorded and excluded. Two rows (Seen_6 and Seen_8 at key 2, pose P_B)
+produced no success from any root. Coverage gate (>= 6 / 4 roots / 3 rows)
+passed. Dataset: 1310 labelled samples (1142 from validated recovery
+branches, 168 from student episodes that themselves settled).
+
+Attempt 1 training (`21401800`) uses v2's optimisation unchanged; only the
+supervision differs.

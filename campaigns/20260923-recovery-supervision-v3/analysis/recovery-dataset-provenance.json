@@ -1,86 +1,14 @@
 {
-  "schema": 1,
-  "created_utc": "2026-09-23T14:40:43Z",
-  "stages": {
-    "baseline.h10": {
-      "job_ids": [
-        "21401701"
-      ],
-      "submitted_utc": "2026-09-23T14:40:43Z",
-      "status": "completed",
-      "gpu_tasks": 8,
-      "finished_utc": "2026-09-23T15:00:44Z"
-    },
-    "search.collect": {
-      "job_ids": [
-        "21401702"
-      ],
-      "submitted_utc": "2026-09-23T14:40:43Z",
-      "status": "completed",
-      "gpu_tasks": 8,
-      "finished_utc": "2026-09-23T15:11:54Z"
-    },
-    "search.compile": {
-      "job_ids": [
-        "21401796"
-      ],
-      "submitted_utc": "2026-09-23T15:11:54Z",
-      "status": "completed",
-      "gpu_tasks": 0,
-      "finished_utc": "2026-09-23T15:13:23Z"
-    },
-    "a1.train": {
-      "job_ids": [
-        "21401800"
-      ],
-      "submitted_utc": "2026-09-23T15:13:23Z",
-      "status": "submitted",
-      "gpu_tasks": 1
-    }
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v3/datasets/recovery.npz",
+  "dataset_sha256": "fefe32a8bf4b18310913ebd78c6a0aaa9f73281128056fa2b8f87def5feeca27",
+  "samples": 1310,
+  "origin_counts": {
+    "branch": 1142,
+    "student": 168
   },
-  "attempts": {
-    "1": {
-      "plan": {
-        "attempt": 1,
-        "dataset": "recovery",
-        "init_checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
-        "training": {},
-        "source": "manifest"
-      }
-    }
-  },
-  "baseline": {
-    "h10_runs": [
-      {
-        "rows": 8,
-        "valid": 8,
-        "settled": 2,
-        "ever": 3,
-        "mean_conditions": 3.0,
-        "invalid": [],
-        "source": "v2 run"
-      },
-      {
-        "rows": 8,
-        "valid": 8,
-        "settled": 0,
-        "ever": 0,
-        "mean_conditions": 2.5,
-        "invalid": [],
-        "source": "v3 run"
-      }
-    ],
-    "h50": {
-      "rows": 8,
-      "valid": 8,
-      "settled": 4,
-      "ever": 4,
-      "mean_conditions": 3.125,
-      "invalid": [],
-      "source": "v2 run"
-    }
-  },
-  "search": {
+  "label_definition": "observation rendered at a state paired with the next 50 actions actually executed from it on a continuation that reached SETTLED success",
+  "weighting": "uniform; no episode-weighted AWR",
+  "coverage_gate": {
     "passed": true,
     "unmet_requirements": [],
     "checks": [
@@ -250,49 +178,86 @@
       }
     }
   },
-  "final": {},
-  "ticks": {
-    "chain": "21401801",
-    "chain_deps": [
-      "21401800"
-    ],
-    "chain_begin": null,
-    "watchdog": "21401704"
-  },
-  "done": false,
-  "stop_reason": null,
-  "log": [
+  "sources": [
     {
-      "utc": "2026-09-23T14:40:43Z",
-      "message": "submitted baseline.h10 -> 21401701",
-      "gpu_tasks": 8
+      "id": "search_pant_short_seen_4_key0",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 0,
+      "branch_examples": 123,
+      "student_settled_success": false,
+      "student_examples": 0,
+      "recovery_json_sha256": "0201e1452b745c53719e0e77759c94c087ee05e2c6fa5a4e0d1c454f94e04dbc",
+      "examples_sha256": "fe0c1c66a0845d7d6b55e25257326d4938b10b5617d9cdb520cf77d73cd11f40"
     },
     {
-      "utc": "2026-09-23T14:40:43Z",
-      "message": "submitted search.collect -> 21401702",
-      "gpu_tasks": 8
+      "id": "search_pant_short_seen_5_key0",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 0,
+      "branch_examples": 51,
+      "student_settled_success": false,
+      "student_examples": 0,
+      "recovery_json_sha256": "64de358e5b4dc291bda32019db7527a245ebfddb8995f0361dbeae2c7677d43f",
+      "examples_sha256": "8032a1375256b90c4ecd9187f22289fc9988db7e04526f6dec49e7094bb0833f"
     },
     {
-      "utc": "2026-09-23T15:00:44Z",
-      "message": "baseline H10 repeat measured",
-      "v2": 2,
-      "v3": 0
+      "id": "search_pant_short_seen_6_key0",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 0,
+      "branch_examples": 51,
+      "student_settled_success": false,
+      "student_examples": 0,
+      "recovery_json_sha256": "a8e8f8b556e33fa6c9531000f462749322c8546825b02a3d60cddd9cb931aa38",
+      "examples_sha256": "afedcd97562c6186d33e88f8427b8b6aabf60b2070fa564975d4573a1a392d6f"
     },
     {
-      "utc": "2026-09-23T15:11:54Z",
-      "message": "submitted search.compile -> 21401796",
-      "gpu_tasks": 0
+      "id": "search_pant_short_seen_8_key0",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 0,
+      "branch_examples": 175,
+      "student_settled_success": true,
+      "student_examples": 56,
+      "recovery_json_sha256": "eda57d92b9fc94083af0339bc0b67b89c5baeb00b8bb5135eeb038ebf8ebb49c",
+      "examples_sha256": "c914979f624cb59ab5ce2a70092807f727ceea205cb1a5d358e34fcb737bbc92"
     },
     {
-      "utc": "2026-09-23T15:13:23Z",
-      "message": "recovery coverage gate passed=True",
-      "successes": 32,
-      "unmet": []
+      "id": "search_pant_short_seen_4_key1",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 1,
+      "branch_examples": 319,
+      "student_settled_success": true,
+      "student_examples": 56,
+      "recovery_json_sha256": "0c1bf3b8056ef60778b43183c4baba815897282700fbc8a94afcedadfd7ce22e",
+      "examples_sha256": "094572ea5e201d8004aa973a7b589e1201d005825c45035999ea2aaf11c4dcd2"
     },
     {
-      "utc": "2026-09-23T15:13:23Z",
-      "message": "submitted a1.train -> 21401800",
-      "gpu_tasks": 1
+      "id": "search_pant_short_seen_5_key1",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 1,
+      "branch_examples": 423,
+      "student_settled_success": true,
+      "student_examples": 56,
+      "recovery_json_sha256": "bde9d3d947e2b5965a8a13654612a44cff13a2bb18a9549ebe30261f942a7ed8",
+      "examples_sha256": "15c1fe18895021e62c746727940c04e6c44918ff6c93431abbcc51293bdb3126"
+    },
+    {
+      "id": "search_pant_short_seen_6_key2",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "branch_examples": 0,
+      "student_settled_success": false,
+      "student_examples": 0,
+      "recovery_json_sha256": "c2f1866a4cae3ac8cc3e8dd12fa3abfd33f39c93fd6f96e6adf909807c940672",
+      "examples_sha256": "b35a378761a065c0a85136634fbc3dff2c617a23119fcf84f27f8ceaa07fab33"
+    },
+    {
+      "id": "search_pant_short_seen_8_key2",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "branch_examples": 0,
+      "student_settled_success": false,
+      "student_examples": 0,
+      "recovery_json_sha256": "4beea76b574a897762fe73352db233b71f22a7529bc75a204c98c9e6fae891fd",
+      "examples_sha256": "dfb02e6e3b487196356bea12f80e6ebb8cc86843c4af60c1c342b42deb958d23"
     }
   ]
 }

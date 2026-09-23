@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21403368` a2.confirm_h10 |
+| **Active job** | `21403368` a2.confirm_h10, `21403388` a2.h50 |
 | **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, H10 r1 4/8 |
 | **Limitation / blocker** | none |
 | **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-23T23:30:09Z by scripts/driver.py._
+_Updated 2026-09-23T23:38:25Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

@@ -124,7 +124,9 @@ def main() -> int:
     plan = json.loads(args.plan.read_text()) if args.plan else None
     if plan is not None and args.phase not in ("collection", "collection_expansion"):
         raise SystemExit("--plan only supplies collection rows")
-    rows = plan[args.phase] if plan is not None else manifest[args.phase]
+    # "recovery" names the search CONFIG in the manifest; its rows live apart.
+    rows_key = {"recovery": "recovery_search"}.get(args.phase, args.phase)
+    rows = plan[args.phase] if plan is not None else manifest[rows_key]
     if not 0 <= args.index < len(rows):
         raise SystemExit(f"{args.phase} index {args.index} out of range")
     row = rows[args.index]

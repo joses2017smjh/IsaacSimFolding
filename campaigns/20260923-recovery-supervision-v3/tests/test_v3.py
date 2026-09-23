@@ -158,3 +158,16 @@ def test_retention_samples_the_whole_episode_not_its_start(tmp_path):
              action=np.zeros((5, 50, 12), np.float32), garment=np.asarray("Top_Long_Seen_4"))
     _, _, _, rec = trainer.load_whole_episodes([ep], 3, anchor=[])
     assert rec[0]["frames_used"] == [0, 2, 4]
+
+
+@pytest.mark.parametrize("phase,index", [("recovery", 0), ("recovery", 7), ("recovery_smoke", 0),
+                                         ("benchmark", 0), ("final_test", 7)])
+def test_every_v3_phase_resolves_its_rows(phase, index):
+    """The first dry run found `recovery` reading the search config as rows."""
+    proc = subprocess.run([sys.executable, str(ROOT / "scripts/run_rollout_task.py"), "--campaign", str(ROOT),
+                           "--phase", phase, "--index", str(index), "--dry-run"], capture_output=True, text=True)
+    assert proc.returncode == 0, proc.stderr[-500:]
+    request = json.loads(proc.stdout)
+    assert request["runner"]["path"].endswith("20260923-recovery-supervision-v3/scripts/render/policy_rollout51.py")
+    if phase.startswith("recovery"):
+        assert "--recovery_out" in request["command"] and "--trajectory_out" in request["command"]

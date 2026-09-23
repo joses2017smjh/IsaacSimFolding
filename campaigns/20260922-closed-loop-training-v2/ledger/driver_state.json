@@ -63,6 +63,14 @@
       "submitted_utc": "2026-09-23T07:35:59Z",
       "adopted_from_ledger": true,
       "finished_utc": "2026-09-23T07:56:01Z"
+    },
+    "iter2.collect": {
+      "job_ids": [
+        "21400812"
+      ],
+      "submitted_utc": "2026-09-23T07:58:32Z",
+      "status": "submitted",
+      "gpu_tasks": 16
     }
   },
   "iterations": {
@@ -117,7 +125,8 @@
       "outcome": "evaluated"
     },
     "2": {
-      "phase": "planning"
+      "phase": "planning",
+      "plan_sha256": "15572b3c32cd5c662e1d7504d4dfb2f3ed278bc4860368ff3d34153a0c78fc63"
     }
   },
   "baseline_dev": {
@@ -141,9 +150,11 @@
   "best": null,
   "final": {},
   "ticks": {
-    "chain": "21400808",
-    "chain_deps": [],
-    "chain_begin": "2026-09-23T09:26:01Z",
+    "chain": "21400813",
+    "chain_deps": [
+      "21400812"
+    ],
+    "chain_begin": null,
     "watchdog": "21400762"
   },
   "done": false,
@@ -173,6 +184,11 @@
     {
       "utc": "2026-09-23T07:56:01Z",
       "message": "iteration 1 concluded: evaluated"
+    },
+    {
+      "utc": "2026-09-23T07:58:32Z",
+      "message": "submitted iter2.collect -> 21400812",
+      "gpu_tasks": 16
     }
   ]
 }

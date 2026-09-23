@@ -7,12 +7,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21400710` iter1.reload.retry1 |
+| **Active job** | `21400710` iter1.reload.retry1, `21400812` iter2.collect |
 | **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8 |
 | **Blocker** | none |
 | **Next milestone** | advance the current iteration; final frozen test after the loop |
 
-_Updated 2026-09-23T07:56:01Z by scripts/driver.py._
+_Updated 2026-09-23T07:58:32Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## What this campaign is
@@ -215,3 +215,45 @@ calls the real binary and adds the wrapper's one flag itself.
 Manifest refrozen as protocol v2 at `b319349` (70 sources); the iteration-1
 manifest is archived at `manifests/manifest_d3422c9.json` because the
 collection, compile and train jobs recorded that commit.
+
+### 2026-09-23 — iteration 1: no improvement, and H10 got worse
+
+**Matched baseline** (this campaign, identical 16 rows): H10 settled **2/8**,
+H50 settled **4/8**. The horizon pilot measured the *same* seeds, checkpoint
+and controller at H10 0/8 and H50 4/8 — two H10 rows flipped between runs.
+Pooled: H10 2/16, H50 8/16. A development difference of one or two episodes
+is within observed run-to-run variation, and every comparison below is read
+with that in mind.
+
+**Iteration 1** `iter1-step000300`:
+
+| | H10 settled | H10 mean conditions | H50 settled | H50 mean conditions |
+|---|---|---|---|---|
+| matched baseline | 2/8 | 3.000 | 4/8 | 3.125 |
+| iter1-step000300 | **0/8** | **2.125** | 4/8 | 3.250 |
+
+Eligible (retention guard, clean reload, no H50 regression, all rows valid),
+but no improvement — and a systematic H10 degradation: 7 of 8 rows collapsed
+to exactly 2/4 and none improved. **Diagnosis:** AWR resampling of H10
+*failure* trajectories reinforced the H10 failure mode, and the advantage it
+used measured garment class rather than action quality (every pants episode
+3/4, every top 2-3/5). The gate passed because a between-class confound has
+spread and is not concentrated — which is exactly what the gate checks.
+
+**Iteration 2** (amendment A2, recorded before any iteration-2 data): the
+changed factor is the *success density* of the collection. H10 data from this
+baseline is ~87% failure; H50 on the target class is the one configuration
+where it is measured to succeed (8/10 on P_B/P_C poses across both runs).
+16 H50 rollouts on Pant_Short garments 4/5/6/8 — no development or test
+garment — mirroring the development pose mix, from the untouched baseline,
+training otherwise identical. A2 names the cached-suffix issue the pilot
+closed at two boundary states, how full-trajectory outcome-weighted training
+differs, and the discriminating prediction: an H10 gain on P_B/P_C rows
+supports plan-continuity transfer; no gain rules the factor out.
+
+Launched by the driver from the committed plan: collection **21400812**.
+Along the way the driver needed four fixes, each now a regression test: a
+tick that `scancel`'d itself (ledger adoption closes the window), a stale
+lock from a killed tick (holders are now checked), `--begin` read in local
+time (now relative), and a budget-skipped test that would have been scored
+0/0 (now reported "not run").

@@ -106,6 +106,17 @@
       "submitted_utc": "2026-09-23T07:35:59Z",
       "state": "submitted",
       "array": "0-15"
+    },
+    {
+      "job_id": "21400812",
+      "phase": "iter2.collect",
+      "script": "slurm/collect_plan.sbatch",
+      "gpu_tasks": 16,
+      "submitted_by": "driver",
+      "manifest_commit": "fecd4dc3a6d8a0bb2dde332f831af3232708d748",
+      "submitted_utc": "2026-09-23T07:58:32Z",
+      "state": "submitted",
+      "array": "0-15"
     }
   ]
 }

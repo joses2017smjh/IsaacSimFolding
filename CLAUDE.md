@@ -173,7 +173,31 @@ else passes on the login node:
 The simulator half has no local run path. It needs `bhl.sif` + the Isaac Sim
 5.1 venv, and only runs through `sbatch`.
 
-### Queueing the closed-loop iteration
+### Running the campaign — use the driver, never submit stages by hand
+
+The v2 campaign is driven by `scripts/driver.py`, which owns every
+submission. It is restartable and duplicate-safe: each stage is keyed in
+`ledger/driver_state.json` and never resubmitted while that key holds a job.
+
+```bash
+C=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2
+PY=/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/bin/python
+$PY $C/scripts/driver.py --campaign $C tick --dry-run   # what WOULD it submit
+$PY $C/scripts/driver.py --campaign $C tick             # advance + schedule next tick
+$PY $C/scripts/driver.py --campaign $C status           # resumable state
+```
+
+Each tick submits a CPU chain tick that fires when any waited job ends
+(Slurm `?` OR-dependency), plus a 2-hour watchdog tick, so progression never
+waits on a person. Iterations 2 and 3 run from an explicit committed
+`plans/iterationK.json` (build it with `scripts/make_plan.py`, which refuses
+rows that break train/evaluation separation); if none exists 90 minutes after
+the previous iteration concludes, a preregistered default ladder applies.
+
+**Changing any executed source means refreezing.** `compile.sbatch` and
+`train.sbatch` run `verify_sources.py` at start and fail on any drift. The
+procedure: commit the source, `git mv manifest.json manifests/manifest_<commit>.json`,
+run `build_manifest.py`, commit, push. Never regenerate a manifest in place.
 
 **This section describes v1 and is superseded.** Use
 `campaigns/20260922-closed-loop-training-v2/README.md`, whose chain adds a
@@ -241,6 +265,34 @@ trajectories, so a partial collection must never reach the compiler.
   alongside it; a published GIF may show a latched success that later unfolded.
 - **~30 `slurm-*.out` files sit untracked at the repo root**, up to 1.1 MB each.
   They are not gitignored.
+- **The site `sbatch` word-splits its arguments.** `/apps/slurm/bin/sbatch` is
+  `/apps/slurm/current/bin/sbatch --mail-user=$USER $@` with `$@` UNQUOTED, so
+  any argument containing a space breaks and any glob character is expanded.
+  `--wrap "..."` fails with "Script arguments not permitted". The driver calls
+  the real binary and adds `--mail-user` itself.
+- **8 GPUs per user** (`QOSMaxGRESPerUser`), shared with every other job you
+  run. Array throttles above that are moot; a 16-row evaluation is ~3 waves.
+- **Identical seeds do not reproduce outcomes.** Baseline dev00 at H10 scored
+  1/4 in the pilot and 3/4 in v2 on the same seed, checkpoint and runner —
+  GPU cloth physics is not bitwise deterministic. Compare baseline and
+  candidate only when measured in the same campaign, never across campaigns.
+- **Checkpoints only load on a GPU.** The saved preprocessor pins
+  `device_processor` to `cuda`; on a CPU node `make_pre_post_processors`
+  asserts. Reload gates must request a GPU.
+- **`save_pretrained` drops the draccus `type` key** from `config.json`, so a
+  raw saved SmolVLA checkpoint does not reload. The v2 trainer restores it.
+- **The raster retention guard is narrow.** It is the loss on the first 8
+  frames of 4 Top_Short demonstrations, and the BC anchor is the first 8 frames
+  of 16 demos (2 of them pants). Neither says anything about grasping or
+  folding. The matched H50 closed-loop regression check is the real retention
+  test.
+- **Mixed-class collections confound the advantage.** In v2 iteration 1 every
+  pants episode scored 3/4 and every top 2-3/5, so reward differences measured
+  garment difficulty, not action quality. The gate checks spread and
+  concentration, which that passes.
+- **Initial poses are a shared set of ~6.** Pant_Short key 0 on garments 0/7/9
+  is the same pose ("P_A"), and the baseline fails it even at H50. The dev
+  set's H50 ceiling for the baseline is 4/8.
 
 ---
 

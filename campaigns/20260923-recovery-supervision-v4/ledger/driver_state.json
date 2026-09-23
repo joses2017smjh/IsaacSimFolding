@@ -70,8 +70,31 @@
         "21403256"
       ],
       "submitted_utc": "2026-09-23T23:00:03Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T23:15:07Z"
+    },
+    "a2.screen": {
+      "job_ids": [
+        "21403295"
+      ],
+      "submitted_utc": "2026-09-23T23:15:07Z",
+      "status": "completed",
+      "gpu_tasks": 8,
+      "finished_utc": "2026-09-23T23:30:09Z"
+    },
+    "a2.confirm_h10": {
+      "job_ids": [
+        "21403368"
+      ],
+      "submitted_utc": "2026-09-23T23:30:09Z",
       "status": "submitted",
-      "gpu_tasks": 1
+      "gpu_tasks": 8
+    },
+    "a2.h50": {
+      "job_ids": [],
+      "status": "skipped",
+      "reason": "gpu task budget"
     }
   },
   "attempts": {
@@ -139,13 +162,13 @@
         "reload_ok": true,
         "fit": {
           "baseline": {
-            "recovery_branch": 0.08408,
-            "recovery_student": 0.11435,
+            "recovery_branch": 0.08409,
+            "recovery_student": 0.11436,
             "retention_demos": 0.11185
           },
           "candidate": {
-            "recovery_branch": 0.08248,
-            "recovery_student": 0.12008,
+            "recovery_branch": 0.08247,
+            "recovery_student": 0.12009,
             "retention_demos": 0.10841
           }
         },
@@ -154,6 +177,25 @@
           "bf16_changed_fraction": 0.5936144980138176,
           "norm_gain_weights": 23760,
           "norm_gains_changed": 0
+        },
+        "fit_gate": true,
+        "fit_gate_detail": {
+          "repair_ok": true,
+          "noninferior_ok": true,
+          "mean_paired_diff": 0.0014074709243312314,
+          "diff_ci95": [
+            -0.002860582461407295,
+            0.004867030833071005
+          ],
+          "baseline_seed_spread": 0.024843520016884044
+        },
+        "h10_r1": {
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.25,
+          "invalid": []
         }
       }
     }
@@ -420,9 +462,9 @@
     }
   },
   "ticks": {
-    "chain": "21403257",
+    "chain": "21403369",
     "chain_deps": [
-      "21403256"
+      "21403368"
     ],
     "chain_begin": null,
     "watchdog": "21403258"
@@ -514,6 +556,20 @@
       "utc": "2026-09-23T23:00:03Z",
       "message": "submitted a2.fit -> 21403256",
       "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T23:15:07Z",
+      "message": "submitted a2.screen -> 21403295",
+      "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-23T23:30:09Z",
+      "message": "submitted a2.confirm_h10 -> 21403368",
+      "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-23T23:30:09Z",
+      "message": "budget refuses a2.h50: 8 GPU tasks"
     }
   ],
   "final": {}

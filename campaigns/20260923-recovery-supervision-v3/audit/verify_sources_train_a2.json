@@ -1,0 +1,9 @@
+{
+  "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v3",
+  "commit": "eb9b134a9d259037279082da79d24014fdd00ce1",
+  "sources_declared": 58,
+  "sources_checked": 58,
+  "checkpoint_checked": true,
+  "passed": true,
+  "problems": []
+}

@@ -203,7 +203,8 @@ def main() -> int:
                      "the baseline; previously a 120-minute driver hardcode absent from the "
                      "manifest")},
         "amendments": ["amendments/2026-09-23-attempt2-budget.md"],
-        "budget": {"gpu_tasks": 60, "gpu_hours": 28.0,
+        "budget": {"gpu_tasks": 72, "gpu_hours": 28.0,
+                   "amended": "2026-09-23-task-proxy: 60 -> 72, hours unchanged",
                    "reserve": {"final_set": 16},
                    "source": ("the remaining original allocation, measured from reconciled ledgers: "
                               "v2+v3 used 136 tasks and 12.17 of 45 GPU-hours. GPU-HOURS ARE THE "

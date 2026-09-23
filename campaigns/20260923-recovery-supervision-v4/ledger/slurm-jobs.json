@@ -140,8 +140,19 @@
       "submitted_by": "driver",
       "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
       "submitted_utc": "2026-09-23T22:10:18Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1551,
+        "gpu_hours": 0.4308,
+        "start": "2026-09-23T15:10:36",
+        "end": "2026-09-23T15:36:27"
+      }
     },
     {
       "job_id": "21403076",
@@ -151,8 +162,19 @@
       "submitted_by": "driver",
       "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
       "submitted_utc": "2026-09-23T22:36:37Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 77,
+        "gpu_hours": 0.0214,
+        "start": "2026-09-23T15:43:47",
+        "end": "2026-09-23T15:45:04"
+      }
     },
     {
       "job_id": "21403131",
@@ -162,9 +184,20 @@
       "submitted_by": "driver-superseded",
       "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
       "submitted_utc": "2026-09-23T22:45:07Z",
-      "state": "submitted",
+      "state": "completed",
       "array": null,
-      "note": "ran the pre-correction gate whose norm-gain clause was a measured instrument artifact (amendments/2026-09-23-fit-gate-instrument.md); stage cleared for re-run under the corrected gate"
+      "note": "ran the pre-correction gate whose norm-gain clause was a measured instrument artifact (amendments/2026-09-23-fit-gate-instrument.md); stage cleared for re-run under the corrected gate",
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 682,
+        "gpu_hours": 0.1894,
+        "start": "2026-09-23T15:45:19",
+        "end": "2026-09-23T15:56:41"
+      }
     },
     {
       "job_id": "21403256",
@@ -174,8 +207,65 @@
       "submitted_by": "driver",
       "manifest_commit": "ce834e5f0e4706d075141543bed6b399f19c1cca",
       "submitted_utc": "2026-09-23T23:00:03Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 875,
+        "gpu_hours": 0.2431,
+        "start": "2026-09-23T16:00:16",
+        "end": "2026-09-23T16:14:51"
+      }
+    },
+    {
+      "job_id": "21403295",
+      "phase": "a2.screen",
+      "script": "slurm/benchmark.sbatch",
+      "gpu_tasks": 8,
+      "submitted_by": "driver",
+      "manifest_commit": "ce834e5f0e4706d075141543bed6b399f19c1cca",
+      "submitted_utc": "2026-09-23T23:15:07Z",
+      "state": "completed",
+      "array": "0,2,4,6,8,10,12,14",
+      "final": {
+        "tasks": 8,
+        "states": {
+          "COMPLETED": 8
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 2120,
+        "gpu_hours": 0.5889,
+        "start": "2026-09-23T16:15:16",
+        "end": "2026-09-23T16:29:43"
+      }
+    },
+    {
+      "job_id": "21403368",
+      "phase": "a2.confirm_h10",
+      "script": "slurm/benchmark.sbatch",
+      "gpu_tasks": 8,
+      "submitted_by": "driver",
+      "manifest_commit": "ce834e5f0e4706d075141543bed6b399f19c1cca",
+      "submitted_utc": "2026-09-23T23:30:09Z",
+      "state": "active",
+      "array": "0,2,4,6,8,10,12,14",
+      "final": {
+        "tasks": 5,
+        "states": {
+          "COMPLETED": 2,
+          "RUNNING": 2,
+          "PENDING": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 573,
+        "gpu_hours": 0.1592,
+        "start": "2026-09-23T16:30:16",
+        "end": "2026-09-23T16:34:51"
+      }
     }
   ],
   "support_jobs": [
@@ -216,13 +306,43 @@
       "gpu_hours": 0.0
     },
     {
-      "job_id": "21402827",
+      "job_id": "21402920",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21403077",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21403132",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21403257",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21403258",
       "name": "lh-v3-tick",
       "state": "active",
       "gpu_hours": 0.0
     },
     {
-      "job_id": "21402842",
+      "job_id": "21403296",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21403369",
       "name": "lh-v3-tick",
       "state": "active",
       "gpu_hours": 0.0
@@ -230,11 +350,12 @@
   ],
   "reconciled": {
     "by": "scripts/reconcile_ledger.py from sacct",
-    "stage_jobs": 6,
-    "support_jobs": 8,
-    "gpu_hours_total": 5.31,
+    "stage_jobs": 12,
+    "support_jobs": 13,
+    "gpu_hours_total": 6.943,
     "outcomes": {
-      "completed": 6
+      "completed": 11,
+      "active": 1
     },
     "by_iteration_or_stage": {
       "smoke": {
@@ -251,6 +372,11 @@
         "jobs": 3,
         "gpu_tasks": 10,
         "gpu_hours": 1.0467
+      },
+      "a2": {
+        "jobs": 6,
+        "gpu_tasks": 20,
+        "gpu_hours": 1.6328
       }
     }
   }

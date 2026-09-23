@@ -135,8 +135,12 @@ def test_recipe_factor_and_checkpoint_rule_are_preregistered():
 def test_budget_is_hours_primary_and_success_path_is_fundable():
     b = MANIFEST["budget"]
     assert b["gpu_hours"] == 28.0 and "BINDING CAP" in b["source"]
-    # smoke 1 + search 8 + train 1 + reload 1 + fit 1 + screen 8 + confirm 16 + final 16
-    assert 1 + 8 + 1 + 1 + 1 + 8 + 16 + 16 <= b["gpu_tasks"]
+    # The loop allows k = 2, so the success path must be fundable AFTER a
+    # failed attempt 1 (train 1 + reload 1 + fit 1 + screen 8), not just for
+    # a single attempt -- the gap amendment 2026-09-23-task-proxy repaired.
+    one_attempt = 1 + 1 + 1 + 8
+    assert 1 + 8 + one_attempt + one_attempt + 16 + 16 <= b["gpu_tasks"]
+    assert b["gpu_hours"] == 28.0, "the hour cap is binding and is never amended"
 
 
 # ---------------------------------------------------------------- driver

@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none — campaign complete |
-| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, fit precondition failed: repair verification failed (bf16 expert still frozen); FINAL: `baseline` delivered |
+| **Active job** | `21403368` a2.confirm_h10 |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, H10 r1 4/8 |
 | **Limitation / blocker** | none |
-| **Next automatic action** | none — campaign complete; see REPORT.md |
+| **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-23T22:57:07Z by scripts/driver.py._
+_Updated 2026-09-23T23:30:09Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -61,3 +61,22 @@ Corrected per `amendments/2026-09-23-fit-gate-instrument.md` (changed
 fraction alone gates; norm count reported); the original report is preserved
 in `attempts/`. Driver state reopened before any screen result exists; no
 evidence gate changed. The corrected fit gate re-runs, then the screen.
+
+### 2026-09-23 — attempt 2 clears the screen; confirmation in progress
+
+Corrected fit gate on `a2-step000250`: **passed** (59.4% of reloaded bf16
+expert weights changed; paired non-inferiority within seed spread). Screen:
+**4/8 settled, mean conditions 3.25** (dev02, dev05, dev06, dev07; baseline
+runs 2/8 and 0/8) — the first trained checkpoint in any campaign to clear the
+unchanged 4/8 bar. This is a screen, not a result: the confirmation rule
+pools a second H10 run with it against the baseline's 2/16, and one-sided
+Fisher p < 0.05 requires that second run at **≥ 4/8** (3/8 gives p = 0.057).
+H50 must also hold ≥ 4/8.
+
+The driver refused the H50 leg on the task-count proxy (39 + 8 + 16 > 60),
+which would have concluded the attempt as "confirmation skipped: budget".
+The cap could never fund a two-attempt success path — attempt 2's own plan
+summed to 62 > 60 before it trained — so per
+`amendments/2026-09-23-task-proxy.md` the proxy is 60 → 72; **GPU-hours stay
+28.0 (6.94 used)** and no evidence gate changed. Pending ticks were cancelled
+before the fix; the second H10 run (`21403368`) kept running.

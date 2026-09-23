@@ -208,7 +208,40 @@
       "submitted_by": "manual",
       "manifest_commit": "eb9b134a9d259037279082da79d24014fdd00ce1",
       "submitted_utc": "2026-09-23T16:47:55Z",
-      "state": "submitted"
+      "state": "completed",
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 148,
+        "gpu_hours": 0.0411,
+        "start": "2026-09-23T09:48:03",
+        "end": "2026-09-23T09:50:31"
+      }
+    },
+    {
+      "job_id": "21402067",
+      "phase": "a2.train",
+      "script": "slurm/train.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "eb9b134a9d259037279082da79d24014fdd00ce1",
+      "submitted_utc": "2026-09-23T16:51:31Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1365,
+        "gpu_hours": 0.3792,
+        "start": "2026-09-23T09:51:43",
+        "end": "2026-09-23T10:14:28"
+      }
     }
   ],
   "support_jobs": [
@@ -216,12 +249,6 @@
       "job_id": "21401703",
       "name": "lh-v3-tick",
       "state": "completed",
-      "gpu_hours": 0.0
-    },
-    {
-      "job_id": "21401704",
-      "name": "lh-v3-tick",
-      "state": "failed",
       "gpu_hours": 0.0
     },
     {
@@ -261,26 +288,32 @@
       "gpu_hours": 0.0
     },
     {
-      "job_id": "21401952",
+      "job_id": "21402068",
       "name": "lh-v3-tick",
-      "state": "failed",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402069",
+      "name": "lh-v3-tick",
+      "state": "active",
       "gpu_hours": 0.0
     }
   ],
   "reconciled": {
     "by": "scripts/reconcile_ledger.py from sacct",
-    "stage_jobs": 9,
+    "stage_jobs": 11,
     "support_jobs": 9,
-    "gpu_hours_total": 3.649,
+    "gpu_hours_total": 4.069,
     "outcomes": {
-      "completed": 8,
+      "completed": 10,
       "failed": 1
     },
     "by_iteration_or_stage": {
       "smoke": {
-        "jobs": 1,
-        "gpu_tasks": 1,
-        "gpu_hours": 0.0731
+        "jobs": 2,
+        "gpu_tasks": 2,
+        "gpu_hours": 0.1142
       },
       "baseline": {
         "jobs": 1,
@@ -301,6 +334,11 @@
         "jobs": 1,
         "gpu_tasks": 1,
         "gpu_hours": 0.1297
+      },
+      "a2": {
+        "jobs": 1,
+        "gpu_tasks": 1,
+        "gpu_hours": 0.3792
       }
     }
   }

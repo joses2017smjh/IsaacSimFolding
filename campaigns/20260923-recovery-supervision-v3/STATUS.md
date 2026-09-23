@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none |
-| **Current result** | baseline H10 2/8 + 0/8; recovery search 32 settled successes of 128 attempts (gate pass); attempt 1, H10 r1 1/8, screen failed: H10 1/8 < 4/8; attempt 2 |
+| **Active job** | none — campaign complete |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 32 settled successes of 128 attempts (gate pass); attempt 1, H10 r1 1/8, screen failed: H10 1/8 < 4/8; attempt 2, double breach: no guard-passing checkpoint (amendment A1); nothing is evaluated; FINAL: `baseline` delivered |
 | **Limitation / blocker** | none |
-| **Next automatic action** | driver advances the next stage when a waited job ends |
+| **Next automatic action** | none — campaign complete; see REPORT.md |
 
-_Updated 2026-09-23T15:51:44Z by scripts/driver.py._
+_Updated 2026-09-23T18:51:35Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -82,3 +82,16 @@ a hardcode of this campaign's own scheduler, not a preregistered rule, and
 letting it finalize mid-repair would end the campaign on a known bug. The
 pause is orchestration only; no gate, threshold, row or selection rule
 changes. The tick resumes once `plans/attempt2.json` is committed.
+
+### 2026-09-23 — campaign complete: no improvement; baseline retained
+
+Attempt 2 (fp32 repair + effective batch 32) concluded by preregistered
+rule: **double breach** — retention loss 0.084/0.085/0.084 at steps
+100/200/300 against a 0.0786 limit, so no candidate existed and nothing was
+evaluated. The repair verifiably worked at training level (recovery loss
+0.068→0.060, anchor 0.098→0.078 — the first campaign fine-tune to
+demonstrably learn its rollout supervision); the model traded held-out
+whole-episode behaviour for it within 100 optimizer steps. The driver
+finalized on the baseline; the untouched final set was never spent and
+remains unseen. Full account, evidence chain and the remaining limitation:
+`REPORT.md`. Budget: 31 of 78 GPU tasks, 4.1 of 36.9 GPU-hours.

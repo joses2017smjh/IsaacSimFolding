@@ -16,15 +16,25 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-23).** The closed-loop training v2 campaign is
-complete: three rollout-driven AWR iterations, none improved development H10
-over the matched baseline, so the **untouched baseline checkpoint is
-retained**. Read `campaigns/20260922-closed-loop-training-v2/REPORT.md` first.
+**Latest outcome (2026-09-23, evening).** The recovery-supervision v3
+campaign is complete: a bounded simulator-validated recovery search produced
+32 settled successes from 128 executed candidate continuations (25%), but
+neither training attempt qualified — attempt 1 was blocked by a real
+optimizer defect (AdamW ran on bf16 expert weights; ~88% of trainable
+parameters could not move, in every v2/v3 fine-tune), and attempt 2, with
+the repair in place and demonstrably learning, breached the whole-episode
+retention guard at every checkpoint. The **untouched baseline checkpoint
+remains the deliverable**. The binding constraint is now supervision
+breadth, not the optimizer, labels, or orchestration. Read
+`campaigns/20260923-recovery-supervision-v3/REPORT.md` first; v2's report
+covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report — outcome, evidence limits, reproduction, provenance** | `campaigns/20260922-closed-loop-training-v2/REPORT.md` |
-| **Current campaign — active job, latest result, blocker, next milestone** | `campaigns/20260922-closed-loop-training-v2/STATUS.md` |
+| **Final report (v3) — outcome, findings, remaining limitation** | `campaigns/20260923-recovery-supervision-v3/REPORT.md` |
+| v3 live status table and record | `campaigns/20260923-recovery-supervision-v3/STATUS.md` |
+| v2 final report (AWR negative result; frozen-test baseline measurement) | `campaigns/20260922-closed-loop-training-v2/REPORT.md` |
+| v2 status record | `campaigns/20260922-closed-loop-training-v2/STATUS.md` |
 | Its frozen protocol (budget, gates, selection rule, targets) | `campaigns/20260922-closed-loop-training-v2/manifest.json` |
 | Its order of operations | `campaigns/20260922-closed-loop-training-v2/README.md` |
 | Frozen predecessor, closed at `0e83a7b` | `campaigns/20260921-horizon-pilot/STATUS.md` |

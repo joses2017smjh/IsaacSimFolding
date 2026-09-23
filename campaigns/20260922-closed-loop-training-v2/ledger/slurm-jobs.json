@@ -490,7 +490,7 @@
     {
       "job_id": "21400762",
       "name": "lh-cl2-tick",
-      "state": "active",
+      "state": "completed",
       "gpu_hours": 0.0
     },
     {

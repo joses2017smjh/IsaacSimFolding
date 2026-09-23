@@ -199,6 +199,16 @@
         "start": "2026-09-23T08:46:33",
         "end": "2026-09-23T08:51:35"
       }
+    },
+    {
+      "job_id": "21402066",
+      "phase": "smoke.accum_fp32",
+      "script": "runtime/probe/accum_smoke.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "manual",
+      "manifest_commit": "eb9b134a9d259037279082da79d24014fdd00ce1",
+      "submitted_utc": "2026-09-23T16:47:55Z",
+      "state": "submitted"
     }
   ],
   "support_jobs": [

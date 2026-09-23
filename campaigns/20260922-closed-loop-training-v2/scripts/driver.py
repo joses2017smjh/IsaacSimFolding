@@ -494,6 +494,10 @@ class Driver:
                 self.event(f"no explicit plan for iteration {k} after {GRACE_MINUTES} min grace; "
                            f"applying default ladder: {plan['factor_changed']}")
         plan["resolved_utc"] = stamp()
+        if self.dry:
+            # A dry run must leave no trace: a resolved plan written here would
+            # be picked up by the next real tick without its hash recorded.
+            return plan
         resolved.parent.mkdir(exist_ok=True)
         resolved.write_text(json.dumps(plan, indent=2) + "\n")
         self.state["iterations"].setdefault(str(k), {})["plan_sha256"] = \

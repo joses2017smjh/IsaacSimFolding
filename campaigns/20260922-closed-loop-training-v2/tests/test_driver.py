@@ -271,3 +271,13 @@ def test_a_lock_held_by_a_dead_slurm_job_is_broken_immediately(tmp_path, monkeyp
     with pytest.raises(SystemExit):
         with driver.Lock(path):
             pass
+
+
+def test_a_dry_run_writes_no_resolved_plan(tmp_path):
+    """A dry-run tick wrote plans/iteration2.resolved.json; the real tick then
+    adopted it without recording its hash."""
+    root = _temp_campaign(tmp_path, [])
+    d = driver.Driver(root, dry=True)
+    plan = d.resolved_plan(1)
+    assert plan is not None and plan["iteration"] == 1
+    assert not (root / "plans" / "iteration1.resolved.json").exists()

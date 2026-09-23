@@ -7,12 +7,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21400710` iter1.reload.retry1, `21400812` iter2.collect |
-| **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8 |
+| **Active job** | `21400710` iter1.reload.retry1, `21401005` iter3.compile |
+| **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8; iter 2 `iter2-step000300` H10 0/8, H50 3/8 |
 | **Blocker** | none |
 | **Next milestone** | advance the current iteration; final frozen test after the loop |
 
-_Updated 2026-09-23T07:58:32Z by scripts/driver.py._
+_Updated 2026-09-23T08:50:09Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## What this campaign is
@@ -257,3 +257,40 @@ tick that `scancel`'d itself (ledger adoption closes the window), a stale
 lock from a killed tick (holders are now checked), `--begin` read in local
 time (now relative), and a budget-skipped test that would have been scored
 0/0 (now reported "not run").
+
+### 2026-09-23 — iteration 2: no transfer; iteration 3 changes advantage sharpness
+
+**Iteration 2** `iter2-step000300` (H50 on Pant_Short garments 4/5/6/8):
+
+| | H10 settled | H10 mean cond | H50 settled | H50 mean cond |
+|---|---|---|---|---|
+| matched baseline | 2/8 | 3.000 | 4/8 | 3.125 |
+| iter1-step000300 | 0/8 | 2.125 | 4/8 | 3.250 |
+| iter2-step000300 | 0/8 | 2.500 | **3/8** | 3.125 |
+
+**Ineligible** on H50 regression (3 < 4). A2's preregistered prediction
+resolved negatively: H10 did not rise on P_B/P_C rows (P_B 3.00 flat, P_C
+3.00 -> 2.33). Caveat: the realized success density was 2/16, not the ~60%
+the development garments predicted — on garments 4/5/6/8 the P_B/P_C rows
+mostly stopped at 3/4, so the baseline's H50 competence is garment-specific.
+
+**Diagnosis common to both iterations** (amendment A3): they learned mostly
+from failures. Iteration 1 had no success; in iteration 2 the cap held the
+two successes to 28.6% of the sampling mass while six 3/4 failures carried
+54%. Development P_B fell 4/4 -> 3/4 at H50 after training on four P_B
+collection rows that all scored exactly 3/4.
+
+**Iteration 3** holds iteration 2's 16 trajectories fixed and changes one
+coupled mechanism, advantage sharpness (beta 1.0 -> 0.5 with w_max 3 -> 20),
+which moves success mass to 63% at ESS 4.58 with every gate threshold
+unchanged. A3 discloses this is a post-hoc change made knowing two
+candidates' development results; the still-unseen frozen test is the
+confirmation. Precedent is against it (the pilot fitted two H50 states and
+still failed closed-loop). If H10 does not rise, the campaign's finding is
+that AWR resampling from a ~12%-success policy on 16 rollouts cannot move H10
+whatever the horizon, class or weighting.
+
+The driver's default fallback for iteration 3 would have re-run the
+four-class H10 design at a *higher* rollout share — exactly backwards on this
+evidence. An uncommitted stub held it while the explicit plan was built.
+Compile **21401005** submitted; the collection stage is recorded as reused.

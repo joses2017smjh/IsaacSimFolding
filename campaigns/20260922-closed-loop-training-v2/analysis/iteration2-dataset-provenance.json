@@ -1,0 +1,597 @@
+{
+  "schema_version": 1,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/datasets/iteration2.npz",
+  "dataset_sha256": "00b8d756af88b2a8b82553ea2ce9e3d4a36167128cbc2211c0a6480fa4a10ae9",
+  "dataset_samples": 1776,
+  "chunk": 50,
+  "source": "autonomous closed-loop executed action streams at declared horizons [50]; every label is an action the rollout actually executed at a state it actually visited -- no plan queried at a state its own rollout did not reach",
+  "reward_definition": "terminal official geometric conditions_passed / conditions_total",
+  "advantage_definition": "terminal reward minus mean terminal reward across this fixed collection",
+  "advantage_implementation": "lehome_fold.awr.success_residual",
+  "awr_weight_implementation": "lehome_fold.awr.weights; weights are used as rollout resampling probabilities",
+  "beta": 1.0,
+  "w_max": 3.0,
+  "w_min": 1e-06,
+  "gate": {
+    "passed": true,
+    "unmet_requirements": [],
+    "detail": null,
+    "checks": [
+      {
+        "name": "reward_informative",
+        "requirement": "distinct terminal rewards >= 3",
+        "observed": 4,
+        "threshold": 3,
+        "passed": true
+      },
+      {
+        "name": "advantage_informative",
+        "requirement": "advantage std > 0.02",
+        "observed": 0.24803918600082397,
+        "threshold": 0.02,
+        "passed": true
+      },
+      {
+        "name": "episode_weights_non_uniform",
+        "requirement": "episode ESS <= n - 1 (15)",
+        "observed": 10.690079666126639,
+        "threshold": 15,
+        "passed": true
+      },
+      {
+        "name": "episode_weights_not_concentrated",
+        "requirement": "episode ESS >= 3.0",
+        "observed": 10.690079666126639,
+        "threshold": 3.0,
+        "passed": true
+      },
+      {
+        "name": "sample_weights_non_uniform",
+        "requirement": "sample ESS fraction <= 0.95",
+        "observed": 0.6681299791329148,
+        "threshold": 0.95,
+        "passed": true
+      }
+    ],
+    "episodes": 16,
+    "distinct_rewards": 4,
+    "advantage_std": 0.24803918600082397,
+    "terminal_rewards": [
+      0.25,
+      0.25,
+      0.5,
+      0.5,
+      1.0,
+      0.25,
+      1.0,
+      0.5,
+      0.75,
+      0.25,
+      0.5,
+      0.75,
+      0.75,
+      0.75,
+      0.75,
+      0.75
+    ],
+    "episode_weight_summary": {
+      "n": 16.0,
+      "ess": 10.690079666126639,
+      "ess_fraction": 0.6681299791329149,
+      "capped": 2.0,
+      "floored": 0.0,
+      "max": 3.0,
+      "min": 0.2501075863838196,
+      "ratio": 11.994838074988042
+    },
+    "sample_weight_summary": {
+      "n": 1776.0,
+      "ess": 1186.5988429400568,
+      "ess_fraction": 0.6681299791329148,
+      "capped": 222.0,
+      "floored": 0.0,
+      "max": 3.0,
+      "min": 0.2501075863838196,
+      "ratio": 11.994838074988042
+    },
+    "awr": {
+      "beta": 1.0,
+      "w_max": 3.0,
+      "w_min": 1e-06,
+      "cap_bound_episodes": 2.0,
+      "floor_bound_episodes": 0.0
+    },
+    "allow_degenerate": false
+  },
+  "episodes": [
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72000_h50/trajectory.npz",
+      "trajectory_sha256": "8ceec05d6ee5a7b8871580717e41f0b366e7fb5b71b1b6327dd303c99c1390f7",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72000_h50/rollout.json",
+      "result_sha256": "9286de988cf0a1fa13fd0908f837b9d0741120303b9d79e3dd72b18bc73aa26e",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72000_h50/request.json",
+      "request_sha256": "0280018d33a8efd0609524de90065565cf005f7c48ef42d64a753ac737f3c545",
+      "id": "it2_pant_short_seen_4_key0_s72000_h50",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 0,
+      "seed": 72000,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.25,
+      "terminal_conditions_passed": 1,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.34375,
+      "awr_weight": 0.2501075863838196
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72001_h50/trajectory.npz",
+      "trajectory_sha256": "9c7c328d49157cb193495d75ccb937be1d4500e27a0ea6b8dddde3d87681412d",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72001_h50/rollout.json",
+      "result_sha256": "04e141d6eb494eb2c00ba74170658d97d40e0347de9c37802b9ebe3fb50c6845",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key0_s72001_h50/request.json",
+      "request_sha256": "b31b0508d6b00c88bfcd5a88ea76d068da1e6c09e41ef381d96c62018ca91607",
+      "id": "it2_pant_short_seen_4_key0_s72001_h50",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 0,
+      "seed": 72001,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.25,
+      "terminal_conditions_passed": 1,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.34375,
+      "awr_weight": 0.2501075863838196
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72010_h50/trajectory.npz",
+      "trajectory_sha256": "5fd37b2bca25d8925834173282dcf6277b0c9102ac6962337c78e4cbc07476a5",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72010_h50/rollout.json",
+      "result_sha256": "9efc26c95bd4a7ccecab068294cbba4e548c75765f01727722be4125465388fd",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72010_h50/request.json",
+      "request_sha256": "1c36d822665159ea6750ea1b2ad55d8c9b30ab91df78d04a483695f6851dadd8",
+      "id": "it2_pant_short_seen_4_key1_s72010_h50",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 1,
+      "seed": 72010,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.5,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.09375,
+      "awr_weight": 0.6852558851242065
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72011_h50/trajectory.npz",
+      "trajectory_sha256": "222631a0e37b2500c612b730ea7f383491269057b2a76e5f4950c68411b66215",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72011_h50/rollout.json",
+      "result_sha256": "b6a92057b17b4c60c603cfb4317f0d8d607b1d93e4c03ce0b29b42ada178d6f3",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_4_key1_s72011_h50/request.json",
+      "request_sha256": "ec1c53c52d4a535fb017715cd329bea489033bc7a8fac86babe194d5d502e1b1",
+      "id": "it2_pant_short_seen_4_key1_s72011_h50",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 1,
+      "seed": 72011,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.5,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.09375,
+      "awr_weight": 0.6852558851242065
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72002_h50/trajectory.npz",
+      "trajectory_sha256": "701da1d12c54d1d841c20101e1f43c61190d8ccdbdce57d027c7520f6ec02aaa",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72002_h50/rollout.json",
+      "result_sha256": "0216344e7b7c2d8595055d16dbdcc4eaa2b576c698a38c4e82a3192220c54e1c",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72002_h50/request.json",
+      "request_sha256": "ba89c1c2d367ed0c80cd02cbd54e0653caf9aeeb2bf524689149938a92ab9bba",
+      "id": "it2_pant_short_seen_5_key0_s72002_h50",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 0,
+      "seed": 72002,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 1.0,
+      "terminal_conditions_passed": 4,
+      "terminal_conditions_total": 4,
+      "terminal_success": true,
+      "advantage": 0.40625,
+      "awr_weight": 3.0
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72003_h50/trajectory.npz",
+      "trajectory_sha256": "5dc3c2eb30463fd6d405faa12ad52bbf3ab282424b211745b423714bdfae54d1",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72003_h50/rollout.json",
+      "result_sha256": "3026eb6e30349bfd8cac3a4523849484cfa658f8c82213cb1dc48cb9e56605ea",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key0_s72003_h50/request.json",
+      "request_sha256": "c2feed329f1819be0cf6ba8bf9ae1ae5c90c63b080e5afe473cb46e5b705fd92",
+      "id": "it2_pant_short_seen_5_key0_s72003_h50",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 0,
+      "seed": 72003,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.25,
+      "terminal_conditions_passed": 1,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.34375,
+      "awr_weight": 0.2501075863838196
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72012_h50/trajectory.npz",
+      "trajectory_sha256": "eb9063f73e85514cbc3c9558bcf012830f4a22eb004879fbd2ead48b97c3776e",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72012_h50/rollout.json",
+      "result_sha256": "fe0a1930579ea6e20609a68359aad1d71c6d1336b630a6609906bcb18624872b",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72012_h50/request.json",
+      "request_sha256": "0c6c885cd126057c78a9fd68731169f7ea0fe28b3f7826e81e3a6f6beac5f216",
+      "id": "it2_pant_short_seen_5_key1_s72012_h50",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 1,
+      "seed": 72012,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 1.0,
+      "terminal_conditions_passed": 4,
+      "terminal_conditions_total": 4,
+      "terminal_success": true,
+      "advantage": 0.40625,
+      "awr_weight": 3.0
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72013_h50/trajectory.npz",
+      "trajectory_sha256": "b0ef7317b850651748974640fce69117a1f1ae4233e1cc5b7d618bf454557392",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72013_h50/rollout.json",
+      "result_sha256": "266e41c6b9d8ea6b8d2689fbf7c4fedaaaa746e41afd8212bc2b6f13d41d6442",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_5_key1_s72013_h50/request.json",
+      "request_sha256": "3e46479071df1f0f3c494eae713654e0de9c6dcf82065d4244c34ec1020c4c2d",
+      "id": "it2_pant_short_seen_5_key1_s72013_h50",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 1,
+      "seed": 72013,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.5,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.09375,
+      "awr_weight": 0.6852558851242065
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72004_h50/trajectory.npz",
+      "trajectory_sha256": "a704cbfd089958c5920d483ed61ef7aeb0fb9cd555a2be6c3142ef8ccfb30a87",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72004_h50/rollout.json",
+      "result_sha256": "b46cb589256bf6a0083c8052c37b06b90c43f963661b8e495e0795ad018d05a5",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72004_h50/request.json",
+      "request_sha256": "53603bc6b9c13e382bfc5caf92578993ec563cc0a5c2e44ea5514fbea4aae40d",
+      "id": "it2_pant_short_seen_6_key0_s72004_h50",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 0,
+      "seed": 72004,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72005_h50/trajectory.npz",
+      "trajectory_sha256": "68da430295846109d7ad281523a42766c5e925a57f65e48efc30b41d9de3a82a",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72005_h50/rollout.json",
+      "result_sha256": "c47de2fe4e79c21363c14e86966299262a450a572cafc801120569f6cea27987",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key0_s72005_h50/request.json",
+      "request_sha256": "2bad541db3f62d012e225cffc592c8cbb61ed1293e422b6cd99f2389fab2f8bc",
+      "id": "it2_pant_short_seen_6_key0_s72005_h50",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 0,
+      "seed": 72005,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.25,
+      "terminal_conditions_passed": 1,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.34375,
+      "awr_weight": 0.2501075863838196
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72006_h50/trajectory.npz",
+      "trajectory_sha256": "dc6549ebfb39580d59fa84e2ba9f97a320a78dcd14925ccf38972e165f2f4e3d",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72006_h50/rollout.json",
+      "result_sha256": "e651eee8563c51a393a7326d054be6c5fb806f3b58b995750fd3fb02ff9bbaac",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72006_h50/request.json",
+      "request_sha256": "10868d3d89a3392958b2b932b07c1232aeba7b82a0dfb4dfa02220f53c042316",
+      "id": "it2_pant_short_seen_6_key2_s72006_h50",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 72006,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.5,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": -0.09375,
+      "awr_weight": 0.6852558851242065
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72007_h50/trajectory.npz",
+      "trajectory_sha256": "35af854469609da5833dbefab39e400499e8d2b4f679334ed48953bf4796859a",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72007_h50/rollout.json",
+      "result_sha256": "a2a071853a9ee55d3cb1a859876929a2728bd933477b7554e0744fa994fe75da",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_6_key2_s72007_h50/request.json",
+      "request_sha256": "886edf57d4bd193c76ecea2321411c5e159d155ab907aeb10184f227dce0c19e",
+      "id": "it2_pant_short_seen_6_key2_s72007_h50",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 72007,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72014_h50/trajectory.npz",
+      "trajectory_sha256": "faebc75b32563b99d5c688dad520f1220058a733895e16ed690aa0fb60845a91",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72014_h50/rollout.json",
+      "result_sha256": "c75e615431e178544f7ba9cee605348dab0835c2446d59d0fd22dcf6c693f42f",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72014_h50/request.json",
+      "request_sha256": "3b075a9944c2835acda2bce00de041b2d600c9e84081d9398960b5c8704f9943",
+      "id": "it2_pant_short_seen_8_key1_s72014_h50",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 1,
+      "seed": 72014,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72015_h50/trajectory.npz",
+      "trajectory_sha256": "0d479acd957a06f926790eed6b772e2e8bdf1f8247e47fdf03a708d68f6268b4",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72015_h50/rollout.json",
+      "result_sha256": "3d4d59ff6bb91a43b26a0290607d062883782f4720738578b8be05958f7d13c6",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key1_s72015_h50/request.json",
+      "request_sha256": "7046d98aada87aadf8ec3fde9fe508e501fbf3749bc3e86ea08f2f8b25032bc5",
+      "id": "it2_pant_short_seen_8_key1_s72015_h50",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 1,
+      "seed": 72015,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72008_h50/trajectory.npz",
+      "trajectory_sha256": "5b4c86d68ff9b0785a53f8c4984a341459c233890f3b5902c38694bb5adc7271",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72008_h50/rollout.json",
+      "result_sha256": "eb3d2d8cb6f28b54f19dd171fb78fa51bafaef1bd0a66dacc0be68457ddf9165",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72008_h50/request.json",
+      "request_sha256": "3f2a8f9b3d572c8e653bad1284d5269773a6b842fc477489aa5600561d583706",
+      "id": "it2_pant_short_seen_8_key2_s72008_h50",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 72008,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72009_h50/trajectory.npz",
+      "trajectory_sha256": "ac9ac9e830d2701566b3e0519f785b42a902aab29eec64a931368c2363a7e4f6",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72009_h50/rollout.json",
+      "result_sha256": "5c878a93ba427e1a0a7d5ade77ca2f95b2d9563e5c5d38b66f7b2e95d07caef7",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration2/it2_pant_short_seen_8_key2_s72009_h50/request.json",
+      "request_sha256": "a62e7797e7c896830d49c3195e30dec71cd31b88d5367f12a9fcd5017f06ff5b",
+      "id": "it2_pant_short_seen_8_key2_s72009_h50",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 72009,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "execution_horizon": 50,
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.15625,
+      "awr_weight": 1.8774945735931396
+    }
+  ],
+  "summary": {
+    "episode_count": 16,
+    "terminal_reward_mean": 0.59375,
+    "terminal_reward_min": 0.25,
+    "terminal_reward_max": 1.0,
+    "positive_advantage_episodes": 8,
+    "effective_sample_size": 10.690079666126639,
+    "sample_effective_sample_size": 1186.5988429400568
+  }
+}

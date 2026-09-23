@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "unmet_requirements": [],
+  "detail": null,
+  "checks": [
+    {
+      "name": "reward_informative",
+      "requirement": "distinct terminal rewards >= 3",
+      "observed": 4,
+      "threshold": 3,
+      "passed": true
+    },
+    {
+      "name": "advantage_informative",
+      "requirement": "advantage std > 0.02",
+      "observed": 0.24803918600082397,
+      "threshold": 0.02,
+      "passed": true
+    },
+    {
+      "name": "episode_weights_non_uniform",
+      "requirement": "episode ESS <= n - 1 (15)",
+      "observed": 10.690079666126639,
+      "threshold": 15,
+      "passed": true
+    },
+    {
+      "name": "episode_weights_not_concentrated",
+      "requirement": "episode ESS >= 3.0",
+      "observed": 10.690079666126639,
+      "threshold": 3.0,
+      "passed": true
+    },
+    {
+      "name": "sample_weights_non_uniform",
+      "requirement": "sample ESS fraction <= 0.95",
+      "observed": 0.6681299791329148,
+      "threshold": 0.95,
+      "passed": true
+    }
+  ],
+  "episodes": 16,
+  "distinct_rewards": 4,
+  "advantage_std": 0.24803918600082397,
+  "terminal_rewards": [
+    0.25,
+    0.25,
+    0.5,
+    0.5,
+    1.0,
+    0.25,
+    1.0,
+    0.5,
+    0.75,
+    0.25,
+    0.5,
+    0.75,
+    0.75,
+    0.75,
+    0.75,
+    0.75
+  ],
+  "episode_weight_summary": {
+    "n": 16.0,
+    "ess": 10.690079666126639,
+    "ess_fraction": 0.6681299791329149,
+    "capped": 2.0,
+    "floored": 0.0,
+    "max": 3.0,
+    "min": 0.2501075863838196,
+    "ratio": 11.994838074988042
+  },
+  "sample_weight_summary": {
+    "n": 1776.0,
+    "ess": 1186.5988429400568,
+    "ess_fraction": 0.6681299791329148,
+    "capped": 222.0,
+    "floored": 0.0,
+    "max": 3.0,
+    "min": 0.2501075863838196,
+    "ratio": 11.994838074988042
+  },
+  "awr": {
+    "beta": 1.0,
+    "w_max": 3.0,
+    "w_min": 1e-06,
+    "cap_bound_episodes": 2.0,
+    "floor_bound_episodes": 0.0
+  },
+  "allow_degenerate": false
+}

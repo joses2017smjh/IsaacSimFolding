@@ -1,0 +1,33 @@
+{
+  "iteration": 3,
+  "factor_changed": "advantage sharpness (beta 1.0 -> 0.5 with w_max 3 -> 20, one coupled mechanism)",
+  "justification": "Both prior candidates learned mostly from failures: iteration 1 had no success, and in iteration 2 the cap held the two successes to 28.6% of the sampling mass while six 3/4 failures carried 54%. Iteration 3 holds iteration 2's rollouts fixed and changes only how sharply AWR concentrates on successes (63% success mass). See amendment A3, including the post-hoc disclosure and the discriminating prediction.",
+  "evidence": {
+    "baseline_dev": "H10 2/8 (3.000), H50 4/8",
+    "iter1_dev": "H10 0/8 (2.125), H50 4/8",
+    "iter2_dev": "H10 0/8 (2.500), H50 3/8"
+  },
+  "amendment": "amendments/A3-iteration3-advantage-sharpness.json",
+  "collection_checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+  "init_checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+  "collection_horizons": [
+    50
+  ],
+  "collection_source": "iteration2",
+  "collection_source_rows": 16,
+  "awr": {
+    "beta": 0.5,
+    "w_max": 20.0
+  },
+  "collection": [],
+  "collection_expansion": [],
+  "training": {},
+  "allow_dev_overlap": null,
+  "separation": {
+    "frozen_test_garments_excluded": true,
+    "development_pairs_excluded": true,
+    "preregistered_seed_blocks_excluded": true
+  },
+  "source": "explicit",
+  "resolved_utc": "2026-09-23T08:50:09Z"
+}

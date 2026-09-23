@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/training/iteration1/checkpoints/step_000300",
+  "checkpoint_model_sha256": "c231b7569be1fdf011a0ce4d3341f0a8811cd8bc3b39d23f1becaf950cd9ac8c",
+  "config_matches_baseline": true,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/datasets/iteration1.npz",
+  "action_shape": [
+    1,
+    12
+  ],
+  "action_sha256": "9ed1f23c59dfcada6e00054316b57bad6c357687cdbd14fa2ab2735babb9138f",
+  "finite": true,
+  "device": "cuda"
+}

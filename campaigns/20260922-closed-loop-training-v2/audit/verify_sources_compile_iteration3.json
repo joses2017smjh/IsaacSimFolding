@@ -1,0 +1,9 @@
+{
+  "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2",
+  "commit": "4e7e78939cfffe0dd629091327589fda72fa2c4d",
+  "sources_declared": 72,
+  "sources_checked": 72,
+  "checkpoint_checked": true,
+  "passed": true,
+  "problems": []
+}

@@ -108,6 +108,21 @@
       "status": "completed",
       "gpu_tasks": 16,
       "finished_utc": "2026-09-23T08:39:12Z"
+    },
+    "iter3.collect": {
+      "job_ids": [],
+      "status": "reused",
+      "from": "iteration2",
+      "rows": 16,
+      "recorded_utc": "2026-09-23T08:50:09Z"
+    },
+    "iter3.compile": {
+      "job_ids": [
+        "21401005"
+      ],
+      "submitted_utc": "2026-09-23T08:50:09Z",
+      "status": "submitted",
+      "gpu_tasks": 0
     }
   },
   "iterations": {
@@ -223,7 +238,8 @@
       "outcome": "evaluated"
     },
     "3": {
-      "phase": "planning"
+      "phase": "planning",
+      "plan_sha256": "9d2ffc68d64000ea3b063389bd58b8199911abe43456d26d9ecc3f711ad89d76"
     }
   },
   "baseline_dev": {
@@ -247,9 +263,11 @@
   "best": null,
   "final": {},
   "ticks": {
-    "chain": "21400984",
-    "chain_deps": [],
-    "chain_begin": "2026-09-23T10:09:13Z",
+    "chain": "21401006",
+    "chain_deps": [
+      "21401005"
+    ],
+    "chain_begin": null,
     "watchdog": "21400762"
   },
   "done": false,
@@ -308,6 +326,15 @@
     {
       "utc": "2026-09-23T08:39:13Z",
       "message": "iteration 2 concluded: evaluated"
+    },
+    {
+      "utc": "2026-09-23T08:50:09Z",
+      "message": "iter3.collect reuses rollouts/iteration2 (16 trajectories); nothing submitted"
+    },
+    {
+      "utc": "2026-09-23T08:50:09Z",
+      "message": "submitted iter3.compile -> 21401005",
+      "gpu_tasks": 0
     }
   ]
 }

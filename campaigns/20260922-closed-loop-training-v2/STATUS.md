@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| **Active job** | none submitted yet |
-| **Latest result** | none — campaign frozen at `f2422ef`, 64 sources verified, 13 CPU tests pass |
+| **Active job** | `21400605` — end-to-end smoke (retry) |
+| **Latest result** | smoke `21400590` FAILED at 51 s: LeHome's logger could not write to the read-only pilot checkout. Fixed in `a313e4a`. |
 | **Blocker** | none |
-| **Next milestone** | end-to-end smoke (`slurm/smoke.sbatch`) |
+| **Next milestone** | smoke passes → submit the 8-row collection array |
 
 ## What this campaign is
 
@@ -93,3 +93,37 @@ historical manifest.
 ## Record
 
 append-only; newest last
+
+### 2026-09-22 — campaign frozen and launched
+
+Manifest frozen at `f2422ef`: 64 executed sources pinned by committed-blob
+SHA-256, immutable baseline checkpoint pinned, every protocol decision
+preregistered. Pushed to `origin/main` at `d6ae7fc` before any job was
+submitted.
+
+Clean-checkout proof (`audit/clean_checkout_proof.json`): cloned from origin
+into scratch, verified all 64 sources and the baseline checkpoint, ran 13
+campaign tests and 56 root tests, and resolved the smoke launch path. The
+clone carries the runner, its import graph and the LeHome checkout, so the
+campaign is reconstructible from the commit alone.
+
+Smoke job **21400590** submitted.
+
+### 2026-09-22 — smoke 21400590 failed, cause fixed
+
+`OSError: [Errno 30] Read-only file system` on
+`.../20260921-horizon-pilot/external/lehome-challenge/logs/...`. LeHome's
+logger opens a log file at import time; this campaign binds
+`/nfs/hpc/share/sanchej7` read-only with only its own directory writable, so
+the frozen pilot checkout that `$LEHOME` points at was not writable. The
+pilot never hit this because it bound its *own* campaign directory rw.
+
+Fixed by binding a per-job writable directory over that log path rather than
+relaxing the read-only mount, so the frozen campaign stays immutable.
+
+The same commit makes `build_manifest.py` hash `.sh` files.
+`slurm/_common.sh` holds the apptainer invocation, the bind mounts and
+`PYTHONPATH` — the exact file this bug was in — and was not covered by the
+source pin. Manifest refrozen at `a313e4a` with 66 sources.
+
+Smoke retry **21400605** submitted.

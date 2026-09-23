@@ -1,1 +1,25 @@
-{"campaign": "20260922-closed-loop-training-v2", "frozen_commit": "f2422ef4b179194ab58751c58262d321b33f4009", "jobs": []}
+{
+  "campaign": "20260922-closed-loop-training-v2",
+  "frozen_commit": "a313e4a2e1cb299c87c42c06f5a6702ec9d26aca",
+  "jobs": [
+    {
+      "job_id": "21400590",
+      "phase": "smoke",
+      "script": "slurm/smoke.sbatch",
+      "submitted_utc": "2026-09-23T06:52:21Z",
+      "manifest_commit": "f2422ef4b179194ab58751c58262d321b33f4009",
+      "state": "FAILED",
+      "exit_code": 3,
+      "cause": "LeHome logger could not write to the read-only pilot checkout",
+      "fixed_by": "a313e4a writable per-job log bind"
+    },
+    {
+      "job_id": "21400605",
+      "phase": "smoke",
+      "script": "slurm/smoke.sbatch",
+      "submitted_utc": "2026-09-23T06:55:12Z",
+      "manifest_commit": "a313e4a2e1cb299c87c42c06f5a6702ec9d26aca",
+      "state": "submitted"
+    }
+  ]
+}

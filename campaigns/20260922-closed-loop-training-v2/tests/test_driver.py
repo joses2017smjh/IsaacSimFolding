@@ -77,7 +77,9 @@ def test_settled_and_latched_success_are_reported_separately():
 
 
 # -------------------------------------------------------------- eligibility
-BASE = {"h10": {"settled": 0, "valid": 8, "rows": 8}, "h50": {"settled": 4, "valid": 8, "rows": 8}}
+# Same shape score_rows produces, so fixtures cannot drift from real data.
+BASE = {"h10": {"settled": 0, "valid": 8, "rows": 8, "ever": 1, "mean_conditions": 2.5, "invalid": []},
+        "h50": {"settled": 4, "valid": 8, "rows": 8, "ever": 4, "mean_conditions": 3.0, "invalid": []}}
 
 
 def _cand(h10, h50, gate=True, reload_ok=True, valid=8, cond=3.0, loss=0.08):
@@ -190,3 +192,16 @@ def test_lock_prevents_two_concurrent_ticks(tmp_path):
             with driver.Lock(path):
                 pass
     assert not path.exists()
+
+
+def test_a_budget_skipped_final_test_is_reported_as_not_run(tmp_path):
+    """Advisor catch: finalize() must never score an empty directory as 0/0."""
+    cap_eater = {"job_id": "1", "phase": "x", "gpu_tasks": 169}   # cap is 170
+    root = _temp_campaign(tmp_path, [cap_eater])
+    d = driver.Driver(root, dry=True)
+    d.state["baseline_dev"] = BASE
+    d.state["best"] = None
+    (root / "STATUS.md").write_text("x")
+    assert d.finalize() == "done"
+    assert d.state["final"]["test_baseline"] == {"skipped": "GPU task budget"}
+    assert "not run" in (root / "FINAL_REPORT.md").read_text()

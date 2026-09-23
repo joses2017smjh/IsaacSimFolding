@@ -410,7 +410,11 @@ class Driver:
         n = len(rows)
         if self.stage(key) is None:
             self.submit(key, script, args, gpu_tasks=n, array=f"0-{n - 1}")
+            if self.stage(key).get("status") == "skipped":
+                return "skipped"
             return "wait"
+        if self.stage(key).get("status") == "skipped":
+            return "skipped"
         if self.stage_status(key) == "active":
             return "wait"
         bad = self.failed_rows(base, rows)
@@ -509,6 +513,8 @@ class Driver:
                                       base, plan["collection"])
         if coll == "wait":
             return "wait"
+        if coll == "skipped":
+            return self.conclude(k, "collection skipped: GPU task budget")
         if coll == "incomplete":
             return self.conclude(k, "collection rows failed twice on infrastructure")
 
@@ -624,6 +630,8 @@ class Driver:
                                 self.root / "evaluation" / label / "benchmark", rows)
         if ev == "wait":
             return "wait"
+        if ev == "skipped":
+            return self.conclude(k, "evaluation skipped: GPU task budget; candidate unscored")
         results = {r["id"]: self.read_result(self.root / "evaluation" / label / "benchmark" / r["id"])
                    for r in rows}
         cand["dev"] = score_rows(rows, results)
@@ -684,15 +692,16 @@ class Driver:
         rows = self.manifest["frozen_test"]
         C = str(self.root)
         pending = False
-        st = self.rollout_stage("final.test.baseline", "test.sbatch",
-                                [C, self.manifest["baseline_checkpoint"]["path"], DEV_LABEL],
-                                self.root / "evaluation" / DEV_LABEL / "frozen_test", rows) \
-            if self.stage("final.test.baseline") or self.can_spend(len(rows), final=True) else "done"
-        pending |= st == "wait"
+        outcome = {"baseline": self.rollout_stage(
+            "final.test.baseline", "test.sbatch",
+            [C, self.manifest["baseline_checkpoint"]["path"], DEV_LABEL],
+            self.root / "evaluation" / DEV_LABEL / "frozen_test", rows)}
+        pending |= outcome["baseline"] == "wait"
         if best:
-            st = self.rollout_stage("final.test.candidate", "test.sbatch", [C, chosen, label],
-                                    self.root / "evaluation" / label / "frozen_test", rows)
-            pending |= st == "wait"
+            outcome["candidate"] = self.rollout_stage(
+                "final.test.candidate", "test.sbatch", [C, chosen, label],
+                self.root / "evaluation" / label / "frozen_test", rows)
+            pending |= outcome["candidate"] == "wait"
             if self.stage("final.boundary") is None and self.can_spend(1, final=True):
                 self.submit("final.boundary", "boundary.sbatch", [C, chosen, label],
                             gpu_tasks=1, final=True)
@@ -703,6 +712,11 @@ class Driver:
             return "wait"
         for who, lab in (("baseline", DEV_LABEL), ("candidate", label if best else None)):
             if lab is None:
+                continue
+            if outcome.get(who) == "skipped":
+                # A test that never ran has no score. Writing 0/0 here would let
+                # the final report state a measurement that does not exist.
+                fin[f"test_{who}"] = {"skipped": "GPU task budget"}
                 continue
             results = {r["id"]: self.read_result(self.root / "evaluation" / lab / "frozen_test" / r["id"])
                        for r in rows}
@@ -740,7 +754,9 @@ class Driver:
                   "## Frozen test set (reserved; excluded from all training and selection)", ""]
         for who in ("baseline", "candidate"):
             t = fin.get(f"test_{who}")
-            if t:
+            if t and "skipped" in t:
+                lines.append(f"- {who}: **not run** ({t['skipped']})")
+            elif t:
                 lines.append(f"- {who}: H10 settled {t['h10']['settled']}/{t['h10']['valid']} "
                              f"(mean conditions {t['h10']['mean_conditions']})")
         target = self.amendment["changes"]["targets"]["now"]

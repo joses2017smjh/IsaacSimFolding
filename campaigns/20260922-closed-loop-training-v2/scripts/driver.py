@@ -194,6 +194,13 @@ def default_plan(k: int, manifest: dict, best: dict | None, prior: list[dict]) -
 
 
 # ----------------------------------------------------------------- Slurm
+def relative_begin(when: dt.datetime) -> str:
+    """Slurm's --begin reads an absolute timestamp in the CLUSTER's local time
+    (UTC-7 here), so a UTC string lands seven hours late. The relative form has
+    no time zone to get wrong."""
+    return f"now+{max(0, int((when - now()).total_seconds()))}"
+
+
 def clean_env() -> dict:
     return {k: v for k, v in os.environ.items() if not k.startswith(("SLURM_", "SBATCH_"))}
 
@@ -268,8 +275,16 @@ class Driver:
                 "done": False, "stop_reason": None, "log": []}
 
     def adopt(self) -> None:
+        """Rebuild any stage the state lost from the ledger.
+
+        The ledger is written the instant sbatch returns; the state is saved
+        later. A tick killed in between (tick 21400711 was, by its own scancel)
+        leaves a live job the state has never heard of, and the next tick would
+        resubmit it. Adopting from the ledger closes that window.
+        """
         for job in self.ledger()["jobs"]:
-            key = ADOPT.get(job.get("phase"))
+            phase = job.get("phase")
+            key = ADOPT.get(phase) or (phase if job.get("submitted_by") == "driver" else None)
             if key and key not in self.state["stages"]:
                 self.state["stages"][key] = {"job_ids": [job["job_id"]], "status": "submitted",
                                              "submitted_utc": job.get("submitted_utc"),
@@ -374,6 +389,8 @@ class Driver:
                                      "status": "submitted", "gpu_tasks": gpu_tasks, **extra}
         self.waiting.append(job)
         self.event(f"submitted {key} -> {job}", gpu_tasks=gpu_tasks)
+        if not self.dry:
+            self.save()
         return job
 
     # ---- rollout bookkeeping
@@ -771,15 +788,19 @@ class Driver:
     def schedule_ticks(self) -> None:
         ticks = self.state["ticks"]
         waiting = sorted(set(self.waiting))
+        me = os.environ.get("SLURM_JOB_ID")
         chain = ticks.get("chain")
-        if chain and summarize([s for v in job_states([chain]).values() for s in v]) == "active":
-            if ticks.get("chain_deps") == waiting and ticks.get("chain_begin") == \
-                    (stamp(self.begin_at) if self.begin_at else None):
-                chain = chain  # identical tick already pending
-            else:
-                scancel(chain)
-                chain = None
+        # Only a PENDING chain tick is "queued". A running one is this very
+        # process: tick 21400711 compared itself against its new dependency
+        # set, called scancel on its own job id, and died before saving.
+        pending = chain and chain != me and \
+            [s for v in job_states([chain]).values() for s in v][:1] == ["PENDING"]
+        if pending and ticks.get("chain_deps") == waiting and \
+                ticks.get("chain_begin") == (stamp(self.begin_at) if self.begin_at else None):
+            pass                                       # identical tick already queued
         else:
+            if pending:
+                scancel(chain)
             chain = None
         if chain is None and (waiting or self.begin_at) and not self.state["done"]:
             argv = [f"--chdir={self.root}", f"--output={self.root}/ledger/ticks/tick-%j.out"]
@@ -789,7 +810,7 @@ class Driver:
                 # array (a benchmark) that happens to be running alongside it.
                 argv.append("--dependency=" + "?".join(f"afterany:{j}" for j in waiting))
             if self.begin_at:
-                argv.append(f"--begin={self.begin_at.strftime('%Y-%m-%dT%H:%M:%S')}")
+                argv.append(f"--begin={relative_begin(self.begin_at)}")
             (self.root / "ledger/ticks").mkdir(parents=True, exist_ok=True)
             argv += [str(self.root / "slurm/tick.sbatch"), str(self.root)]
             if not self.dry:
@@ -797,13 +818,13 @@ class Driver:
                 ticks["chain_deps"] = waiting
                 ticks["chain_begin"] = stamp(self.begin_at) if self.begin_at else None
         watchdog = ticks.get("watchdog")
-        alive = watchdog and summarize([s for v in job_states([watchdog]).values() for s in v]) == "active"
+        alive = watchdog and watchdog != me and \
+            summarize([s for v in job_states([watchdog]).values() for s in v]) == "active"
         if not alive and not self.state["done"] and not self.dry:
-            begin = (now() + dt.timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%S")
             ticks["watchdog"] = sbatch([f"--chdir={self.root}",
                                         f"--output={self.root}/ledger/ticks/watchdog-%j.out",
-                                        f"--begin={begin}", str(self.root / "slurm/tick.sbatch"),
-                                        str(self.root)])
+                                        f"--begin={relative_begin(now() + dt.timedelta(hours=2))}",
+                                        str(self.root / "slurm/tick.sbatch"), str(self.root)])
 
     def update_status(self, active: str, latest: str, blocker: str, nxt: str) -> None:
         path = self.root / "STATUS.md"

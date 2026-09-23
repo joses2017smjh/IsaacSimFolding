@@ -205,3 +205,53 @@ def test_a_budget_skipped_final_test_is_reported_as_not_run(tmp_path):
     assert d.finalize() == "done"
     assert d.state["final"]["test_baseline"] == {"skipped": "GPU task budget"}
     assert "not run" in (root / "FINAL_REPORT.md").read_text()
+
+
+# ------------------------------------------- regressions from live running
+def test_a_running_tick_never_cancels_itself(tmp_path, monkeypatch):
+    """Tick 21400711 scancel'd its own job id and died before saving state."""
+    root = _temp_campaign(tmp_path, [])
+    d = driver.Driver(root, dry=False)
+    d.state["ticks"] = {"chain": "500", "chain_deps": ["1"], "watchdog": "600"}
+    d.waiting = ["2", "3"]                     # dependency set changed
+    cancelled, submitted = [], []
+    monkeypatch.setenv("SLURM_JOB_ID", "500")  # we ARE the chain tick
+    monkeypatch.setattr(driver, "job_states", lambda ids: {i: ["RUNNING"] for i in ids})
+    monkeypatch.setattr(driver, "scancel", lambda j: cancelled.append(j))
+    monkeypatch.setattr(driver, "sbatch", lambda argv: submitted.append(argv) or "700")
+    d.schedule_ticks()
+    assert "500" not in cancelled
+    assert d.state["ticks"]["chain"] == "700"
+    assert any("afterany:2?afterany:3" in a for a in submitted[0])
+
+
+def test_a_pending_chain_tick_with_stale_dependencies_is_replaced(tmp_path, monkeypatch):
+    root = _temp_campaign(tmp_path, [])
+    d = driver.Driver(root, dry=False)
+    d.state["ticks"] = {"chain": "500", "chain_deps": ["1"], "watchdog": "600"}
+    d.waiting = ["2"]
+    cancelled = []
+    monkeypatch.delenv("SLURM_JOB_ID", raising=False)
+    monkeypatch.setattr(driver, "job_states", lambda ids: {i: ["PENDING"] for i in ids})
+    monkeypatch.setattr(driver, "scancel", lambda j: cancelled.append(j))
+    monkeypatch.setattr(driver, "sbatch", lambda argv: "701")
+    d.schedule_ticks()
+    assert cancelled == ["500"] and d.state["ticks"]["chain"] == "701"
+
+
+def test_a_job_the_state_lost_is_adopted_from_the_ledger(tmp_path):
+    """The ledger is written when sbatch returns; the state can lag behind it."""
+    root = _temp_campaign(tmp_path, [
+        {"job_id": "21400738", "phase": "iter1.evaluate", "submitted_by": "driver"}])
+    d = driver.Driver(root, dry=True)
+    assert d.state["stages"]["iter1.evaluate"]["job_ids"] == ["21400738"]
+    assert d.submit("iter1.evaluate", "benchmark.sbatch", [], gpu_tasks=16) is None
+
+
+def test_begin_times_are_relative_so_the_cluster_time_zone_cannot_shift_them():
+    """An absolute UTC --begin was read as UTC-7 local time: 7 hours late."""
+    later = driver.now() + driver.dt.timedelta(hours=2)
+    text = driver.relative_begin(later)
+    assert text.startswith("now+")
+    assert 7190 <= int(text[4:]) <= 7200
+    assert driver.relative_begin(driver.now() - driver.dt.timedelta(hours=1)) == "now+0"

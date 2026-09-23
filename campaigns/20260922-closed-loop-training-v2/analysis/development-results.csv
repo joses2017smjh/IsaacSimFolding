@@ -1,0 +1,17 @@
+row,pose,horizon,pilot_baseline_conditions,pilot_baseline_settled,baseline (v2)_conditions,baseline (v2)_settled,baseline (v2)_latched,iter1_conditions,iter1_settled,iter1_latched,iter2_conditions,iter2_settled,iter2_latched,iter3_conditions,iter3_settled,iter3_latched
+dev00,P_A,10,1,False,3,False,False,2,False,False,2,False,False,2,False,False
+dev00,P_A,50,2,False,2,False,False,2,False,False,2,False,False,4,True,True
+dev01,P_B,10,3,False,3,False,False,2,False,False,3,False,False,2,False,False
+dev01,P_B,50,4,True,4,True,True,3,False,False,3,False,False,3,False,False
+dev02,P_C,10,1,False,2,False,True,2,False,False,3,False,False,4,True,True
+dev02,P_C,50,2,False,2,False,False,4,True,True,4,True,True,1,False,False
+dev03,P_B,10,3,False,3,False,False,2,False,False,3,False,False,2,False,False
+dev03,P_B,50,4,True,4,True,True,4,True,True,3,False,False,4,True,True
+dev04,P_A,10,2,False,2,False,False,2,False,False,2,False,False,2,False,False
+dev04,P_A,50,1,False,2,False,False,2,False,False,2,False,False,3,False,True
+dev05,P_C,10,3,False,4,True,True,2,False,False,2,False,False,2,False,False
+dev05,P_C,50,4,True,4,True,True,4,True,True,4,True,True,4,True,True
+dev06,P_A,10,3,False,4,True,True,3,False,False,3,False,False,2,False,False
+dev06,P_A,50,3,False,3,False,False,3,False,False,4,True,True,4,True,True
+dev07,P_C,10,3,False,3,False,False,2,False,False,2,False,False,3,False,False
+dev07,P_C,50,4,True,4,True,True,4,True,True,3,False,True,3,False,False

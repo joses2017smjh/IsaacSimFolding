@@ -16,8 +16,14 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
+**Latest outcome (2026-09-23).** The closed-loop training v2 campaign is
+complete: three rollout-driven AWR iterations, none improved development H10
+over the matched baseline, so the **untouched baseline checkpoint is
+retained**. Read `campaigns/20260922-closed-loop-training-v2/REPORT.md` first.
+
 | Live now | File |
 |---|---|
+| **Final report — outcome, evidence limits, reproduction, provenance** | `campaigns/20260922-closed-loop-training-v2/REPORT.md` |
 | **Current campaign — active job, latest result, blocker, next milestone** | `campaigns/20260922-closed-loop-training-v2/STATUS.md` |
 | Its frozen protocol (budget, gates, selection rule, targets) | `campaigns/20260922-closed-loop-training-v2/manifest.json` |
 | Its order of operations | `campaigns/20260922-closed-loop-training-v2/README.md` |

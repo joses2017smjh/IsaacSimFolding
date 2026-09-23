@@ -7,12 +7,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21400710` iter1.reload.retry1, `21401005` iter3.compile |
-| **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8; iter 2 `iter2-step000300` H10 0/8, H50 3/8 |
+| **Active job** | none — campaign complete |
+| **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8; iter 2 `iter2-step000300` H10 0/8, H50 3/8; iter 3 `iter3-step000300` H10 1/8, H50 4/8; FINAL: `baseline` delivered; frozen test H10 0/8 |
 | **Blocker** | none |
-| **Next milestone** | advance the current iteration; final frozen test after the loop |
+| **Next milestone** | none — campaign complete; REPORT.md (full account), FINAL_REPORT.md (driver summary) |
 
-_Updated 2026-09-23T08:50:09Z by scripts/driver.py._
+_Updated 2026-09-23T09:29:35Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## What this campaign is
@@ -294,3 +294,60 @@ The driver's default fallback for iteration 3 would have re-run the
 four-class H10 design at a *higher* rollout share — exactly backwards on this
 evidence. An uncommitted stub held it while the explicit plan was built.
 Compile **21401005** submitted; the collection stage is recorded as reused.
+
+### 2026-09-23 — iteration 3, and a correction to the iteration-1 reading
+
+**Iteration 3** `iter3-step000300` (iteration 2's data, beta 0.5 / w_max 20):
+H10 **1/8** (mean conditions 2.375), H50 **4/8** (3.250). Eligible, no
+improvement. Training drew about 60% of rollout samples from the two
+successes (mean sampled advantage +0.29 to +0.32, against iteration 2's
++0.18), as A3 designed. A3's prediction resolved negatively: concentrating
+the mass on successes did not lift H10.
+
+**Correction.** I described iteration 1 as a *systematic H10 degradation*
+(mean conditions 3.000 -> 2.125). That overstated it. The horizon pilot ran
+this same baseline on the identical seeds and its H10 mean conditions were
+**2.375**, not 3.000 — a figure I had not computed. The baseline's own
+run-to-run range is therefore 2.375-3.000 (pooled 2.69), and every candidate
+(2.125, 2.500, 2.375) sits within or just below it. The supportable reading
+is: **no candidate improved H10; a degradation is not established at n=8**,
+iteration 1 being the only one slightly outside the baseline's range (7 of 8
+rows at exactly 2/4). The iteration-2 and iteration-3 decisions do not depend
+on the degradation claim: they rest on the absence of successes in iteration
+1's data and on the audited weight arithmetic, both of which stand.
+
+| | H10 settled | H10 mean cond | H50 settled | H50 mean cond |
+|---|---|---|---|---|
+| baseline, pilot run (same seeds) | 0/8 | 2.375 | 4/8 | 3.000 |
+| baseline, this campaign | 2/8 | 3.000 | 4/8 | 3.125 |
+| iter1-step000300 | 0/8 | 2.125 | 4/8 | 3.250 |
+| iter2-step000300 | 0/8 | 2.500 | 3/8 | 3.125 |
+| iter3-step000300 | 1/8 | 2.375 | 4/8 | 3.250 |
+
+No candidate is eligible *and* better than the baseline, so the untouched
+baseline is retained. The driver has submitted the frozen test on it
+(`21401084`); per the protocol that set was reserved for the final selected
+checkpoint and has not been looked at until now.
+
+### 2026-09-23 — campaign complete: target not met, baseline retained
+
+**Frozen test** (8 garments across all four classes, excluded from every
+training and selection decision, run once for the delivered checkpoint): the
+retained baseline settled **0/8** at H10, mean conditions 3.000, with one fold
+latched then undone by settling. No candidate qualified, so no candidate was
+tested; the set was never used to tune anything.
+
+**Outcome.** Development H10 target >= 6/8 **not met**: the best eligible
+candidate reached 1/8 against the matched baseline's 2/8, and no candidate
+improved on the baseline within its own run-to-run range. The untouched
+baseline is delivered. **Remaining limitation:** on non-development garments
+the policy settles about 1 episode in 8 at either horizon, so every dataset it
+can generate autonomously is failure-dominated or rests on a couple of
+successes. Outcome-weighted self-imitation had nothing better to imitate.
+Improvement needs successful actions at the states the H10 policy visits
+(teleoperated or scripted recovery) or a within-episode value signal; neither
+exists in this headless setup.
+
+Budget: 105 of 170 GPU tasks, 8.1 of 45 GPU-hours, 15 GB. The full account —
+per-iteration evidence, evidence limits, reproduction, provenance and the
+twelve infrastructure defects fixed along the way — is in `REPORT.md`.

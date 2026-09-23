@@ -52,8 +52,9 @@
         "21400710"
       ],
       "submitted_utc": "2026-09-23T07:30:42Z",
-      "status": "submitted",
-      "gpu_tasks": 1
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T09:29:35Z"
     },
     "iter1.evaluate": {
       "job_ids": [
@@ -121,8 +122,45 @@
         "21401005"
       ],
       "submitted_utc": "2026-09-23T08:50:09Z",
-      "status": "submitted",
-      "gpu_tasks": 0
+      "status": "completed",
+      "gpu_tasks": 0,
+      "finished_utc": "2026-09-23T08:52:02Z"
+    },
+    "iter3.train": {
+      "job_ids": [
+        "21401009"
+      ],
+      "submitted_utc": "2026-09-23T08:52:02Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T08:57:21Z"
+    },
+    "iter3.reload": {
+      "job_ids": [
+        "21401026"
+      ],
+      "submitted_utc": "2026-09-23T08:57:21Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T08:58:21Z"
+    },
+    "iter3.evaluate": {
+      "job_ids": [
+        "21401028"
+      ],
+      "submitted_utc": "2026-09-23T08:58:21Z",
+      "status": "completed",
+      "gpu_tasks": 16,
+      "finished_utc": "2026-09-23T09:16:36Z"
+    },
+    "final.test.baseline": {
+      "job_ids": [
+        "21401084"
+      ],
+      "submitted_utc": "2026-09-23T09:16:36Z",
+      "status": "completed",
+      "gpu_tasks": 8,
+      "finished_utc": "2026-09-23T09:27:12Z"
     }
   },
   "iterations": {
@@ -239,7 +277,62 @@
     },
     "3": {
       "phase": "planning",
-      "plan_sha256": "9d2ffc68d64000ea3b063389bd58b8199911abe43456d26d9ecc3f711ad89d76"
+      "plan_sha256": "9d2ffc68d64000ea3b063389bd58b8199911abe43456d26d9ecc3f711ad89d76",
+      "gate": {
+        "scope": "iteration3",
+        "rewards": [
+          0.25,
+          0.25,
+          0.5,
+          0.5,
+          1.0,
+          0.25,
+          1.0,
+          0.5,
+          0.75,
+          0.25,
+          0.5,
+          0.75,
+          0.75,
+          0.75,
+          0.75,
+          0.75
+        ],
+        "episode_ess": 4.573826569722025,
+        "unmet": []
+      },
+      "selection": "step_000300 passes the raster retention guard",
+      "candidate": {
+        "label": "iter3-step000300",
+        "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/training/iteration3/checkpoints/step_000300",
+        "step": 300,
+        "heldout_gate": true,
+        "heldout_loss": 0.08131376490928233,
+        "heldout_loss_baseline": 0.13325396389700472,
+        "reload_ok": true,
+        "dev": {
+          "h10": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 1,
+            "ever": 1,
+            "mean_conditions": 2.375,
+            "invalid": []
+          },
+          "h50": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 4,
+            "ever": 5,
+            "mean_conditions": 3.25,
+            "invalid": []
+          }
+        },
+        "ineligible_because": [],
+        "improves_h10_over_baseline": false
+      },
+      "concluded_utc": "2026-09-23T09:16:36Z",
+      "outcome": "evaluated"
     }
   },
   "baseline_dev": {
@@ -261,16 +354,33 @@
     }
   },
   "best": null,
-  "final": {},
+  "final": {
+    "selected": {
+      "label": "baseline",
+      "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+      "reason": "no candidate qualified; the untouched baseline is retained"
+    },
+    "test_baseline": {
+      "h10": {
+        "rows": 8,
+        "valid": 8,
+        "settled": 0,
+        "ever": 1,
+        "mean_conditions": 3.0,
+        "invalid": []
+      }
+    },
+    "completed_utc": "2026-09-23T09:27:12Z"
+  },
   "ticks": {
-    "chain": "21401006",
+    "chain": "21401085",
     "chain_deps": [
-      "21401005"
+      "21401084"
     ],
     "chain_begin": null,
     "watchdog": "21400762"
   },
-  "done": false,
+  "done": true,
   "stop_reason": null,
   "log": [
     {
@@ -335,6 +445,34 @@
       "utc": "2026-09-23T08:50:09Z",
       "message": "submitted iter3.compile -> 21401005",
       "gpu_tasks": 0
+    },
+    {
+      "utc": "2026-09-23T08:52:02Z",
+      "message": "submitted iter3.train -> 21401009",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T08:57:21Z",
+      "message": "submitted iter3.reload -> 21401026",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T08:58:21Z",
+      "message": "submitted iter3.evaluate -> 21401028",
+      "gpu_tasks": 16
+    },
+    {
+      "utc": "2026-09-23T09:16:36Z",
+      "message": "iteration 3 concluded: evaluated"
+    },
+    {
+      "utc": "2026-09-23T09:16:36Z",
+      "message": "submitted final.test.baseline -> 21401084",
+      "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-23T09:27:12Z",
+      "message": "campaign complete; final report written"
     }
   ]
 }

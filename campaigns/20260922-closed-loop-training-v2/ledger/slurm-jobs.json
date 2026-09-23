@@ -32,6 +32,36 @@
       "submitted_utc": "2026-09-23T07:01:12Z",
       "manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
       "state": "submitted"
+    },
+    {
+      "job_id": "21400641",
+      "phase": "collect:iteration1",
+      "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/slurm/collect.sbatch",
+      "manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
+      "depends_on": null,
+      "array": "0-7",
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "state": "submitted"
+    },
+    {
+      "job_id": "21400642",
+      "phase": "compile:iteration1",
+      "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/slurm/compile.sbatch",
+      "manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
+      "depends_on": "21400641",
+      "array": null,
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "state": "submitted"
+    },
+    {
+      "job_id": "21400643",
+      "phase": "train:iteration1",
+      "script": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/slurm/train.sbatch",
+      "manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
+      "depends_on": "21400642",
+      "array": null,
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "state": "submitted"
     }
   ]
 }

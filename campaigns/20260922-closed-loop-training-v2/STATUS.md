@@ -6,10 +6,10 @@
 
 | | |
 |---|---|
-| **Active job** | `21400623` — end-to-end smoke (attempt 3) |
-| **Latest result** | smoke `21400605` reached 4/5 stages, then failed reloading its own checkpoint: `save_pretrained` drops the draccus `type` discriminator. Fixed in `d3422c9`. |
+| **Active job** | `21400641` collect (array 0-7) → `21400642` compile → `21400643` train |
+| **Latest result** | smoke `21400623` **PASSED** all 5 stages: rollout → compile → AWR update → checkpoint saved → reloaded, `config_matches_baseline: true`, finite action on CUDA |
 | **Blocker** | none |
-| **Next milestone** | smoke passes → submit the 8-row collection array |
+| **Next milestone** | collection gate verdict — if it passes, training runs; if not, one preregistered expansion draw |
 
 ## What this campaign is
 
@@ -152,3 +152,26 @@ shared key genuinely differs, so it cannot mislabel a changed architecture.
 
 Manifest refrozen at `d3422c9`, 68 sources. 16 campaign tests pass.
 Smoke **21400623** submitted.
+
+### 2026-09-23 — smoke passed, iteration 1 launched
+
+Smoke **21400623** completed all five stages at manifest `d3422c9`:
+
+| stage | result |
+|---|---|
+| verify sources | 68/68 against committed blobs |
+| autonomous H10 rollout | 80 actions, trajectory persisted |
+| compile | 1 episode, 16 samples, gate correctly degenerate |
+| AWR update + save | 99,880,992 trainable params, discriminator restored 48 → 49 keys |
+| reload | `config_matches_baseline: true`, finite action, CUDA |
+
+The two defects the smoke caught — a read-only LeHome log path and an
+unloadable saved checkpoint — were both invisible to static review and to the
+CPU suite, and each would have surfaced only after the full collection and
+training budget had been spent.
+
+Iteration 1 submitted as a chain: collect **21400641** (array 0-7) →
+compile **21400642** (`afterany`) → train **21400643** (`afterok`).
+`compile` depends `afterany` on purpose so a partial collection reaches the
+compiler and exits 2 with an explicit count, rather than leaving the job
+silently unscheduled.

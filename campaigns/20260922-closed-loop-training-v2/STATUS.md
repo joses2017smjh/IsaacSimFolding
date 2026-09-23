@@ -7,10 +7,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21400641` collect (array 0-7) → `21400642` compile → `21400643` train |
-| **Latest result** | smoke `21400623` **PASSED** all 5 stages: rollout → compile → AWR update → checkpoint saved → reloaded, `config_matches_baseline: true`, finite action on CUDA |
+| **Active job** | `baseline.dev`, `iter1.reload` |
+| **Latest result** | iteration 1 in progress |
 | **Blocker** | none |
-| **Next milestone** | collection gate verdict — if it passes, training runs; if not, one preregistered expansion draw |
+| **Next milestone** | advance the current iteration; final frozen test after the loop |
+
+_Updated 2026-09-23T07:25:20Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## What this campaign is
@@ -177,3 +179,39 @@ compile **21400642** (`afterany`) → train **21400643** (`afterok`).
 `compile` depends `afterany` on purpose so a partial collection reaches the
 compiler and exits 2 with an explicit count, rather than leaving the job
 silently unscheduled.
+
+### 2026-09-23 — iteration 1 trained; the campaign now drives itself
+
+**Mandate A1 recorded before any candidate existed.** Targets raised to
+development H10 settled >= 6/8 (stretch 8/8) with no H50 regression against a
+*matched* baseline; up to three collect-train-evaluate iterations; the frozen
+test set reserved for the final selected checkpoint only; finite caps of 170
+GPU tasks, 45 GPU-hours, no new iteration after 2026-09-24T18:00Z, and a
+60 GB campaign / 40 GB filesystem-floor storage limit. `/nfs/hpc/share` is a
+shared filesystem at 90% used, so the storage cap is deliberately tight.
+See `amendments/A1-autonomous-mandate.json`.
+
+**Iteration 1 gate passed.** Rewards `[0.75 x4, 0.6, 0.4 x3]` (pants reached
+3/4 conditions, tops 2-3/5; no settled success): 3 distinct values, advantage
+std 0.162, episode ESS 5.36 of 8, sample ESS fraction 0.67. The cap did not
+bind on this batch (top z = 0.93 < ln 3), and the gate report says so.
+
+**Iteration 1 training** (`21400643`, 4 min 49 s): all three checkpoints pass
+the retention guard, and the raster held-out loss *fell* from 0.1333 to
+0.0823 at step 300. The sampled advantage was +0.11 throughout, confirming
+the resampling favoured the better episodes. The preregistered rule selects
+`step_000300`.
+
+**The driver** (`scripts/driver.py`) now owns progression. It adopted the
+three iteration-1 jobs from the ledger rather than resubmitting them, and
+submitted the matched baseline benchmark `21400694`, the reload gate
+`21400695`, a dependent chain tick `21400696` and a watchdog `21400697`.
+
+Building it surfaced a real hazard: the site `sbatch` is a wrapper that
+expands `$@` **unquoted**, word-splitting and glob-expanding every argument.
+Earlier submissions worked only because no argument had a space. The driver
+calls the real binary and adds the wrapper's one flag itself.
+
+Manifest refrozen as protocol v2 at `b319349` (70 sources); the iteration-1
+manifest is archived at `manifests/manifest_d3422c9.json` because the
+collection, compile and train jobs recorded that commit.

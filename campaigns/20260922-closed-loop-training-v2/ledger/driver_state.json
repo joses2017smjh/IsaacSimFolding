@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-23T07:25:20Z",
+  "stages": {
+    "iter1.collect": {
+      "job_ids": [
+        "21400641"
+      ],
+      "status": "completed",
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "adopted_from_ledger": true,
+      "finished_utc": "2026-09-23T07:25:20Z"
+    },
+    "iter1.compile": {
+      "job_ids": [
+        "21400642"
+      ],
+      "status": "completed",
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "adopted_from_ledger": true,
+      "finished_utc": "2026-09-23T07:25:20Z"
+    },
+    "iter1.train": {
+      "job_ids": [
+        "21400643"
+      ],
+      "status": "completed",
+      "submitted_utc": "2026-09-23T07:05:18Z",
+      "adopted_from_ledger": true,
+      "finished_utc": "2026-09-23T07:25:20Z"
+    },
+    "baseline.dev": {
+      "job_ids": [
+        "21400694"
+      ],
+      "submitted_utc": "2026-09-23T07:25:20Z",
+      "status": "submitted",
+      "gpu_tasks": 16
+    },
+    "iter1.reload": {
+      "job_ids": [
+        "21400695"
+      ],
+      "submitted_utc": "2026-09-23T07:25:20Z",
+      "status": "submitted",
+      "gpu_tasks": 0
+    }
+  },
+  "iterations": {
+    "1": {
+      "phase": "planning",
+      "gate": {
+        "scope": "iteration1",
+        "rewards": [
+          0.75,
+          0.75,
+          0.75,
+          0.75,
+          0.4000000059604645,
+          0.6000000238418579,
+          0.4000000059604645,
+          0.4000000059604645
+        ],
+        "episode_ess": 5.358179808557947,
+        "unmet": []
+      },
+      "selection": "step_000300 passes the raster retention guard",
+      "candidate": {
+        "label": "iter1-step000300",
+        "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/training/iteration1/checkpoints/step_000300",
+        "step": 300,
+        "heldout_gate": true,
+        "heldout_loss": 0.08227758505381644,
+        "heldout_loss_baseline": 0.13325396389700472
+      }
+    }
+  },
+  "baseline_dev": null,
+  "best": null,
+  "final": {},
+  "ticks": {
+    "chain": "21400696",
+    "chain_deps": [
+      "21400694",
+      "21400695"
+    ],
+    "chain_begin": null,
+    "watchdog": "21400697"
+  },
+  "done": false,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-23T07:25:20Z",
+      "message": "submitted baseline.dev -> 21400694",
+      "gpu_tasks": 16
+    },
+    {
+      "utc": "2026-09-23T07:25:20Z",
+      "message": "submitted iter1.reload -> 21400695",
+      "gpu_tasks": 0
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/datasets/iteration1.npz",
+  "dataset_sha256": "314f4762085c2028c109fb2e662d9e969da8de58a3e2f5927cf2db67c4cccb99",
+  "dataset_samples": 888,
+  "chunk": 50,
+  "source": "autonomous ordinary-H10 executed action streams; no H50 branches or labels",
+  "reward_definition": "terminal official geometric conditions_passed / conditions_total",
+  "advantage_definition": "terminal reward minus mean terminal reward across this fixed collection",
+  "advantage_implementation": "lehome_fold.awr.success_residual",
+  "awr_weight_implementation": "lehome_fold.awr.weights; weights are used as rollout resampling probabilities",
+  "beta": 1.0,
+  "w_max": 3.0,
+  "w_min": 1e-06,
+  "gate": {
+    "passed": true,
+    "unmet_requirements": [],
+    "detail": null,
+    "checks": [
+      {
+        "name": "reward_informative",
+        "requirement": "distinct terminal rewards >= 3",
+        "observed": 3,
+        "threshold": 3,
+        "passed": true
+      },
+      {
+        "name": "advantage_informative",
+        "requirement": "advantage std > 0.02",
+        "observed": 0.16201850771903992,
+        "threshold": 0.02,
+        "passed": true
+      },
+      {
+        "name": "episode_weights_non_uniform",
+        "requirement": "episode ESS <= n - 1 (7)",
+        "observed": 5.358179808557947,
+        "threshold": 7,
+        "passed": true
+      },
+      {
+        "name": "episode_weights_not_concentrated",
+        "requirement": "episode ESS >= 3.0",
+        "observed": 5.358179808557947,
+        "threshold": 3.0,
+        "passed": true
+      },
+      {
+        "name": "sample_weights_non_uniform",
+        "requirement": "sample ESS fraction <= 0.95",
+        "observed": 0.6697724760697433,
+        "threshold": 0.95,
+        "passed": true
+      }
+    ],
+    "episodes": 8,
+    "distinct_rewards": 3,
+    "advantage_std": 0.16201850771903992,
+    "terminal_rewards": [
+      0.75,
+      0.75,
+      0.75,
+      0.75,
+      0.4000000059604645,
+      0.6000000238418579,
+      0.4000000059604645,
+      0.4000000059604645
+    ],
+    "episode_weight_summary": {
+      "n": 8.0,
+      "ess": 5.358179808557947,
+      "ess_fraction": 0.6697724760697433,
+      "capped": 0.0,
+      "floored": 0.0,
+      "max": 2.523922920227051,
+      "min": 0.2910037338733673,
+      "ratio": 8.673163353035727
+    },
+    "sample_weight_summary": {
+      "n": 888.0,
+      "ess": 594.7579587499321,
+      "ess_fraction": 0.6697724760697433,
+      "capped": 0.0,
+      "floored": 0.0,
+      "max": 2.523922920227051,
+      "min": 0.2910037338733673,
+      "ratio": 8.673163353035727
+    },
+    "awr": {
+      "beta": 1.0,
+      "w_max": 3.0,
+      "w_min": 1e-06,
+      "cap_bound_episodes": 0.0,
+      "floor_bound_episodes": 0.0
+    },
+    "allow_degenerate": false
+  },
+  "episodes": [
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose0/trajectory.npz",
+      "trajectory_sha256": "d96ef7a77fe42109aa66c9ee9144ac298e06cf23fabe0cbdede49ad2f7088fbd",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose0/rollout.json",
+      "result_sha256": "0413f147d9f38bbd5863cd74be0bf7f54ec918e21a95e3e3a48d26b88ba7292c",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose0/request.json",
+      "request_sha256": "ae38baab91f4c83e2e08437ceda088626fba4eb55a1365270d3be707baf00117",
+      "id": "collect_pant_long_seen_0_pose0",
+      "garment": "Pant_Long_Seen_0",
+      "pose_key": 0,
+      "seed": 4202,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.1499999761581421,
+      "awr_weight": 2.523922920227051
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose1/trajectory.npz",
+      "trajectory_sha256": "8b5c20c0c38e7d4a64844cc8e388afe5298f7b91be8c281d80fafea3d3a93da9",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose1/rollout.json",
+      "result_sha256": "13f576af08af0682b7b58ff1f2a496d567db6a40291735915d62ecace536efa4",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_long_seen_0_pose1/request.json",
+      "request_sha256": "6f3d97664ef3f0360e9b698c74c62f94fbdaf0d923ec38f1d3b82f4e7131ecea",
+      "id": "collect_pant_long_seen_0_pose1",
+      "garment": "Pant_Long_Seen_0",
+      "pose_key": 1,
+      "seed": 4203,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.1499999761581421,
+      "awr_weight": 2.523922920227051
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose0/trajectory.npz",
+      "trajectory_sha256": "9febd31fa841df3d1c1d2ae60651687e6d51b727d91b5ab707e6f4068a73a839",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose0/rollout.json",
+      "result_sha256": "58c002f473033f8fcd9e1b5019e739df140f1118fb23a3df52a0e2631f7beb4b",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose0/request.json",
+      "request_sha256": "0b79c5cc163e54dfca86bfbd0c99ebe04901c3aa14c8aad261e866831021e5fb",
+      "id": "collect_pant_short_seen_0_pose0",
+      "garment": "Pant_Short_Seen_0",
+      "pose_key": 0,
+      "seed": 4200,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.1499999761581421,
+      "awr_weight": 2.523922920227051
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose1/trajectory.npz",
+      "trajectory_sha256": "70e6a180bbc7d54b7edd7b07c2b66eebf5dcb65620faa4fc7ce6e2a049d5e54c",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose1/rollout.json",
+      "result_sha256": "797af1952a1486b37ecded3cadb984be613021591ae8a0580819ffc9fdb4e293",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_pant_short_seen_0_pose1/request.json",
+      "request_sha256": "f8a4a8760bbd46d7f15a819d92d13095dba4b3df59aa03164374263a53964428",
+      "id": "collect_pant_short_seen_0_pose1",
+      "garment": "Pant_Short_Seen_0",
+      "pose_key": 1,
+      "seed": 4201,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.75,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 4,
+      "terminal_success": false,
+      "advantage": 0.1499999761581421,
+      "awr_weight": 2.523922920227051
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose0/trajectory.npz",
+      "trajectory_sha256": "3ebee8d4e08b9712eeaca0fd1905d21d281d03ad97c7c8dd9363195e2ca764b2",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose0/rollout.json",
+      "result_sha256": "2cf8c4354985770ab6f786da0d9571f840a337986d8bf16344f2e65ca230094e",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose0/request.json",
+      "request_sha256": "6d478b67ebcad79b7ec5956f31f89a1e15ec2a7e47c08f5d845eb344f6ce38c2",
+      "id": "collect_top_long_seen_0_pose0",
+      "garment": "Top_Long_Seen_0",
+      "pose_key": 0,
+      "seed": 4206,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.4,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 5,
+      "terminal_success": false,
+      "advantage": -0.20000001788139343,
+      "awr_weight": 0.2910037338733673
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose1/trajectory.npz",
+      "trajectory_sha256": "56a0fdc5b194a3dc346a07028a6d3113a5e1ff4ca7f0216cdd05ef7b82feacda",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose1/rollout.json",
+      "result_sha256": "33d7028da034ef7e3cccea1f98a5c19a7e6ffb447552ce018965c9b9decaf068",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_long_seen_0_pose1/request.json",
+      "request_sha256": "ab74e6ffc3438f2dacd3dbce394228f948211c626dda55f4f84995f5aba41a9e",
+      "id": "collect_top_long_seen_0_pose1",
+      "garment": "Top_Long_Seen_0",
+      "pose_key": 1,
+      "seed": 4207,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.6,
+      "terminal_conditions_passed": 3,
+      "terminal_conditions_total": 5,
+      "terminal_success": false,
+      "advantage": 0.0,
+      "awr_weight": 1.0000001192092896
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose0/trajectory.npz",
+      "trajectory_sha256": "82957c282d17652d6319f3504ab72269b13bc501dd8725e805822ea5e777f059",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose0/rollout.json",
+      "result_sha256": "0f72d486cb8489459be9bf5382130fd449c527bc2117a984487e8ad83378e1a5",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose0/request.json",
+      "request_sha256": "b915136b6bfad70c0f24b3d9e6d3952a879b0c6e5c90bfbdfc64ebbc50bcb48c",
+      "id": "collect_top_short_seen_0_pose0",
+      "garment": "Top_Short_Seen_0",
+      "pose_key": 0,
+      "seed": 4204,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.4,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 5,
+      "terminal_success": false,
+      "advantage": -0.20000001788139343,
+      "awr_weight": 0.2910037338733673
+    },
+    {
+      "trajectory_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose1/trajectory.npz",
+      "trajectory_sha256": "2b87275bc67c6b472f83790aae9688565b9ecf4608588f49368ff3f46152165a",
+      "result_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose1/rollout.json",
+      "result_sha256": "f590a1d156e5286b5be8ea10dc7a002d86c7ce00d586ab7051a5631977f118f3",
+      "request_path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/rollouts/iteration1/collect_top_short_seen_0_pose1/request.json",
+      "request_sha256": "a256cd1aac4a4e3a840456636bcbc2d33673be289b65bcc90e27b163f8907f13",
+      "id": "collect_top_short_seen_0_pose1",
+      "garment": "Top_Short_Seen_0",
+      "pose_key": 1,
+      "seed": 4205,
+      "checkpoint": {
+        "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+        "sha256": {
+          "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+          "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+          "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+          "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+        }
+      },
+      "raw_observations": 120,
+      "usable_samples": 111,
+      "terminal_reward": 0.4,
+      "terminal_conditions_passed": 2,
+      "terminal_conditions_total": 5,
+      "terminal_success": false,
+      "advantage": -0.20000001788139343,
+      "awr_weight": 0.2910037338733673
+    }
+  ],
+  "summary": {
+    "episode_count": 8,
+    "terminal_reward_mean": 0.6000000238418579,
+    "terminal_reward_min": 0.4000000059604645,
+    "terminal_reward_max": 0.75,
+    "positive_advantage_episodes": 4,
+    "effective_sample_size": 5.358179808557947,
+    "sample_effective_sample_size": 594.7579587499321
+  }
+}

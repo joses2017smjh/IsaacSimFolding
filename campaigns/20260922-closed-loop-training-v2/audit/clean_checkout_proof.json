@@ -1,0 +1,23 @@
+{
+  "performed_utc": "2026-09-23T06:52:21Z",
+  "method": "git clone --depth 1 from origin into a scratch directory outside the working tree",
+  "clone_head": "d6ae7fc",
+  "manifest_commit": "f2422ef4b179194ab58751c58262d321b33f4009",
+  "checks": {
+    "executed_sources_verified": 64,
+    "immutable_baseline_checkpoint_verified": true,
+    "campaign_tests": "13 passed",
+    "root_pure_tests": "56 passed",
+    "smoke_dry_run": "resolved; runner sha256 7e5877e73e2fdc2895c230d8dbb8b554266c770108f4f64275b2697454b64f6a"
+  },
+  "runner_dependencies_present_in_clone": [
+    "campaigns/20260921-horizon-pilot/scripts/render/policy_rollout51.py",
+    "campaigns/20260921-horizon-pilot/scripts/render/rollout_audit_utils.py",
+    "campaigns/20260921-horizon-pilot/scripts/render/asset_paths.py",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/strict_observer.py",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/folding_geometry.py",
+    "campaigns/20260921-horizon-pilot/external/lehome-challenge/pyproject.toml"
+  ],
+  "note": "Absolute paths to the 1.2 GB baseline checkpoint, the LeHome asset pack and the container image are workspace resources, not git objects; the clone resolves them by absolute path and they are hash-pinned in the manifest.",
+  "passed": true
+}

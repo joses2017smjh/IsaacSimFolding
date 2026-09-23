@@ -1,6 +1,6 @@
 {
   "campaign": "20260922-closed-loop-training-v2",
-  "frozen_commit": "a313e4a2e1cb299c87c42c06f5a6702ec9d26aca",
+  "frozen_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
   "jobs": [
     {
       "job_id": "21400590",
@@ -19,6 +19,18 @@
       "script": "slurm/smoke.sbatch",
       "submitted_utc": "2026-09-23T06:55:12Z",
       "manifest_commit": "a313e4a2e1cb299c87c42c06f5a6702ec9d26aca",
+      "state": "FAILED",
+      "exit_code": 1,
+      "failed_stage": "5/5 checkpoint reload",
+      "cause": "save_pretrained drops the draccus 'type' discriminator; checkpoint unloadable",
+      "fixed_by": "d3422c9 restore_config_discriminator"
+    },
+    {
+      "job_id": "21400623",
+      "phase": "smoke",
+      "script": "slurm/smoke.sbatch",
+      "submitted_utc": "2026-09-23T07:01:12Z",
+      "manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
       "state": "submitted"
     }
   ]

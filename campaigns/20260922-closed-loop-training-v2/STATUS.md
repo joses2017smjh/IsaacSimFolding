@@ -6,8 +6,8 @@
 
 | | |
 |---|---|
-| **Active job** | `21400605` — end-to-end smoke (retry) |
-| **Latest result** | smoke `21400590` FAILED at 51 s: LeHome's logger could not write to the read-only pilot checkout. Fixed in `a313e4a`. |
+| **Active job** | `21400623` — end-to-end smoke (attempt 3) |
+| **Latest result** | smoke `21400605` reached 4/5 stages, then failed reloading its own checkpoint: `save_pretrained` drops the draccus `type` discriminator. Fixed in `d3422c9`. |
 | **Blocker** | none |
 | **Next milestone** | smoke passes → submit the 8-row collection array |
 
@@ -127,3 +127,28 @@ The same commit makes `build_manifest.py` hash `.sh` files.
 source pin. Manifest refrozen at `a313e4a` with 66 sources.
 
 Smoke retry **21400605** submitted.
+
+### 2026-09-23 — smoke 21400605: every saved checkpoint was unloadable
+
+Stages 1-4 passed. The rollout ran, the trajectory compiled (1 episode, 16
+samples, gate correctly degenerate under `--allow-degenerate`), one AWR
+update ran and a checkpoint was written. Stage 5 then failed reloading it:
+
+    draccus.utils.ParsingError: Expected a dict with a 'type' key for
+    <class 'lerobot.configs.policies.PreTrainedConfig'>
+
+`SmolVLAPolicy.save_pretrained` writes 48 of the baseline's 49 config keys
+and omits `type`, draccus's choice-class discriminator. **Every checkpoint
+this trainer saves was unloadable by the evaluator path** — and it only shows
+up on reload, which is after all the collection and training GPU time has
+been spent. This is precisely what the smoke exists to catch.
+
+The other 48 keys were verified byte-identical to the baseline's, and
+fine-tuning changes weights rather than architecture, so the baseline config
+is restored wholesale. Second benefit: the boundary evaluator symlinks every
+candidate file *except* `config.json` and substitutes the baseline's, which
+is now a provable no-op. `restore_config_discriminator` refuses to run if any
+shared key genuinely differs, so it cannot mislabel a changed architecture.
+
+Manifest refrozen at `d3422c9`, 68 sources. 16 campaign tests pass.
+Smoke **21400623** submitted.

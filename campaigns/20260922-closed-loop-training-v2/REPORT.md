@@ -82,6 +82,8 @@ successes.
   reproduce outcomes (GPU cloth physics is not bitwise deterministic).
 - The frozen test was run for the baseline only, because no candidate
   qualified; it measures the delivered checkpoint, not a candidate.
+- The pose-3 action-5/action-10 boundary evaluation (`slurm/boundary.sbatch`)
+  runs only for a qualifying final candidate, so it never ran.
 - Development rows dev00/dev01 share garment and pose with iteration 1's
   Pant_Short_Seen_0 collection rows (a v1 design carried into v2), so the
   development set was not fully held out from iteration-1 training.
@@ -136,7 +138,7 @@ Selected checkpoints (`model.safetensors`; weights not in Git, full per-file has
 - `iter2-step000300`: `561e20c26449cca9…`, raster held-out 0.0830 vs baseline 0.1333
 - `iter3-step000300`: `69fe2be02f2b2596…`, raster held-out 0.0813 vs baseline 0.1333
 
-Amendments, each recorded before the iteration it governs was trained or evaluated. A1 and A2 also preceded the evidence they depend on; A3 was made after two candidates' development results and says so:
+Amendments, each recorded before the iteration it governs was trained or evaluated, and each chosen from the previous iteration's evidence by design. The one to read closely is A3: it reversed the AWR constants that A1 had declared fixed, after two candidates' development results, and discloses that as post-hoc:
 - `amendments/A1-autonomous-mandate.json` (`1898c2b664bb…`)
 - `amendments/A2-iteration2-success-density.json` (`1c9f422b6e14…`)
 - `amendments/A3-iteration3-advantage-sharpness.json` (`f90189b5b35e…`)

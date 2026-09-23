@@ -46,11 +46,18 @@ if [ "$found" -ne "$expected" ]; then
 fi
 globs=()
 for d in "${dirs[@]}"; do globs+=(--trajectory-glob "$d/*/trajectory.npz"); done
+# The plan declares which execution horizons its rows ran at; without a plan
+# (iteration 1) the collection is H10 only, as the manifest froze it.
+horizons=(--allowed-horizon 10)
+if [ -n "$plan" ]; then
+  horizons=()
+  for h in $(jq -r '.collection_horizons // [10] | .[]' "$plan"); do horizons+=(--allowed-horizon "$h"); done
+fi
 
 lh_torch "$campaign/scripts/verify_sources.py" --campaign "$campaign" \
   --out "$campaign/audit/verify_sources_compile_${scope}.json"
 
-lh_torch "$campaign/scripts/build_rollout_dataset.py" "${globs[@]}" \
+lh_torch "$campaign/scripts/build_rollout_dataset.py" "${globs[@]}" "${horizons[@]}" \
   --manifest "$campaign/manifest.json" \
   --out "$campaign/datasets/${scope}.npz" \
   --provenance "$campaign/analysis/${scope}-dataset-provenance.json" \

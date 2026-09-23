@@ -46,7 +46,8 @@ def terminal_reward(result: dict) -> tuple[float, int, int, bool]:
     return passed / total, passed, total, success
 
 
-def load_episode(path: Path, chunk: int) -> tuple[dict, dict, np.ndarray, np.ndarray, np.ndarray]:
+def load_episode(path: Path, chunk: int, allowed_horizons: tuple[int, ...] = (10,)
+                 ) -> tuple[dict, dict, np.ndarray, np.ndarray, np.ndarray]:
     result_path = path.with_name("rollout.json")
     request_path = path.with_name("request.json")
     if not result_path.is_file() or not request_path.is_file():
@@ -79,8 +80,15 @@ def load_episode(path: Path, chunk: int) -> tuple[dict, dict, np.ndarray, np.nda
     row = request["row"]
     if seed != int(row["seed"]) or result["garment"] != row["garment"]:
         raise ValueError(f"{path} trajectory identity differs from request")
-    if result.get("effective_n_action_steps") != 10 or result.get("prediction_chunk_size") != chunk:
-        raise ValueError(f"{path} does not use normal H10 / predicted H50 semantics")
+    # The target at observation t is stream[t:t+chunk] -- what the policy
+    # actually executed next -- whatever the execution horizon was. A horizon
+    # outside the declared set is still refused: it means the collection is
+    # not the one the plan preregistered.
+    horizon = result.get("effective_n_action_steps")
+    if horizon not in allowed_horizons or result.get("prediction_chunk_size") != chunk:
+        raise ValueError(f"{path} executed H{horizon} with chunk "
+                         f"{result.get('prediction_chunk_size')}; declared horizons "
+                         f"{list(allowed_horizons)} with a {chunk}-action chunk")
     valid = indices[indices + chunk <= len(stream)]
     if len(valid) == 0:
         raise ValueError(f"{path} has no observation with a full {chunk}-action suffix")
@@ -103,6 +111,7 @@ def load_episode(path: Path, chunk: int) -> tuple[dict, dict, np.ndarray, np.nda
         "pose_key": int(row["pose_key"]),
         "seed": seed,
         "checkpoint": request["checkpoint"],
+        "execution_horizon": int(horizon),
         "raw_observations": int(len(indices)),
         "usable_samples": int(n),
     }
@@ -120,6 +129,8 @@ def main() -> int:
     ap.add_argument("--manifest", type=Path, required=True,
                     help="campaign manifest supplying the preregistered AWR and gate constants")
     ap.add_argument("--gate-out", type=Path, required=True)
+    ap.add_argument("--allowed-horizon", type=int, action="append", default=None,
+                    help="execution horizons this collection declared; default H10 only")
     ap.add_argument("--allow-degenerate", action="store_true",
                     help="smoke only: record the gate verdict without failing on it")
     args = ap.parse_args()
@@ -137,7 +148,8 @@ def main() -> int:
 
     episodes, image_rows, state_rows, action_rows, starts = [], [], [], [], []
     for path in paths:
-        source, result, images, state, actions = load_episode(path, args.chunk)
+        source, result, images, state, actions = load_episode(
+            path, args.chunk, tuple(args.allowed_horizon or [10]))
         reward, passed, total, success = terminal_reward(result)
         source.update({
             "terminal_reward": reward,
@@ -278,7 +290,10 @@ def main() -> int:
         "dataset_sha256": digest(args.out),
         "dataset_samples": int(len(images)),
         "chunk": args.chunk,
-        "source": "autonomous ordinary-H10 executed action streams; no H50 branches or labels",
+        "source": (f"autonomous closed-loop executed action streams at declared horizons "
+                   f"{sorted(set(args.allowed_horizon or [10]))}; every label is an action the "
+                   f"rollout actually executed at a state it actually visited -- no plan "
+                   f"queried at a state its own rollout did not reach"),
         "reward_definition": "terminal official geometric conditions_passed / conditions_total",
         "advantage_definition": "terminal reward minus mean terminal reward across this fixed collection",
         "advantage_implementation": "lehome_fold.awr.success_residual",

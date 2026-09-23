@@ -9,7 +9,18 @@
       "submitted_by": "manual",
       "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
       "submitted_utc": "2026-09-23T19:58:05Z",
-      "state": "submitted"
+      "state": "completed",
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 274,
+        "gpu_hours": 0.0761,
+        "start": "2026-09-23T12:58:21",
+        "end": "2026-09-23T13:02:55"
+      }
     },
     {
       "job_id": "21402621",
@@ -19,8 +30,183 @@
       "submitted_by": "driver",
       "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
       "submitted_utc": "2026-09-23T20:03:23Z",
-      "state": "submitted",
-      "array": "0,1,2,3,4,5,6,7"
+      "state": "completed",
+      "array": "0,1,2,3,4,5,6,7",
+      "final": {
+        "tasks": 8,
+        "states": {
+          "COMPLETED": 8
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 15075,
+        "gpu_hours": 4.1875,
+        "start": "2026-09-23T13:03:43",
+        "end": "2026-09-23T14:06:17"
+      }
+    },
+    {
+      "job_id": "21402731",
+      "phase": "search.compile",
+      "script": "slurm/compile_recovery.sbatch",
+      "gpu_tasks": 0,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T21:06:19Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 136,
+        "gpu_hours": 0.0,
+        "start": "2026-09-23T14:06:27",
+        "end": "2026-09-23T14:08:43"
+      }
+    },
+    {
+      "job_id": "21402738",
+      "phase": "a1.train",
+      "script": "slurm/train.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T21:08:46Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1539,
+        "gpu_hours": 0.4275,
+        "start": "2026-09-23T14:09:06",
+        "end": "2026-09-23T14:34:45"
+      }
+    },
+    {
+      "job_id": "21402799",
+      "phase": "a1.reload",
+      "script": "slurm/reload.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T21:34:57Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 72,
+        "gpu_hours": 0.02,
+        "start": "2026-09-23T14:35:05",
+        "end": "2026-09-23T14:36:17"
+      }
+    },
+    {
+      "job_id": "21402803",
+      "phase": "a1.screen",
+      "script": "slurm/benchmark.sbatch",
+      "gpu_tasks": 8,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T21:36:26Z",
+      "state": "completed",
+      "array": "0,2,4,6,8,10,12,14",
+      "final": {
+        "tasks": 8,
+        "states": {
+          "COMPLETED": 8
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 2157,
+        "gpu_hours": 0.5992,
+        "start": "2026-09-23T14:36:35",
+        "end": "2026-09-23T14:46:01"
+      }
     }
-  ]
+  ],
+  "support_jobs": [
+    {
+      "job_id": "21402622",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402623",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402732",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402739",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402800",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402804",
+      "name": "lh-v3-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402827",
+      "name": "lh-v3-tick",
+      "state": "active",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21402842",
+      "name": "lh-v3-tick",
+      "state": "active",
+      "gpu_hours": 0.0
+    }
+  ],
+  "reconciled": {
+    "by": "scripts/reconcile_ledger.py from sacct",
+    "stage_jobs": 6,
+    "support_jobs": 8,
+    "gpu_hours_total": 5.31,
+    "outcomes": {
+      "completed": 6
+    },
+    "by_iteration_or_stage": {
+      "smoke": {
+        "jobs": 1,
+        "gpu_tasks": 1,
+        "gpu_hours": 0.0761
+      },
+      "search": {
+        "jobs": 2,
+        "gpu_tasks": 8,
+        "gpu_hours": 4.1875
+      },
+      "a1": {
+        "jobs": 3,
+        "gpu_tasks": 10,
+        "gpu_hours": 1.0467
+      }
+    }
+  }
 }

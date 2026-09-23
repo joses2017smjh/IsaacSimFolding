@@ -1,0 +1,21 @@
+{
+ "attempt": 2,
+ "dataset": "recovery",
+ "init_checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+ "training": {
+  "lr": 3.3e-06,
+  "batch_size": 4,
+  "grad_accum": 8,
+  "checkpoint_every": 25
+ },
+ "checkpoint_rule": "latest_guard_passing",
+ "fit_precondition": true,
+ "changed_factor": "learning rate 1e-5 -> 3.3e-6. Everything else held at attempt 1's values: the same compiled dataset recovery.npz (2,990 H10-only validated labels, byte-untouched), init = untouched baseline, steps 300, effective batch 32 (4 x grad_accum 8), whole-episode anchor, seed 4242, checkpoint every 25, latest-guard-passing selection, retention tolerance 1.10.",
+ "evidence": "training/a1/training.json: the retention guard passes ONLY at steps 75-100 (0.0766/0.0773 vs limit 0.0786) and breaches from 125 onward, so the selected checkpoint had absorbed ~0.54 passes of the supervision (1,600 of 2,990 draws). The whole-episode anchor worked as designed -- anchor_fit no longer collapses (0.11-0.13 throughout vs 0.07 in v3) and retention breaches late instead of immediately -- but drift still outruns absorption at lr 1e-5. Screen: 2/8 settled (dev05, dev07, both P_C; five rows at 3-4/4; mean conditions 2.875) -- the first trained checkpoint at baseline parity (baseline runs: 2/8 and 0/8).",
+ "hypothesis": "at one third the learning rate, per-step drift shrinks ~3x while the guard tolerance is unchanged, so the guard-passing frontier should extend several times deeper into training and the selected checkpoint should carry ~2-3x more absorbed supervision. Preregistered readouts: (a) the last guard-passing step (attempt 1: 100); (b) screen H10. If the frontier extends >= 2x but the screen does not improve, the finding is that this supervision content cannot lift H10 at any absorption level -- terminal for this data source at this scale.",
+ "fit_precondition_note": "attempt 1's manifest-generated plan lacked the fit_precondition key, so its screen ran without the 1-task offline-fit gate (a wiring gap, disclosed; the gate is a cost-saving necessary condition, not an evidence gate). Attempt 2 sets it explicitly.",
+ "screen": "unchanged: proceed only if H10 settled >= 4/8 on the 8 development H10 rows",
+ "confirmation_and_claim": "unchanged manifest rules: second H10 run + one H50 run; improvement rule (pooled 16 vs 16 against the preregistered pooled baseline 2/16, margin >= 4, one-sided Fisher p < 0.05, H50 >= 4/8, retention guard, reload); v3's still-unseen final set 8 + 8 only if the rule holds",
+ "budget": "within the frozen v4 budget (60 tasks / 28.0 GPU-hours): 19 tasks and 5.3 GPU-h used; attempt 2 adds train 1 + reload 1 + fit 1 + screen 8 (~1.5 GPU-h), success path +32 tasks (~3 GPU-h)",
+ "after_attempt_2": "no attempt 3; the driver loop ends at k = 2"
+}

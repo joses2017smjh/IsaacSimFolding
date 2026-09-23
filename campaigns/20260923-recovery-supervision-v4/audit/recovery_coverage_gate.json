@@ -1,0 +1,230 @@
+{
+  "passed": true,
+  "unmet_requirements": [],
+  "checks": [
+    {
+      "name": "successful_branches",
+      "observed": 81,
+      "threshold": 18,
+      "passed": true
+    },
+    {
+      "name": "distinct_successful_roots",
+      "observed": 28,
+      "threshold": 10,
+      "passed": true
+    },
+    {
+      "name": "distinct_successful_rows",
+      "observed": 7,
+      "threshold": 4,
+      "passed": true
+    }
+  ],
+  "attempts_total": 384,
+  "attempts_completed": 384,
+  "attempts_not_run_or_error": 0,
+  "successful_branches": 81,
+  "success_rate": 0.2109375,
+  "transient_full_crossings_without_settled_success": 29,
+  "by_root": {
+    "search_pant_short_seen_4_key0@120": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key0@180": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key0@240": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key0@300": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key0@360": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key0@60": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@120": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@180": {
+      "successes": 8,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@240": {
+      "successes": 8,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@300": {
+      "successes": 8,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@360": {
+      "successes": 8,
+      "attempts": 8
+    },
+    "search_pant_short_seen_4_key1@60": {
+      "successes": 3,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@120": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@180": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@240": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@300": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@360": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key0@60": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@120": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@180": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@240": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@300": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@360": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_5_key1@60": {
+      "successes": 7,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@120": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@180": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@240": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@300": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@360": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key0@60": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@120": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@180": {
+      "successes": 3,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@240": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@300": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@360": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_6_key2@60": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@120": {
+      "successes": 3,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@180": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@240": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@300": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@360": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key0@60": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@120": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@180": {
+      "successes": 2,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@240": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@300": {
+      "successes": 0,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@360": {
+      "successes": 1,
+      "attempts": 8
+    },
+    "search_pant_short_seen_8_key2@60": {
+      "successes": 3,
+      "attempts": 8
+    }
+  },
+  "by_horizon": {
+    "10": {
+      "successes": 81,
+      "attempts": 384
+    }
+  }
+}

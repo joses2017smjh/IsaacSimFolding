@@ -118,10 +118,16 @@ def main() -> int:
     ckpt = checkpoint_record(checkpoint)
     baseline = Path(manifest["baseline_checkpoint"]["path"]).resolve()
     if checkpoint == baseline:
-        if ckpt["model.safetensors"] != manifest["baseline_checkpoint"]["model_safetensors_sha256"]:
-            raise SystemExit("immutable baseline model SHA changed")
-        if ckpt["config.json"] != manifest["baseline_checkpoint"]["config_sha256"]:
-            raise SystemExit("immutable baseline config SHA changed")
+        # The baseline is declared immutable, so check every file the manifest
+        # pinned rather than only the weights: a changed normalizer or
+        # preprocessor silently shifts the action space this campaign measures.
+        pinned = manifest["baseline_checkpoint"]["sha256"]
+        drifted = sorted(name for name, sha in ckpt.items()
+                         if name in pinned and sha != pinned[name])
+        missing = sorted(name for name in ckpt if name not in pinned)
+        if drifted or missing:
+            raise SystemExit(
+                f"immutable baseline checkpoint changed: altered={drifted} unpinned={missing}")
 
     dest = destination(root, args.phase, row, label)
     if dest.exists():

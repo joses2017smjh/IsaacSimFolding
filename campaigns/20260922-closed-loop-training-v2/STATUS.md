@@ -7,12 +7,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `baseline.dev`, `iter1.reload` |
-| **Latest result** | iteration 1 in progress |
+| **Active job** | `21400710` iter1.reload.retry1 |
+| **Latest result** | matched baseline dev H10 2/8, H50 4/8; iter 1 `iter1-step000300` H10 0/8, H50 4/8 |
 | **Blocker** | none |
 | **Next milestone** | advance the current iteration; final frozen test after the loop |
 
-_Updated 2026-09-23T07:25:20Z by scripts/driver.py._
+_Updated 2026-09-23T07:56:01Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## What this campaign is

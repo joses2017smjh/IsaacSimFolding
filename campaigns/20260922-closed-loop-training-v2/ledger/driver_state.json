@@ -34,16 +34,35 @@
         "21400694"
       ],
       "submitted_utc": "2026-09-23T07:25:20Z",
-      "status": "submitted",
-      "gpu_tasks": 16
+      "status": "completed",
+      "gpu_tasks": 16,
+      "finished_utc": "2026-09-23T07:42:07Z"
     },
     "iter1.reload": {
       "job_ids": [
         "21400695"
       ],
       "submitted_utc": "2026-09-23T07:25:20Z",
+      "status": "failed",
+      "gpu_tasks": 0,
+      "finished_utc": "2026-09-23T07:30:42Z"
+    },
+    "iter1.reload.retry1": {
+      "job_ids": [
+        "21400710"
+      ],
+      "submitted_utc": "2026-09-23T07:30:42Z",
       "status": "submitted",
-      "gpu_tasks": 0
+      "gpu_tasks": 1
+    },
+    "iter1.evaluate": {
+      "job_ids": [
+        "21400738"
+      ],
+      "status": "completed",
+      "submitted_utc": "2026-09-23T07:35:59Z",
+      "adopted_from_ledger": true,
+      "finished_utc": "2026-09-23T07:56:01Z"
     }
   },
   "iterations": {
@@ -71,21 +90,61 @@
         "step": 300,
         "heldout_gate": true,
         "heldout_loss": 0.08227758505381644,
-        "heldout_loss_baseline": 0.13325396389700472
-      }
+        "heldout_loss_baseline": 0.13325396389700472,
+        "reload_ok": true,
+        "dev": {
+          "h10": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 0,
+            "ever": 0,
+            "mean_conditions": 2.125,
+            "invalid": []
+          },
+          "h50": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 4,
+            "ever": 4,
+            "mean_conditions": 3.25,
+            "invalid": []
+          }
+        },
+        "ineligible_because": [],
+        "improves_h10_over_baseline": false
+      },
+      "concluded_utc": "2026-09-23T07:56:01Z",
+      "outcome": "evaluated"
+    },
+    "2": {
+      "phase": "planning"
     }
   },
-  "baseline_dev": null,
+  "baseline_dev": {
+    "h10": {
+      "rows": 8,
+      "valid": 8,
+      "settled": 2,
+      "ever": 3,
+      "mean_conditions": 3.0,
+      "invalid": []
+    },
+    "h50": {
+      "rows": 8,
+      "valid": 8,
+      "settled": 4,
+      "ever": 4,
+      "mean_conditions": 3.125,
+      "invalid": []
+    }
+  },
   "best": null,
   "final": {},
   "ticks": {
-    "chain": "21400696",
-    "chain_deps": [
-      "21400694",
-      "21400695"
-    ],
-    "chain_begin": null,
-    "watchdog": "21400697"
+    "chain": "21400808",
+    "chain_deps": [],
+    "chain_begin": "2026-09-23T09:26:01Z",
+    "watchdog": "21400762"
   },
   "done": false,
   "stop_reason": null,
@@ -99,6 +158,21 @@
       "utc": "2026-09-23T07:25:20Z",
       "message": "submitted iter1.reload -> 21400695",
       "gpu_tasks": 0
+    },
+    {
+      "utc": "2026-09-23T07:30:42Z",
+      "message": "submitted iter1.reload.retry1 -> 21400710",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T07:42:07Z",
+      "message": "matched baseline development measured",
+      "h10": 2,
+      "h50": 4
+    },
+    {
+      "utc": "2026-09-23T07:56:01Z",
+      "message": "iteration 1 concluded: evaluated"
     }
   ]
 }

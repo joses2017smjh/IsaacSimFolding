@@ -1,0 +1,35 @@
+{
+  "id": "A2",
+  "recorded_utc": "2026-09-23T07:57:49Z",
+  "evidence_available_when_recorded": {
+    "iteration2_data": "none -- no iteration-2 row has been collected",
+    "matched_baseline_development": {"h10_settled": "2/8", "h50_settled": "4/8", "h10_mean_conditions": 3.000, "h50_mean_conditions": 3.125},
+    "iteration1_candidate_development": {"label": "iter1-step000300", "h10_settled": "0/8", "h50_settled": "4/8", "h10_mean_conditions": 2.125, "h50_mean_conditions": 3.250,
+                                         "eligible": true, "improves_over_baseline": false},
+    "frozen_test": "not run and not looked at"
+  },
+  "findings": {
+    "iteration1_degraded_h10": "Mean H10 terminal conditions fell 3.000 -> 2.125; 7 of 8 rows collapsed to exactly 2/4 and none improved, while H50 held (4/8, 3.125 -> 3.250). AWR resampling of H10 FAILURE trajectories reinforced the H10 failure mode: the rollouts it favoured (pants, 3/4) were still failures.",
+    "iteration1_advantage_was_class_confounded": "Every pants episode scored 0.75 and every top 0.4-0.6; within a garment the reward was identical except one Top_Long pose pair. The advantage measured garment difficulty, not action quality. The gate passed because it tests spread and concentration, which a between-class confound satisfies.",
+    "baseline_is_noisy_on_identical_seeds": "The horizon pilot measured this baseline at H10 0/8 and H50 4/8 on the SAME seeds, checkpoint and controller; v2 measured H10 2/8 and H50 4/8. Pooled: H10 2/16, H50 8/16. A development difference of one or two episodes is within observed run-to-run variation.",
+    "retention_guard_is_narrow": "The guard is the loss on the first 8 frames of 4 Top_Short demonstrations and the anchor the first 8 frames of 16 demonstrations; neither covers grasping or folding. Both are kept exactly as frozen; the matched H50 closed-loop regression check is the substantive retention test."
+  },
+  "decision": {
+    "iteration": 2,
+    "factor_changed": "collection reward distribution (success density)",
+    "what_moves": "Collection is executed at H50 on Pant_Short garments 4, 5, 6 and 8, instead of at H10 across four garment classes. Horizon and class move together, and that is deliberate rather than incidental: the factor is the success density of the data AWR weights. At H10 the baseline succeeds about 2 times in 16, so an H10 collection would still be roughly 60% failure frames by sampled weight -- the data iteration 1 just showed degrades H10. H50 on the target class is the one configuration where the baseline is measured to succeed (P_B and P_C poses: 8/10 settled across the pilot and v2). Restricting to one class also removes the class confound by construction, so the advantage contrasts success against failure rather than pants against tops.",
+    "held_fixed": ["initial checkpoint: the untouched baseline", "training settings: 300 steps, lr 1e-5, batch 4, 50% rollout / 50% raster anchor, boundary unfreeze, seed 4242", "AWR constants and every gate threshold", "the 16 development rows and the frozen test set"],
+    "rows": "8 (garment, pose) combinations mirroring the development pose mix -- P_A x3, P_B x2, P_C x3 -- times 2 seeds = 16 episodes; 8 preregistered expansion rows. No development garment, no frozen-test garment, no preregistered seed.",
+    "coverage": "16 rather than 8 episodes so that the P_A failures (expected to score 1/4-3/4) and the P_B/P_C successes both appear with replication, giving the gate its three distinct rewards and the advantage within-pose-type contrast."
+  },
+  "h50_prohibition_scope": {
+    "prohibited_and_still_prohibited": "Plans queried at states the plan's own rollout did not visit -- specifically the pilot's fresh-H50 self-oracle at H10 student-visited roots (0/6), and the pilot's student-roots.npz and successful-h50-examples.npz. None is used.",
+    "used_here": "Executed actions of autonomous closed-loop rollouts started from the episode's initial state, at the states those rollouts actually visited, weighted by their own settled terminal outcome. That is the same kind of data every collection in this campaign is; only the execution horizon differs."
+  },
+  "cached_suffix_issue_named": {
+    "issue": "At H50 with trajectory_every 5, most sampled observations are mid-chunk, so their label stream[t:t+50] is the unexecuted tail of one open-loop plan followed by the head of the next -- a continuation the policy committed to earlier, not one it chose at t. The pilot tested this direction at two boundary states of one pose (boundary-replay -> mixed-replay -> boundary-ceiling) and closed it: stop_static_boundary_suffix_adaptation.",
+    "how_this_differs": ["full episodes, every sampled state, not two boundaries", "16 rollouts over 4 garments and 3 pose types, not one pose", "outcome-weighted by AWR with failures retained, not static imitation of one success", "evaluated closed-loop at H10 from the episode's initial state, not from a restored snapshot"],
+    "discriminating_prediction": "If iteration 2 raises development H10 on the P_B and P_C rows (where the baseline succeeds at H50), that supports plan-continuity transfer. A gain concentrated on P_A rows, where H50 also fails, would indicate something else. No H10 gain, or a further H10 drop, extends the pilot's boundary result to full trajectories and rules this factor out for iteration 3."
+  },
+  "unchanged": ["targets (A1)", "budget caps (A1)", "gate thresholds", "selection rule", "frozen test reserved for the final checkpoint", "RECAP not used"]
+}

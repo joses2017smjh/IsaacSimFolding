@@ -84,6 +84,28 @@
       "submitted_utc": "2026-09-23T07:25:20Z",
       "state": "submitted",
       "array": null
+    },
+    {
+      "job_id": "21400710",
+      "phase": "iter1.reload.retry1",
+      "script": "slurm/reload.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "c799da8daedbedaa39c3cd84f16818aadd1936ba",
+      "submitted_utc": "2026-09-23T07:30:42Z",
+      "state": "submitted",
+      "array": null
+    },
+    {
+      "job_id": "21400738",
+      "phase": "iter1.evaluate",
+      "script": "slurm/benchmark.sbatch",
+      "gpu_tasks": 16,
+      "submitted_by": "driver",
+      "manifest_commit": "87a21e5025e25fa1e8d1fce8d8b6fe21033c187d",
+      "submitted_utc": "2026-09-23T07:35:59Z",
+      "state": "submitted",
+      "array": "0-15"
     }
   ]
 }

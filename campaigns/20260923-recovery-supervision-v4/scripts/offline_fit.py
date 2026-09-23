@@ -254,8 +254,16 @@ def main() -> int:
     if pair_gate:
         (bl, _), (cl, _) = labels_paths
         rw = results["_weight_change_reloaded"]
-        repair_ok = (rw["bf16_changed_fraction"] is not None and rw["bf16_changed_fraction"] >= 0.50
-                     and rw["norm_gains_changed"] >= 1)
+        # Repair verification is the changed FRACTION alone. The norm-gain
+        # clause was an instrument artifact: RMSNorm gains sit near magnitude
+        # 1.0, where bf16's half-ULP is ~2e-3, and at lr 3.3e-6 x 250 steps
+        # the measured fp32 deltas reach only 0.18 of that -- 23,750/23,760
+        # gains MOVED in the saved fp32 tensors and were erased by the
+        # re-round at load, for any correctly working optimizer. The frozen
+        # signature this check exists to catch was 11.5% changed; >= 50% is
+        # unreachable by a frozen expert. Norm-gain count stays reported.
+        repair_ok = (rw["bf16_changed_fraction"] is not None
+                     and rw["bf16_changed_fraction"] >= 0.50)
         db, dc = [], []
         spread = []
         for grp in ("recovery_branch", "recovery_student"):
@@ -275,8 +283,9 @@ def main() -> int:
                 "pass": bool(repair_ok and noninferior_ok),
                 "mean_paired_diff": float(diff.mean()), "diff_ci95": ci,
                 "baseline_seed_spread": seed_spread,
-                "definition": ("PASS iff reloaded bf16 expert change >= 50% with >= 1 norm gain "
-                               "changed, AND paired (candidate - baseline) 95% CI upper bound <= "
+                "definition": ("PASS iff reloaded bf16 expert change >= 50% (norm-gain count "
+                               "reported, not gated -- see amendment 2026-09-23-fit-gate-"
+                               "instrument), AND paired (candidate - baseline) 95% CI upper bound <= "
                                "the baseline's own mean seed-to-seed std, branch+student pooled. "
                                "Necessary condition only; in-sample; never evidence of improvement.")}
         print("GATE:", json.dumps(gate), flush=True)

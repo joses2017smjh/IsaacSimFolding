@@ -131,6 +131,39 @@
         "start": "2026-09-23T14:36:35",
         "end": "2026-09-23T14:46:01"
       }
+    },
+    {
+      "job_id": "21402919",
+      "phase": "a2.train",
+      "script": "slurm/train.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T22:10:18Z",
+      "state": "submitted",
+      "array": null
+    },
+    {
+      "job_id": "21403076",
+      "phase": "a2.reload",
+      "script": "slurm/reload.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T22:36:37Z",
+      "state": "submitted",
+      "array": null
+    },
+    {
+      "job_id": "21403131",
+      "phase": "a2.fit",
+      "script": "slurm/offline_fit.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "ccdc6f51a1c3fc5d96279d0ee0cc115b1c6220a9",
+      "submitted_utc": "2026-09-23T22:45:07Z",
+      "state": "submitted",
+      "array": null
     }
   ],
   "support_jobs": [

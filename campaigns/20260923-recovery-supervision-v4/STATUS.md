@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none |
-| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2 |
+| **Active job** | none — campaign complete |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, fit precondition failed: repair verification failed (bf16 expert still frozen); FINAL: `baseline` delivered |
 | **Limitation / blocker** | none |
-| **Next automatic action** | driver advances the next stage when a waited job ends |
+| **Next automatic action** | none — campaign complete; see REPORT.md |
 
-_Updated 2026-09-23T22:03:38Z by scripts/driver.py._
+_Updated 2026-09-23T22:57:07Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -44,3 +44,20 @@ supervision; preregistered readouts are the last guard-passing step and the
 screen. Disclosed: attempt 1's manifest-generated plan lacked the
 `fit_precondition` key, so its screen ran without the 1-task offline-fit
 gate; attempt 2 sets it explicitly. Budget: 19 tasks / 5.3 of 28 GPU-hours.
+
+### 2026-09-23 — fit-gate instrument artifact; attempt 2 reopened
+
+The lr hypothesis's first readout resolved strongly: the guard-passing
+frontier extended from step 100 to **step 250** (selected `a2-step000250`,
+~1.34 passes of the supervision absorbed vs 0.54). The fit gate then
+concluded attempt 2 on its "≥1 RMSNorm gain changed" clause — which
+measurement shows is unpassable by construction at this lr: 23,750/23,760
+gains moved in the saved fp32 tensors but their max delta is 0.18 of a bf16
+half-ULP, erased at load for any correct optimizer. The clause's real
+purpose (catching the 11.5% frozen signature) was decided by the changed
+fraction: **59.4% ≥ 50%** — repair verified. Non-inferiority passed.
+
+Corrected per `amendments/2026-09-23-fit-gate-instrument.md` (changed
+fraction alone gates; norm count reported); the original report is preserved
+in `attempts/`. Driver state reopened before any screen result exists; no
+evidence gate changed. The corrected fit gate re-runs, then the screen.

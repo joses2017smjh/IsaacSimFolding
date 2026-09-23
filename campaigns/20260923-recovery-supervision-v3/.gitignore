@@ -1,0 +1,30 @@
+/runtime/
+/smoke/
+/rollouts/
+/datasets/*.npz
+/training/checkpoints/
+/evaluation/
+*.pyc
+__pycache__/
+# Driver and Slurm runtime output: logs are regenerable and large; the
+# evidence they produce is captured in audit/, analysis/ and the ledger.
+/logs/
+/attempts/
+/ledger/ticks/
+/ledger/.driver.lock
+/ledger/*.tmp
+slurm-*.out
+# v3: keep each search row's small JSON records; drop bulk artefacts.
+/recovery/**/*.npz
+/recovery/**/frames/
+/recovery/**/*.gif
+/recovery/**/*.mp4
+/recovery/**/*.log
+/recovery/**/*.jsonl
+/runtime/
+/logs/
+/attempts/
+/ledger/ticks/
+/ledger/.driver.lock
+/ledger/*.tmp
+slurm-*.out

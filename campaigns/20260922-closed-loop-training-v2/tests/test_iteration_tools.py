@@ -101,3 +101,63 @@ def test_declared_h50_collection_compiles_with_executed_targets(tmp_path):
     assert source["execution_horizon"] == 50
     assert targets.shape == (2, 50, 12)             # t=0 and t=5 have a full suffix
     assert np.array_equal(targets[1], stream[5:55])  # mid-chunk observation, true continuation
+
+
+# ------------------------------------------ iteration 3: advantage sharpness
+import sys  # noqa: E402
+sys.path.insert(0, str(ROOT.parents[1] / "src"))
+from lehome_fold import awr  # noqa: E402
+
+ITER2_REWARDS = np.array([1.0] * 2 + [0.75] * 6 + [0.5] * 4 + [0.25] * 4)   # audited gate
+
+
+def _mass(beta, w_max):
+    adv = awr.success_residual(ITER2_REWARDS, np.full_like(ITER2_REWARDS, ITER2_REWARDS.mean()))
+    w = awr.weights(adv, beta=beta, w_max=w_max, w_min=1e-6).astype(np.float64)
+    return w, float(w[:2].sum() / w.sum())
+
+
+def test_iteration2_weighting_left_successes_a_minority_of_the_mass():
+    """The diagnosis A3 rests on: under beta=1, w_max=3 the two successes hit
+    the cap at 3.0 while each 3/4 failure got ~1.88, so failures dominated."""
+    w, success_mass = _mass(1.0, 3.0)
+    assert success_mass == pytest.approx(0.286, abs=0.005)
+    failure_3of4_mass = float(w[2:8].sum() / w.sum())
+    assert failure_3of4_mass == pytest.approx(0.54, abs=0.01)
+
+
+def test_lowering_beta_with_the_old_cap_makes_it_worse_not_better():
+    """beta and w_max are coupled: with w_max=3 the 3/4 failures hit the cap too."""
+    _, success_mass = _mass(0.5, 3.0)
+    assert success_mass < 0.286
+
+
+def test_iteration3_constants_concentrate_on_successes_and_still_pass_every_gate():
+    w, success_mass = _mass(0.5, 20.0)
+    assert success_mass == pytest.approx(0.63, abs=0.01)
+    gates = MANIFEST["gates"]
+    ess = awr.effective_sample_size(w)
+    assert gates["ess_min"] <= ess <= len(w) - 1          # concentrated, not collapsed
+    assert ess == pytest.approx(4.58, abs=0.05)
+    assert len(np.unique(ITER2_REWARDS)) >= gates["distinct_rewards_min"]
+    assert float(np.std(ITER2_REWARDS - ITER2_REWARDS.mean())) > gates["advantage_std_min"]
+    # 111 usable samples per episode for every H50 row -> sample ESS fraction = ESS/16
+    assert ess / len(w) <= gates["sample_ess_fraction_max"]
+
+
+# ------------------------------------------------- reuse plumbing
+def test_make_plan_refuses_a_partial_reused_source(tmp_path, monkeypatch):
+    root = tmp_path / "campaigns" / "c"
+    (root / "plans").mkdir(parents=True)
+    (root / "rollouts" / "iteration2" / "a").mkdir(parents=True)
+    (root / "rollouts" / "iteration2" / "a" / "trajectory.npz").write_bytes(b"x")
+    (root / "plans" / "iteration2.resolved.json").write_text(json.dumps(
+        {"collection": [{"id": "a"}, {"id": "b"}], "collection_horizons": [50]}))
+    (root / "manifest.json").write_text(json.dumps(MANIFEST))
+    spec = tmp_path / "spec.json"
+    spec.write_text(json.dumps({"iteration": 3, "collection_source": "iteration2",
+                                "factor_changed": "x", "justification": "x",
+                                "collection_checkpoint": "/b", "init_checkpoint": "/b"}))
+    monkeypatch.setattr(sys, "argv", ["make_plan", "--campaign", str(root), "--spec", str(spec)])
+    with pytest.raises(SystemExit, match="holds 1 trajectories"):
+        make_plan.main()

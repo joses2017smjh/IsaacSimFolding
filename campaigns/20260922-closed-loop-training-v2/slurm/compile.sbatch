@@ -34,8 +34,16 @@ case "$scope" in
     dirs=("$R/iteration$k" "$R/iteration$k-expansion")
     expected=$(jq '(.collection | length) + (.collection_expansion | length)' "${plan:?plan required}") ;;
   iteration*)
-    dirs=("$R/$scope")
-    expected=$(jq '.collection | length' "${plan:?plan required}") ;;
+    # A plan may reuse an earlier iteration's trajectories so that only a
+    # training-side factor moves; it then names the source and its row count.
+    source=$(jq -r '.collection_source // empty' "${plan:?plan required}")
+    if [ -n "$source" ]; then
+      dirs=("$R/$source")
+      expected=$(jq '.collection_source_rows' "$plan")
+    else
+      dirs=("$R/$scope")
+      expected=$(jq '.collection | length' "$plan")
+    fi ;;
   *) echo "unknown scope $scope" >&2; exit 2 ;;
 esac
 
@@ -49,15 +57,19 @@ for d in "${dirs[@]}"; do globs+=(--trajectory-glob "$d/*/trajectory.npz"); done
 # The plan declares which execution horizons its rows ran at; without a plan
 # (iteration 1) the collection is H10 only, as the manifest froze it.
 horizons=(--allowed-horizon 10)
+awr=()
 if [ -n "$plan" ]; then
   horizons=()
   for h in $(jq -r '.collection_horizons // [10] | .[]' "$plan"); do horizons+=(--allowed-horizon "$h"); done
+  beta=$(jq -r '.awr.beta // empty' "$plan"); wmax=$(jq -r '.awr.w_max // empty' "$plan")
+  if [ -n "$beta" ]; then awr+=(--beta "$beta"); fi
+  if [ -n "$wmax" ]; then awr+=(--w-max "$wmax"); fi
 fi
 
 lh_torch "$campaign/scripts/verify_sources.py" --campaign "$campaign" \
   --out "$campaign/audit/verify_sources_compile_${scope}.json"
 
-lh_torch "$campaign/scripts/build_rollout_dataset.py" "${globs[@]}" "${horizons[@]}" \
+lh_torch "$campaign/scripts/build_rollout_dataset.py" "${globs[@]}" "${horizons[@]}" "${awr[@]}" \
   --manifest "$campaign/manifest.json" \
   --out "$campaign/datasets/${scope}.npz" \
   --provenance "$campaign/analysis/${scope}-dataset-provenance.json" \

@@ -351,7 +351,7 @@ class Driver:
         st = self.stage(key)
         if st is None:
             return "absent"
-        if st.get("status") in ("completed", "failed", "skipped"):
+        if st.get("status") in ("completed", "failed", "skipped", "reused"):
             return st["status"]
         states = job_states(st["job_ids"])
         flat = [s for j in st["job_ids"] for s in states.get(j, [])]
@@ -522,6 +522,18 @@ class Driver:
         # -- collection
         if k == 1:
             coll = self.rollout_stage(f"{tag}.collect", "collect.sbatch", [C], base, plan["collection"])
+        elif plan.get("collection_source"):
+            # Reuse an earlier iteration's trajectories so that only a training
+            # side factor moves. Nothing is submitted, and the stage says so.
+            if self.stage(f"{tag}.collect") is None:
+                if now() > parse(self.caps["no_new_iteration_after_utc"]):
+                    return self.conclude(k, "not started: past no_new_iteration_after_utc")
+                self.state["stages"][f"{tag}.collect"] = {
+                    "job_ids": [], "status": "reused", "from": plan["collection_source"],
+                    "rows": plan["collection_source_rows"], "recorded_utc": stamp()}
+                self.event(f"{tag}.collect reuses rollouts/{plan['collection_source']} "
+                           f"({plan['collection_source_rows']} trajectories); nothing submitted")
+            coll = "done"
         else:
             if self.stage(f"{tag}.collect") is None:
                 if now() > parse(self.caps["no_new_iteration_after_utc"]):

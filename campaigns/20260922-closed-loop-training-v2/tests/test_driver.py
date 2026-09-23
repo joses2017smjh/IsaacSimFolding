@@ -281,3 +281,18 @@ def test_a_dry_run_writes_no_resolved_plan(tmp_path):
     plan = d.resolved_plan(1)
     assert plan is not None and plan["iteration"] == 1
     assert not (root / "plans" / "iteration1.resolved.json").exists()
+
+
+def test_a_reused_collection_submits_nothing_and_moves_to_compile(tmp_path):
+    root = _temp_campaign(tmp_path, [])
+    (root / "plans").mkdir()
+    (root / "plans" / "iteration3.resolved.json").write_text(json.dumps({
+        "iteration": 3, "source": "explicit", "collection": [], "collection_expansion": [],
+        "collection_source": "iteration2", "collection_source_rows": 16,
+        "collection_checkpoint": "/b", "init_checkpoint": "/b", "training": {}}))
+    d = driver.Driver(root, dry=True)
+    assert d.iteration(3) == "wait"
+    collect = d.state["stages"]["iter3.collect"]
+    assert collect["status"] == "reused" and collect["job_ids"] == []
+    assert d.stage_status("iter3.collect") == "reused"      # never waited on
+    assert d.state["stages"]["iter3.compile"]["job_ids"] == ["DRY-iter3.compile"]

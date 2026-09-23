@@ -129,6 +129,10 @@ def main() -> int:
     ap.add_argument("--manifest", type=Path, required=True,
                     help="campaign manifest supplying the preregistered AWR and gate constants")
     ap.add_argument("--gate-out", type=Path, required=True)
+    ap.add_argument("--beta", type=float, default=None,
+                    help="plan override of the manifest's AWR beta (recorded as such)")
+    ap.add_argument("--w-max", type=float, default=None,
+                    help="plan override of the manifest's AWR cap (recorded as such)")
     ap.add_argument("--allowed-horizon", type=int, action="append", default=None,
                     help="execution horizons this collection declared; default H10 only")
     ap.add_argument("--allow-degenerate", action="store_true",
@@ -136,7 +140,18 @@ def main() -> int:
     args = ap.parse_args()
     manifest = json.loads(args.manifest.read_text())
     awr_cfg, gate_cfg = manifest["awr"], manifest["gates"]
-    args.beta, args.w_max, args.w_min = awr_cfg["beta"], awr_cfg["w_max"], awr_cfg["w_min"]
+    # The gate thresholds are never overridable. The AWR constants are, by a
+    # plan, and the provenance says which source each one came from.
+    awr_source = {"beta": "manifest", "w_max": "manifest", "w_min": "manifest"}
+    if args.beta is not None:
+        awr_source["beta"] = "plan (overrides manifest)"
+    else:
+        args.beta = awr_cfg["beta"]
+    if args.w_max is not None:
+        awr_source["w_max"] = "plan (overrides manifest)"
+    else:
+        args.w_max = awr_cfg["w_max"]
+    args.w_min = awr_cfg["w_min"]
     if args.chunk != 50:
         raise SystemExit("this campaign is preregistered for the checkpoint's 50-action chunks")
     paths = sorted({Path(x).resolve() for pattern in args.trajectory_glob
@@ -254,6 +269,7 @@ def main() -> int:
         "episode_weight_summary": episode_stats,
         "sample_weight_summary": sample_stats,
         "awr": {"beta": args.beta, "w_max": args.w_max, "w_min": args.w_min,
+                "source": awr_source,
                 "cap_bound_episodes": episode_stats["capped"],
                 "floor_bound_episodes": episode_stats["floored"]},
         "allow_degenerate": bool(args.allow_degenerate),

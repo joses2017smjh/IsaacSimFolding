@@ -78,18 +78,37 @@ def main() -> int:
     if out.exists():
         raise SystemExit(f"refusing to overwrite {out}; plans are frozen once written")
 
-    pilot = root.parent / "20260921-horizon-pilot"
-    inventory = {g["garment_id"]: g for g in
-                 json.loads((pilot / "audit/garment_inventory.json").read_text())["garments"]}
-    demos = json.loads(Path(manifest["pose_metadata"]["path"]).read_text())
-
-    collection = build_rows(spec["collection"], demos, inventory, prefix=f"it{k}")
-    expansion = build_rows(spec.get("collection_expansion", []), demos, inventory, prefix=f"it{k}x")
+    collection, expansion = [], []
+    if spec.get("collection") or spec.get("collection_expansion"):
+        # Pose metadata is only needed to build NEW rows; a plan that reuses an
+        # earlier collection must not depend on it.
+        pilot = root.parent / "20260921-horizon-pilot"
+        inventory = {g["garment_id"]: g for g in
+                     json.loads((pilot / "audit/garment_inventory.json").read_text())["garments"]}
+        demos = json.loads(Path(manifest["pose_metadata"]["path"]).read_text())
+        collection = build_rows(spec.get("collection", []), demos, inventory, prefix=f"it{k}")
+        expansion = build_rows(spec.get("collection_expansion", []), demos, inventory,
+                               prefix=f"it{k}x")
     problems = separation_problems(collection + expansion, manifest,
                                    allow_dev_overlap=spec.get("allow_dev_overlap"))
     if problems:
         raise SystemExit("unsafe plan:\n  " + "\n  ".join(problems))
     horizons = sorted({r["horizon"] for r in collection + expansion})
+
+    # Reusing an earlier iteration's trajectories: the rows were already
+    # separation-checked when that iteration's plan was built; count what is
+    # actually on disk so compile can fail closed on a partial source.
+    source = spec.get("collection_source")
+    source_rows = None
+    if source:
+        if collection or expansion:
+            raise SystemExit("a plan either collects new rows or reuses a source, not both")
+        source_plan = json.loads((root / "plans" / f"{source}.resolved.json").read_text())
+        source_rows = len(list((root / "rollouts" / source).glob("*/trajectory.npz")))
+        if source_rows != len(source_plan["collection"]):
+            raise SystemExit(f"rollouts/{source} holds {source_rows} trajectories; its plan "
+                             f"declared {len(source_plan['collection'])}")
+        horizons = source_plan["collection_horizons"]
 
     plan = {
         "iteration": k,
@@ -100,6 +119,9 @@ def main() -> int:
         "collection_checkpoint": spec["collection_checkpoint"],
         "init_checkpoint": spec["init_checkpoint"],
         "collection_horizons": horizons,
+        "collection_source": source,
+        "collection_source_rows": source_rows,
+        "awr": spec.get("awr"),
         "collection": collection,
         "collection_expansion": expansion,
         "training": spec.get("training", {}),

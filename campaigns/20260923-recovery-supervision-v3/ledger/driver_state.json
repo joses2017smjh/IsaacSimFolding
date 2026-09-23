@@ -34,8 +34,36 @@
         "21401800"
       ],
       "submitted_utc": "2026-09-23T15:13:23Z",
-      "status": "submitted",
-      "gpu_tasks": 1
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T15:18:43Z"
+    },
+    "a1.reload": {
+      "job_ids": [
+        "21401817"
+      ],
+      "submitted_utc": "2026-09-23T15:18:43Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T15:19:44Z"
+    },
+    "a1.screen": {
+      "job_ids": [
+        "21401820"
+      ],
+      "submitted_utc": "2026-09-23T15:19:44Z",
+      "status": "failed",
+      "gpu_tasks": 8,
+      "finished_utc": "2026-09-23T15:46:15Z"
+    },
+    "a1.screen.retry1": {
+      "job_ids": [
+        "21401940"
+      ],
+      "submitted_utc": "2026-09-23T15:46:15Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T15:51:44Z"
     }
   },
   "attempts": {
@@ -46,8 +74,29 @@
         "init_checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
         "training": {},
         "source": "manifest"
-      }
-    }
+      },
+      "selection": "final step breached the guard; preregistered fallback to step_000200",
+      "candidate": {
+        "label": "a1-step000200",
+        "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v3/training/a1/checkpoints/step_000200",
+        "guard": true,
+        "retention_loss": 0.07803072927345056,
+        "retention_baseline": 0.0714656221534824,
+        "anchor_fit_loss": 0.0760574305895716,
+        "reload_ok": true,
+        "h10_r1": {
+          "rows": 8,
+          "valid": 8,
+          "settled": 1,
+          "ever": 1,
+          "mean_conditions": 2.375,
+          "invalid": []
+        }
+      },
+      "concluded_utc": "2026-09-23T15:51:44Z",
+      "outcome": "screen failed: H10 1/8 < 4/8"
+    },
+    "2": {}
   },
   "baseline": {
     "h10_runs": [
@@ -252,11 +301,9 @@
   },
   "final": {},
   "ticks": {
-    "chain": "21401801",
-    "chain_deps": [
-      "21401800"
-    ],
-    "chain_begin": null,
+    "chain": "21401952",
+    "chain_deps": [],
+    "chain_begin": "2026-09-23T17:51:44Z",
     "watchdog": "21401704"
   },
   "done": false,
@@ -293,6 +340,29 @@
       "utc": "2026-09-23T15:13:23Z",
       "message": "submitted a1.train -> 21401800",
       "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T15:18:43Z",
+      "message": "submitted a1.reload -> 21401817",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T15:19:44Z",
+      "message": "submitted a1.screen -> 21401820",
+      "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-23T15:46:15Z",
+      "message": "a1.screen: retrying infrastructure-failed rows [10]"
+    },
+    {
+      "utc": "2026-09-23T15:46:15Z",
+      "message": "submitted a1.screen.retry1 -> 21401940",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T15:51:44Z",
+      "message": "attempt 1 concluded: screen failed: H10 1/8 < 4/8"
     }
   ]
 }

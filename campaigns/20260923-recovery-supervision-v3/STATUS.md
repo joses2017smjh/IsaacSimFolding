@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21401800` a1.train |
-| **Current result** | baseline H10 2/8 + 0/8; recovery search 32 settled successes of 128 attempts (gate pass); attempt 1 |
+| **Active job** | none |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 32 settled successes of 128 attempts (gate pass); attempt 1, H10 r1 1/8, screen failed: H10 1/8 < 4/8; attempt 2 |
 | **Limitation / blocker** | none |
 | **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-23T15:13:23Z by scripts/driver.py._
+_Updated 2026-09-23T15:51:44Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -50,7 +50,9 @@ Baseline H10 repeat (fresh, this campaign): **0/8** settled (mean conditions
 
 Recovery search, 8 training-only rows x 4 roots x 4 fixed candidates = **128
 attempts, all completed, 32 settled successes (25%)** — 16/64 at H10 and
-16/64 at H50 — from **17 of 32 roots across 6 of 8 rows**, including every
+16/64 at H50 — from **15 of 32 roots across 6 of 8 rows** (correction: an
+earlier version of this entry and the message of commit 9eccef5 said 17,
+which is the number of roots with *zero* successes), including every
 P_A garment (the pose the baseline fails even at H50). 16 further attempts
 crossed full conditions only transiently and did not settle; they are
 recorded and excluded. Two rows (Seen_6 and Seen_8 at key 2, pose P_B)
@@ -60,3 +62,23 @@ branches, 168 from student episodes that themselves settled).
 
 Attempt 1 training (`21401800`) uses v2's optimisation unchanged; only the
 supervision differs.
+
+### 2026-09-23 — orchestration paused for the attempt-2 repair
+
+Attempt 1's screen failed (H10 1/8 < 4/8). An adversarial review (4
+independent lenses + synthesis; full record in `analysis/attempt2-review.json`)
+overturned my working "noise-dominated optimisation" diagnosis and found the
+real defect: **the trainer built AdamW directly on bf16 expert weights with
+bf16 optimizer state** — at lr 1e-5, 88.5% of the 96.6M expert weights and
+every RMSNorm gain could not move (verified from raw checkpoint bytes: only
+12.9% of bf16 weights changed at all in 300 steps, the same share as the
+raster fine-tune, whose learning went through its fp32 vision tower). The
+offline-fit "regression" was largely a self-sample metric artifact, and label
+alignment/data integrity were verified clean.
+
+Pending driver ticks 21401952 and 21401704 are cancelled while the repair is
+committed and the manifest refrozen: the driver's 120-minute plan deadline is
+a hardcode of this campaign's own scheduler, not a preregistered rule, and
+letting it finalize mid-repair would end the campaign on a known bug. The
+pause is orchestration only; no gate, threshold, row or selection rule
+changes. The tick resumes once `plans/attempt2.json` is committed.

@@ -130,9 +130,23 @@ def test_no_second_attempt_without_a_committed_evidence_plan(tmp_path):
 
 def test_the_final_set_reserve_is_protected(tmp_path):
     root = _temp(tmp_path)
-    (root / "ledger/slurm-jobs.json").write_text(json.dumps({"jobs": [{"job_id": "1", "gpu_tasks": 45}]}))
+    cap = int(MANIFEST["budget"]["gpu_tasks"])
+    (root / "ledger/slurm-jobs.json").write_text(
+        json.dumps({"jobs": [{"job_id": "1", "gpu_tasks": cap - 20}]}))
     d = driver.Driver(root, dry=True)
     assert not d.can_spend(8, reserve=16) and d.can_spend(4, reserve=16)
+
+
+def test_attempt2_success_path_is_fundable_under_the_amended_cap():
+    """The original 65-task cap could never fund the preregistered H50
+    confirmation leg (69 minimum at zero overhead) -- the design flaw the
+    dated amendment repairs. 29 used + 27 attempt-2 stages + 16 final <= cap."""
+    cap = int(MANIFEST["budget"]["gpu_tasks"])
+    assert 29 + (1 + 1 + 1 + 8 + 8 + 8) + 16 <= cap
+
+
+def test_plan_deadline_is_manifest_declared():
+    assert int(MANIFEST["automation"]["attempt2_plan_deadline_minutes"]) >= 120
 
 
 def test_verify_sources_passes_against_the_frozen_manifest():
@@ -171,3 +185,26 @@ def test_every_v3_phase_resolves_its_rows(phase, index):
     assert request["runner"]["path"].endswith("20260923-recovery-supervision-v3/scripts/render/policy_rollout51.py")
     if phase.startswith("recovery"):
         assert "--recovery_out" in request["command"] and "--trajectory_out" in request["command"]
+
+
+# ------------------------------------------------- attempt-2 mechanics
+def _ck(step, gate):
+    return {"step": step, "path": f"/c/step_{step:06d}", "heldout_gate": gate, "heldout_loss": 0.08}
+
+
+def test_latest_guard_passing_rule_takes_the_newest_passing_checkpoint():
+    chosen, why = driver.latest_guard_passing({"checkpoints": [_ck(100, True), _ck(200, True), _ck(300, False)]})
+    assert chosen["step"] == 200 and "latest guard-passing" in why
+    chosen, _ = driver.latest_guard_passing({"checkpoints": [_ck(100, True), _ck(600, True)]})
+    assert chosen["step"] == 600
+
+
+def test_latest_guard_passing_selects_nothing_when_all_breach():
+    chosen, why = driver.latest_guard_passing({"checkpoints": [_ck(100, False), _ck(200, False)]})
+    assert chosen is None and "no checkpoint passes" in why
+
+
+def test_grad_accum_flag_validates_and_defaults_to_attempt1_behaviour():
+    trainer_src = (ROOT / "scripts/rollout_weighted_finetune.py").read_text()
+    assert '"--grad-accum", type=int, default=1' in trainer_src
+    assert "batch_size * args.grad_accum" in trainer_src   # effective batch recorded

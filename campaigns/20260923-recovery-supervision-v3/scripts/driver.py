@@ -58,7 +58,6 @@ PYTHON = "/nfs/hpc/share/sanchej7/Humanoid_Lite/venv/bin/python"
 ACTIVE = {"PENDING", "RUNNING", "REQUEUED", "CONFIGURING", "COMPLETING",
           "RESIZING", "SUSPENDED", "REQUEUE_HOLD", "REQUEUE_FED", "SIGNALING",
           "STAGE_OUT"}
-GRACE_MINUTES = 90
 # Jobs submitted before the driver existed, mapped onto the stage keys the
 # driver would have used. Without this a first tick would resubmit them.
 ADOPT = {"collect:iteration1": "iter1.collect", "compile:iteration1": "iter1.compile",
@@ -93,6 +92,17 @@ def summarize(states: list[str]) -> str:
     if all(s == "COMPLETED" for s in norm):
         return "completed"
     return "failed"
+
+
+def latest_guard_passing(training: dict) -> tuple[dict | None, str]:
+    """Plan-declarable rule: the LATEST checkpoint that passes the retention
+    guard, else none. Preregistered in the plan before any result exists; the
+    default final-else-step-200 rule assumed exactly three checkpoints."""
+    passing = [c for c in training.get("checkpoints", []) if c.get("heldout_gate")]
+    if not passing:
+        return None, "no checkpoint passes the retention guard"
+    chosen = max(passing, key=lambda c: int(c["step"]))
+    return chosen, f"latest guard-passing checkpoint: step_{int(chosen['step']):06d}"
 
 
 def select_checkpoint(training: dict) -> tuple[dict | None, str]:
@@ -312,6 +322,12 @@ class Driver:
             self.event(f"budget refuses {key}: {gpu_tasks} GPU tasks")
             self.state["stages"][key] = {"job_ids": [], "status": "skipped", "reason": "gpu task budget"}
             return None
+        if gpu_tasks and not self.within_gpu_hours():
+            # The hour cap was defined but never consulted; the task count was
+            # silently the only budget that bound.
+            self.event(f"budget refuses {key}: GPU-hour cap reached")
+            self.state["stages"][key] = {"job_ids": [], "status": "skipped", "reason": "gpu hour budget"}
+            return None
         logs = self.root / "logs"
         logs.mkdir(exist_ok=True)
         argv = [f"--chdir={self.root}",
@@ -471,7 +487,9 @@ class Driver:
                 return "wait"
             if not tj.is_file():
                 return self.conclude(k, "training failed twice")
-        chosen, why = select_checkpoint(json.loads(tj.read_text()))
+        rule = plan.get("checkpoint_rule", "default")
+        selector = latest_guard_passing if rule == "latest_guard_passing" else select_checkpoint
+        chosen, why = selector(json.loads(tj.read_text()))
         at["selection"] = why
         if chosen is None:
             return self.conclude(k, why)
@@ -497,6 +515,52 @@ class Driver:
         cand["reload_ok"] = bool(reload.get("finite") and reload.get("config_matches_baseline"))
         if not cand["reload_ok"]:
             return self.conclude(k, "candidate failed the evaluator-style reload")
+        if plan.get("fit_precondition"):
+            # Attempt 1 spent its 8-task screen on a checkpoint that predicted
+            # its own validated labels WORSE than the baseline (offline fit:
+            # 0.082 vs 0.078 rad). This gate is a tightening: no screen until
+            # the candidate beats the baseline on the labels it trained on.
+            fit_out = self.root / "audit" / f"fit_gate_{label}.json"
+            base_ckpt = self.manifest["baseline_checkpoint"]["path"]
+            fit_args = [C, f"baseline={base_ckpt},candidate={chosen['path']}", str(fit_out)]
+            if self.stage(f"{tag}.fit") is None:
+                self.submit(f"{tag}.fit", "offline_fit.sbatch", fit_args, gpu_tasks=1)
+                return "wait"
+            if self.stage_status(f"{tag}.fit") == "active":
+                return "wait"
+            if not fit_out.is_file():
+                if self.stage(f"{tag}.fit.retry1") is None:
+                    self.submit(f"{tag}.fit.retry1", "offline_fit.sbatch", fit_args, gpu_tasks=1)
+                    return "wait"
+                if self.stage_status(f"{tag}.fit.retry1") == "active":
+                    return "wait"
+                if not fit_out.is_file():
+                    return self.conclude(k, "fit gate job failed twice")
+            report = json.loads(fit_out.read_text())
+            fit = report["results"]
+            cand["fit"] = {lbl: {kk: round(vv["rms_first10_rad"], 5)
+                                 for kk, vv in block.items()
+                                 if isinstance(vv, dict) and "rms_first10_rad" in vv}
+                           for lbl, block in fit.items() if not lbl.startswith("_")}
+            cand["weight_change"] = fit.get("_weight_change_reloaded")
+            # The gate is computed by offline_fit.py itself: repair verification
+            # on the RELOADED weights plus multi-seed paired non-inferiority.
+            # An earlier draft demanded "strictly better than the baseline" on
+            # single-seed RMS, which the review showed only variance collapse
+            # could pass, because 86% of sampled labels are the baseline's own
+            # draws at identical observations.
+            gate = report.get("gate") or {}
+            cand["fit_gate"] = bool(gate.get("pass"))
+            cand["fit_gate_detail"] = {kk: gate.get(kk) for kk in
+                                       ("repair_ok", "noninferior_ok", "mean_paired_diff",
+                                        "diff_ci95", "baseline_seed_spread")}
+            if not cand["fit_gate"]:
+                why_bits = []
+                if not gate.get("repair_ok"):
+                    why_bits.append("repair verification failed (bf16 expert still frozen)")
+                if not gate.get("noninferior_ok"):
+                    why_bits.append("candidate is paired-inferior to the baseline beyond seed noise")
+                return self.conclude(k, "fit precondition failed: " + "; ".join(why_bits or ["no gate record"]))
         # screen: one H10 run
         r1 = f"{label}-r1"
         st = self.rollout_stage(f"{tag}.screen", "benchmark.sbatch", [C, chosen["path"], r1],
@@ -579,7 +643,9 @@ class Driver:
                 if status != "concluded":
                     if k == 2 and self.attempt_plan(2) is None:
                         concluded1 = parse(self.state["attempts"]["1"]["concluded_utc"])
-                        due = concluded1 + dt.timedelta(minutes=120)
+                        minutes = int(self.manifest.get("automation", {})
+                                      .get("attempt2_plan_deadline_minutes", 480))
+                        due = concluded1 + dt.timedelta(minutes=minutes)
                         if now() >= due:
                             finished = True
                         else:

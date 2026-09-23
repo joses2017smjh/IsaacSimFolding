@@ -237,6 +237,9 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=4242)
     ap.add_argument("--task", default="fold the garment on the table")
     ap.add_argument("--heldout-tolerance", type=float, default=1.10)
+    ap.add_argument("--grad-accum", type=int, default=1,
+                    help="micro-batches accumulated per optimizer step; the effective "
+                         "batch is batch_size x grad_accum with the same rollout/anchor mix")
     ap.add_argument("--retention-files", required=True,
                     help="comma-separated demonstration episodes held out by complete episode AND garment")
     ap.add_argument("--retention-frames", type=int, default=16,
@@ -255,6 +258,8 @@ def main() -> int:
         raise SystemExit("rollout fraction does not yield both sources in each batch")
     if args.checkpoint_every < 1:
         raise SystemExit("checkpoint interval must be positive")
+    if args.grad_accum < 1:
+        raise SystemExit("grad accumulation must be positive")
 
     heldout_paths = [Path(name).resolve() for name in sorted(glob.glob(args.heldout_glob))]
     if len(heldout_paths) < args.heldout_files:
@@ -284,8 +289,25 @@ def main() -> int:
     policy = SmolVLAPolicy.from_pretrained(str(args.policy_path)).to(device)
     pre, _post = make_pre_post_processors(policy_cfg=cfg, pretrained_path=str(args.policy_path))
     trainable, trainable_names = parameter_selection(policy, args.unfreeze)
+    # fp32 master weights. The action expert loads in bf16 (96.6M of the 99.9M
+    # boundary-unfreeze parameters), and AdamW at lr 1e-5 with bf16 weights and
+    # bf16 optimizer state rounds most updates to zero: measured on attempt 1,
+    # only 12.9% of the expert's bf16 weights changed AT ALL over 300 steps,
+    # while every fp32 tensor changed 100% of its entries. The raster
+    # adaptation that produced the baseline only worked because its vision
+    # tower is fp32. Casting the trainable parameters up gives fp32 weights,
+    # gradients and Adam state; the forward casts activations per layer, and
+    # save_pretrained then stores these tensors in fp32 (reloading quantises
+    # to bf16, keeping every delta above bf16 resolution -- standard
+    # mixed-precision practice: fp32 master, reduced-precision deploy).
+    dtype_before = {}
+    for name, param in policy.named_parameters():
+        if param.requires_grad and param.dtype != torch.float32:
+            dtype_before[name] = str(param.dtype)
+            param.data = param.data.float()
     optimizer = torch.optim.AdamW(trainable, lr=args.lr)
     n_params = sum(param.numel() for param in trainable)
+    n_upcast = sum(policy.get_parameter(name).numel() for name in dtype_before)
 
     def batch(x: np.ndarray, s: np.ndarray, a: np.ndarray, indices: np.ndarray):
         output: dict[str, Any] = {}
@@ -347,6 +369,10 @@ def main() -> int:
     records: list[dict[str, Any]] = []
     sampled_weight: list[float] = []
     sampled_advantage: list[float] = []
+    # Per-source interval means. Attempt 1 recorded only the final micro-step's
+    # combined loss, which cannot show whether the anchor or the recovery data
+    # carried the gradient -- the review's key open question.
+    interval_losses: dict[str, list[float]] = {"rollout": [], "anchor": []}
 
     def save(step: int, train_loss: float) -> None:
         checkpoint = args.out / "checkpoints" / f"step_{step:06d}"
@@ -376,6 +402,8 @@ def main() -> int:
             "config_discriminator": config_fix,
             "mean_sampled_awr_weight_since_last_checkpoint": float(np.mean(sampled_weight)),
             "mean_sampled_advantage_since_last_checkpoint": float(np.mean(sampled_advantage)),
+            "mean_rollout_loss_since_last_checkpoint": float(np.mean(interval_losses["rollout"])),
+            "mean_anchor_loss_since_last_checkpoint": float(np.mean(interval_losses["anchor"])),
         }
         if not record["heldout_gate"]:
             # A regression guard nothing ever reads is not a guard. Selection
@@ -388,21 +416,35 @@ def main() -> int:
         records.append(record)
         sampled_weight.clear()
         sampled_advantage.clear()
+        interval_losses["rollout"].clear()
+        interval_losses["anchor"].clear()
         print(json.dumps({"checkpoint": str(checkpoint), **record}, sort_keys=True), flush=True)
 
     policy.train()
     n_anchor = args.batch_size - n_rollout
     for step in range(1, args.steps + 1):
-        rollout_index = rng.choice(len(rollout_x), size=n_rollout, replace=True, p=probabilities)
-        anchor_index = rng.choice(len(anchor_x), size=n_anchor, replace=True)
-        loss = (loss_on(rollout_x, rollout_s, rollout_a, rollout_index) * n_rollout
-                + loss_on(anchor_x, anchor_s, anchor_a, anchor_index) * n_anchor) / args.batch_size
+        # One optimizer step averages grad_accum micro-batches, each with the
+        # same rollout/anchor mix, so the gradient is an average over
+        # batch_size x grad_accum samples instead of batch_size. Attempt 1's
+        # effective batch of 4 (2 supervised samples per source) was far below
+        # the 32 the original BC used and the 8 the raster adaptation used.
         optimizer.zero_grad(set_to_none=True)
-        loss.backward()
+        micro_losses = []
+        for _ in range(args.grad_accum):
+            rollout_index = rng.choice(len(rollout_x), size=n_rollout, replace=True, p=probabilities)
+            anchor_index = rng.choice(len(anchor_x), size=n_anchor, replace=True)
+            rollout_loss = loss_on(rollout_x, rollout_s, rollout_a, rollout_index)
+            anchor_loss = loss_on(anchor_x, anchor_s, anchor_a, anchor_index)
+            loss = (rollout_loss * n_rollout + anchor_loss * n_anchor) / (args.batch_size * args.grad_accum)
+            loss.backward()
+            micro_losses.append(float(loss) * args.grad_accum)
+            interval_losses["rollout"].append(float(rollout_loss))
+            interval_losses["anchor"].append(float(anchor_loss))
+            sampled_weight.extend(weights[rollout_index].tolist())
+            sampled_advantage.extend(rollout_advantage[rollout_index].tolist())
+        loss = sum(micro_losses) / len(micro_losses)
         torch.nn.utils.clip_grad_norm_(trainable, 1.0)
         optimizer.step()
-        sampled_weight.extend(weights[rollout_index].tolist())
-        sampled_advantage.extend(rollout_advantage[rollout_index].tolist())
         if step % args.checkpoint_every == 0 or step == args.steps:
             save(step, float(loss))
 
@@ -428,8 +470,25 @@ def main() -> int:
         "rollout_sampling": "with replacement, probability proportional to compiled lehome_fold.awr.weights",
         "steps": args.steps,
         "batch_size": args.batch_size,
+        "grad_accum": args.grad_accum,
+        "effective_batch": args.batch_size * args.grad_accum,
         "learning_rate": args.lr,
         "optimizer": "AdamW",
+        "optimizer_hyperparameters": {
+            "lr": args.lr,
+            "betas": list(optimizer.defaults["betas"]),
+            "weight_decay": optimizer.defaults["weight_decay"],
+            "eps": optimizer.defaults["eps"],
+            "grad_clip_norm": 1.0,
+            "note": ("PyTorch AdamW defaults, as every campaign fine-tune used; recorded "
+                     "explicitly because the original BC used weight_decay 1e-10 and "
+                     "betas (0.9, 0.95) -- a known, recorded difference, not a change"),
+        },
+        "master_weights": {
+            "upcast_parameters": int(n_upcast),
+            "original_dtypes": sorted(set(dtype_before.values())),
+            "why": "bf16 weights + bf16 Adam state at lr 1e-5 round most updates to zero",
+        },
         "seed": args.seed,
         "unfreeze": args.unfreeze,
         "trainable_parameter_count": n_params,

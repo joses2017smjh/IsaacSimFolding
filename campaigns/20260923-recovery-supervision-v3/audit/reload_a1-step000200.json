@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v3/training/a1/checkpoints/step_000200",
+  "checkpoint_model_sha256": "1d9561f5bd9bc2038aaf051fd07a856c1a7bfb48196fa6c6f28a097a210cab1c",
+  "config_matches_baseline": true,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v3/datasets/recovery.npz",
+  "action_shape": [
+    1,
+    12
+  ],
+  "action_sha256": "08c11f328eeb9dfe1794a5ee8ebc6a90d71f5c761e3989cef84a04d3962f180c",
+  "finite": true,
+  "device": "cuda"
+}

@@ -30,7 +30,13 @@ setting() {
   printf '%s' "$value"
 }
 init=$(jq -r '.baseline_checkpoint.path' "$M")
-if [ -n "$plan" ]; then init=$(jq -r '.init_checkpoint // empty' "$plan"); init=${init:-$(jq -r '.baseline_checkpoint.path' "$M")}; fi
+GRAD_ACCUM=1
+if [ -n "$plan" ]; then
+  init=$(jq -r '.init_checkpoint // empty' "$plan"); init=${init:-$(jq -r '.baseline_checkpoint.path' "$M")}
+  # A plan that declares grad_accum must actually get it; without this wiring
+  # the flag would silently default to 1 and rerun attempt 1's configuration.
+  GRAD_ACCUM=$(jq -r '.training.grad_accum // 1' "$plan")
+fi
 lh_torch "$campaign/scripts/rollout_weighted_finetune.py" \
   --policy-path "$init" \
   --rollout-dataset "$campaign/datasets/${dataset}.npz" \
@@ -47,4 +53,5 @@ lh_torch "$campaign/scripts/rollout_weighted_finetune.py" \
   --steps "$(setting steps)" --batch-size "$(setting batch_size)" \
   --rollout-fraction "$(setting rollout_fraction)" --lr "$(setting lr)" \
   --checkpoint-every "$(setting checkpoint_every)" --unfreeze "$(setting unfreeze)" \
+  --grad-accum "$GRAD_ACCUM" \
   --seed "$(setting seed)"

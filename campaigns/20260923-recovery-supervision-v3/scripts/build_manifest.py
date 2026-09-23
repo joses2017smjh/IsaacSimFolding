@@ -167,9 +167,19 @@ def main() -> int:
             "final_rows": final,
             "v2_frozen_test": "unchanged, not rerun",
         },
-        "budget": {"gpu_tasks": 65, "gpu_hours": 36.9,
+        "automation": {
+            "attempt2_plan_deadline_minutes": 480,
+            "note": ("if attempt 1 concludes without an improved candidate and no committed "
+                     "plans/attempt2.json appears within this window, the driver finalizes on "
+                     "the baseline; previously a 120-minute driver hardcode absent from the "
+                     "manifest")},
+        "amendments": ["amendments/2026-09-23-attempt2-budget.md"],
+        "budget": {"gpu_tasks": 78, "gpu_hours": 36.9,
                    "reserve": {"baseline_repeat": 8, "final_set": 16},
-                   "source": "unused portion of v2's allocation: 170-105 tasks, 45-8.1 GPU-hours",
+                   "source": ("unused portion of v2's allocation (170-105 tasks, 45-8.1 GPU-hours); "
+                              "65 -> 78 by the dated amendment: the original 65 could never fund the "
+                              "preregistered H50 confirmation leg (69 minimum), a design inconsistency "
+                              "predating any result"),
                    "rollout_timeout_seconds": {"benchmark": 1500, "recovery": 7000, "smoke": 1500,
                                                "collection": 1500, "boundary": 3000}},
         "second_attempt": "only from an explicit committed plan written from evidence; no default ladder",

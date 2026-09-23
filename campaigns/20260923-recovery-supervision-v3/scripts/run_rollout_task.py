@@ -149,7 +149,9 @@ def main() -> int:
                 f"immutable baseline checkpoint changed: altered={drifted} unpinned={missing}")
 
     dest = destination(root, args.phase, row, label, plan)
-    if dest.exists():
+    if dest.exists() and not args.dry_run:
+        # A dry run writes nothing, so an existing output is information for
+        # the caller (recorded below), not grounds to refuse an inspection.
         raise SystemExit(f"refusing to overwrite retained output {dest}")
     # v3 executes its own snapshot of the runner (with the recovery-search
     # mode); the v2 and pilot copies stay byte-identical to what they ran.
@@ -212,6 +214,7 @@ def main() -> int:
         "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     if args.dry_run:
+        request["destination_exists"] = dest.exists()
         print(json.dumps(request, indent=2))
         return 0
 

@@ -104,6 +104,7 @@ def main() -> int:
     base = root / ("smoke/recovery" if args.smoke else "recovery")
     attempts_by_row, sources = {}, []
     images, state, action, origin = [], [], [], []
+    prov_cols = {k: [] for k in ("root", "candidate", "horizon", "candidate_seed", "step_index")}
     for row in rows:
         d = base / row["id"]
         record = json.loads((d / "recovery.json").read_text())
@@ -117,11 +118,15 @@ def main() -> int:
                     raise SystemExit(f"{d}: example shapes invalid")
                 images.append(ex["images"]); state.append(ex["state"]); action.append(ex["action"])
                 origin += [f"branch:{row['id']}"] * n
+                for key in prov_cols:
+                    prov_cols[key].append(np.asarray(ex[key], dtype=np.int64))
         student = student_examples(d / "trajectory.npz", 50)
         n_student = 0 if student is None else len(student[2])
         if n_student:
             images.append(student[0]); state.append(student[1]); action.append(student[2])
             origin += [f"student:{row['id']}"] * n_student
+            for key in prov_cols:      # -1 marks a student example (no branch attempt)
+                prov_cols[key].append(np.full(n_student, -1, dtype=np.int64))
         sources.append({"id": row["id"], "garment": row["garment"], "pose_key": row["pose_key"],
                         "branch_examples": int(n), "student_settled_success": student is not None,
                         "student_examples": n_student,
@@ -143,7 +148,9 @@ def main() -> int:
     np.savez_compressed(
         args.out, images=images, state=state, action=action,
         awr_weight=np.ones(n, np.float32), advantage=np.zeros(n, np.float32), reward=np.ones(n, np.float32),
-        origin=np.asarray(origin), chunk=np.asarray(50, np.int32),
+        origin=np.asarray(origin),
+        **{k: np.concatenate(v) for k, v in prov_cols.items()},
+        chunk=np.asarray(50, np.int32),
         task=np.asarray(manifest["task_prompt"]), camera_keys=np.asarray(CAMERAS))
     args.provenance.parent.mkdir(parents=True, exist_ok=True)
     args.provenance.write_text(json.dumps({

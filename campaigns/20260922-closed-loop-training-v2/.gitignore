@@ -6,3 +6,11 @@
 /evaluation/
 *.pyc
 __pycache__/
+# Driver and Slurm runtime output: logs are regenerable and large; the
+# evidence they produce is captured in audit/, analysis/ and the ledger.
+/logs/
+/attempts/
+/ledger/ticks/
+/ledger/.driver.lock
+/ledger/*.tmp
+slurm-*.out

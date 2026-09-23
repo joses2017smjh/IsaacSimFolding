@@ -111,7 +111,8 @@ def load_episode(path: Path, chunk: int) -> tuple[dict, dict, np.ndarray, np.nda
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--trajectory-glob", required=True)
+    ap.add_argument("--trajectory-glob", required=True, action="append",
+                    help="repeatable; an expanded compile names each draw's directory")
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--provenance", type=Path, required=True)
     ap.add_argument("--csv", type=Path, required=True)
@@ -127,7 +128,8 @@ def main() -> int:
     args.beta, args.w_max, args.w_min = awr_cfg["beta"], awr_cfg["w_max"], awr_cfg["w_min"]
     if args.chunk != 50:
         raise SystemExit("this campaign is preregistered for the checkpoint's 50-action chunks")
-    paths = [Path(x).resolve() for x in sorted(glob.glob(args.trajectory_glob))]
+    paths = sorted({Path(x).resolve() for pattern in args.trajectory_glob
+                    for x in glob.glob(pattern)})
     if not paths:
         raise SystemExit(f"no trajectories match {args.trajectory_glob}")
     if args.out.exists() or args.provenance.exists() or args.csv.exists():

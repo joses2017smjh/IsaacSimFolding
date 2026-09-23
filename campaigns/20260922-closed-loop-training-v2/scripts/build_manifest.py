@@ -93,7 +93,13 @@ def pose_row(demos: dict, garment: str, local_key: int, seed: int, steps: int,
 def main() -> int:
     out = ROOT / "manifest.json"
     if out.exists():
-        raise SystemExit("refusing to mutate an existing frozen manifest")
+        raise SystemExit("refusing to mutate an existing frozen manifest; archive it to "
+                         "manifests/ first so every job's recorded commit stays resolvable")
+    archived = sorted((ROOT / "manifests").glob("manifest_*.json")) if (ROOT / "manifests").is_dir() else []
+    amendments = []
+    for path in sorted((ROOT / "amendments").glob("A*.json")):
+        amendments.append({"path": str(path.relative_to(ROOT)), "sha256": file_sha(path),
+                           "id": json.loads(path.read_text())["id"]})
 
     commit = git("rev-parse", "HEAD")
     sources = executed_sources()
@@ -183,6 +189,13 @@ def main() -> int:
         "schema_version": 1,
         "campaign": "20260922-closed-loop-training-v2",
         "supersedes": "20260922-closed-loop-training-v1 (pre-review draft, never launched)",
+        "protocol_version": 1 + len(archived),
+        "previous_manifests": [str(p.relative_to(ROOT)) for p in archived],
+        "amendments": amendments,
+        "amendment_rule": ("A protocol change is only ever made by a dated amendment recorded "
+                           "before the evidence it could bias. Amendments override the fields "
+                           "below where they conflict; the fields are left as originally frozen "
+                           "so the history of what was preregistered stays readable."),
         "objective": (
             "One bounded rollout-driven AWR iteration from the untouched BC baseline, "
             "measured on closed-loop folding rather than offline loss."),

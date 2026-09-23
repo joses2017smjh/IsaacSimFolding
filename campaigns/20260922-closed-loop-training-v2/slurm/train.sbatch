@@ -1,6 +1,10 @@
 #!/bin/bash
-# One fixed-seed 300-step 50/50 AWR-resampled rollout + raster-BC-anchor update
-# from the untouched baseline. Every constant comes from the frozen manifest.
+# Fixed-seed AWR-resampled rollout + raster-BC-anchor update. Iteration 1 uses
+# the frozen manifest; later iterations pass a resolved plan, which supplies the
+# initial checkpoint and any single changed training factor. Everything else
+# comes from the manifest.
+#
+#   train.sbatch CAMPAIGN SCOPE [PLAN]
 #SBATCH --job-name=lh-cl2-train
 #SBATCH --account=eecs
 #SBATCH --partition=gpu,ampere
@@ -13,6 +17,7 @@
 set -euo pipefail
 campaign=${1:?absolute campaign root}
 scope=${2:-iteration1}
+plan=${3:-}
 source "$campaign/slurm/_common.sh"
 lh_runtime "train_${scope}"
 M="$campaign/manifest.json"
@@ -25,8 +30,18 @@ fi
 lh_torch "$campaign/scripts/verify_sources.py" --campaign "$campaign" \
   --out "$campaign/audit/verify_sources_train_${scope}.json"
 
+# A plan value wins where present; the manifest supplies every default.
+setting() {
+  local key=$1 value=""
+  if [ -n "$plan" ]; then value=$(jq -r --arg k "$key" '.training[$k] // empty' "$plan"); fi
+  if [ -z "$value" ]; then value=$(jq -r --arg k "$key" '.training[$k]' "$M"); fi
+  printf '%s' "$value"
+}
+init=$(jq -r '.baseline_checkpoint.path' "$M")
+if [ -n "$plan" ]; then init=$(jq -r '.init_checkpoint' "$plan"); fi
+
 lh_torch "$campaign/scripts/rollout_weighted_finetune.py" \
-  --policy-path "$(jq -r '.baseline_checkpoint.path' "$M")" \
+  --policy-path "$init" \
   --rollout-dataset "$campaign/datasets/${scope}.npz" \
   --anchor-glob "$(jq -r '.training.anchor.glob' "$M")" \
   --anchor-files "$(jq -r '.training.anchor.files' "$M")" \
@@ -36,10 +51,10 @@ lh_torch "$campaign/scripts/rollout_weighted_finetune.py" \
   --heldout-frames "$(jq -r '.training.heldout.frames' "$M")" \
   --heldout-tolerance "$(jq -r '.training.heldout.tolerance' "$M")" \
   --out "$campaign/training/${scope}" \
-  --steps "$(jq -r '.training.steps' "$M")" \
-  --batch-size "$(jq -r '.training.batch_size' "$M")" \
-  --rollout-fraction "$(jq -r '.training.rollout_fraction' "$M")" \
-  --lr "$(jq -r '.training.lr' "$M")" \
-  --checkpoint-every "$(jq -r '.training.checkpoint_every' "$M")" \
-  --unfreeze "$(jq -r '.training.unfreeze' "$M")" \
-  --seed "$(jq -r '.training.seed' "$M")"
+  --steps "$(setting steps)" \
+  --batch-size "$(setting batch_size)" \
+  --rollout-fraction "$(setting rollout_fraction)" \
+  --lr "$(setting lr)" \
+  --checkpoint-every "$(setting checkpoint_every)" \
+  --unfreeze "$(setting unfreeze)" \
+  --seed "$(setting seed)"

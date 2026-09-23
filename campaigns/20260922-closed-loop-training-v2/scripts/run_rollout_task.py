@@ -39,7 +39,14 @@ def checkpoint_record(path: Path) -> dict[str, str]:
     return {name: digest(path / name) for name in required}
 
 
-def destination(root: Path, phase: str, row: dict, label: str) -> Path:
+def destination(root: Path, phase: str, row: dict, label: str,
+                plan: dict | None = None) -> Path:
+    if plan is not None:
+        # Iteration >= 2 collection. Rows come from a resolved, hashed plan and
+        # land in their own group so no compile glob can mix iterations.
+        k = int(plan["iteration"])
+        group = f"iteration{k}" if phase == "collection" else f"iteration{k}-expansion"
+        return root / "rollouts" / group / row["id"]
     if phase == "smoke":
         return root / "smoke" / "rollouts" / row["id"]
     if phase == "collection":
@@ -102,12 +109,17 @@ def main() -> int:
     ap.add_argument("--index", type=int, required=True)
     ap.add_argument("--checkpoint", default="", help="defaults to the immutable baseline")
     ap.add_argument("--label", default="baseline", help="safe output/checkpoint label")
+    ap.add_argument("--plan", type=Path, default=None,
+                    help="resolved iteration plan supplying collection rows (iteration >= 2)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     root = args.campaign.resolve()
     manifest = json.loads((root / "manifest.json").read_text())
-    rows = manifest[args.phase]
+    plan = json.loads(args.plan.read_text()) if args.plan else None
+    if plan is not None and args.phase not in ("collection", "collection_expansion"):
+        raise SystemExit("--plan only supplies collection rows")
+    rows = plan[args.phase] if plan is not None else manifest[args.phase]
     if not 0 <= args.index < len(rows):
         raise SystemExit(f"{args.phase} index {args.index} out of range")
     row = rows[args.index]
@@ -129,7 +141,7 @@ def main() -> int:
             raise SystemExit(
                 f"immutable baseline checkpoint changed: altered={drifted} unpinned={missing}")
 
-    dest = destination(root, args.phase, row, label)
+    dest = destination(root, args.phase, row, label, plan)
     if dest.exists():
         raise SystemExit(f"refusing to overwrite retained output {dest}")
     pilot = root.parent / "20260921-horizon-pilot"
@@ -174,6 +186,9 @@ def main() -> int:
         "checkpoint": {"path": str(checkpoint), "sha256": ckpt},
         "runner": {"path": str(runner), "sha256": digest(runner)},
         "campaign_commit": manifest["git"]["commit"],
+        "task_script_sha256": digest(Path(__file__).resolve()),
+        "plan": ({"path": str(args.plan.resolve()), "sha256": digest(args.plan.resolve()),
+                  "iteration": plan["iteration"]} if plan is not None else None),
         "command": command,
         "capture": capture,
         "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),

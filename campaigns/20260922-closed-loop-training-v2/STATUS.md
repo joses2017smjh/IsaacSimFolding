@@ -4,12 +4,14 @@
      every submission and every completed job. Everything under "Record" is
      append-only history. -->
 
+<!-- driver:status:begin -->
 | | |
 |---|---|
 | **Active job** | `21400641` collect (array 0-7) → `21400642` compile → `21400643` train |
 | **Latest result** | smoke `21400623` **PASSED** all 5 stages: rollout → compile → AWR update → checkpoint saved → reloaded, `config_matches_baseline: true`, finite action on CUDA |
 | **Blocker** | none |
 | **Next milestone** | collection gate verdict — if it passes, training runs; if not, one preregistered expansion draw |
+<!-- driver:status:end -->
 
 ## What this campaign is
 

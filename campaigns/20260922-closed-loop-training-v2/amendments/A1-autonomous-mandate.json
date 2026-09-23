@@ -1,0 +1,71 @@
+{
+  "id": "A1",
+  "recorded_utc": "2026-09-23T07:16:48Z",
+  "source": "user mandate of 2026-09-23 ('Autonomous completion mandate')",
+  "amends_manifest_commit": "d3422c9ee1b1795d7d46faee43dc7b6264823d8c",
+  "evidence_available_when_recorded": {
+    "collection_iteration1": "7 of 8 rows complete; terminal conditions 3/4 x4 (pants), 2/5 x2 (short tops); 0 settled successes",
+    "trained_candidates": "none",
+    "development_results_for_any_candidate": "none",
+    "frozen_test_results": "none",
+    "statement": "No trained checkpoint exists and no development or test outcome for any candidate has been observed. Every change below is therefore made blind to candidate performance."
+  },
+  "changes": {
+    "targets": {
+      "was": {"primary": "development H10 >= 4/8", "stretch": "development H10 >= 6/8 with no H50 regression"},
+      "now": {"primary": "development H10 settled >= 6/8", "stretch": "development H10 settled = 8/8",
+              "both_require": ["no H50 regression below the MATCHED baseline", "raster retention guard passes"]}
+    },
+    "iterations": {
+      "was": "one iteration, plus a second only if the first improved development and passed the retention guard",
+      "now": "up to three full collect-train-evaluate iterations; a disappointing iteration is diagnosed and the next changes exactly one major factor; bounded by the caps below, whichever binds first"
+    },
+    "baseline_development": {
+      "was": "reused from the horizon pilot (H10 0/8, H50 4/8)",
+      "now": "measured fresh under this campaign on the identical 16 development rows, so baseline and candidate share runner, sources and conditions",
+      "why": "the mandate requires matched baseline/candidate conditions, and the pilot itself recorded deformable-simulation replay drift, so run-to-run variation on identical seeds is not established to be zero. The pilot's 0/8 and 4/8 are kept as a reproducibility cross-check, not as the comparison."
+    },
+    "frozen_test": {
+      "was": "run for baseline and candidate after iteration 1",
+      "now": "reserved for the FINAL selected checkpoint and the baseline only; run once, after selection is complete; its results are never fed back into any training or selection decision"
+    },
+    "selection_across_iterations": {
+      "criterion": "development H10 settled successes",
+      "tie_break": ["development H50 settled successes", "mean development H10 terminal conditions", "lower raster held-out loss"],
+      "eligibility": ["raster retention guard passes", "development H50 >= matched baseline H50", "checkpoint reloads with config_matches_baseline and a finite action"],
+      "if_none_eligible": "retain the untouched baseline checkpoint"
+    },
+    "within_iteration_checkpoint_rule": {
+      "unchanged": "evaluate step_000300; fall back to step_000200 only if step_000300 breaches the retention guard",
+      "added_double_breach_case": "if step_000300 and step_000200 both breach, the iteration has no guard-passing candidate: nothing is evaluated and the breach becomes the diagnosis for the next iteration"
+    }
+  },
+  "budget_caps": {
+    "rationale": "The frozen manifest capped iteration 1 only. The mandate requires a conservative finite cap within the existing allocation (account eecs; partitions gpu, ampere, share) before further production submission. No resources are purchased and no allocation is increased.",
+    "max_gpu_tasks_total": 170,
+    "max_gpu_hours_total": 45,
+    "gpu_array_concurrency": 8,
+    "max_retries_per_rollout_row": 1,
+    "max_retries_per_training_job": 1,
+    "no_new_iteration_after_utc": "2026-09-24T18:00:00Z",
+    "campaign_hard_stop_utc": "2026-09-25T06:00:00Z",
+    "storage": {
+      "campaign_directory_max_gb": 60,
+      "stop_new_collection_if_filesystem_free_below_gb": 40,
+      "context": "/nfs/hpc/share is a SHARED filesystem measured at 90% used with 160 GB free on 2026-09-23; this campaign must not be the reason it fills"
+    },
+    "reserved_for_final_evaluation_gpu_tasks": 17
+  },
+  "automation": {
+    "driver": "scripts/driver.py, restartable and duplicate-safe; state in ledger/driver_state.json",
+    "progression": "each stage is followed by a dependent CPU tick job that re-runs the driver, which submits the next stage; a time-based watchdog tick recovers a crashed chain",
+    "next_iteration_choice": "an explicit committed plan (plans/iterationK.json) written from closed-loop evidence takes precedence; if none exists after a 90-minute grace period, the preregistered default rule in driver.py applies, so progression never waits on a chat prompt"
+  },
+  "unchanged": [
+    "all collection-signal gate thresholds (no loosening)",
+    "AWR constants beta=1.0, w_max=3.0, w_min=1e-6",
+    "the development and frozen-test row definitions and seeds",
+    "the prohibition on H50 self-oracle plans from student-visited roots as recovery labels",
+    "RECAP conditioning is not used"
+  ]
+}

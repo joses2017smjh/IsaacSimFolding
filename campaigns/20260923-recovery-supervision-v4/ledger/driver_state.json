@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-23T20:03:22Z",
+  "stages": {
+    "search.collect": {
+      "job_ids": [
+        "21402621"
+      ],
+      "submitted_utc": "2026-09-23T20:03:23Z",
+      "status": "submitted",
+      "gpu_tasks": 8
+    }
+  },
+  "attempts": {},
+  "baseline": {
+    "h10_runs": [
+      {
+        "rows": 8,
+        "valid": 8,
+        "settled": 2,
+        "ever": 3,
+        "mean_conditions": 3.0,
+        "invalid": [],
+        "source": "v2-campaign run"
+      },
+      {
+        "rows": 8,
+        "valid": 8,
+        "settled": 0,
+        "ever": 0,
+        "mean_conditions": 2.5,
+        "invalid": [],
+        "source": "v3-campaign run"
+      }
+    ],
+    "h50": {
+      "rows": 8,
+      "valid": 8,
+      "settled": 4,
+      "ever": 4,
+      "mean_conditions": 3.125,
+      "invalid": [],
+      "source": "v2-campaign run"
+    }
+  },
+  "search": null,
+  "final": {},
+  "ticks": {
+    "chain": "21402622",
+    "chain_deps": [
+      "21402621"
+    ],
+    "chain_begin": null,
+    "watchdog": "21402623"
+  },
+  "done": false,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-23T20:03:22Z",
+      "message": "pooled preregistered baseline loaded",
+      "h10": "2/16",
+      "h50": 4
+    },
+    {
+      "utc": "2026-09-23T20:03:23Z",
+      "message": "submitted search.collect -> 21402621",
+      "gpu_tasks": 8
+    }
+  ]
+}

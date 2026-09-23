@@ -18,9 +18,14 @@ Many `.md` files here are **historical records that were true when written**.
 
 | Live now | File |
 |---|---|
-| **Current campaign + next authorized action** | `campaigns/20260922-closed-loop-training-v1/STATUS.md` |
-| Its protocol and directory contract | `campaigns/20260922-closed-loop-training-v1/README.md` |
+| **Current campaign — active job, latest result, blocker, next milestone** | `campaigns/20260922-closed-loop-training-v2/STATUS.md` |
+| Its frozen protocol (budget, gates, selection rule, targets) | `campaigns/20260922-closed-loop-training-v2/manifest.json` |
+| Its order of operations | `campaigns/20260922-closed-loop-training-v2/README.md` |
 | Frozen predecessor, closed at `0e83a7b` | `campaigns/20260921-horizon-pilot/STATUS.md` |
+
+`20260922-closed-loop-training-v1` is a **superseded draft**. It was reviewed,
+found to have five correctness defects (§6.3-§6.7) and never launched. v2 is
+its repair, rebuilt from committed sources. Do not run v1.
 
 Historical — useful as evidence, **not** as instructions:
 `SESSION_STATUS.md` (Sep 20), `SESSION_STATUS_2026-09-19.md`, `README.md`
@@ -33,7 +38,7 @@ at job 21214241 while the cluster is now issuing 214xxxxx. The live records are
 per-campaign:
 
 ```
-campaigns/20260922-closed-loop-training-v1/ledger/slurm-jobs.json   # current, currently empty
+campaigns/20260922-closed-loop-training-v2/ledger/slurm-jobs.json   # current
 campaigns/20260921-horizon-pilot/audit/job_ledger.json              # frozen campaign
 campaigns/20260921-horizon-pilot/submissions.jsonl
 campaigns/20260921-horizon-pilot/analysis/*/slurm-jobs.json         # one per diagnostic
@@ -111,7 +116,7 @@ the RTX delegate which segfaults on this cluster), `policy_wrap.py` (hooks
 `model.embed_prefix` to tap VLA prefix features without a second forward),
 `value_head.py`, `storm_eval.py`, `storm_camera.py`.
 
-**The live closed-loop training path** (`campaigns/20260922-closed-loop-training-v1/`):
+**The live closed-loop training path** (`campaigns/20260922-closed-loop-training-v2/`):
 
 ```
 slurm/collect.sbatch   → scripts/run_rollout_task.py
@@ -170,6 +175,13 @@ The simulator half has no local run path. It needs `bhl.sif` + the Isaac Sim
 
 ### Queueing the closed-loop iteration
 
+**This section describes v1 and is superseded.** Use
+`campaigns/20260922-closed-loop-training-v2/README.md`, whose chain adds a
+source-verification preflight, a gate-enforcing compile that exits 4 on a
+degenerate signal, and separate development / frozen-test evaluation phases.
+
+<details><summary>superseded v1 chain</summary>
+
 `STATUS.md` names the smoke as the next authorized action. The chain, with the
 dependency structure the campaign expects (nothing below has been submitted):
 
@@ -190,8 +202,9 @@ exits 0, so the manifest, the pinned baseline SHAs, the runner path, the LeHome
 checkout and the asset config all resolve. Nothing above has been submitted.
 
 `afterok:$coll` is correct as written — `compile.sbatch` exits 2 on fewer than 8
-trajectories, so a partial collection must never reach the compiler. Record every
-job id in `ledger/slurm-jobs.json`; it is currently `"jobs": []`.
+trajectories, so a partial collection must never reach the compiler.
+
+</details>
 
 ---
 
@@ -233,8 +246,16 @@ job id in `ledger/slurm-jobs.json`; it is currently `"jobs": []`.
 
 ## 6. Code review, 2026-09-22
 
-Reviewed: the uncommitted working tree, `src/lehome_fold/`, and the live
-`20260922-closed-loop-training-v1` scripts. Nothing was submitted or committed.
+Reviewed: the uncommitted working tree, `src/lehome_fold/`, and the then-live
+`20260922-closed-loop-training-v1` scripts.
+
+**Status: all findings below are now fixed.** §6.2-§6.7 are repaired in
+`20260922-closed-loop-training-v2` (commit `d471cd1`), and §6.3 is fixed in
+`src/lehome_fold/awr.py` itself (commit `12ea6a5`). §6.1 is **deliberately not
+"fixed"**: the horizon pilot's manifest drift is a historical record, and
+rewriting it would hide the drift rather than report it. v2 instead pins its
+own sources from committed blobs and re-verifies them before every submission.
+The findings are kept here as the rationale for what v2 does differently.
 
 ### 6.1 Frozen-source hashes have drifted — one runner path is already broken
 

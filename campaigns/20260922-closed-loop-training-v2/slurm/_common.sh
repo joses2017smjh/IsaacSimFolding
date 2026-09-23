@@ -10,7 +10,13 @@ pilot="$repo/campaigns/20260921-horizon-pilot"
 
 lh_runtime() {
   runtime="$campaign/runtime/${SLURM_JOB_ID}_${1}"
-  mkdir -p "$runtime/home" "$runtime/cache" "$runtime/ov" "$runtime/nv" "$runtime/tmp"
+  # lehome-logs is bound over the frozen pilot's log directory below. LeHome's
+  # logger opens $LEHOME/logs/<timestamp>.log at import time and raises OSError
+  # on a read-only filesystem, which killed the first smoke. The pilot did not
+  # hit this because it bound its OWN campaign directory rw; this campaign
+  # binds only its own, so the pilot checkout is read-only here.
+  mkdir -p "$runtime/home" "$runtime/cache" "$runtime/ov" "$runtime/nv" \
+           "$runtime/tmp" "$runtime/lehome-logs"
   export APPTAINER_CACHEDIR="$runtime/apptainer-cache"
   libs=("$workspace"/venv/lib/python3.11/site-packages/isaacsim/extscache/omni.usd.libs-*)
   mask=()
@@ -22,6 +28,7 @@ lh_isaac() {
   apptainer exec --nv --cleanenv --home "$runtime/home" \
     --bind /nfs/hpc/share/sanchej7:/nfs/hpc/share/sanchej7:ro \
     --bind "$campaign:$campaign:rw" \
+    --bind "$runtime/lehome-logs:$pilot/external/lehome-challenge/logs:rw" \
     --env OMNI_KIT_ACCEPT_EULA=YES --env ACCEPT_EULA=Y \
     --env "XDG_CACHE_HOME=$runtime/cache" --env "OV_CACHE=$runtime/ov" \
     --env "CUDA_CACHE_PATH=$runtime/nv" --env "TMPDIR=$runtime/tmp" \

@@ -56,7 +56,11 @@ def executed_sources() -> list[str]:
     rels = []
     for directory in ("scripts", "slurm", "tests"):
         for path in sorted((ROOT / directory).rglob("*")):
-            if path.is_file() and path.suffix in (".py", ".sbatch"):
+            # .sh matters: slurm/_common.sh carries the actual apptainer
+            # invocation, bind mounts and PYTHONPATH. Leaving it unhashed
+            # would let the execution environment change without the manifest
+            # noticing -- which is most of what a source pin is for.
+            if path.is_file() and path.suffix in (".py", ".sbatch", ".sh"):
                 rels.append(str(path.relative_to(REPO)))
     for path in sorted((PILOT / "scripts" / "render").glob("*.py")):
         rels.append(str(path.relative_to(REPO)))

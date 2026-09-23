@@ -857,7 +857,20 @@ class Driver:
         _, tail = rest.split(end, 1)
         path.write_text(head + block + tail)
 
+    def refresh_stages(self) -> None:
+        """Re-query every stage still marked "submitted".
+
+        A stage whose outcome was read from its output file is never polled
+        again: reload retry 21400710 wrote its verdict, the iteration moved on,
+        and the stage read "submitted" -- so STATUS listed it as the active job
+        after the whole campaign had finished.
+        """
+        for key, st in self.state["stages"].items():
+            if st.get("status") == "submitted" and st.get("job_ids"):
+                self.stage_status(key)
+
     def describe(self) -> tuple[str, str, str, str]:
+        self.refresh_stages()
         live = [f"`{','.join(v['job_ids'])}` {k}" for k, v in self.state["stages"].items()
                 if v.get("status") == "submitted"]
         active = ", ".join(live) if live else ("none — campaign complete" if self.state["done"] else "none")
@@ -873,10 +886,16 @@ class Driver:
                              f"H50 {cand['dev']['h50']['settled']}/8")
             elif it.get("outcome"):
                 parts.append(f"iter {k}: {it['outcome']}")
+        final = self.state.get("final") or {}
+        if self.state["done"] and final.get("selected"):
+            test = final.get("test_baseline", {}).get("h10") if final["selected"]["label"] == DEV_LABEL \
+                else (final.get("test_candidate") or {}).get("h10")
+            parts.append(f"FINAL: `{final['selected']['label']}` delivered"
+                         + (f"; frozen test H10 {test['settled']}/{test['valid']}" if test else ""))
         latest = "; ".join(parts) or "iteration 1 in progress"
         blocker = self.state.get("stop_reason") or "none"
         if self.state["done"]:
-            nxt = "none — see FINAL_REPORT.md"
+            nxt = "none — campaign complete; REPORT.md (full account), FINAL_REPORT.md (driver summary)"
         elif best:
             nxt = f"best so far `{best['label']}`; next: continue loop / final frozen test"
         else:
@@ -886,7 +905,10 @@ class Driver:
     # ---- main loop
     def tick(self) -> None:
         if self.state["done"]:
-            self.event("tick: campaign already complete")
+            # Nothing to submit, but keep the four-field table true.
+            if not self.dry:
+                self.update_status(*self.describe())
+                self.save()
             return
         if now() > parse(self.caps["campaign_hard_stop_utc"]) and not self.state["final"]:
             self.state["stop_reason"] = "campaign hard stop reached"

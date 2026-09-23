@@ -296,3 +296,16 @@ def test_a_reused_collection_submits_nothing_and_moves_to_compile(tmp_path):
     assert collect["status"] == "reused" and collect["job_ids"] == []
     assert d.stage_status("iter3.collect") == "reused"      # never waited on
     assert d.state["stages"]["iter3.compile"]["job_ids"] == ["DRY-iter3.compile"]
+
+
+def test_a_stage_resolved_from_its_output_is_not_left_active(tmp_path, monkeypatch):
+    """Reload retry 21400710 stayed "submitted" after the campaign finished,
+    because its verdict was read from a file and its job never polled again."""
+    root = _temp_campaign(tmp_path, [])
+    d = driver.Driver(root, dry=True)
+    d.state["stages"]["iter1.reload.retry1"] = {"job_ids": ["21400710"], "status": "submitted"}
+    monkeypatch.setattr(driver, "job_states", lambda ids: {i: ["COMPLETED"] for i in ids})
+    d.state["done"] = True
+    active, _, _, nxt = d.describe()
+    assert "21400710" not in active and active.startswith("none")
+    assert d.state["stages"]["iter1.reload.retry1"]["status"] == "completed"

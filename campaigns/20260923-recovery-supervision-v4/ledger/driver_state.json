@@ -64,6 +64,14 @@
       "status": "completed",
       "gpu_tasks": 1,
       "finished_utc": "2026-09-23T22:45:07Z"
+    },
+    "a2.fit": {
+      "job_ids": [
+        "21403256"
+      ],
+      "submitted_utc": "2026-09-23T23:00:03Z",
+      "status": "submitted",
+      "gpu_tasks": 1
     }
   },
   "attempts": {
@@ -412,12 +420,12 @@
     }
   },
   "ticks": {
-    "chain": "21403132",
+    "chain": "21403257",
     "chain_deps": [
-      "21403131"
+      "21403256"
     ],
     "chain_begin": null,
-    "watchdog": "21402842"
+    "watchdog": "21403258"
   },
   "done": false,
   "stop_reason": null,
@@ -489,6 +497,23 @@
     {
       "utc": "2026-09-23T23:05:00Z",
       "message": "REOPENED by amendment 2026-09-23-fit-gate-instrument: the fit gate's norm-gain clause was a measured instrument artifact (see amendment); a2.fit cleared to re-run under the corrected gate"
+    },
+    {
+      "utc": "2026-09-23T22:59:36Z",
+      "message": "attempt 2 concluded: fit precondition failed: repair verification failed (bf16 expert still frozen)"
+    },
+    {
+      "utc": "2026-09-23T22:59:36Z",
+      "message": "campaign complete"
+    },
+    {
+      "utc": "2026-09-23T23:12:00Z",
+      "message": "REOPEN (second pass): the first reopen was undone by adopt() resurrecting a2.fit from its ledger entry; that entry is now marked driver-superseded and the stale gate output moved to attempts/"
+    },
+    {
+      "utc": "2026-09-23T23:00:03Z",
+      "message": "submitted a2.fit -> 21403256",
+      "gpu_tasks": 1
     }
   ],
   "final": {}

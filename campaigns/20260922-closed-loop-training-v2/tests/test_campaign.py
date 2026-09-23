@@ -161,3 +161,51 @@ def test_verify_sources_passes_against_the_frozen_manifest():
          "--campaign", str(ROOT), "--skip-checkpoint"],
         capture_output=True, text=True)
     assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+# ------------------------------------------------- checkpoint loadability
+def _finetune_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "rwf", ROOT / "scripts/rollout_weighted_finetune.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_saved_config_keeps_the_draccus_type_discriminator(tmp_path):
+    """Smoke 21400605 died here: save_pretrained drops `type`.
+
+    Without that key PreTrainedConfig.from_pretrained raises ParsingError and
+    every checkpoint the trainer writes is unloadable by the evaluator. The
+    failure only appears when a checkpoint is reloaded, which is after all the
+    collection and training GPU time has been spent.
+    """
+    rwf = _finetune_module()
+    base = tmp_path / "base.json"
+    saved = tmp_path / "saved.json"
+    base.write_text(json.dumps({"type": "smolvla", "n_obs_steps": 1, "device": "cuda"}))
+    saved.write_text(json.dumps({"n_obs_steps": 1, "device": "cuda"}))  # no "type"
+
+    info = rwf.restore_config_discriminator(base, saved)
+    assert info["restored_type"] == "smolvla"
+    assert json.loads(saved.read_text())["type"] == "smolvla"
+
+
+def test_config_restore_refuses_a_genuinely_changed_architecture(tmp_path):
+    """Restoring the baseline config must not paper over a real difference."""
+    rwf = _finetune_module()
+    base = tmp_path / "base.json"
+    saved = tmp_path / "saved.json"
+    base.write_text(json.dumps({"type": "smolvla", "chunk_size": 50}))
+    saved.write_text(json.dumps({"chunk_size": 10}))
+    with pytest.raises(ValueError, match="architecture changed"):
+        rwf.restore_config_discriminator(base, saved)
+
+
+def test_baseline_checkpoint_config_has_a_type_to_restore():
+    m = json.loads((ROOT / "manifest.json").read_text())
+    config = Path(m["baseline_checkpoint"]["path"]) / "config.json"
+    if not config.is_file():
+        pytest.skip("baseline checkpoint not present on this host")
+    assert json.loads(config.read_text()).get("type") == "smolvla"

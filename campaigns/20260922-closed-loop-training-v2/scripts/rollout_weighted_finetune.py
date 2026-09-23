@@ -56,6 +56,36 @@ def copy_processors(src: Path, dst: Path) -> None:
             shutil.copy2(source, target)
 
 
+def restore_config_discriminator(base_config: Path, saved_config: Path) -> dict:
+    """Put back the ``type`` key that ``save_pretrained`` drops.
+
+    SmolVLAPolicy.save_pretrained writes 48 of the baseline's 49 config keys
+    and omits ``type``. That key is draccus's choice-class discriminator, so
+    PreTrainedConfig.from_pretrained raises
+
+        ParsingError: Expected a dict with a 'type' key for PreTrainedConfig
+
+    and EVERY checkpoint this trainer saves is unloadable by the evaluator
+    path. Fine-tuning changes weights, not architecture, and the remaining 48
+    keys were verified byte-identical to the baseline's, so the baseline
+    config is restored wholesale rather than patched. That also makes the
+    boundary evaluator's baseline-config substitution a provable no-op
+    instead of something that has to be argued about.
+    """
+    base = json.loads(base_config.read_text())
+    saved = json.loads(saved_config.read_text()) if saved_config.is_file() else {}
+    drifted = sorted(k for k in saved if k in base and saved[k] != base[k])
+    if drifted:
+        raise ValueError(
+            f"saved config disagrees with the baseline on {drifted}; the "
+            f"architecture changed and restoring the baseline config would "
+            f"misdescribe this checkpoint")
+    if "type" not in base:
+        raise ValueError(f"{base_config} has no 'type' discriminator to restore")
+    shutil.copy2(base_config, saved_config)
+    return {"restored_type": base["type"], "keys_saved": len(saved), "keys_baseline": len(base)}
+
+
 def require_arrays(data: Any, *, source: str) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     required = {"images", "state", "action"}
     missing = required - set(data.files)
@@ -289,6 +319,8 @@ def main() -> int:
         checkpoint.mkdir()
         policy.save_pretrained(str(checkpoint))
         copy_processors(args.policy_path, checkpoint)
+        config_fix = restore_config_discriminator(
+            args.policy_path / "config.json", checkpoint / "config.json")
         heldout = heldout_loss()
         record = {
             "step": step,
@@ -299,6 +331,7 @@ def main() -> int:
             "heldout_gate": bool(heldout <= initial_holdout * args.heldout_tolerance),
             "heldout_tolerance": args.heldout_tolerance,
             "checkpoint_sha256": checkpoint_hashes(checkpoint),
+            "config_discriminator": config_fix,
             "mean_sampled_awr_weight_since_last_checkpoint": float(np.mean(sampled_weight)),
             "mean_sampled_advantage_since_last_checkpoint": float(np.mean(sampled_advantage)),
         }

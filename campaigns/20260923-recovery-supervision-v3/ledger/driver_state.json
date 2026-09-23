@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-23T14:40:43Z",
+  "stages": {
+    "baseline.h10": {
+      "job_ids": [
+        "21401701"
+      ],
+      "submitted_utc": "2026-09-23T14:40:43Z",
+      "status": "submitted",
+      "gpu_tasks": 8
+    },
+    "search.collect": {
+      "job_ids": [
+        "21401702"
+      ],
+      "submitted_utc": "2026-09-23T14:40:43Z",
+      "status": "submitted",
+      "gpu_tasks": 8
+    }
+  },
+  "attempts": {},
+  "baseline": null,
+  "search": null,
+  "final": {},
+  "ticks": {
+    "chain": "21401703",
+    "chain_deps": [
+      "21401701",
+      "21401702"
+    ],
+    "chain_begin": null,
+    "watchdog": "21401704"
+  },
+  "done": false,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-23T14:40:43Z",
+      "message": "submitted baseline.h10 -> 21401701",
+      "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-23T14:40:43Z",
+      "message": "submitted search.collect -> 21401702",
+      "gpu_tasks": 8
+    }
+  ]
+}

@@ -92,9 +92,12 @@
       "gpu_tasks": 8
     },
     "a2.h50": {
-      "job_ids": [],
-      "status": "skipped",
-      "reason": "gpu task budget"
+      "job_ids": [
+        "21403388"
+      ],
+      "submitted_utc": "2026-09-23T23:38:25Z",
+      "status": "submitted",
+      "gpu_tasks": 8
     }
   },
   "attempts": {
@@ -462,12 +465,13 @@
     }
   },
   "ticks": {
-    "chain": "21403369",
+    "chain": "21403389",
     "chain_deps": [
-      "21403368"
+      "21403368",
+      "21403388"
     ],
     "chain_begin": null,
-    "watchdog": "21403258"
+    "watchdog": "21403390"
   },
   "done": false,
   "stop_reason": null,
@@ -570,6 +574,15 @@
     {
       "utc": "2026-09-23T23:30:09Z",
       "message": "budget refuses a2.h50: 8 GPU tasks"
+    },
+    {
+      "utc": "2026-09-23T23:38:21Z",
+      "message": "a2.h50 'skipped' stage cleared per amendment 2026-09-23-task-proxy (task proxy 60 -> 72, GPU-hours unchanged at 28.0)"
+    },
+    {
+      "utc": "2026-09-23T23:38:25Z",
+      "message": "submitted a2.h50 -> 21403388",
+      "gpu_tasks": 8
     }
   ],
   "final": {}

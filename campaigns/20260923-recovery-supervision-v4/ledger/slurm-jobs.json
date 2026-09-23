@@ -266,6 +266,17 @@
         "start": "2026-09-23T16:30:16",
         "end": "2026-09-23T16:34:51"
       }
+    },
+    {
+      "job_id": "21403388",
+      "phase": "a2.h50",
+      "script": "slurm/benchmark.sbatch",
+      "gpu_tasks": 8,
+      "submitted_by": "driver",
+      "manifest_commit": "7a0b6677114256726fa9bb98270d7349b82691d8",
+      "submitted_utc": "2026-09-23T23:38:25Z",
+      "state": "submitted",
+      "array": "1,3,5,7,9,11,13,15"
     }
   ],
   "support_jobs": [

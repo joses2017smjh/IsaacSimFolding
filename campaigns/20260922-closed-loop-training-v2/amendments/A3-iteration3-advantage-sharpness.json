@@ -1,0 +1,38 @@
+{
+  "id": "A3",
+  "recorded_utc": "2026-09-23T08:49:41Z",
+  "evidence_available_when_recorded": {
+    "matched_baseline_development": {"h10": "2/8 (mean conditions 3.000)", "h50": "4/8 (3.125)"},
+    "iter1_step000300": {"h10": "0/8 (2.125)", "h50": "4/8 (3.250)", "eligible": true, "improves": false},
+    "iter2_step000300": {"h10": "0/8 (2.500)", "h50": "3/8 (3.125)", "eligible": false,
+                         "ineligible_because": "H50 regression: 3 < matched baseline 4"},
+    "iteration3_data": "no new rollout; iteration 3 reuses iteration 2's 16 trajectories",
+    "frozen_test": "not run and not looked at"
+  },
+  "a2_prediction_resolved": {
+    "prediction": "An H10 gain on P_B/P_C rows supports plan-continuity transfer; no H10 gain, or a further drop, rules the factor out.",
+    "outcome": "H10 mean conditions by pose type, baseline -> iter2: P_A 3.00 -> 2.33, P_B 3.00 -> 3.00, P_C 3.00 -> 2.33. No gain on P_B/P_C. The factor is ruled out as realized.",
+    "caveat": "The realized success density was 2/16 (12.5%), not the ~60% the development garments' H50 record predicted: on garments 4/5/6/8 the P_B/P_C rows mostly stopped at 3/4. The test was weaker than designed. The baseline's H50 competence is itself garment-specific (development garments 8/10 on P_B/P_C; collection garments at most 1/10 on the same poses)."
+  },
+  "diagnosis": {
+    "both_iterations_learned_mostly_from_failures": "Iteration 1's collection had no success: 100% of the sampling mass was failure. Iteration 2's rewards were [1.0 x2, 0.75 x6, 0.5 x4, 0.25 x4]; with beta=1 and w_max=3 the two successes were pinned at the cap (3.0) while each 3/4 failure got exp(0.63)=1.88, so the six 3/4 failures carried 54% of the mass and the successes 28.6%. The cap made live by the AWR fix bound on exactly the two episodes that should have dominated.",
+    "corroboration": "Development P_B fell from 4/4 to 3/4 at H50 after training on the four P_B collection rows, all of which scored exactly 3/4.",
+    "shared_effect": "Both updates degraded H10 (mean conditions 3.000 -> 2.125, 2.500) and left H50 intact (3.125 -> 3.250, 3.125). H10 replans 60 times an episode against H50's 12, so it is the regime most exposed to predictions learned from failure continuations."
+  },
+  "decision": {
+    "iteration": 3,
+    "factor_changed": "advantage sharpness: how strongly AWR concentrates sampling mass on successful rollouts",
+    "constants": {"beta": {"from": 1.0, "to": 0.5}, "w_max": {"from": 3.0, "to": 20.0}},
+    "why_both_constants": "They are one mechanism. With w_max=3, lowering beta makes the imbalance worse: the 3/4 failures also reach the cap, and success mass falls below 28.6% (pinned by a test). Raising the cap alone gives 41% success mass -- still failure-majority, which would not test the hypothesis. beta=0.5 with w_max=20 gives 63% success mass on iteration 2's exact rewards.",
+    "held_fixed": ["the rollout data: iteration 2's 16 trajectories, reused, so this is a clean comparison against iter2-step000300", "initial checkpoint: the untouched baseline", "training: 300 steps, lr 1e-5, batch 4, 50% rollout / 50% raster anchor, boundary unfreeze, seed 4242", "every gate threshold", "the development rows and the frozen test set"],
+    "gate_on_new_constants": "4 distinct rewards, advantage std 0.248, episode ESS 4.58 (floor 3, ceiling 15), sample ESS fraction about 0.29 (ceiling 0.95). This is a MORE concentrated regime than iteration 2's (ESS 10.7), not a loosened one."
+  },
+  "post_hoc_disclosure": "Amendment A1 declared the AWR constants unchanged before any data existed. A3 changes them knowing two candidates' development results. That is recorded here as a post-hoc, evidence-driven change. It is one change, made once, with one candidate evaluated under the unchanged within-iteration selection rule; the frozen test set, still unseen, is the confirmation.",
+  "expected_outcome_and_precedent": "About 220 unique success frames (2 episodes x 111) drawn roughly 380 times over 300 steps, with a 50% raster anchor. The pilot's boundary-replay fitted 2 H50 states over 300 steps, cut first-replan error 73-90%, and still failed closed-loop. This is a fairer version -- 2 full episodes rather than 2 states -- but the precedent is against it.",
+  "discriminating_prediction": "If development H10 mean conditions rise above the baseline's 3.000, or settled H10 exceeds 2/8 without an H50 regression, success-concentrated AWR can move H10 at this scale. If not, the campaign's finding is that AWR importance resampling from a ~12%-success policy on 16 rollouts cannot improve H10, whatever the horizon, class or weighting: the mechanism needs more successful trajectories, or a within-episode value signal, than this policy produces on its own.",
+  "reporting_commitments": {
+    "retention_guard_is_vacuous_in_practice": "Held-out raster loss fell 35-43% under every training run because the anchor and the held-out set share a distribution (episode-start frames) and the anchor is half of every batch. The guard has never come close to binding, so step_000300 has been selected every time. The matched H50 closed-loop check is what actually caught a regression (iteration 2).",
+    "metric_at_n8": "Settled counts on 8 rows are within observed run-to-run noise (the same baseline scored 0/8 and 2/8 at H10 on identical seeds). H10 mean terminal conditions is the more informative development trend and is reported alongside."
+  },
+  "unchanged": ["targets (A1)", "budget caps (A1)", "gate thresholds", "within-iteration selection rule", "frozen test reserved for the final checkpoint", "RECAP not used", "the H50 self-oracle prohibition"]
+}

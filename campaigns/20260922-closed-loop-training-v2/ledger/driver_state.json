@@ -69,8 +69,45 @@
         "21400812"
       ],
       "submitted_utc": "2026-09-23T07:58:32Z",
-      "status": "submitted",
-      "gpu_tasks": 16
+      "status": "completed",
+      "gpu_tasks": 16,
+      "finished_utc": "2026-09-23T08:14:43Z"
+    },
+    "iter2.compile": {
+      "job_ids": [
+        "21400892"
+      ],
+      "submitted_utc": "2026-09-23T08:14:43Z",
+      "status": "completed",
+      "gpu_tasks": 0,
+      "finished_utc": "2026-09-23T08:16:35Z"
+    },
+    "iter2.train": {
+      "job_ids": [
+        "21400898"
+      ],
+      "submitted_utc": "2026-09-23T08:16:35Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T08:22:02Z"
+    },
+    "iter2.reload": {
+      "job_ids": [
+        "21400907"
+      ],
+      "submitted_utc": "2026-09-23T08:22:02Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "finished_utc": "2026-09-23T08:23:03Z"
+    },
+    "iter2.evaluate": {
+      "job_ids": [
+        "21400910"
+      ],
+      "submitted_utc": "2026-09-23T08:23:04Z",
+      "status": "completed",
+      "gpu_tasks": 16,
+      "finished_utc": "2026-09-23T08:39:12Z"
     }
   },
   "iterations": {
@@ -126,7 +163,67 @@
     },
     "2": {
       "phase": "planning",
-      "plan_sha256": "15572b3c32cd5c662e1d7504d4dfb2f3ed278bc4860368ff3d34153a0c78fc63"
+      "plan_sha256": "15572b3c32cd5c662e1d7504d4dfb2f3ed278bc4860368ff3d34153a0c78fc63",
+      "gate": {
+        "scope": "iteration2",
+        "rewards": [
+          0.25,
+          0.25,
+          0.5,
+          0.5,
+          1.0,
+          0.25,
+          1.0,
+          0.5,
+          0.75,
+          0.25,
+          0.5,
+          0.75,
+          0.75,
+          0.75,
+          0.75,
+          0.75
+        ],
+        "episode_ess": 10.690079666126639,
+        "unmet": []
+      },
+      "selection": "step_000300 passes the raster retention guard",
+      "candidate": {
+        "label": "iter2-step000300",
+        "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260922-closed-loop-training-v2/training/iteration2/checkpoints/step_000300",
+        "step": 300,
+        "heldout_gate": true,
+        "heldout_loss": 0.08302102657034993,
+        "heldout_loss_baseline": 0.13325396389700472,
+        "reload_ok": true,
+        "dev": {
+          "h10": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 0,
+            "ever": 0,
+            "mean_conditions": 2.5,
+            "invalid": []
+          },
+          "h50": {
+            "rows": 8,
+            "valid": 8,
+            "settled": 3,
+            "ever": 4,
+            "mean_conditions": 3.125,
+            "invalid": []
+          }
+        },
+        "ineligible_because": [
+          "H50 regression: 3 < matched baseline 4"
+        ],
+        "improves_h10_over_baseline": false
+      },
+      "concluded_utc": "2026-09-23T08:39:13Z",
+      "outcome": "evaluated"
+    },
+    "3": {
+      "phase": "planning"
     }
   },
   "baseline_dev": {
@@ -150,11 +247,9 @@
   "best": null,
   "final": {},
   "ticks": {
-    "chain": "21400813",
-    "chain_deps": [
-      "21400812"
-    ],
-    "chain_begin": null,
+    "chain": "21400984",
+    "chain_deps": [],
+    "chain_begin": "2026-09-23T10:09:13Z",
     "watchdog": "21400762"
   },
   "done": false,
@@ -189,6 +284,30 @@
       "utc": "2026-09-23T07:58:32Z",
       "message": "submitted iter2.collect -> 21400812",
       "gpu_tasks": 16
+    },
+    {
+      "utc": "2026-09-23T08:14:43Z",
+      "message": "submitted iter2.compile -> 21400892",
+      "gpu_tasks": 0
+    },
+    {
+      "utc": "2026-09-23T08:16:35Z",
+      "message": "submitted iter2.train -> 21400898",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T08:22:02Z",
+      "message": "submitted iter2.reload -> 21400907",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-23T08:23:04Z",
+      "message": "submitted iter2.evaluate -> 21400910",
+      "gpu_tasks": 16
+    },
+    {
+      "utc": "2026-09-23T08:39:13Z",
+      "message": "iteration 2 concluded: evaluated"
     }
   ]
 }

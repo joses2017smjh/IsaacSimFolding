@@ -255,3 +255,19 @@ def test_begin_times_are_relative_so_the_cluster_time_zone_cannot_shift_them():
     assert text.startswith("now+")
     assert 7190 <= int(text[4:]) <= 7200
     assert driver.relative_begin(driver.now() - driver.dt.timedelta(hours=1)) == "now+0"
+
+
+def test_a_lock_held_by_a_dead_slurm_job_is_broken_immediately(tmp_path, monkeypatch):
+    """A SIGTERM'd tick leaves its lock; waiting out a timer stalls the campaign."""
+    path = tmp_path / ".lock"
+    path.write_text(json.dumps({"host": "cn-x", "pid": 1, "slurm_job_id": "21400711",
+                                "time": __import__("time").time(), "utc": "now"}))
+    monkeypatch.setattr(driver, "job_states", lambda ids: {i: ["CANCELLED by 1"] for i in ids})
+    with driver.Lock(path):
+        assert json.loads(path.read_text())["pid"] != 1     # we now hold it
+    monkeypatch.setattr(driver, "job_states", lambda ids: {i: ["RUNNING"] for i in ids})
+    path.write_text(json.dumps({"host": "cn-x", "pid": 1, "slurm_job_id": "9",
+                                "time": __import__("time").time(), "utc": "now"}))
+    with pytest.raises(SystemExit):
+        with driver.Lock(path):
+            pass

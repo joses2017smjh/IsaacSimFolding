@@ -48,7 +48,9 @@ GRACE_MINUTES = 90
 # driver would have used. Without this a first tick would resubmit them.
 ADOPT = {"collect:iteration1": "iter1.collect", "compile:iteration1": "iter1.compile",
          "train:iteration1": "iter1.train"}
-LOCK_STALE_SECONDS = 45 * 60
+# A tick's Slurm allocation is 20 minutes, so any lock older than this is
+# certainly abandoned even when its holder cannot be checked directly.
+LOCK_STALE_SECONDS = 25 * 60
 DEV_LABEL = "baseline"
 
 
@@ -908,19 +910,49 @@ class Driver:
 
 
 class Lock:
+    """Exclusive tick lock that recognises a dead holder immediately.
+
+    A tick killed mid-run (tick 21400711 was, by SIGTERM) cannot remove its
+    lock, and a purely time-based rule would then block every tick for the
+    full staleness window. The lock records the holder's Slurm job id, or its
+    host and pid when run by hand, and is broken as soon as that holder is
+    provably gone.
+    """
+
     def __init__(self, path: Path):
         self.path = path
+
+    def holder_alive(self) -> bool:
+        try:
+            info = json.loads(self.path.read_text())
+        except (ValueError, OSError):
+            return time.time() - self.path.stat().st_mtime < LOCK_STALE_SECONDS
+        if time.time() - float(info.get("time", 0)) > LOCK_STALE_SECONDS:
+            return False
+        job = info.get("slurm_job_id")
+        if job:
+            verdict = summarize([s for v in job_states([job]).values() for s in v])
+            return verdict in ("active", "unknown")
+        if info.get("host") == socket.gethostname():
+            try:
+                os.kill(int(info["pid"]), 0)
+            except ProcessLookupError:
+                return False
+            except PermissionError:
+                return True
+        return True
 
     def __enter__(self):
         try:
             fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
-            age = time.time() - self.path.stat().st_mtime
-            if age < LOCK_STALE_SECONDS:
-                raise SystemExit(f"driver locked by {self.path.read_text().strip()} ({age:.0f}s); exiting")
-            self.path.unlink()
+            if self.holder_alive():
+                raise SystemExit(f"driver locked by {self.path.read_text().strip()}; exiting")
+            self.path.unlink(missing_ok=True)
             fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        os.write(fd, f"{socket.gethostname()} pid {os.getpid()} {stamp()}".encode())
+        os.write(fd, json.dumps({"host": socket.gethostname(), "pid": os.getpid(),
+                                 "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
+                                 "time": time.time(), "utc": stamp()}).encode())
         os.close(fd)
         return self
 

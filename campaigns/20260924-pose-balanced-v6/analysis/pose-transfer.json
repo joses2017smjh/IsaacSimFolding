@@ -1,0 +1,252 @@
+{
+  "method": "development poses grouped by match_pose identity (pose keys map to different poses on different garments); v4 search rows mapped the same way; v5's 64 matched episodes",
+  "poses": {
+    "P_A": {
+      "dev_rows": [
+        "dev00",
+        "dev04",
+        "dev06"
+      ],
+      "v4_supply": {
+        "rows": [
+          {
+            "id": "search_pant_short_seen_4_key0",
+            "settled": 9,
+            "attempts": 48
+          },
+          {
+            "id": "search_pant_short_seen_5_key0",
+            "settled": 0,
+            "attempts": 48
+          },
+          {
+            "id": "search_pant_short_seen_6_key0",
+            "settled": 6,
+            "attempts": 48
+          },
+          {
+            "id": "search_pant_short_seen_8_key0",
+            "settled": 8,
+            "attempts": 48
+          }
+        ],
+        "settled": 23,
+        "attempts": 192,
+        "samples": 838,
+        "corpus_share": 0.28
+      },
+      "v5_matched": {
+        "baseline_H10": {
+          "settled": "3/6",
+          "condition_failures": {
+            "condition_2": 3,
+            "condition_1": 1
+          },
+          "mean_margin_cm": {
+            "condition_1": 2.12,
+            "condition_2": -2.23,
+            "condition_3": 4.4,
+            "condition_4": 5.76
+          }
+        },
+        "baseline_H50": {
+          "settled": "0/6",
+          "condition_failures": {
+            "condition_1": 3,
+            "condition_2": 6,
+            "condition_3": 3
+          },
+          "mean_margin_cm": {
+            "condition_1": -1.1,
+            "condition_2": -9.16,
+            "condition_3": -4.94,
+            "condition_4": 4.67
+          }
+        },
+        "candidate_H10": {
+          "settled": "2/6",
+          "condition_failures": {
+            "condition_2": 3,
+            "condition_1": 2,
+            "condition_3": 1
+          },
+          "mean_margin_cm": {
+            "condition_1": 0.13,
+            "condition_2": -1.53,
+            "condition_3": 4.11,
+            "condition_4": 5.95
+          }
+        },
+        "candidate_H50": {
+          "settled": "3/6",
+          "condition_failures": {
+            "condition_1": 2,
+            "condition_2": 2
+          },
+          "mean_margin_cm": {
+            "condition_1": -0.48,
+            "condition_2": 1.63,
+            "condition_3": 3.38,
+            "condition_4": 4.53
+          }
+        }
+      }
+    },
+    "P_B": {
+      "dev_rows": [
+        "dev01",
+        "dev03"
+      ],
+      "v4_supply": {
+        "rows": [
+          {
+            "id": "search_pant_short_seen_6_key2",
+            "settled": 7,
+            "attempts": 48
+          },
+          {
+            "id": "search_pant_short_seen_8_key2",
+            "settled": 7,
+            "attempts": 48
+          }
+        ],
+        "settled": 14,
+        "attempts": 96,
+        "samples": 580,
+        "corpus_share": 0.194
+      },
+      "v5_matched": {
+        "baseline_H10": {
+          "settled": "1/4",
+          "condition_failures": {
+            "condition_1": 3
+          },
+          "mean_margin_cm": {
+            "condition_1": -3.19,
+            "condition_2": 4.64,
+            "condition_3": 4.58,
+            "condition_4": 6.01
+          }
+        },
+        "baseline_H50": {
+          "settled": "3/4",
+          "condition_failures": {
+            "condition_1": 1
+          },
+          "mean_margin_cm": {
+            "condition_1": 3.89,
+            "condition_2": 6.22,
+            "condition_3": 3.73,
+            "condition_4": 5.67
+          }
+        },
+        "candidate_H10": {
+          "settled": "0/4",
+          "condition_failures": {
+            "condition_1": 4,
+            "condition_2": 2
+          },
+          "mean_margin_cm": {
+            "condition_1": -3.2,
+            "condition_2": -1.3,
+            "condition_3": 3.63,
+            "condition_4": 5.6
+          }
+        },
+        "candidate_H50": {
+          "settled": "0/4",
+          "condition_failures": {
+            "condition_1": 4,
+            "condition_2": 2
+          },
+          "mean_margin_cm": {
+            "condition_1": -3.48,
+            "condition_2": -0.72,
+            "condition_3": 4.21,
+            "condition_4": 6.08
+          }
+        }
+      }
+    },
+    "P_C": {
+      "dev_rows": [
+        "dev02",
+        "dev05",
+        "dev07"
+      ],
+      "v4_supply": {
+        "rows": [
+          {
+            "id": "search_pant_short_seen_4_key1",
+            "settled": 37,
+            "attempts": 48
+          },
+          {
+            "id": "search_pant_short_seen_5_key1",
+            "settled": 7,
+            "attempts": 48
+          }
+        ],
+        "settled": 44,
+        "attempts": 96,
+        "samples": 1572,
+        "corpus_share": 0.526
+      },
+      "v5_matched": {
+        "baseline_H10": {
+          "settled": "1/6",
+          "condition_failures": {
+            "condition_1": 3,
+            "condition_2": 4,
+            "condition_3": 1
+          },
+          "mean_margin_cm": {
+            "condition_1": 1.21,
+            "condition_2": -2.13,
+            "condition_3": 2.31,
+            "condition_4": 5.96
+          }
+        },
+        "baseline_H50": {
+          "settled": "4/6",
+          "condition_failures": {
+            "condition_1": 2,
+            "condition_2": 2
+          },
+          "mean_margin_cm": {
+            "condition_1": 3.4,
+            "condition_2": -0.76,
+            "condition_3": 6.38,
+            "condition_4": 5.86
+          }
+        },
+        "candidate_H10": {
+          "settled": "6/6",
+          "condition_failures": {},
+          "mean_margin_cm": {
+            "condition_1": 5.12,
+            "condition_2": 2.82,
+            "condition_3": 6.31,
+            "condition_4": 6.57
+          }
+        },
+        "candidate_H50": {
+          "settled": "4/6",
+          "condition_failures": {
+            "condition_1": 1,
+            "condition_2": 1
+          },
+          "mean_margin_cm": {
+            "condition_1": 3.47,
+            "condition_2": 1.48,
+            "condition_3": 3.3,
+            "condition_4": 6.5
+          }
+        }
+      }
+    }
+  },
+  "finding": "the candidate's change tracks per-pose supervision density: P_C (53% of the corpus, 44 settled branches) 1/6 -> 6/6 at H10; P_A (28%, 23) mixed; P_B (19%, 14 branches from 2 rows) 0/8 vs the baseline's 4/8 over H10 and H50, every failure on checker condition 1. The runner's 'never_approached_cloth' category is not used: successful folds also stay >= 5 cm from the cloth by its last-link metric.",
+  "decision": "supply dense validated supervision at P_B (only 2 exact-pose training rows exist: Seen_6 key 2, Seen_8 key 2 -> 4 fresh seeds each, early roots) and P_A (4 rows x 2 seeds), gate it per pose, then train a2's recipe unchanged on a pose-balanced corpus",
+  "rule_arithmetic": "against a matched baseline of 5/16 at H10 the rule needs 11/16 (p = 0.038); a2 reached 8/16, so P_A and P_B must both improve while P_C holds"
+}

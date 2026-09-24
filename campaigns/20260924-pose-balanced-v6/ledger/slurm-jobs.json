@@ -33,6 +33,50 @@
       "submitted_utc": "2026-09-24T18:49:11Z",
       "state": "submitted",
       "array": null
+    },
+    {
+      "job_id": "21409937",
+      "phase": "pb1.reload",
+      "script": "slurm/reload.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
+      "submitted_utc": "2026-09-24T19:16:27Z",
+      "state": "submitted",
+      "array": null
+    },
+    {
+      "job_id": "21409947",
+      "phase": "pb1.fit",
+      "script": "slurm/offline_fit.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
+      "submitted_utc": "2026-09-24T19:18:26Z",
+      "state": "submitted",
+      "array": null
+    },
+    {
+      "job_id": "21410268",
+      "phase": "run1",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
+      "submitted_utc": "2026-09-24T19:36:23Z",
+      "state": "submitted",
+      "array": "0-31"
+    },
+    {
+      "job_id": "21410269",
+      "phase": "run2",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
+      "submitted_utc": "2026-09-24T19:36:23Z",
+      "state": "submitted",
+      "array": "0-31"
     }
   ]
 }

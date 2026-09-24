@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/training/pb1/checkpoints/step_000200",
+  "checkpoint_model_sha256": "cfdbe3834b2876964bea87990d115f9197263121e2914b2355f31ee120c60d17",
+  "config_matches_baseline": true,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/datasets/recovery.npz",
+  "action_shape": [
+    1,
+    12
+  ],
+  "action_sha256": "4ade4d90b2a14c28c182b0a8347cecd29296349c83301d870862a39ce9b33a1e",
+  "finite": true,
+  "device": "cuda"
+}

@@ -27,9 +27,48 @@
         "21409491"
       ],
       "submitted_utc": "2026-09-24T18:49:11Z",
-      "status": "submitted",
+      "status": "completed",
       "gpu_tasks": 1,
-      "array": null
+      "array": null,
+      "finished_utc": "2026-09-24T19:16:27Z"
+    },
+    "pb1.reload": {
+      "job_ids": [
+        "21409937"
+      ],
+      "submitted_utc": "2026-09-24T19:16:27Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-24T19:18:25Z"
+    },
+    "pb1.fit": {
+      "job_ids": [
+        "21409947"
+      ],
+      "submitted_utc": "2026-09-24T19:18:26Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-24T19:36:17Z"
+    },
+    "run1": {
+      "job_ids": [
+        "21410268"
+      ],
+      "submitted_utc": "2026-09-24T19:36:23Z",
+      "status": "submitted",
+      "gpu_tasks": 32,
+      "array": "0-31"
+    },
+    "run2": {
+      "job_ids": [
+        "21410269"
+      ],
+      "submitted_utc": "2026-09-24T19:36:23Z",
+      "status": "submitted",
+      "gpu_tasks": 32,
+      "array": "0-31"
     }
   },
   "search": {
@@ -512,14 +551,35 @@
       }
     }
   },
-  "attempt": {},
+  "attempt": {
+    "selection": "latest guard-passing checkpoint: step_000200",
+    "label": "pb1-step000200",
+    "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/training/pb1/checkpoints/step_000200",
+    "guard": true,
+    "retention_loss": 0.07819918687891914,
+    "retention_baseline": 0.07143800430640113,
+    "reload_ok": true,
+    "fit_gate": {
+      "pass": true,
+      "repair_ok": true,
+      "noninferior_ok": true,
+      "mean_paired_diff": 0.001198984493021271,
+      "diff_ci95": [
+        -0.0004982760115944984,
+        0.0030043343231227486
+      ],
+      "baseline_seed_spread": 0.021139503069941955
+    },
+    "candidate_record_sha256": "ce844304ffb47bc4d2dad9dcadb08a94c055cbbd8d5153bc81ae153725b1fd2f"
+  },
   "scores": {},
   "verdict": null,
   "final": {},
   "ticks": {
-    "chain": "21409492",
+    "chain": "21410270",
     "chain_deps": [
-      "21409491"
+      "21410268",
+      "21410269"
     ],
     "chain_begin": null,
     "watchdog": "21409000"
@@ -550,6 +610,31 @@
       "utc": "2026-09-24T18:49:11Z",
       "message": "submitted pb1.train -> 21409491",
       "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-24T19:16:27Z",
+      "message": "submitted pb1.reload -> 21409937",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-24T19:18:26Z",
+      "message": "submitted pb1.fit -> 21409947",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-24T19:36:23Z",
+      "message": "candidate pinned: pb1-step000200",
+      "sha256_model": "cfdbe3834b2876964bea87990d115f9197263121e2914b2355f31ee120c60d17"
+    },
+    {
+      "utc": "2026-09-24T19:36:23Z",
+      "message": "submitted run1 -> 21410268",
+      "gpu_tasks": 32
+    },
+    {
+      "utc": "2026-09-24T19:36:23Z",
+      "message": "submitted run2 -> 21410269",
+      "gpu_tasks": 32
     }
   ]
 }

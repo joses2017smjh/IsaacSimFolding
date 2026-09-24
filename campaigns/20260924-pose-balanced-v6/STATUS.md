@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21409491` pb1.train |
-| **Current result** | targeted search: P_A 38/384, P_B 123/384 settled (gate pass) |
+| **Active job** | `21410268` run1, `21410269` run2 |
+| **Current result** | targeted search: P_A 38/384, P_B 123/384 settled (gate pass); latest guard-passing checkpoint: step_000200, reload ok, fit gate pass; baseline: H10 0/0+0/0, H50 0/0+0/0; pb1-step000200: H10 0/0+0/0, H50 0/0+0/0 |
 | **Limitation / blocker** | none |
 | **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-24T18:49:11Z by scripts/driver.py._
+_Updated 2026-09-24T19:36:23Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

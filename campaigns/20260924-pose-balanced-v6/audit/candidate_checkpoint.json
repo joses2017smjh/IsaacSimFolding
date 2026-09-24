@@ -1,0 +1,17 @@
+{
+  "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/training/pb1/checkpoints/step_000200",
+  "label": "pb1-step000200",
+  "step": 200,
+  "selection": "latest guard-passing checkpoint: step_000200",
+  "sha256": {
+    "checkpoint.json": "42a7dadd60d7777394176a9e80680f6c4f1b4b33cfddb78c6be98226fdce228c",
+    "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+    "model.safetensors": "cfdbe3834b2876964bea87990d115f9197263121e2914b2355f31ee120c60d17",
+    "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+    "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "train_config.json": "e4a9782f17c1552eb8aedc87433674b85c9353730f8cbd1097cecdb419fa73df"
+  },
+  "written_utc": "2026-09-24T19:36:23Z"
+}

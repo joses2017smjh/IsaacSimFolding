@@ -55,9 +55,14 @@ terminal conditions passed):
    It settles every P_C episode at H10 (6/6 over dev02/05/07 in both runs;
    baseline 1/6) and is the more consistent policy run to run (4/8, 4/8 vs
    3/8, 2/8). It is no better on P_A (2/6 vs 3/6) and worse on P_B (0/4 vs
-   1/4). The recovery supervision it trained on came 37/81 from one
-   nearly-solved search row; the gain sits where that supervision was
-   densest.
+   1/4) — and at H50 the P_B regression is the clearest pose-specific
+   effect in the table: baseline 3/4 (dev01 r1, dev03 r1, dev03 r2) vs
+   candidate 0/4. The mechanism is not "densest supervision wins": 37 of
+   the 81 recovery successes came from `Pant_Short_Seen_4` key 1, whose
+   initial orientation (`garment_info.json`: rx −14.4°, ry −10.8°)
+   resembles the development **P_A** pose (−12.7°, −10.2°), not P_C
+   (+18.0°, +24.2°) — yet the gain appears on P_C and the loss on P_B. Why
+   this supervision transferred where it did is unexplained by v5's data.
 3. **H50 is a wash with large run-to-run swing** on identical seeds:
    candidate 2/8 then 5/8, baseline 4/8 then 3/8. Two of the candidate's H50
    misses in run 1 were folds that came undone during the settle (dev02,
@@ -84,11 +89,14 @@ recorded, and the 640×480 originals stay under `evaluation/`.
 
 ## Recommended next step (not run)
 
-If the goal is a general improvement rather than a P_C one, the lever is
-supervision on P_A/P_B-like states, which the v4 search barely produced
-(its successes came mostly from one P_C-like row); more evaluation episodes
-of this checkpoint will not change the picture. Any future claim should be
-measured exactly as v5 measured it.
+More evaluation episodes of this checkpoint will not change the picture.
+The next lever is not obvious from this data: the search's dominant row was
+P_A-like, yet the candidate gained on P_C and regressed on P_B (H50 0/4 vs
+3/4). Before any further training, a per-pose transfer analysis — which
+search rows' labels resemble which development poses by initial
+orientation, and how each policy's per-step condition traces differ on the
+P_B rows — should say what the recipe actually changed. Any future claim
+should be measured exactly as v5 measured it.
 
 ## Budget and provenance
 

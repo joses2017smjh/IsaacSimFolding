@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21403368` a2.confirm_h10, `21403388` a2.h50 |
-| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, H10 r1 4/8 |
+| **Active job** | none — campaign complete |
+| **Current result** | baseline H10 2/8 + 0/8; recovery search 81 settled successes of 384 attempts (gate pass); attempt 1, H10 r1 2/8, screen failed: H10 2/8 < 4/8; attempt 2, H10 r1 4/8, r2 4/8, H50 3/8, confirmation did not establish improvement; FINAL: `baseline` delivered |
 | **Limitation / blocker** | none |
-| **Next automatic action** | driver advances the next stage when a waited job ends |
+| **Next automatic action** | none — campaign complete; see REPORT.md |
 
-_Updated 2026-09-23T23:38:25Z by scripts/driver.py._
+_Updated 2026-09-24T00:03:42Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -80,3 +80,10 @@ summed to 62 > 60 before it trained — so per
 `amendments/2026-09-23-task-proxy.md` the proxy is 60 → 72; **GPU-hours stay
 28.0 (6.94 used)** and no evidence gate changed. Pending ticks were cancelled
 before the fix; the second H10 run (`21403368`) kept running.
+
+### 2026-09-24 — closed: no preregistered improvement; baseline retained
+
+Second H10 run **4/8** → pooled **8/16 vs 2/16** (margin 6, p = 0.027) — both
+H10 clauses pass. H50 **3/8 vs baseline 4/8** — fails non-regression by one
+episode (dev07 latched the fold, then relaxed to 3/4). Final set not spent.
+See `REPORT.md`. Budget: 47 tasks, 7.85 of 28.0 GPU-hours.

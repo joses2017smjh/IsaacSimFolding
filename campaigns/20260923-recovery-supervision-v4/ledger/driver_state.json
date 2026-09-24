@@ -88,16 +88,18 @@
         "21403368"
       ],
       "submitted_utc": "2026-09-23T23:30:09Z",
-      "status": "submitted",
-      "gpu_tasks": 8
+      "status": "completed",
+      "gpu_tasks": 8,
+      "finished_utc": "2026-09-23T23:49:38Z"
     },
     "a2.h50": {
       "job_ids": [
         "21403388"
       ],
       "submitted_utc": "2026-09-23T23:38:25Z",
-      "status": "submitted",
-      "gpu_tasks": 8
+      "status": "completed",
+      "gpu_tasks": 8,
+      "finished_utc": "2026-09-24T00:03:41Z"
     }
   },
   "attempts": {
@@ -199,8 +201,42 @@
           "ever": 4,
           "mean_conditions": 3.25,
           "invalid": []
+        },
+        "h10_r2": {
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.375,
+          "invalid": []
+        },
+        "h50": {
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 4,
+          "mean_conditions": 3.0,
+          "invalid": []
+        },
+        "verdict": {
+          "improved": false,
+          "checks": {
+            "pooled_h10_margin_ge_4": true,
+            "fisher_one_sided_p_lt_0.05": true,
+            "h50_not_below_baseline": false,
+            "retention_guard": true,
+            "reload": true,
+            "all_rows_valid": true
+          },
+          "p_value": 0.02690106559623414,
+          "candidate_h10": "8/16",
+          "baseline_h10": "2/16",
+          "target_6_of_8_both_runs": false,
+          "stretch_8_of_8_both_runs": false
         }
-      }
+      },
+      "concluded_utc": "2026-09-24T00:03:42Z",
+      "outcome": "confirmation did not establish improvement"
     }
   },
   "baseline": {
@@ -465,15 +501,14 @@
     }
   },
   "ticks": {
-    "chain": "21403389",
+    "chain": "21403416",
     "chain_deps": [
-      "21403368",
       "21403388"
     ],
     "chain_begin": null,
     "watchdog": "21403390"
   },
-  "done": false,
+  "done": true,
   "stop_reason": null,
   "log": [
     {
@@ -583,7 +618,22 @@
       "utc": "2026-09-23T23:38:25Z",
       "message": "submitted a2.h50 -> 21403388",
       "gpu_tasks": 8
+    },
+    {
+      "utc": "2026-09-24T00:03:42Z",
+      "message": "attempt 2 concluded: confirmation did not establish improvement"
+    },
+    {
+      "utc": "2026-09-24T00:03:42Z",
+      "message": "campaign complete"
     }
   ],
-  "final": {}
+  "final": {
+    "selected": {
+      "label": "baseline",
+      "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+      "reason": "no attempt met the preregistered improvement rule; final set not spent"
+    },
+    "completed_utc": "2026-09-24T00:03:42Z"
+  }
 }

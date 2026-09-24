@@ -1,0 +1,14 @@
+/runtime/
+/smoke/
+/evaluation/
+/logs/
+/attempts/
+/ledger/ticks/
+/ledger/.driver.lock
+/ledger/*.tmp
+slurm-*.out
+*.pyc
+__pycache__/
+# media/: the gallery's curated copies (top-camera GIF + final triptych per
+# SETTLED success) and INDEX.json are committed; everything else the runner
+# wrote stays under evaluation/ and is hashed in INDEX.json.

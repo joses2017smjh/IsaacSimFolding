@@ -101,5 +101,39 @@
       "max": 201,
       "n": 2
     }
+  },
+  "post_fold_label_coverage": {
+    "labels": 10305,
+    "post_fold_labels": 6614,
+    "post_fold_share": 0.642,
+    "settled_branches": 242,
+    "single_full_entry_share": 0.87,
+    "branch_first_fold_step": {
+      "median": 240,
+      "p10": 102,
+      "p90": 542
+    },
+    "post_fold_label_steps_after_fold": {
+      "median": 169,
+      "max": 466
+    },
+    "method": "each branch label placed before/after its own branch's first full-fold step (root + first_full_step_offset)"
+  },
+  "candidate_h10_losses": {
+    "lost_during_policy_phase": 9,
+    "lost_in_settle": 0,
+    "median_steps_at_full_fold": 15,
+    "condition_broken_at_loss": {
+      "condition_2": 6,
+      "condition_3": 2
+    },
+    "loss_position_within_h10_chunk": {
+      "3": 1,
+      "4": 2,
+      "5": 2,
+      "6": 1,
+      "7": 1,
+      "9": 1
+    }
   }
 }

@@ -37,21 +37,40 @@ descriptive only and carries no claim (`analysis/reach-hold.json`).
    candidate reached it in 13/16 episodes against the baseline's 5/16, and
    early (median policy step 191 vs 461). At H50 it settled every P_A
    episode (6/6 vs 0/6).
-2. **It does not hold the fold at H10.** 9 of its 13 H10 folds came undone,
-   a median of **6 steps** after they formed (range 1–40): replanning every
-   10 steps, the policy moves through the folded state instead of stopping
-   and releasing. At H50, where each 50-step chunk runs to completion, the
+2. **At H10 it moves through the fold instead of stopping in it.** 9 of its
+   13 H10 folds were lost during the policy phase, never in the terminal
+   settle. The full fold lasted a median 15 steps. In 6 of the 8 lost folds
+   with a clean trace, the same condition — condition 2, one fold's closure
+   distance — reopened mid-chunk and stayed open to the end (2 others lost
+   condition 3). At H50, where each 50-step chunk runs to completion, the
    folds it reached mostly held.
 3. **P_B's H50 loss is not supply-limited.** With ~10× the P_B supervision
    the candidate still settled 0/4 at H50 against the baseline's 3/4.
 
 ## Remaining limitation
 
-**Fold holding, not fold reaching.** Settled-success branch labels teach the
-motion into the fold, but nothing in them teaches ending it: stopping,
-releasing and staying clear once the garment is folded. The next lever is
-supervision of the post-fold phase — not more reach supervision, and not
-another pose rebalance.
+**Stopping at the fold, not reaching it — and not for lack of supervision.**
+64% of the training labels (6,614 of 10,305) are post-fold states from
+branches that then held their fold. 87% of settled branches entered the full
+fold once and stayed in it, and post-fold labels span a median 169 steps
+after the fold, covering the regime the candidate now reaches at about step
+190. The candidate still passes through the fold at H10. The open question is
+why the fine-tune does not reproduce the folding-to-holding transition its
+labels contain when executed at H10. It does so at H50 (P_A 6/6). More data
+of the same kind is not the lever.
+
+## Limitations
+
+- Per-pose cells are 4–6 episodes. On identical seeds the matched baseline's
+  per-pose H10 counts moved between v5 and v6 (P_A 3/6 → 0/6, P_C 1/6 → 4/6)
+  while its pooled counts stayed 5/16 and 7/16. Only pooled numbers carry
+  the verdict.
+- Robust across both campaigns: the baseline settled P_A at H50 in 0/6
+  episodes in v5 and in v6, so the candidate's 6/6 there is a real contrast.
+  Not a matched comparison: this candidate's P_C 3/6 against a2's 6/6 in v5
+  (different campaigns); do not read it as a regression.
+- "Reached" (latched) counts are descriptive; the preregistered metric is
+  settled success.
 
 ## Budget and provenance
 

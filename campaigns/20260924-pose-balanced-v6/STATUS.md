@@ -29,5 +29,7 @@ Targeted search P_B 123/384, P_A 38/384 settled; per-pose gate passed;
 reload and fit gate passed. Matched: H10 **4/16 vs 5/16** (p = 0.78), H50
 **8/16 vs 7/16**. The candidate reached the fold in 13/16 H10 episodes (vs
 5/16) but lost 9 of them a median 6 steps later; at H50 it settled P_A 6/6
-(vs 0/6). Remaining limitation: holding the fold, not reaching it. See
-`REPORT.md`. 83 tasks, 14.06 GPU-hours.
+(vs 0/6). Remaining limitation: stopping at the fold at H10 — the lost folds
+reopen condition 2 mid-chunk — although 64% of the training labels are
+post-fold holding states; not a data-supply problem. See `REPORT.md`. 83
+tasks, 14.06 GPU-hours.

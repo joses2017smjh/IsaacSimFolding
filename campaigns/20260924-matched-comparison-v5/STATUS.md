@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21404089` smoke |
-| **Current result** | smoke pending |
+| **Active job** | `21404096` run1, `21404097` run2 |
+| **Current result** | baseline: H10 0/0+0/0, H50 0/0+0/0; a2-step000250: H10 0/0+0/0, H50 0/0+0/0 |
 | **Limitation / blocker** | none |
 | **Next automatic action** | driver advances the next stage when a waited job ends |
 
-_Updated 2026-09-24T00:59:17Z by scripts/driver.py._
+_Updated 2026-09-24T01:02:02Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

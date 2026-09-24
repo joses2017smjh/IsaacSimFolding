@@ -11,6 +11,28 @@
       "submitted_utc": "2026-09-24T00:59:17Z",
       "state": "submitted",
       "array": "0-1"
+    },
+    {
+      "job_id": "21404096",
+      "phase": "run1",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "6cdd0d463aafa34340d23651b54ed8a755bf64fc",
+      "submitted_utc": "2026-09-24T01:02:02Z",
+      "state": "submitted",
+      "array": "0-31"
+    },
+    {
+      "job_id": "21404097",
+      "phase": "run2",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "6cdd0d463aafa34340d23651b54ed8a755bf64fc",
+      "submitted_utc": "2026-09-24T01:02:02Z",
+      "state": "submitted",
+      "array": "0-31"
     }
   ]
 }

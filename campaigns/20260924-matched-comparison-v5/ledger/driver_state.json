@@ -7,9 +7,28 @@
         "21404089"
       ],
       "submitted_utc": "2026-09-24T00:59:17Z",
-      "status": "submitted",
+      "status": "completed",
       "gpu_tasks": 2,
-      "array": "0-1"
+      "array": "0-1",
+      "finished_utc": "2026-09-24T01:02:02Z"
+    },
+    "run1": {
+      "job_ids": [
+        "21404096"
+      ],
+      "submitted_utc": "2026-09-24T01:02:02Z",
+      "status": "submitted",
+      "gpu_tasks": 32,
+      "array": "0-31"
+    },
+    "run2": {
+      "job_ids": [
+        "21404097"
+      ],
+      "submitted_utc": "2026-09-24T01:02:02Z",
+      "status": "submitted",
+      "gpu_tasks": 32,
+      "array": "0-31"
     }
   },
   "scores": {},
@@ -17,9 +36,10 @@
   "final": {},
   "gallery": null,
   "ticks": {
-    "chain": "21404090",
+    "chain": "21404098",
     "chain_deps": [
-      "21404089"
+      "21404096",
+      "21404097"
     ],
     "chain_begin": null,
     "watchdog": "21404091"
@@ -31,6 +51,16 @@
       "utc": "2026-09-24T00:59:17Z",
       "message": "submitted smoke -> 21404089",
       "gpu_tasks": 2
+    },
+    {
+      "utc": "2026-09-24T01:02:02Z",
+      "message": "submitted run1 -> 21404096",
+      "gpu_tasks": 32
+    },
+    {
+      "utc": "2026-09-24T01:02:02Z",
+      "message": "submitted run2 -> 21404097",
+      "gpu_tasks": 32
     }
   ]
 }

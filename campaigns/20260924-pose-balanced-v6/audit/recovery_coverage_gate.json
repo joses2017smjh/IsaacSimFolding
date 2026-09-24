@@ -1,0 +1,480 @@
+{
+  "passed": true,
+  "unmet_requirements": [],
+  "per_pose": {
+    "P_A": {
+      "passed": true,
+      "unmet_requirements": [],
+      "checks": [
+        {
+          "name": "successful_branches",
+          "observed": 38,
+          "threshold": 24,
+          "passed": true
+        },
+        {
+          "name": "distinct_successful_roots",
+          "observed": 24,
+          "threshold": 8,
+          "passed": true
+        },
+        {
+          "name": "distinct_successful_rows",
+          "observed": 8,
+          "threshold": 3,
+          "passed": true
+        }
+      ],
+      "attempts_total": 384,
+      "attempts_completed": 384,
+      "attempts_not_run_or_error": 0,
+      "successful_branches": 38,
+      "success_rate": 0.09895833333333333,
+      "transient_full_crossings_without_settled_success": 28,
+      "by_root": {
+        "search_p_a_pant_short_seen_4_key0_s83008@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83008@180": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83008@240": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83008@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83008@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83008@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@120": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@180": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@240": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_4_key0_s83009@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@120": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@180": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@240": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@300": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@360": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83010@60": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@180": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@240": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_5_key0_s83011@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@180": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@240": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83012@60": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@180": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@240": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_6_key0_s83013@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@180": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@240": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@360": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83014@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@120": {
+          "successes": 4,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@180": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@240": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@300": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@360": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_a_pant_short_seen_8_key0_s83015@60": {
+          "successes": 2,
+          "attempts": 8
+        }
+      },
+      "by_horizon": {
+        "10": {
+          "successes": 38,
+          "attempts": 384
+        }
+      }
+    },
+    "P_B": {
+      "passed": true,
+      "unmet_requirements": [],
+      "checks": [
+        {
+          "name": "successful_branches",
+          "observed": 123,
+          "threshold": 24,
+          "passed": true
+        },
+        {
+          "name": "distinct_successful_roots",
+          "observed": 35,
+          "threshold": 8,
+          "passed": true
+        },
+        {
+          "name": "distinct_successful_rows",
+          "observed": 7,
+          "threshold": 3,
+          "passed": true
+        }
+      ],
+      "attempts_total": 384,
+      "attempts_completed": 384,
+      "attempts_not_run_or_error": 0,
+      "successful_branches": 123,
+      "success_rate": 0.3203125,
+      "transient_full_crossings_without_settled_success": 33,
+      "by_root": {
+        "search_p_b_pant_short_seen_6_key2_s83000@120": {
+          "successes": 8,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83000@150": {
+          "successes": 7,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83000@180": {
+          "successes": 8,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83000@30": {
+          "successes": 3,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83000@60": {
+          "successes": 7,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83000@90": {
+          "successes": 6,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@150": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@180": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@30": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@60": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83001@90": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@120": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@150": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@180": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@30": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@60": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83002@90": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@120": {
+          "successes": 3,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@150": {
+          "successes": 8,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@180": {
+          "successes": 8,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@30": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@60": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_6_key2_s83003@90": {
+          "successes": 3,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@120": {
+          "successes": 7,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@150": {
+          "successes": 7,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@180": {
+          "successes": 8,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@30": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@60": {
+          "successes": 5,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83004@90": {
+          "successes": 4,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@120": {
+          "successes": 3,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@150": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@180": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@30": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@60": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83005@90": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@120": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@150": {
+          "successes": 0,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@180": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@30": {
+          "successes": 4,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@60": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83006@90": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@120": {
+          "successes": 2,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@150": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@180": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@30": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@60": {
+          "successes": 1,
+          "attempts": 8
+        },
+        "search_p_b_pant_short_seen_8_key2_s83007@90": {
+          "successes": 1,
+          "attempts": 8
+        }
+      },
+      "by_horizon": {
+        "10": {
+          "successes": 123,
+          "attempts": 384
+        }
+      }
+    }
+  },
+  "successful_branches": 161,
+  "attempts_completed": 768,
+  "gates": {
+    "P_B": {
+      "min_successful_branches": 24,
+      "min_distinct_roots": 8,
+      "min_rows": 3
+    },
+    "P_A": {
+      "min_successful_branches": 24,
+      "min_distinct_roots": 8,
+      "min_rows": 3
+    }
+  }
+}

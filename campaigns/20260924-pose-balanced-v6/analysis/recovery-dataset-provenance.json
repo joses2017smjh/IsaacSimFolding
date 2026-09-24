@@ -1,38 +1,47 @@
 {
-  "schema": 1,
-  "created_utc": "2026-09-24T16:11:28Z",
-  "stages": {
-    "search.collect": {
-      "job_ids": [
-        "21408329"
-      ],
-      "submitted_utc": "2026-09-24T16:11:28Z",
-      "status": "completed",
-      "gpu_tasks": 16,
-      "array": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
-      "finished_utc": "2026-09-24T18:41:27Z"
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/datasets/recovery.npz",
+  "dataset_sha256": "10717a367722ba41aa21915ff5d3b79908851e3c1b7955524b6289cde1c17667",
+  "samples": 10305,
+  "origin_counts": {
+    "branch": 9913,
+    "student": 392
+  },
+  "source_counts": {
+    "v4": 2990,
+    "v6": 7315
+  },
+  "pose_balance": {
+    "samples": {
+      "P_A": 2452,
+      "P_C": 1572,
+      "P_B": 6281
     },
-    "search.compile": {
-      "job_ids": [
-        "21409327"
-      ],
-      "submitted_utc": "2026-09-24T18:41:28Z",
-      "status": "completed",
-      "gpu_tasks": 0,
-      "array": null,
-      "finished_utc": "2026-09-24T18:49:11Z"
+    "draw_share": {
+      "P_A": 0.3333333432674408,
+      "P_C": 0.3333333134651184,
+      "P_B": 0.3333333432674408
     },
-    "pb1.train": {
-      "job_ids": [
-        "21409491"
-      ],
-      "submitted_utc": "2026-09-24T18:49:11Z",
-      "status": "submitted",
-      "gpu_tasks": 1,
-      "array": null
+    "multiplier_vs_uniform": {
+      "P_A": 1.4008972267536706,
+      "P_C": 2.185114503816794,
+      "P_B": 0.5468874383060023
     }
   },
-  "search": {
+  "samples_by_pose_and_source": {
+    "P_A/v4": 838,
+    "P_A/v6": 1614,
+    "P_B/v4": 580,
+    "P_B/v6": 5701,
+    "P_C/v4": 1572
+  },
+  "label_definition": "observation rendered at a state paired with the next 50 actions actually executed from it on a continuation that reached SETTLED success",
+  "weighting": "pose-balanced: awr_weight = N / (P * n_pose), so each pose supplies 1/P of the rollout draws; uniform within a pose; the trainer samples proportional to awr_weight",
+  "reused_corpus": {
+    "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/datasets/recovery.npz",
+    "sha256": "8742f745825a8811fc06ef679c03b6bbd7f9e16d5775b37bac01c262bd2fa645",
+    "samples": 2990
+  },
+  "coverage_gate": {
     "passed": true,
     "unmet_requirements": [],
     "per_pose": {
@@ -512,44 +521,254 @@
       }
     }
   },
-  "attempt": {},
-  "scores": {},
-  "verdict": null,
-  "final": {},
-  "ticks": {
-    "chain": "21409492",
-    "chain_deps": [
-      "21409491"
-    ],
-    "chain_begin": null,
-    "watchdog": "21409000"
-  },
-  "done": false,
-  "stop_reason": null,
-  "log": [
+  "sources": [
     {
-      "utc": "2026-09-24T16:11:28Z",
-      "message": "submitted search.collect -> 21408329",
-      "gpu_tasks": 16
+      "id": "search_p_b_pant_short_seen_6_key2_s83000",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 83000,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 1734,
+      "student_examples": 56,
+      "recovery_json_sha256": "528fef9eb8954aaf34305bd245986b9f0271bec381fc6122394973ce1668a009",
+      "examples_sha256": "14c6626deb5661a5ffa70f5cf8114c1b50d5303a4c2698209e264e407c03db45"
     },
     {
-      "utc": "2026-09-24T18:41:28Z",
-      "message": "submitted search.compile -> 21409327",
-      "gpu_tasks": 0
+      "id": "search_p_b_pant_short_seen_6_key2_s83001",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 83001,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 0,
+      "student_examples": 0,
+      "recovery_json_sha256": "aecd0f7a1e1a0eb0f19dc13a2bd3d2e789d4479479dfe80edae6f1bd04f5b0c6",
+      "examples_sha256": "3550c553ac50b9ee897e113a8426d4d5a2a8ab8f5da2de10d6dc69fc9ce46f77"
     },
     {
-      "utc": "2026-09-24T18:49:11Z",
-      "message": "per-pose coverage gate passed=True",
-      "per_pose": {
-        "P_A": 38,
-        "P_B": 123
-      },
-      "unmet": []
+      "id": "search_p_b_pant_short_seen_6_key2_s83002",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 83002,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 126,
+      "student_examples": 0,
+      "recovery_json_sha256": "db1a0e7d52589594ea132dc14b0aeeb2469fe4f47e8981d295bdcd172b472dd1",
+      "examples_sha256": "3cf94a4899a074364051fcdcff7bbd2a42f54c3286768455b25e9f14e50b1e8c"
     },
     {
-      "utc": "2026-09-24T18:49:11Z",
-      "message": "submitted pb1.train -> 21409491",
-      "gpu_tasks": 1
+      "id": "search_p_b_pant_short_seen_6_key2_s83003",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 2,
+      "seed": 83003,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 1011,
+      "student_examples": 56,
+      "recovery_json_sha256": "3f8be746c865c69ab9541af92197720126810b0bbe5be3de295213667e17c7ab",
+      "examples_sha256": "92f545606fcaff28906599718425ec2ade6c35a82593a500ab49d45cf7116864"
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s83004",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 83004,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 1390,
+      "student_examples": 56,
+      "recovery_json_sha256": "59203f9d8c1b40e0d6f70868e41544165d5d109c5021d4df635d0a9f68ecc293",
+      "examples_sha256": "abc44bdf86a71bcc27178b42994847e0fd6608ad1cdcc6fb603e8fe51d0bd156"
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s83005",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 83005,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 355,
+      "student_examples": 0,
+      "recovery_json_sha256": "86036417017080a25400fb5765ab91259cfece3c30c9e59ca93c9cc4437c684b",
+      "examples_sha256": "6f8de89c1b9fa4c8b5b4de6003be8af3fcc04e7fb3dcb721f25b3ff57c5aea62"
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s83006",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 83006,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 488,
+      "student_examples": 56,
+      "recovery_json_sha256": "63987608dd28f16a38f101b437c8cbae281f0ffce839a484c8f1cd6c9df524f8",
+      "examples_sha256": "16d9f483ea04495b1edfb02046785189adfc21b8e9dffd68d14b5d0de77d93cd"
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s83007",
+      "pose": "P_B",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 2,
+      "seed": 83007,
+      "roots": [
+        30,
+        60,
+        90,
+        120,
+        150,
+        180
+      ],
+      "branch_examples": 317,
+      "student_examples": 56,
+      "recovery_json_sha256": "c0e20dda5d9ff624bf2a68b04fb95ea046e1cc2d8bcc5e5919cfce0a35f6e490",
+      "examples_sha256": "5c4bbd41f6c7b24d06aaa6c481ac9c46cbc958e837b0f2f1a16d56771a92526a"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_4_key0_s83008",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 0,
+      "seed": 83008,
+      "roots": null,
+      "branch_examples": 100,
+      "student_examples": 0,
+      "recovery_json_sha256": "d456a58c9e55fa7e098f6d2aa64dc8002497fa7ac89135f5e9e6fe955b3734b6",
+      "examples_sha256": "483bf8cc7c3b61c05ee060190aab3d8818adac591f51ec93da5284d775405efa"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_4_key0_s83009",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_4",
+      "pose_key": 0,
+      "seed": 83009,
+      "roots": null,
+      "branch_examples": 220,
+      "student_examples": 0,
+      "recovery_json_sha256": "99a3170e57e480126acd7810d733e58cdea2b6d04ecaf6f2a1a4b9f8f34d0738",
+      "examples_sha256": "5ec3790c738ebc5b6bea851cdab8bb71548b1da9a25104596c55fa26e77e6bb0"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_5_key0_s83010",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 0,
+      "seed": 83010,
+      "roots": null,
+      "branch_examples": 280,
+      "student_examples": 0,
+      "recovery_json_sha256": "d646c52a5cfebea769fe657aaa3defe6bbfa0737c876f4db0ef6b3133c7db419",
+      "examples_sha256": "b98524f63401ecd5b900e595beaec40ae6a0e57016ef4efc368bc505c4de10b6"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_5_key0_s83011",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_5",
+      "pose_key": 0,
+      "seed": 83011,
+      "roots": null,
+      "branch_examples": 132,
+      "student_examples": 0,
+      "recovery_json_sha256": "04159d8d62881c9457c0ecbf6c881200a9f929e2387c4543384d6cdf5734830b",
+      "examples_sha256": "7978472d4998e2660f11571bcaac8db0a1cae2c98971b5688074ed12ceb5b42d"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_6_key0_s83012",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 0,
+      "seed": 83012,
+      "roots": null,
+      "branch_examples": 158,
+      "student_examples": 0,
+      "recovery_json_sha256": "48d2cb1779d0e76664e0abecd62ff661e964f15addedaacad108dc34bea080b4",
+      "examples_sha256": "bd4d999f80b6dd41f38224ecd6cfb84fc053ba524275c9bd3c82eb5ad5d8a5f0"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_6_key0_s83013",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_6",
+      "pose_key": 0,
+      "seed": 83013,
+      "roots": null,
+      "branch_examples": 100,
+      "student_examples": 0,
+      "recovery_json_sha256": "47586fda8b8309e4857aa2ce56ed2942b290c16a63eb4c7551e49fb85c631341",
+      "examples_sha256": "a10a36b00a5e9bd50db2cc8857881229e7e28695e9dee704a87893c094d0841f"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_8_key0_s83014",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 0,
+      "seed": 83014,
+      "roots": null,
+      "branch_examples": 170,
+      "student_examples": 0,
+      "recovery_json_sha256": "a9637c3fa51886c6e84184b1d5050b4f47f2d1ce1a2e7d1c3dc50aef3eb0ee74",
+      "examples_sha256": "dcbe6c994c1ce24bbce7ea9cec6bd82604bc90cf6ac9cd7f897acb9bb138a1b8"
+    },
+    {
+      "id": "search_p_a_pant_short_seen_8_key0_s83015",
+      "pose": "P_A",
+      "garment": "Pant_Short_Seen_8",
+      "pose_key": 0,
+      "seed": 83015,
+      "roots": null,
+      "branch_examples": 398,
+      "student_examples": 56,
+      "recovery_json_sha256": "4af9b08767b2c43564c6edd61e1797e46bcdd2fc21b8d82705beae3bc15ab45b",
+      "examples_sha256": "3d87c4216b1d9de093dc6d57aaa9376b1c04b773dd96dd14586259e652952e91"
     }
   ]
 }

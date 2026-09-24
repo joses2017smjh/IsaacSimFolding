@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-24T16:11:28Z",
+  "stages": {
+    "search.collect": {
+      "job_ids": [
+        "21408329"
+      ],
+      "submitted_utc": "2026-09-24T16:11:28Z",
+      "status": "submitted",
+      "gpu_tasks": 16,
+      "array": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+    }
+  },
+  "search": null,
+  "attempt": {},
+  "scores": {},
+  "verdict": null,
+  "final": {},
+  "ticks": {
+    "chain": "21408330",
+    "chain_deps": [
+      "21408329"
+    ],
+    "chain_begin": null,
+    "watchdog": "21408331"
+  },
+  "done": false,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-24T16:11:28Z",
+      "message": "submitted search.collect -> 21408329",
+      "gpu_tasks": 16
+    }
+  ]
+}

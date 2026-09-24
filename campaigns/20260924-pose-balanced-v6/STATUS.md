@@ -3,10 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none submitted yet |
-| **Current result** | none — campaign being frozen |
+| **Active job** | `21408329` search.collect |
+| **Current result** | targeted search pending |
 | **Limitation / blocker** | none |
-| **Next automatic action** | targeted search (16 rows at P_B and P_A) |
+| **Next automatic action** | driver advances the next stage when a waited job ends |
+
+_Updated 2026-09-24T16:11:28Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

@@ -119,7 +119,8 @@ def test_equal_pooled_h50_is_non_regression_and_passes():
 def test_h10_needs_both_margin_and_significance():
     assert not driver.matched_verdict(_side((3, 2), (4, 4)), _side((2, 0), (3, 3)), True, True)["improved"]  # margin 3
     assert not driver.matched_verdict(_side((3, 3), (4, 4)), _side((2, 0), (3, 3)), True, True)["improved"]  # p = 0.11
-    assert driver.matched_verdict(_side((4, 3), (4, 4)), _side((2, 0), (3, 3)), True, True)["improved"]       # 7 vs 2
+    assert not driver.matched_verdict(_side((4, 3), (4, 4)), _side((2, 0), (3, 3)), True, True)["improved"]   # 7 vs 2: p = 0.057
+    assert driver.matched_verdict(_side((4, 4), (4, 4)), _side((2, 0), (3, 3)), True, True)["improved"]       # 8 vs 2: p = 0.027
 
 
 def test_guard_reload_and_invalid_rows_each_block_the_claim():

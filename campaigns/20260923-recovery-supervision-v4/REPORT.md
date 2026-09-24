@@ -17,8 +17,9 @@ missed by one episode.
 
 The deciding H50 row (dev07) reached the full fold (latched success) and then
 relaxed to 3/4 before the settle check. H10 gains were concentrated on the
-P_C/P_B poses (dev02, dev05, dev07 settled in both runs); P_A (dev00) stayed
-unsolved, as it is for the baseline at every horizon.
+P_C pose (dev02, dev05, dev07 settled in both runs); P_A settled once each
+(dev04 in run 2, dev06 in run 1) and never on dev00; P_B (dev01, dev03) never
+settled at H10.
 
 ## What changed from v3 (all preregistered before any v4 result)
 
@@ -27,7 +28,8 @@ unsolved, as it is for the baseline at every horizon.
    2,990 labels, coverage gate passed (one row contributed 37 of 81).
 2. **Whole-episode anchor.** Anchor frames spread over each demonstration
    instead of its first 8 frames. It worked as designed: anchor fit no longer
-   collapsed and retention breached late rather than immediately.
+   collapsed, and attempt 1 gained a guard-passing window (steps 75–100)
+   where v3 had none.
 3. **Learning rate as the single attempt-2 factor** (1e-5 → 3.3e-6). The
    guard-passing frontier moved from step 100 to step 250 (≈0.54 → 1.34
    passes over the supervision), and the screen moved from 2/8 to 4/8.

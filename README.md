@@ -1,6 +1,8 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
-**Update — 21 September 2026:** the v4 folding smoke gate finished **3/5 passed**, with two setup errors and no successful folds among the three valid short-budget episodes. The garment-switch diagnostic completed without reproducing the historical hang. A remaining unwelded-mesh integration guard is repaired; 16 CPU tests pass and replacement GPU smokes are submitted. The 24-rollout horizon pilot has not run. [Verified results, four-class policy footage, repairs and next steps](docs/FOLDING_STATUS_2026-09-21.md).
+**Update — 24 September 2026:** closed-loop fine-tuning campaigns v2–v4 are complete, and **no checkpoint met the preregistered improvement rule**; the baseline is retained. The best candidate reached **8/16** settled folds at H10 against the baseline's **2/16** (p = 0.027) but **3/8 vs 4/8** at H50, missing non-regression by one episode. Along the way: an optimizer defect that froze ~88% of trainable parameters in every earlier fine-tune was found and repaired, and 81/384 simulator-validated recovery continuations were produced. Baselines were measured in earlier campaigns; a same-wave comparison is the proposed next step. [v4 report](campaigns/20260923-recovery-supervision-v4/REPORT.md).
+
+**Earlier update — 21 September 2026:** the v4 folding smoke gate finished **3/5 passed**, with two setup errors and no successful folds among the three valid short-budget episodes. The garment-switch diagnostic completed without reproducing the historical hang. A remaining unwelded-mesh integration guard is repaired; 16 CPU tests pass and replacement GPU smokes are submitted. The 24-rollout horizon pilot has not run. [Verified results, four-class policy footage, repairs and next steps](docs/FOLDING_STATUS_2026-09-21.md).
 
 **Current measured status — 20 September 2026:** the strict short-pants
 evaluation recorded **8/24** checker successes for the historical raster-adapted

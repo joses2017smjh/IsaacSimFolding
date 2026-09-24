@@ -1,0 +1,9 @@
+{
+  "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6",
+  "commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
+  "sources_declared": 59,
+  "sources_checked": 59,
+  "checkpoint_checked": true,
+  "passed": true,
+  "problems": []
+}

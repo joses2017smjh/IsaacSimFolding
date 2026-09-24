@@ -16,14 +16,17 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**In progress (2026-09-24): v5 matched comparison** —
-`campaigns/20260924-matched-comparison-v5/STATUS.md` is the live page. Baseline
-and v4's `a2-step000250` run side by side in interleaved Slurm arrays on the
-same rows, two runs per policy per horizon, unchanged rule; evaluation only.
-`campaigns/20260923-recovery-supervision-v4/gallery.html` shows v4's 13
-settled successes (candidate that did not clear confirmation) with hashes.
+**Latest outcome (2026-09-24): v5 matched comparison closed — not improved.**
+Baseline and v4's `a2-step000250` measured in the same Slurm arrays on the
+same rows, two runs each: H10 8/16 vs 5/16 (margin 3, p = 0.24), H50 7/16
+vs 7/16. The matched baseline is far above the earlier cross-campaign
+numbers (2/16, 4/8) — most of v4's apparent gap was baseline variance
+between campaigns. Baseline retained; final set unspent; 27 settled
+successes with hashed media in `campaigns/20260924-matched-comparison-v5/`
+(`REPORT.md`, `gallery.html`). **Any future comparison must be measured
+this way**, never against numbers from another campaign.
 
-**Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
+**Previous outcome (2026-09-24): v4 closed, no preregistered improvement.****Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
 3x-scaled recovery search (81/384 settled) + whole-episode anchor + lr
 3.3e-6 produced `a2-step000250`: H10 pooled 8/16 vs baseline 2/16 (p = 0.027)
 but H50 3/8 vs 4/8 — missed non-regression by one episode. Baseline retained;
@@ -45,7 +48,8 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **v5 live status (in progress)** | `campaigns/20260924-matched-comparison-v5/STATUS.md` |
+| **Final report (v5) — matched comparison, latest outcome** | `campaigns/20260924-matched-comparison-v5/REPORT.md` |
+| v5 settled-success gallery (27 folds, hashed) | `campaigns/20260924-matched-comparison-v5/gallery.html` |
 | Final report (v4) — outcome and the step v5 runs | `campaigns/20260923-recovery-supervision-v4/REPORT.md` |
 | Final report (v3) | `campaigns/20260923-recovery-supervision-v3/REPORT.md` |
 | v3 live status table and record | `campaigns/20260923-recovery-supervision-v3/STATUS.md` |

@@ -17,34 +17,220 @@
         "21404096"
       ],
       "submitted_utc": "2026-09-24T01:02:02Z",
-      "status": "submitted",
+      "status": "completed",
       "gpu_tasks": 32,
-      "array": "0-31"
+      "array": "0-31",
+      "finished_utc": "2026-09-24T01:47:42Z"
     },
     "run2": {
       "job_ids": [
         "21404097"
       ],
       "submitted_utc": "2026-09-24T01:02:02Z",
-      "status": "submitted",
+      "status": "completed",
       "gpu_tasks": 32,
-      "array": "0-31"
+      "array": "0-31",
+      "finished_utc": "2026-09-24T01:55:41Z"
     }
   },
-  "scores": {},
-  "verdict": null,
-  "final": {},
-  "gallery": null,
+  "scores": {
+    "baseline": {
+      "h10": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 3,
+          "mean_conditions": 3.25,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 2,
+          "ever": 2,
+          "mean_conditions": 2.875,
+          "invalid": []
+        }
+      ],
+      "h50": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.0,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 3,
+          "mean_conditions": 2.875,
+          "invalid": []
+        }
+      ]
+    },
+    "candidate": {
+      "h10": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.375,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 5,
+          "mean_conditions": 3.125,
+          "invalid": []
+        }
+      ],
+      "h50": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 2,
+          "ever": 4,
+          "mean_conditions": 3.0,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 5,
+          "ever": 5,
+          "mean_conditions": 3.5,
+          "invalid": []
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "improved": false,
+    "checks": {
+      "pooled_h10_margin_ge_4": false,
+      "fisher_one_sided_p_lt_0.05": false,
+      "pooled_h50_not_below_baseline": true,
+      "retention_guard": true,
+      "reload": true,
+      "all_rows_valid": true
+    },
+    "p_value": 0.23627379858457867,
+    "candidate_h10": "8/16",
+    "baseline_h10": "5/16",
+    "candidate_h50": "7/16",
+    "baseline_h50": "7/16",
+    "h10_margin": 3,
+    "h50_margin": 0,
+    "run_status": {
+      "run1": "done",
+      "run2": "done"
+    }
+  },
+  "final": {
+    "skipped": "the preregistered rule did not hold; the final set stays unspent",
+    "selected": {
+      "label": "baseline",
+      "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full"
+    },
+    "completed_utc": "2026-09-24T01:56:02Z"
+  },
+  "gallery": {
+    "valid": 64,
+    "settled": 27,
+    "ever": 30,
+    "counts": [
+      {
+        "label": "a2-step000250-r1",
+        "phase": "benchmark",
+        "horizon": 10,
+        "valid": 8,
+        "settled": 4,
+        "ever": 4
+      },
+      {
+        "label": "a2-step000250-r1",
+        "phase": "benchmark",
+        "horizon": 50,
+        "valid": 8,
+        "settled": 2,
+        "ever": 4
+      },
+      {
+        "label": "a2-step000250-r2",
+        "phase": "benchmark",
+        "horizon": 10,
+        "valid": 8,
+        "settled": 4,
+        "ever": 5
+      },
+      {
+        "label": "a2-step000250-r2",
+        "phase": "benchmark",
+        "horizon": 50,
+        "valid": 8,
+        "settled": 5,
+        "ever": 5
+      },
+      {
+        "label": "baseline-r1",
+        "phase": "benchmark",
+        "horizon": 10,
+        "valid": 8,
+        "settled": 3,
+        "ever": 3
+      },
+      {
+        "label": "baseline-r1",
+        "phase": "benchmark",
+        "horizon": 50,
+        "valid": 8,
+        "settled": 4,
+        "ever": 4
+      },
+      {
+        "label": "baseline-r2",
+        "phase": "benchmark",
+        "horizon": 10,
+        "valid": 8,
+        "settled": 2,
+        "ever": 2
+      },
+      {
+        "label": "baseline-r2",
+        "phase": "benchmark",
+        "horizon": 50,
+        "valid": 8,
+        "settled": 3,
+        "ever": 3
+      }
+    ],
+    "html": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-matched-comparison-v5/gallery.html",
+    "index": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-matched-comparison-v5/media/INDEX.json"
+  },
   "ticks": {
-    "chain": "21404098",
+    "chain": "21404435",
     "chain_deps": [
-      "21404096",
       "21404097"
     ],
     "chain_begin": null,
     "watchdog": "21404091"
   },
-  "done": false,
+  "done": true,
   "stop_reason": null,
   "log": [
     {
@@ -61,6 +247,30 @@
       "utc": "2026-09-24T01:02:02Z",
       "message": "submitted run2 -> 21404097",
       "gpu_tasks": 32
+    },
+    {
+      "utc": "2026-09-24T01:55:43Z",
+      "message": "verdict: not improved under the preregistered rule",
+      "candidate_h10": "8/16",
+      "baseline_h10": "5/16",
+      "candidate_h50": "7/16",
+      "baseline_h50": "7/16",
+      "p_value": 0.2363,
+      "failed": [
+        "pooled_h10_margin_ge_4",
+        "fisher_one_sided_p_lt_0.05"
+      ]
+    },
+    {
+      "utc": "2026-09-24T01:56:02Z",
+      "message": "gallery built",
+      "settled": 27,
+      "valid": 64
+    },
+    {
+      "utc": "2026-09-24T01:56:02Z",
+      "message": "campaign complete",
+      "selected": "baseline"
     }
   ]
 }

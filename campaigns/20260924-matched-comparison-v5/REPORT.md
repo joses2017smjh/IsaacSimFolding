@@ -51,18 +51,20 @@ terminal conditions passed):
    gap was baseline variance between campaigns, not a candidate effect.
    Matched, same-array measurement is now the standard for any comparison
    in this repository.
-2. **The candidate's H10 advantage is real but small and pose-specific.**
-   It settles every P_C episode at H10 (6/6 over dev02/05/07 in both runs;
-   baseline 1/6) and is the more consistent policy run to run (4/8, 4/8 vs
-   3/8, 2/8). It is no better on P_A (2/6 vs 3/6) and worse on P_B (0/4 vs
-   1/4) — and at H50 the P_B regression is the clearest pose-specific
-   effect in the table: baseline 3/4 (dev01 r1, dev03 r1, dev03 r2) vs
-   candidate 0/4. The mechanism is not "densest supervision wins": 37 of
-   the 81 recovery successes came from `Pant_Short_Seen_4` key 1, whose
-   initial orientation (`garment_info.json`: rx −14.4°, ry −10.8°)
-   resembles the development **P_A** pose (−12.7°, −10.2°), not P_C
-   (+18.0°, +24.2°) — yet the gain appears on P_C and the loss on P_B. Why
-   this supervision transferred where it did is unexplained by v5's data.
+2. **The candidate's H10 advantage is real, pose-specific, and tracks
+   supervision density.** It settles every P_C episode at H10 (6/6 over
+   dev02/05/07 in both runs; baseline 1/6) and is the more consistent policy
+   run to run (4/8, 4/8 vs 3/8, 2/8). It is no better on P_A (2/6 vs 3/6)
+   and fails every P_B episode (0/8 over H10 and H50; baseline 4/8), always
+   on checker condition 1 (mean margin −3.3 cm vs the baseline's +0.3 cm).
+   Grouped by initial pose — `match_pose` identity, never pose key, which
+   maps to different poses on different garments — v4's search supplied 53%
+   of the training corpus at P_C (1,572 samples; 44 settled branches, 37
+   from `Seen_4` key 1, the exact P_C pose), 28% at P_A (838; 23) and 19% at
+   P_B (580; 14). The gain sits where supervision was densest and the
+   regression where it was thinnest. *Corrected 2026-09-24:* an earlier
+   edit compared that search row with the wrong development pose (a
+   pose-key error) and called the mechanism unexplained.
 3. **H50 is a wash with large run-to-run swing** on identical seeds:
    candidate 2/8 then 5/8, baseline 4/8 then 3/8. Two of the candidate's H50
    misses in run 1 were folds that came undone during the settle (dev02,
@@ -87,16 +89,12 @@ committed GIF copies are resized to 320 px wide after closure
 (`scripts/web_media.py`, not an executed campaign source) with both digests
 recorded, and the 640×480 originals stay under `evaluation/`.
 
-## Recommended next step (not run)
+## Next step
 
-More evaluation episodes of this checkpoint will not change the picture.
-The next lever is not obvious from this data: the search's dominant row was
-P_A-like, yet the candidate gained on P_C and regressed on P_B (H50 0/4 vs
-3/4). Before any further training, a per-pose transfer analysis — which
-search rows' labels resemble which development poses by initial
-orientation, and how each policy's per-step condition traces differ on the
-P_B rows — should say what the recipe actually changed. Any future claim
-should be measured exactly as v5 measured it.
+Denser supervision where it was thinnest — P_B, and P_A, whose folds came
+undone before the settle in 3 of the candidate's 6 H10 episodes — with
+pose-balanced sampling, measured exactly as v5 measured it. Run as
+`campaigns/20260924-pose-balanced-v6/`.
 
 ## Budget and provenance
 

@@ -326,9 +326,12 @@ trajectories, so a partial collection must never reach the compiler.
   pants episode scored 3/4 and every top 2-3/5, so reward differences measured
   garment difficulty, not action quality. The gate checks spread and
   concentration, which that passes.
-- **Initial poses are a shared set of ~6.** Pant_Short key 0 on garments 0/7/9
-  is the same pose ("P_A"), and the baseline fails it even at H50. The dev
-  set's H50 ceiling for the baseline is 4/8.
+- **Initial poses are shared across garments, but pose KEYS are not.** Key 0
+  is P_A on garments 0/7/9 yet P_C on garment 3; key 1 is P_C on 7/9 but P_B
+  on 0/3. Group rows by `match_pose` identity, never by pose key — a key-based
+  comparison produced a wrong mechanism claim in v5's first report. Dev poses:
+  P_A = dev00/04/06, P_B = dev01/03, P_C = dev02/05/07; 7 of the 8 final-set
+  rows are poses absent from both dev and every search.
 
 ---
 

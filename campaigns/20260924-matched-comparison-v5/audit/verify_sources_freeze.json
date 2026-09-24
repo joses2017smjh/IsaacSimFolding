@@ -1,0 +1,9 @@
+{
+  "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-matched-comparison-v5",
+  "commit": "6cdd0d463aafa34340d23651b54ed8a755bf64fc",
+  "sources_declared": 48,
+  "sources_checked": 48,
+  "checkpoint_checked": true,
+  "passed": true,
+  "problems": []
+}

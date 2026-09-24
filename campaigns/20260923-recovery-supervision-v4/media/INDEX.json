@@ -1,0 +1,2809 @@
+{
+  "campaign": "20260923-recovery-supervision-v4",
+  "generated_utc": "2026-09-24T00:59:21Z",
+  "rule": "shown iff rollout.json terminal_success is true; ever-success counted, never shown as success",
+  "counts": [
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "horizon": 10,
+      "valid": 8,
+      "settled": 2,
+      "ever": 2
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "horizon": 10,
+      "valid": 8,
+      "settled": 4,
+      "ever": 4
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "horizon": 50,
+      "valid": 8,
+      "settled": 3,
+      "ever": 4
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "horizon": 10,
+      "valid": 8,
+      "settled": 4,
+      "ever": 4
+    }
+  ],
+  "entries": [
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev00_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21402805",
+      "slurm_array_task_id": "0",
+      "wall_seconds": 282.97561897104606,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "aa425fb9f81c240fc01cd0ae8f597df48b19b6d72a300c48f3a3f590d483d662",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1770237,
+          "sha256": "543bd94d926244429eb33d0eaba31fe53121e1f9146a2f49d8387393eaa8032c",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 85463,
+          "sha256": "c479c918dd025c26a7f6eea906cf6ce4d439ba95ab23509d66b4e97b0267b9c5",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 29996,
+          "sha256": "60b9b1b2521bd2a79db5da75ef25f75ee1411fc67ad7938e0f512a27ee7a28ff",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 59705,
+          "sha256": "4a40c0d4a76b91176016626278bc37674c4c2372f1dce73140522fb1bfa63e2b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 195031,
+          "sha256": "451114d019c14195ffb25da1100c403543f68c1401e8f4237adb746731677bc3",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 3963711,
+          "sha256": "7ba55038caae28100d183079e977ee5de5a7e01026f367a423072d198301e6e1",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3240492,
+          "sha256": "e8f085f8b5f259cc3bb1ceefb8cefd9c02545e42fcc641e379ac1226b2a4c657",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2435477,
+          "sha256": "198cd1f66293da15d35df2cd8fe9294670bf25b44d4b40aec3dfeac233476d2c",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 10711216,
+          "sha256": "16e17816028f095fc045c23a6c67634c968928c6ebbcd1325c9ed774cd899e01",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev00_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev01_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21402806",
+      "slurm_array_task_id": "2",
+      "wall_seconds": 301.9514728549402,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "49ac6bcb28f8d91c8107c9a42a7dfc9c2551d9d485f5feaa47a0ae2d0d341fc0",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1811513,
+          "sha256": "5643af31e288dc6179ba506ad2bf9b190983b79bf4e279bcee949c803d225741",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 67272,
+          "sha256": "f73fcb30d15bc6c6ff0d7cec80bfa9e6f4df69c7a3043c001f832da464fddab7",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 42539,
+          "sha256": "07d22cba314b8e18c0430ea04dd3e87bc08d4df2afc66fbe19c89c6d489b3745",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 55871,
+          "sha256": "f8fa31397532b58caaa647d5311697c2f267dfd4072f404675a1118d263e62bc",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 189696,
+          "sha256": "092985c69644dc05977e521703ef5f695180bbf4299d25218bcce2c95d50184a",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4458976,
+          "sha256": "26559bf838286c56c5f8cb713ad7d8e9782037dff9773b9fe5643d6fdc660e2b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2920424,
+          "sha256": "b595e9ca0f388786a1a78e19ab7c778e47666c3395d48134b222a8375fcbd4ce",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2413138,
+          "sha256": "e00528834e3ec64bf3ba991f995ca6b56a92ecf917f47133194ca8142231f8a8",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 10908185,
+          "sha256": "e044b6a020e6c3bb7ff5df3f65d76cf9d9ebebed1e776378a325f505d8040d75",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev01_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev02_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21402808",
+      "slurm_array_task_id": "4",
+      "wall_seconds": 256.30526565620676,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "cb34b60026f8b18d4f1e0a0a06ca24891f89d35e1ede4090ffa8731e4b438dfd",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4",
+          "bytes": 1845342,
+          "sha256": "59e911526a2bd042cb57a86112404ca206fcd51639516843a8aa9361e4da13bc",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 55242,
+          "sha256": "cf25e197769f7b602eb8b17c528c78f2c51c7276819a1ec6b428a370970dc8a2",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 43998,
+          "sha256": "fd5dfcaf9e0903c71b8c996802a984293f3729f216b30b85e0982b783d363633",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_final_top.png",
+          "bytes": 56780,
+          "sha256": "471347b1e7fad7ef029f3e0fa2f74cb4f77ed93e33b5fd4c247fb218ccbec811",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_final_triptych.png",
+          "bytes": 177702,
+          "sha256": "d7f6938c2ff89483b8d8c65c097950a56a4bf74560dfff6e8cf931efca103b03",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_left_wrist.gif",
+          "bytes": 3887390,
+          "sha256": "d95a4e6297893cf4327510941ec10b803f58681306480ff2186a1c0e7293d3cb",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2746348,
+          "sha256": "7eabbab13da4488aa584a71e83ad152d5ab8b36d33842ae42635aaf7accde877",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_top.gif",
+          "bytes": 2418175,
+          "sha256": "4f331cfb8c3b0cf293a3643246ba6556a7f613143b7b1877356c1230d0b59159",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_failure_triptych.gif",
+          "bytes": 10116798,
+          "sha256": "f776c954269f1595638e5f2d8aefa62d0c094edc54c923f5c35866b786918f4c",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev02_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev03_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21402809",
+      "slurm_array_task_id": "6",
+      "wall_seconds": 249.0741639600019,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "45dacf88db24d47411398435f04ece4a029c8a674ca1625380c9b273e6ff5358",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4",
+          "bytes": 1897391,
+          "sha256": "c452fc1d515e96246ae95dce2517df304ae9ce7219ad3206d3c2e6c66854bcec",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 76228,
+          "sha256": "24fe2ff0df321697cc48a88fa4bbcaa26794e8e5338fabdc81ae396efb903c98",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 71083,
+          "sha256": "4a55aeea0fb98c51fd37cb78d8c20ceee61d972ad16506a9ff2d65ca1e8fa4d1",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_top.png",
+          "bytes": 59858,
+          "sha256": "4dba6a54032361abcfa8f89479bb7bb0a135dc006fb78fb2f57db0abfd949e35",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_triptych.png",
+          "bytes": 232998,
+          "sha256": "77e6fd159ee7b7afa5147b971db5d75a0aed8f56f9b188700331c6f58c452d7c",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4957671,
+          "sha256": "1821a036ca98042279591b96eb595c30b3ff6d38935a69dd39deb7e9513f0c63",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3082387,
+          "sha256": "f5fa1e65b735342e8fbd9716f905a694ed5aef22f4cc857f7e26d820e58bdbcf",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_top.gif",
+          "bytes": 2451317,
+          "sha256": "453050841d5c599b2c51c2b29c87012366280ffc58165bbfb24c8aa5c09be43d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_triptych.gif",
+          "bytes": 11719690,
+          "sha256": "ddb9989b8ad6e0354793810fd68669babc3d7065d38c9dcc545ed4f54392c481",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev03_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev04_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21402810",
+      "slurm_array_task_id": "8",
+      "wall_seconds": 271.0756914629601,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "428c9fae373a864f059730d0383dd84c628df1c8f1bd7b91416985f44f133a76",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure.mp4",
+          "bytes": 2056779,
+          "sha256": "0a27c9f019b0e5d6b6dcb26f5ad936a99fefa4fb9d1e8df91631519aca8104bc",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 68236,
+          "sha256": "8a02200b4e90c81813954a7549817b1ced25cc7c980c0ccb25b4f372e1cff82c",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 47283,
+          "sha256": "9d4954ab7a18fe59ec1a2dd555549cc04d893ed073ee0ddf0bedf7a68711beb5",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_top.png",
+          "bytes": 57867,
+          "sha256": "eb24bcc6df49fd19457419ddef626d2692fe9de56c611e9169b6f8362e34a439",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_triptych.png",
+          "bytes": 196507,
+          "sha256": "a5f36d815df6b50425d94ded1b41502750e410b0625e6e6f22e5179c014b8073",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4745932,
+          "sha256": "55ba6d20c0edf2abe773bf53408284101a23eefd381a7e036e261225332a8bcd",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3157499,
+          "sha256": "a8a6bdcf0eb0b1ce190c4bec0af45d976143709970c5d58ab66d16bbb27dc72f",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_top.gif",
+          "bytes": 2471178,
+          "sha256": "4ddf0f4e91de4c1be9250662c5712f2d4e4873bc470c586eea60251ca46250e7",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_triptych.gif",
+          "bytes": 11403068,
+          "sha256": "83cd00c06aff62ed8ffd63f55f91b9caaae928347f41837c7e15533220672b89",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev04_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev05_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21402811",
+      "slurm_array_task_id": "10",
+      "wall_seconds": 270.613897128962,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "b99c2d473d45930ef60b334954cc79b5fa188442a11fe5de2752b30d43005cfa",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 1839443,
+          "sha256": "642e0349dcee41f6fb7f7bae9e37f370a663dca9bbb3e80f9ed3ff3da28717ce",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 65607,
+          "sha256": "3cc8a5702986230b56b9fc8668dbe3086e718d25cbac07459a3503e991d23837",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 42627,
+          "sha256": "5c22544da49f2f5b358be317c8b726381e9062b35fd260ba5d3b8bb370cbe003",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 57328,
+          "sha256": "d78af5a1ea90e6a4c4e724d7143a5a3172ec31fa9d252ec6a7b309ec7ceea9c7",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 190247,
+          "sha256": "54e4ed25e053ec0b749d3a89ec18d29141389e79d79056099f668bbaf5888b6e",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 102347,
+          "sha256": "d43c1c22d14c14d0537e01e52a083b84308656cd5378fca96f95f5ef46946321",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 24227,
+          "sha256": "48fd31e8b94b240a1560d398fc5d39af16d35035ce63b450d8b0e9d311cc454c",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 60174,
+          "sha256": "d8ff571b38c66db913cbbb884057b5cd7b7ec21f3ff7c1723106d7af330668e7",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 204573,
+          "sha256": "9242a30504086010d8d21b6a17dd5940cb5068d990aea01af55e587456028412",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 4715713,
+          "sha256": "613ce9943cc71230db09a0c8af41d4156f0c624c60892111a646b45fcfc7e7ac",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 3006811,
+          "sha256": "61ff23377f6e6663996ce347136b01bff20290dd856a07064209003c4f1a058d",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2492723,
+          "sha256": "da32e96ef23cc9fb607fa766d140b3218f6cbfc3080bd1f15f42c28181d43fd2",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 11277274,
+          "sha256": "f651acd36ee2aeb1a9c4eb018ea8e7417f51480fb748306bae7c26536df4a905",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev05_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev06_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21402812",
+      "slurm_array_task_id": "12",
+      "wall_seconds": 221.3617337050382,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "01fa74454997651dbba8c6a215370476b5e2529be8b8fb6e29c8bb1b1c599c01",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure.mp4",
+          "bytes": 1715735,
+          "sha256": "807adf382442c5de31bb734699da81e93b40fe63dd2b41a10cad361f7176108b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 56628,
+          "sha256": "55a3ff1d5e059d25f0ffef12d914ae3cf3665dfa5f684ea90052b2310a0ffdde",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 44647,
+          "sha256": "9b7e87edf548c1d8b454c093c2d9f675f15577964b149f7aebd96c61b70ddaeb",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_top.png",
+          "bytes": 55181,
+          "sha256": "15aef88c6b92ce1d2e87c7d8481a5783f0f4c69badab6a0f04410d693b6556ed",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_triptych.png",
+          "bytes": 178900,
+          "sha256": "59a4227177d3bd6565c80dca2d557e08287f5e6f3a7b20765bf7725d2168d782",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4078545,
+          "sha256": "ba2ad8f2fcfc4565b6bc07c6531e4981fbb2aec62b484eeedf9c3566dfe119fc",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3000746,
+          "sha256": "5a1e2d412188cf9d719c9cf19720c26f6e2594a2feecc3450ef25e83852db6d8",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_top.gif",
+          "bytes": 2368186,
+          "sha256": "68574867d3b1e299747eb27e9b11de51a15ba59d2362d4905fa71f2068bb2915",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_triptych.gif",
+          "bytes": 10635868,
+          "sha256": "a07ec2929992466603abd901e605faf5ff0e8ad58a6daa82f690530845d8c0c8",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev06_h10_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a1-step000100-r1",
+      "phase": "benchmark",
+      "row": "dev07_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21402803",
+      "slurm_array_task_id": "14",
+      "wall_seconds": 271.48900062800385,
+      "checkpoint_sha256_model": "a5edcf4932f3e79a4769280644939c47eed6cb0d646b9f8ac6ee10dde67c3058",
+      "rollout_sha256": "c54ef18fb7514420f40ad97c15ca0fec794122ce7e26d271d94ea021bbdec8f6",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success.mp4",
+          "bytes": 1794823,
+          "sha256": "604a087503e16497e98be6cfa76a7d032061eefd0cbe604e249ace32e0246ec7",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_left_wrist.png",
+          "bytes": 61653,
+          "sha256": "99d8fb65557895632a42c07a6b82d5e141d871f184c6157d0df89c11ea8c5522",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_right_wrist.png",
+          "bytes": 46624,
+          "sha256": "8f08dbe5fcdbce19387ac53d797e4734cf1fb84db191232ab4043dc69440d77e",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_top.png",
+          "bytes": 53080,
+          "sha256": "d7fd662655ebb231500fd96c5638f4b28b7a0bbb79e74321e4c576934d2657bd",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png",
+          "bytes": 182156,
+          "sha256": "f9ca94653890be50c78a859b5c5083af632d8c578a33dfb9a348b90d37101d73",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 120622,
+          "sha256": "37ae4773a63f288a0d6beb47c30856e3340cd7891721c9c71d8cceb50e4b0c60",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 53404,
+          "sha256": "6a4b0d126a5d6f1b7e426a3659256adb0c9cfe2e4f3d8ffaff15ebca4c2ec489",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_top.png",
+          "bytes": 61547,
+          "sha256": "20db592bad337f1b07e7b00d3cd968e9ff2485c2c468843d6799de6149b490fe",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_triptych.png",
+          "bytes": 264534,
+          "sha256": "18baaa7359e6161c82776ca2c5bd291c87049c27af9522efdc863089ec878e04",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_left_wrist.gif",
+          "bytes": 4281521,
+          "sha256": "3e3a5b0e8cd45b81cc6414c19d3f48e6c43f8005990201356744d3b200f27353",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_right_wrist.gif",
+          "bytes": 2819387,
+          "sha256": "ac8d03c53647dda27acf528d2396cc232103e7e0c84a2f8a0e5f8c5ae604b26a",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif",
+          "bytes": 2348731,
+          "sha256": "8ed2f5eee07c1a60753e21e7752dacaf004d77d98021bbe3d6e87508f285b626",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_triptych.gif",
+          "bytes": 10506227,
+          "sha256": "d8f34b8b6287857aea85771ea757b12a0d45a28a8837199a9bccf3bc1b41edaa",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a1-step000100-r1/benchmark/dev07_h10_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev00_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403297",
+      "slurm_array_task_id": "0",
+      "wall_seconds": 300.42725008702837,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "d8c2aca81b2ded489d6a04f17efb8cea7f0a250c417805496ac0ddf5ae99cf92",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1779235,
+          "sha256": "de3f2f4d0828d85760be4d0f983664868601f1334c5541edaa482db7d4cc7a2f",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 58992,
+          "sha256": "412f48b0ac243469a779d891f5767eca9ad19ae3ce0309fe37e3c6fcd0641ab0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 50922,
+          "sha256": "bd35b2195e8895e783644ee57b919cae90cdf96ec6f4231d739920c3601f1ed5",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 57553,
+          "sha256": "52fcd5b467fc3027284b38829cdad29257ba972285d55b11f31298e0bd540b0d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 190379,
+          "sha256": "b9ceaeb02971652aab32eb5442482cc107ead0fd40e2ed76c9059bb45af29aab",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 3966630,
+          "sha256": "0dece6ca219e66d390f851107ae28aa5fb5d5306134b9b621d920642dae10ec4",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3162264,
+          "sha256": "deb3ae3ee0776eda12df2b62d9c90b8629348565a3b48e843c480afdadcba564",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2452409,
+          "sha256": "95efbc7f294a39080e3d50ce897835ca2eb17ac94e126b317b93c5c47ea9670b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 10678094,
+          "sha256": "085bc564f5873c21689444ad490c2eab9897fc2244021b323cd7499a970d0cbe",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev00_h50_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 50,
+      "settled": false,
+      "ever": false,
+      "conditions": "1/4",
+      "slurm_job_id": "21403397",
+      "slurm_array_task_id": "1",
+      "wall_seconds": 257.18488295702264,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "7f90b0d6c278efbdaa698458fed8414e4a5e0bddc7a12fa378e79d45f600784e",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1816436,
+          "sha256": "3f86f5b6e879f83a296ad5395f96e46b2e4d2cf1030748f5804837d1fff4f91a",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 86507,
+          "sha256": "2bec813e4565c522825ef47ef40e1640efee9f41eed23a5551a98764e2c2bba3",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 85618,
+          "sha256": "44360b343e9749049f811ef5e20c917a78acac966488bf6207af4b8be6040b2e",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 57881,
+          "sha256": "1e141158dc17f21ecdf3705497e4605f3b05a3b667848ce11eced63f5defcba8",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 251709,
+          "sha256": "c26e416cae3f0e45c025bd1a0013066fe5e0e5c33a36cbc076e10391ce72d321",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4550488,
+          "sha256": "7a96fa650c5e80f34cb8ab6e6f65cf649621a5b2e62027871cb0b0a036dc4a4b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3190724,
+          "sha256": "a4259a3c18d55ac85911803e2de89f73375298718c8b604053391c5fc853cb1e",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2467883,
+          "sha256": "63045660fd28a9a3bf2be674ce385efa3ca693eaf96aeb5d77034e0489e262b2",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 11569555,
+          "sha256": "4000bd9cde605112dd74b9ad029df575e8dc3718a6a6cd63255a93a11ebe49be",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev00_h50_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev01_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403298",
+      "slurm_array_task_id": "2",
+      "wall_seconds": 296.16785651887767,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "6f62b7556a3dd37c322f93777ad68f2029cd2d2c8fe55534a489ccfd68df2d0b",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1861879,
+          "sha256": "5c05ab0ffe68b96eec08d48593b5fdbaf14e74d74e0500468426baf72ef4fe2b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 58301,
+          "sha256": "7f3cf3585e0f627afee4035d5faa1813d0e7ce2b23fa9ad7c589f5136a2460e0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 52461,
+          "sha256": "2151a04c6fbd91503df2268511b6eed5d42e9d7d5bc13905c71efe79c08fc7c4",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 56721,
+          "sha256": "5df192d8975a01699b4a8ee7c8e12496c177a062400ce64fcf78682d9b814b87",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 190216,
+          "sha256": "8e4c484057ef6ea19f2c58a18e1d1d0ff75bdaee1ee44a480fefc93e93d809ff",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4967276,
+          "sha256": "1086e84e5eba7c473b9fa2f2eabb53f06b9617a04b87b785e478b75a9b7dd6a7",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3027857,
+          "sha256": "2f5cfb66b604c7cfe05433360b4e0e1a4f63caebe6a0d2e9b40eb9e58e4d5971",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2418987,
+          "sha256": "76b564ff1abf3f8f32d50ba19952269a63c262cadc4981baf304948b50ba33c9",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 11704481,
+          "sha256": "c21265f3b7dd3891dd9d67625c8bcb9bb46252357f019b935291f89d3d808198",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev01_h50_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 50,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403401",
+      "slurm_array_task_id": "3",
+      "wall_seconds": 255.97775373398326,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "80f7c3ab710da420b45b6078345fdf3f0ce8a69a83de758d299841d2668d4530",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1818838,
+          "sha256": "5308afb063044d917e7feb89cc13dffb843194b425f36b028f917f402fb9ef73",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 89018,
+          "sha256": "409945496fda9cb0e6870f6af124b4f507084fa89ee82b966925919b14d9fd58",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 38493,
+          "sha256": "9423ac1ddf8f2d60814f5de731d362a719152e355ee7a8759d242f0a68c95a66",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 56814,
+          "sha256": "4af4d4261adc225b00a66c3b2a938707e862455c277f9ebb0c14cf16ba825a27",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 212272,
+          "sha256": "9e08ed12e2a0bd8da2f5b91a5525e949071190bc48d13f297d3adea9614b438d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 5101032,
+          "sha256": "dccac9cdcb18246c7f08504407d363012c059f298054e1cb254069a761318000",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2949725,
+          "sha256": "ef5f37e66415d2a9ef52ed03dbe80074741fb065ac8aa63accc36c9ddf026354",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2476874,
+          "sha256": "8148c0659559462c64eaa64b059b4491d285f9402673df78b74f1794048e29ad",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 11783720,
+          "sha256": "0c07865bc2ebead406137c858d0b4a8d661830669f54deab71844ab038f3c5f8",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev01_h50_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev02_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403299",
+      "slurm_array_task_id": "4",
+      "wall_seconds": 244.9362817259971,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "27ad436d7a7fa385a648ecb112ec5ef26d6059db7b5d569efc659049ef553886",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success.mp4",
+          "bytes": 1697061,
+          "sha256": "8c98b9370adafce963c95b38648a18c12b001372abccdf287bcfdfc6c3ad1d19",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_left_wrist.png",
+          "bytes": 71980,
+          "sha256": "55684cbb17af1feb54701736815e9b1650196b3afaa20b33529e6a0433247b07",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_right_wrist.png",
+          "bytes": 40302,
+          "sha256": "7fe00b6e4d6f21d26d6aa4ffa6a8cb2d602ed8f26b63f69178e05723d2bbdff1",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_top.png",
+          "bytes": 56613,
+          "sha256": "f7d5091dae8546911e6781f1fc1b3bef8fc4bc1b589b62be79a0fe94bc049c09",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png",
+          "bytes": 194291,
+          "sha256": "20471d22faa50334c002def74bf19e3ba04db227e82fdc6bfb0ace870937be53",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 76926,
+          "sha256": "03b9eb8481ccc4facdb92b009e931a241f50f6c2d200d2ed40e3536235b7f2a8",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 23020,
+          "sha256": "59d0bba6a23fe5a4220eed91219f6ea6b4b19428f9d164a650b2e77c0a2eb112",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_top.png",
+          "bytes": 62260,
+          "sha256": "c51acaec7167697abcc94e79fdb9cdd5e0638723e230d38c87983ca119bfa7a9",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_triptych.png",
+          "bytes": 179852,
+          "sha256": "7d58eb34345b4b44c44ec5651af41f11833ab1b2a7ba1b5aac877dd5a3db828e",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_left_wrist.gif",
+          "bytes": 4286253,
+          "sha256": "b3e6b9efaa3105ef43aaab0ab293489557dae37458f01460f557f1f556adaf26",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_right_wrist.gif",
+          "bytes": 2784095,
+          "sha256": "15c2125090c616b0ba1f790aa2ac4a1a660f02987e6f36faeeda98b79b3df2fb",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_top.gif",
+          "bytes": 2412119,
+          "sha256": "be521fa990e941e43ff66318442a002753b79ece8c5c420c1fd1001e13284bc9",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_triptych.gif",
+          "bytes": 10694982,
+          "sha256": "4b6cc323375f844db251be47df0ca8a1592ec0a4b5ec389be513fda388c0f6ad",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev02_h50_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 50,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403411",
+      "slurm_array_task_id": "5",
+      "wall_seconds": 208.29935460700653,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "953699a8e650283dc9b1559758a055f7cdc6f0e3f5561de1e6fd6c11312493ab",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success.mp4",
+          "bytes": 1759972,
+          "sha256": "275597905fa746229a0c5abd9d36ddc12c16371962c3ea2a390db318cb242395",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_final_left_wrist.png",
+          "bytes": 72928,
+          "sha256": "b19ea69f8169a499e068c2bf90dd5f7721312506f4a8f234dfb3212a8b9e3bac",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_final_right_wrist.png",
+          "bytes": 43810,
+          "sha256": "5c61a15335d1ed51ef3ea9625be3440aa27589502d1818f74c7c161f2e083463",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_final_top.png",
+          "bytes": 55478,
+          "sha256": "e39973223ce74bf5d23f5c8ed511b80ae6d5b333035c86758f88d28ce00c7425",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png",
+          "bytes": 198545,
+          "sha256": "7854e348b70408e48db9f69eb268d7a78b0680e72a8be1223f3eb276c52f4ecc",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 71391,
+          "sha256": "c29cee245d1271cc3b65b6516bff7e70ae08e6bcf6309fc5405525f1eaa99ba1",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 43172,
+          "sha256": "6847362e41c818e4966fe1cbdd3cfb0d19804b6d6395d8aaaaab54edfa18adbf",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_first_success_top.png",
+          "bytes": 56067,
+          "sha256": "20fae27f2994adf545fd01a50fe4f2e2389219971bf586959c54ef6b80c23033",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_first_success_triptych.png",
+          "bytes": 197452,
+          "sha256": "32d857c2d3fe14af760e8fc85198a10992b8d0d58fa1299691277083c96f003e",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_left_wrist.gif",
+          "bytes": 4818240,
+          "sha256": "46eb50638f34b107ee172304f9f20554e941484f39ab71937c526c3d1c7bb25c",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_right_wrist.gif",
+          "bytes": 3271502,
+          "sha256": "fbf8dc652b102d1a11f9dac17a78ae9611f2b5d165defad2fe6f675903a4f086",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_top.gif",
+          "bytes": 2463384,
+          "sha256": "60b5ace113ccf68a9769035400f0dfa4dbe37d3ee1a0927f8505955bfb3b6d0d",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3/rollout_policy_success_triptych.gif",
+          "bytes": 11775268,
+          "sha256": "ee4d81efcd373bc57d582955aa8709c3a6f63a142539ab9af148d819b6d50bca",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev02_h50_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev03_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21403300",
+      "slurm_array_task_id": "6",
+      "wall_seconds": 212.30441142595373,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "38c6f1c1b1ee497110038c58978e6535c8d511893551971bddf8fb13e8181a6e",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4",
+          "bytes": 1772947,
+          "sha256": "3d639a687c9b28093620e60fb80ab45cbb8484e7052f3175c42d7a593543340e",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 142840,
+          "sha256": "9d24cc902b3a22474e713d08a0e694854c980577e2c670b9b2d1e7f01d2b01bd",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 35494,
+          "sha256": "6fde5ac59c40efd1eab08c0318410d707f23825ccf54ce198197330bcf688785",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_top.png",
+          "bytes": 65525,
+          "sha256": "4ad2b5b91b0b9f98261809dbb6a4380535a700c8ac2c4012813f6673ed4b0d50",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_triptych.png",
+          "bytes": 267662,
+          "sha256": "348806cbfdc97d14e098a29ef1615793e4c04f56de253cfca532d1147d850662",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4892382,
+          "sha256": "dda48c517f8f891e08c3330ac0d29a410bcd873edc16d0aaffaffe7a81a17125",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2970084,
+          "sha256": "49f75ddb27feee566696e5bd7740ea2a36a7d34474cf1321c6a6ff9a4896eb22",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_top.gif",
+          "bytes": 2480167,
+          "sha256": "f87aae9508776116d89861d71ed2392d4805a17a1b37705141a1f1c83859dfbe",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_triptych.gif",
+          "bytes": 11594799,
+          "sha256": "9f26bf59dd565f1515279571bbe987dac3613997eb1ae80c7560035e46da8a63",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev03_h50_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 50,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21403415",
+      "slurm_array_task_id": "7",
+      "wall_seconds": 210.72875588200986,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "4856495defa83809baa89f281ef2dab7f69689d3abd3358c903f0704ad1a6010",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure.mp4",
+          "bytes": 1791544,
+          "sha256": "8d795dc4f21801549ae3bc83d97c7bc067f1f93bfa8658d74dbf9facbe2783a0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 90201,
+          "sha256": "17627885710b6b0d552bc040fbc51f47010ac9cacb3ced233bb2ce07ad58ccd6",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 45516,
+          "sha256": "320f9179807d5b934d072ef4133a3f0851a9e73c40b52decc8cbe6fbfdac6e04",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_final_top.png",
+          "bytes": 58466,
+          "sha256": "02bf44c38dfa9b3bc69a9d28ffc433cb0066cdef274c1a8a70ab69812aa85fa9",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_final_triptych.png",
+          "bytes": 221916,
+          "sha256": "7ae2cafefa243d1f0d52271ab9c07dbe53ba78f953203bc7431b4567419e876b",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4899828,
+          "sha256": "3ada5252da1af05608e672aa4647a34cfd0b895fb8c3367e8077e6f8481af8e5",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2875197,
+          "sha256": "c60d0f2a7fb25ac57be6310520024e939758494291419f38e18d6c29b0336f3f",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_top.gif",
+          "bytes": 2464747,
+          "sha256": "bc3a5bc6caf0666c0f56a77cfeab91e5ad18f320992bbc86d9ed2fce6254b3f6",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3/rollout_policy_failure_triptych.gif",
+          "bytes": 11571473,
+          "sha256": "4b205a20a1fcc1a9db6ad885407630337bf9ec36a4f45e9b08262ac86f683a2e",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev03_h50_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev04_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21403323",
+      "slurm_array_task_id": "8",
+      "wall_seconds": 277.2888904060237,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "85f6fccf5cc9644d5745a4cf9065cd103c89c06b25ca135396641a7e731250e0",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure.mp4",
+          "bytes": 1997029,
+          "sha256": "e14bc945fba7900cd52dba6ef1550704ae6d8ca995134cebd325c790b10012dd",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 50949,
+          "sha256": "345d0dda5430438c690a88343a659e59aaf0d639c4c000ff748173d151f469b3",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 35420,
+          "sha256": "7b63a3e4df559a092b77df9b02a3fbf6e6d6f80268b565943022bdb02306320e",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_top.png",
+          "bytes": 57376,
+          "sha256": "f70d4b3665c0b087c2a9ef818ca58c36132cf6a6a3b7316256bb993c09de0ea7",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_final_triptych.png",
+          "bytes": 151788,
+          "sha256": "74aaad82bd1370e4bf994c0c902569c1a3d87537039ba8ef4108f99dce028a53",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4743819,
+          "sha256": "7c59cff38c2c0083c15fb98e5e2e5020978ac1aec434774311953a1e88e9fe0d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3331375,
+          "sha256": "01599da7de17fa9ef02a8d92e7df8d09e3e57cdcc1bede3bcf45d67ef66895f2",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_top.gif",
+          "bytes": 2474633,
+          "sha256": "86f1311939c7165e899f85d65ba8621d4f4108cc4f4cddaba77c8cb13b9e7b64",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_failure_triptych.gif",
+          "bytes": 11622737,
+          "sha256": "4efb743fd3838845d27a0beeb05c836796242ab8a9434c3ed297cec6c9c4bc11",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev04_h50_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 50,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403426",
+      "slurm_array_task_id": "9",
+      "wall_seconds": 257.2224759720266,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "4ae6dd9103690188037cf318ec1055ec7561522e4de34dd5f4bec9099d2e46ff",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 1829479,
+          "sha256": "7d5e401ea3d1a22780ed37358e90b5b4c2d67e0892bba3cecd060730d2e0b19c",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 73179,
+          "sha256": "3bab28ff08866abb7306bb10e9f93a4f1dce447553417e5c5e83110bc68b1917",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 45574,
+          "sha256": "59eeb9b7db25b8614f09170b369973f260c80bc393a9dade9ea1855e1148ca25",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 57288,
+          "sha256": "a946da9c4c3769dbd6ab7dc016e9833ad84af21cd63d1d35c50fd4dc80d252b6",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 198419,
+          "sha256": "b022f168134977dc2726918fa0f6d756c6cd49d35a66d07457221c74deef95ef",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 113087,
+          "sha256": "106113959f0c2ec4374f1da3f6f19792ca462ee57942b3fb02c5b73be083ebcc",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 29842,
+          "sha256": "c8d358034466db60d122b04847a5353b1412aa77e61af9e458e4462b3a95f9e5",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 63472,
+          "sha256": "1bd7d101cf72a633295f7ae0a8e70cc0d57115cbaa6310685592fd75de945e59",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 222572,
+          "sha256": "6375fdcbf790b595fc4e774e39990d74a330146f5d910aa4be74b5cdb71439ed",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 4910169,
+          "sha256": "2f4af4baea395e4fd5b6a8f87d3741c085d85ce246d82c56f38e631df435479a",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 3536346,
+          "sha256": "46a74ddceda149599d1ac13fcaf2e18758926a477382faf53d5df416282024ca",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2510526,
+          "sha256": "ff480c3ef4db40203a45c7bc5251832760edb8ea7ba676377b571172fbd6057b",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 12068652,
+          "sha256": "9946d08cbf82dd4ad6b073eb3683e6941b17d1518dd5f6765723b1a5ac91a5a3",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev04_h50_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev05_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403328",
+      "slurm_array_task_id": "10",
+      "wall_seconds": 272.3363255460281,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "90d2c5bec8167b12c26af1e50a21e6d625f5e6dae97a3c639dec7434aa9191f1",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 2007608,
+          "sha256": "3f6125c6c83fd47cccd8d27fc3dd97f4160e8688d2d8ce482d8a2fa92d565474",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 119632,
+          "sha256": "bc7135270b6b75c212ed0290a292cb109efcb7e0c2af42b95672f14ef724b92f",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 67391,
+          "sha256": "cd917a22c361aa77b90cd448bec1a5ee12f1282160d5a44fb6c8d9057b2b3aad",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 59886,
+          "sha256": "bd96f811bf1abba34c9ac601d36ae1337540c035bdb5c6ba39fb4d2a03b1d652",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 277897,
+          "sha256": "230d99a54cf81ecdc2fb3594e8f94fd77439d82ba12f6813e9d7115c1737fff5",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 61212,
+          "sha256": "fc16c8463c9dae80b588edd554e31d8d9e6faaa351e59922832340f7d803d995",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 19487,
+          "sha256": "0372e6405ddd0f492e4b0827429559ed58ac3a6c9154c8a01200c36fba18c4a7",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 62223,
+          "sha256": "ab060fe653c0ffbd040a82d6069c7496fb86d70f7ace8fe626d2253fa729c045",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 157104,
+          "sha256": "cefa8af9edc40aaa0bec993a73dc69aa578bf52489ef7119e219633e4b5b9948",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 5242447,
+          "sha256": "f1b5a76ff8a6d68384c86358984c617b7009f97972f6c561629a9556aca9c994",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 3019630,
+          "sha256": "addf99cc35104a65bb5be3b606168ca9592358e573ce36fc94ed50923465ea86",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2517158,
+          "sha256": "b063d4953dfb435096f90a2599c903d63492a67217c5e4bcce90e7b615dfc333",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 11921380,
+          "sha256": "4c9b81c433ff49f19e0aea5f5d62e7da95702220ac198d11101a5921cf717731",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev05_h50_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 50,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403431",
+      "slurm_array_task_id": "11",
+      "wall_seconds": 208.2369189900346,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "e9a6db1e541c45ea5cecf1c169719b033d1181e407601531f58d321df05bf790",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 1930204,
+          "sha256": "fdc10403eccad4c9e5577a65f416d0c65d9a962e0c515b1a91a164eb59ec460e",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 118327,
+          "sha256": "f2af970d96843dee8ff794d7849e017952b2bc3ebea7f28622eaba97fb814fba",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 66158,
+          "sha256": "583d7a2e570959902e52179eb32dc91ab830d61178b72eaec4f2fcfd82f559af",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 59252,
+          "sha256": "fd706949380dc2de5086a87166f903a3b6c3e6a480712f02dc2473d6a5dd8821",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 275301,
+          "sha256": "2d26e06ce862097406543c35b8bfda644bee5ee87d99b3fff5a219258b1af997",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 120665,
+          "sha256": "561101fc237e65bc407cb12d3da5d85508d1d4814644fea362e9c0611da3d1ca",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 28232,
+          "sha256": "77bc55ebfd415123a26d735bb51ab6ba9b898eb88731847a342de698dd81b06c",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 63537,
+          "sha256": "db3fcb9821f47a9e4809e731ba01c63b211d0ae072b77a63a230463991280770",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 230820,
+          "sha256": "da6537a6726266044a438bf313b22a02266bbbd3f982325e1261e2418b408eb7",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 4681902,
+          "sha256": "e88c3f9784784f2dd760b4c0aa8ece14e4ed5a69fe65bd783f66403c76c876f2",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 2767638,
+          "sha256": "59e025e16d8fb1bceb2577aa7adae4a9cb68591b087fe3f7648a38253d994322",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2502823,
+          "sha256": "4bdd13550201ab3934051491a3adbdd9cd6320d1d63159db7a46820f1349aa30",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 11047126,
+          "sha256": "b562569a4a2bb18dd4d954aae4d1dbd7ab3e39a6e20f80a0770d6ae7ce398152",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev05_h50_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev06_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403329",
+      "slurm_array_task_id": "12",
+      "wall_seconds": 213.25104087009095,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "693db38dda63099b2b0c46b5e5f6417a63fccc54b6f20dedd6cb1925905da04a",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success.mp4",
+          "bytes": 1761276,
+          "sha256": "90d199acba938b8cba762ed22853d88213d36b30c0f0f2c6d1f34d2d386cae70",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_final_left_wrist.png",
+          "bytes": 76657,
+          "sha256": "26f23256fc58d12e67e3879bc2cd16fef8657e6aaa69b467665fdb6a22c77973",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_final_right_wrist.png",
+          "bytes": 49319,
+          "sha256": "cf09b0b9de618650ec2afd7717e75f2bd3df2fe8a797d5db9b464a39bb4be165",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_final_top.png",
+          "bytes": 54091,
+          "sha256": "b75d489eecba617fc17facdb86d2520e1355c3b3086c674efa8a3ac5fbf199c0",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png",
+          "bytes": 205730,
+          "sha256": "a61ad9ab13a0e60fad1c6773e09e4a29bf8e79541197963f23d7b57a1ca1d0fb",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 56890,
+          "sha256": "d52ad3271811733115321d0c527acc0abd147fbb1d4f7bdc946ab6b108430eb4",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 22040,
+          "sha256": "8e50fa19f56ec6656d14ad0f84bd469f758c405810ac293ab2baa55ee268a86a",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_top.png",
+          "bytes": 60295,
+          "sha256": "bb99cef2740717a281f625fbe2889d77423bc2d93350b0b14159b0666963d7d0",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_triptych.png",
+          "bytes": 153784,
+          "sha256": "c0a1b3b5401c24a23733dedaf657b8df2a9548d551b6b3b48c12a19434905987",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_left_wrist.gif",
+          "bytes": 4242059,
+          "sha256": "43b04e1d2baf3466bc6178790c1800a021da6f2d1a2eca81d6e74740ee94652a",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_right_wrist.gif",
+          "bytes": 3028661,
+          "sha256": "ae72d4e9eb9ecf0fced6fd4c1e80a79b8cbacde78f1cca52d5986b6aaa9157a1",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif",
+          "bytes": 2414876,
+          "sha256": "5f82ef7ec4e104825b82aa93b10163ef43b13efee90cab4e8904ec8c8ddf5b38",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_success_triptych.gif",
+          "bytes": 10767109,
+          "sha256": "75a9a6bea1c4601ba5c0a68858881dbad0a64d89a165683aefe4c8f22c24e1a2",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h10_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev06_h50_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 50,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403439",
+      "slurm_array_task_id": "13",
+      "wall_seconds": 258.61849005310796,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "5267416d66eba96d83773e6d8b1364b56e40431fa330e8b9f3bf3a73598cecf8",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure.mp4",
+          "bytes": 1782551,
+          "sha256": "15143823686131848a57d25e1b812d8f5499ad2dd1fa892bb2db318324c6c3a0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 78514,
+          "sha256": "9da52b935ab319097470aa720c980d0c41a68bf7e297c19e4a5c80647d91af50",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 97207,
+          "sha256": "8fd18d9eb02da44c8d24d989981c79e5f58aa703a1ee441a9067ea201ff9f5d5",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_final_top.png",
+          "bytes": 57082,
+          "sha256": "9a02f7bf1a8663e4cdc1d300a74ea23d75da88c16b905202b59f1941b1494770",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_final_triptych.png",
+          "bytes": 256113,
+          "sha256": "cfa693a7a1ad340b798a5284514ca7f77f1d946363cb3a6b5ea450bb2a113990",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4374333,
+          "sha256": "6d37257b6f6f6bfe4e884bacd04bec2a1b652859f19bf5e1a2991ddb431ac002",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3017948,
+          "sha256": "52404d284062f5085b6f55c2f012106c8205296ed0bd5075685b228ae0567323",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_top.gif",
+          "bytes": 2375532,
+          "sha256": "a10fd9e7878661f665147ec7f55433e9a6aef51c27939077e6181c3c41caee09",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9/rollout_policy_failure_triptych.gif",
+          "bytes": 11030014,
+          "sha256": "b23242579818b9a2a2557799d0c80bb5b72c1d3a5ae227179a3edf47ef0a8ca8",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev06_h50_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev07_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403295",
+      "slurm_array_task_id": "14",
+      "wall_seconds": 271.6875878360588,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "0408edbf146efab5ee6ab33451b4678dc8ec68cb914b60afb2092becedff2015",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success.mp4",
+          "bytes": 1784683,
+          "sha256": "7f2d7beaa8216268ab71f57301921094b9ef88b98be355ff2cae238c7a23bf58",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_left_wrist.png",
+          "bytes": 73411,
+          "sha256": "97678d53b9cd726f77302d6478001592fd289407a608a65b0edc6cfa114f76ca",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_right_wrist.png",
+          "bytes": 40773,
+          "sha256": "cb23efd053a3e6c59a3134d3b771bd0caa982cb7a09bf4c2d5843c4dd4838880",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_top.png",
+          "bytes": 53818,
+          "sha256": "2793912d033e0b7536e5ed48fb4f7265595f476a4955f08cd3c79e786459c9b3",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png",
+          "bytes": 193566,
+          "sha256": "4135430302ab3175459bb573c38c346a9584729e316c4f01bac3e0ed9cba8802",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 59622,
+          "sha256": "28aafbb0e3c15a414805cf411a81d19a0b45c70e83e70cb8f64ca1cacd938e35",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 20414,
+          "sha256": "459cf162603d074d87cb771fe62c577af719de2204d4fc96d45dedbe241a5903",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_top.png",
+          "bytes": 58912,
+          "sha256": "c983fb2e1a2b12e7c541a40c63e435cb07f2c2a8a36a74b3c651dae82e846422",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_triptych.png",
+          "bytes": 153686,
+          "sha256": "fe9ba75ede06a78ba973423b5e3856363e3fa47aba0e7a589689a81b2cab4b24",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_left_wrist.gif",
+          "bytes": 4449631,
+          "sha256": "8c15b21291f0dc79802d4787f28f2585506416bf7880e74dc9014c78a2059fb2",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_right_wrist.gif",
+          "bytes": 2846184,
+          "sha256": "7cc902507e9e781554f4da0dee984d0853ae96b23d8296c0987ee15cb8c0aabb",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif",
+          "bytes": 2398844,
+          "sha256": "c8fe2116c64be9a79f15f2c9b56559736feb7451078ca133fcc3d1e2656eb397",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_triptych.gif",
+          "bytes": 10821551,
+          "sha256": "dff362ca2795e72f4859cba5f559f806b6e993ec38dd258cab2a1fbb5ab45c35",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h10_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r1",
+      "phase": "benchmark",
+      "row": "dev07_h50_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 50,
+      "settled": false,
+      "ever": true,
+      "conditions": "3/4",
+      "slurm_job_id": "21403388",
+      "slurm_array_task_id": "15",
+      "wall_seconds": 211.54385142493993,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "f832039a42cd8f45d24d6f248c3cbff520ce1498c575b4aa3b69c6d60117171a",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success.mp4",
+          "bytes": 1726690,
+          "sha256": "3ef085f58e0847e55e76cbdf12d4b27022ab22c14547ddb79fba6cb5c6ff6c63",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_final_left_wrist.png",
+          "bytes": 83571,
+          "sha256": "968c6bf9a2be6954677ea794d93578aef7c4e21687dcbc4732131dd817f597fe",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_final_right_wrist.png",
+          "bytes": 38229,
+          "sha256": "29714cdb4c6a1de474816ed410a9cbce275eabb47eb056d05cb824178dd511a4",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_final_top.png",
+          "bytes": 54123,
+          "sha256": "f9db82df9c7e1673e43e064f9a79f7ddf85d6a7ac0c6f35473818837b904e2d1",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png",
+          "bytes": 202870,
+          "sha256": "808d26daf7f658d1319c01ec667fc2382dd05f11b594ba66ce840a4bb208c69d",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 134495,
+          "sha256": "8b8221bbd6b3e938b54d32059accf3a407e8b3cbd6b48c1afa1988e880a7c5f0",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 40054,
+          "sha256": "ca2319059d2c55f2964a4f7007a821261d7ba993e62185363f1c7cacb1670723",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_first_success_top.png",
+          "bytes": 60256,
+          "sha256": "b8e7268c299c0ea079233014c1b89fb2c41f9286eb2cc21be4f22aa77ef3c814",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_first_success_triptych.png",
+          "bytes": 256048,
+          "sha256": "75db671501f323be2aa8e18c9eba5fbd449629ddb95ed938dd52dcb76e1558d3",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_left_wrist.gif",
+          "bytes": 5017765,
+          "sha256": "53866dfe10badc1408d5c22b4b49c06ef9e44b294ff40689cde80ec619f11c87",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_right_wrist.gif",
+          "bytes": 3013029,
+          "sha256": "755def5056e4318033eb9c9dff3e72cbd6fbc35ab6be3c4fb6e4ca3a4b266095",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_top.gif",
+          "bytes": 2418838,
+          "sha256": "d18b0e29f4ffa09e248e62d043b35ee5d8f698d65cbb8cd30f083618386f50dc",
+          "copied_to": null
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9/rollout_policy_success_triptych.gif",
+          "bytes": 11760836,
+          "sha256": "52588349f1cb941fccf716794af65696f7f5a5e47f84a3e8ed9c4fe8a7ae20e1",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r1/benchmark/dev07_h50_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev00_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 200,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403370",
+      "slurm_array_task_id": "0",
+      "wall_seconds": 271.13593338709325,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "90a82241409f706544f1fcfdafe18b69f9d0433e1280f8a94cdf227c57f870e7",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1779467,
+          "sha256": "4d2380cd74dc860668fa22c762033463583faccf7dcb39cf3d5ea6a24aa75ca3",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 58376,
+          "sha256": "33fa8782c2c940407d1fedfee1e033799a840754eae228598c1acf7339a450ed",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 50495,
+          "sha256": "203f3f3dbf38636df2d6fa51b555ec7dd5b21707cf2a91036a3de3c663d98f39",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 58002,
+          "sha256": "3061025df63e8ceb5b41fada7e19cfeac73182da3a34d612ea8d7fd97a77d209",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 189880,
+          "sha256": "6df65e10ee2eb990e47a8e95316d4eb4800607dadc81a8c2e7c0608697d5dadf",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 3955540,
+          "sha256": "bcb04deb4f5bc7481be66ff67ebab7de7f1104ca66577f588ba76bef2dfcbec0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3148340,
+          "sha256": "0822a4a3416212a182af129649f63ac52219ff2e5fb43ce8e7b3629a88a0f640",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2443785,
+          "sha256": "527037edd38de8afae5597029dcad1c5e33fcfcffb799ff78f260523463e3ad6",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 10638140,
+          "sha256": "e96cd7e89e7620c153d8749f71a677df4de54b7a18cfbb8ee4299e355dc8dc6d",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev00_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev01_h10_Pant_Short_Seen_0",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_0",
+      "seed": 201,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403371",
+      "slurm_array_task_id": "2",
+      "wall_seconds": 225.71006855997257,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "9fd4e0c994a7625b939615af48f66c2e49f467b5ce67470ffc9383503e9d2024",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure.mp4",
+          "bytes": 1834711,
+          "sha256": "7d3f4c845910ec5f56224e8faa49e27ae1234ea073913a8effabf994120ce3df",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 89686,
+          "sha256": "a12e985f6ae1daef2484c2af38d92748399edb718708ab7578c363c043f56743",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 44875,
+          "sha256": "8280f9ba9f5737d768e503f180672ab1fb91c41b68fcdbef263aeed564cf5842",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_top.png",
+          "bytes": 56281,
+          "sha256": "aa387d2fe080b3119f70b4efc5578831da342034f22ae316209a189dc8e6af19",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_final_triptych.png",
+          "bytes": 215562,
+          "sha256": "88f0701dd1959d889d53764ae25c25b9047ae4806bdffa6243e9e7cc4c79e5ef",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_left_wrist.gif",
+          "bytes": 5051636,
+          "sha256": "5cf08ffcf8fdebcd836ba35ed9a168aa95b6671011bef66a8d2129711992c878",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3033416,
+          "sha256": "bf35e5c01f4e77461dbd607c6b8dbcf0d1f289ec3bdfbe83ea21e3899cc02738",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_top.gif",
+          "bytes": 2422636,
+          "sha256": "895a05fcaf4d3d88485c16ec9350bb44ff38b6a8847ca4ee4ee2c6b488b8866d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0/rollout_policy_failure_triptych.gif",
+          "bytes": 11777816,
+          "sha256": "40759a5b15df2889ff4015906dac90ac567cf57a395aea820ef80dec32c912c4",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev01_h10_Pant_Short_Seen_0"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev02_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 202,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403372",
+      "slurm_array_task_id": "4",
+      "wall_seconds": 218.79012282006443,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "2c8b246a14193bbd2ca491d70c119a922f73db1533fb8d3b76093d398fcd1e46",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success.mp4",
+          "bytes": 1709137,
+          "sha256": "0add68b727349c51848cb198de67caee60d14e3eac86b4f66f613ccf388b3dac",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_left_wrist.png",
+          "bytes": 76625,
+          "sha256": "26869c97e34175bc867404bb4c3e23b497f00e56e2cdc94c6606d3368d575a08",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_right_wrist.png",
+          "bytes": 34989,
+          "sha256": "66963ef7ce2c707db67519bd4d14a2c9356ff79fa105e87f3d5c91b206a5b43a",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_top.png",
+          "bytes": 59128,
+          "sha256": "9be74ad2c614f5316541cd041e218e7ffcde88c0dc9c72d46733d05afcee0c4d",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png",
+          "bytes": 192498,
+          "sha256": "08cd6b9b6cb0abb8ceb3de15ddc9ffc6ebcb5950a5fbc5f2dffffb4b9be097a0",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 81800,
+          "sha256": "1709f37a216857198a88d7114b81f763bfd03641467aaea870bf6087620273b4",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 23072,
+          "sha256": "9c5c19cb5aec3cafe63795d0a76e3010b62f1f3831e727fadbb60283a333f91b",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_top.png",
+          "bytes": 62731,
+          "sha256": "3ab2d4090ddd2f8a9cb436a1af46b209a919185f14412e952ea71700e23ea641",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_first_success_triptych.png",
+          "bytes": 184370,
+          "sha256": "5022392394a3b628f17adb270272c235d300dc2dff7b957fe7861e39e62c194d",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_left_wrist.gif",
+          "bytes": 4319111,
+          "sha256": "a2b78067596f76166374f8618061fa7b4b717ba817810bd2ff8d09ce0df5fb77",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_right_wrist.gif",
+          "bytes": 2822726,
+          "sha256": "82bddf2fb86afdacde2f998a7b17001c868274834e9d70a5ec5c92fa76430896",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_top.gif",
+          "bytes": 2412763,
+          "sha256": "37f10e71236e33fa2c1d4b2df4468b0ad12ad8143531dca259352eefa3312c62",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3/rollout_policy_success_triptych.gif",
+          "bytes": 10740124,
+          "sha256": "d03ed15bcc256b41e702ffe34e6f20ea1b57bd00bfbad36d620136e823e08bf2",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev02_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev03_h10_Pant_Short_Seen_3",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_3",
+      "seed": 203,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "2/4",
+      "slurm_job_id": "21403381",
+      "slurm_array_task_id": "6",
+      "wall_seconds": 271.48488265811466,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "263ce7215c746996747d9354b650b7af43628af1e48df47f3f660952e6fa1bfc",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure.mp4",
+          "bytes": 1772396,
+          "sha256": "e720c910785a95dc4069cf775bfffdcea3540cf978ecbc1dcb29460813cdeaac",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 141074,
+          "sha256": "9caa1ecf89b82341a2e57d7c15204a4c9ca6275d7d5471b9c2696e31b230114c",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 36576,
+          "sha256": "e754a6010ffbe054ca58e079c345512ff98d89024ef48b17257802c05e90c85d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_top.png",
+          "bytes": 65588,
+          "sha256": "8413ea78f18b5d6db5078849f0adf3122bcba7c4ca6cbfe41cec696bd155479f",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_final_triptych.png",
+          "bytes": 265579,
+          "sha256": "0a8a354056c0fe5d0e0b7cfa36efc782415483926986e43dbf58d05e00646b67",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4859615,
+          "sha256": "6c1589c6f815d9c0f4046975a0ddaed171f228d6fc14b4fa63e0afae823da2d0",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_right_wrist.gif",
+          "bytes": 2962989,
+          "sha256": "510c008d2d9ddaa8965d5f7c8a0a49cd4c01c178530c02b320385782d86afa4d",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_top.gif",
+          "bytes": 2480274,
+          "sha256": "62c6737bedec3ba12edd1d0d622b93c177cf69bbe034e9f094076c3b52442938",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3/rollout_policy_failure_triptych.gif",
+          "bytes": 11541480,
+          "sha256": "126461a05338701458c115b7aebe1eeabd8be0a2b961ff10b0878ed427ca36d8",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev03_h10_Pant_Short_Seen_3"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev04_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 204,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403383",
+      "slurm_array_task_id": "8",
+      "wall_seconds": 222.90539636695758,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "4f6334fdc064d939a91c5e4eccbb3c22b8759f0e33241756026115e8c62cc2c1",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 1740985,
+          "sha256": "7eaaea95442de642604a86fc4fafadccf5741545db72abd5ca0a8e93566d65df",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 64268,
+          "sha256": "6b143ae66f204c322bbf5d616a1c0f167571d0538f00a61b76bd4d5ef54046d9",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 49724,
+          "sha256": "84832c740fd97b05cea43e3414e8422f1fc0f8340e1bbd16597bb463e17f14d9",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 58217,
+          "sha256": "76dfef12eb49fbc2f5ae0adb5aa46f31842cce8d986c1ccb10353fffae4a9efc",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 192659,
+          "sha256": "855ef04cb165e9f50cfd7bbc9d1161bbb34104531cbbfdfca26a1860223430b5",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 120609,
+          "sha256": "319fa27ed84adb997b6ed0cac283f4f9619fab6d146c324c57a4830aad5fad42",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 64057,
+          "sha256": "2af12f29a12fed642ea0fc6cc7f2deb56edc067d6ccf2561d0b51f5e6bbabf1b",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 60237,
+          "sha256": "be455e94c6341e292682fd11137bb7dc4f583fc8f442d15858255222b541d684",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 272673,
+          "sha256": "447dd4ae0e3e360d1f0664107761027aed32ac5492f36638929422006cc3f6f3",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 4634369,
+          "sha256": "a2a42e383f352dcd8950d53b3b4234848bb06e6588e87d54ebec3ba7d3d6eaa0",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 3335844,
+          "sha256": "95c2f6df8a485c507cbfa0fb0cd176d5d053513495bab84ba2669a3e5412562e",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2468809,
+          "sha256": "d542b7a735397f91883320f3031bfee95c3cc362dbea3a540d2c7f8baa832c06",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 11589144,
+          "sha256": "2bc2d453fbc9cba7ff8d121537cac5c68cf78b05bd09c71a38d0dd403882bbf7",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev04_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev05_h10_Pant_Short_Seen_7",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_7",
+      "seed": 205,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403387",
+      "slurm_array_task_id": "10",
+      "wall_seconds": 275.1385443068575,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "a64c4db05ad167d8fc0c7217be61eb1ba91577a1b4e5f8b2365fec3370690799",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success.mp4",
+          "bytes": 1997664,
+          "sha256": "f19dbf1338e379ddcd153f459513599d753b726125980236f7b72cdf6d591d74",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_left_wrist.png",
+          "bytes": 119619,
+          "sha256": "b761f5e79812fd1afa72b12fab65167358d2bc924625b97d30ea3c584ac0c7a2",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_right_wrist.png",
+          "bytes": 67908,
+          "sha256": "19f6f86dabb3d1b3d9da1466b48ae9b62bc7f01e61e9959fc50058f74ee05d3e",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_top.png",
+          "bytes": 60096,
+          "sha256": "751871f166eca1e00a07a8914786223af291109ce7f56b8074f34ce623252479",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png",
+          "bytes": 278605,
+          "sha256": "dfe89a7b3b1420ab4c6f07baceaedd1c11d91cd104bc418127233c4560963850",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 59137,
+          "sha256": "c5951c31e16d4e541a80166443d5c1384e480a9838c7de01b8f51da87e36da39",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 19423,
+          "sha256": "8eebf11e7763cf12901c381f4355cdc09e410b9259f3d5b51e8e8d67e0496bc0",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_top.png",
+          "bytes": 62690,
+          "sha256": "290648371a3b6b8fd9114730733c0f437e2d923fc6ec59b3f7902d025677d18e",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_first_success_triptych.png",
+          "bytes": 154721,
+          "sha256": "1db8ae90525ab8459ffec4108152694853e6d8272fdbd494fdeda3d8ae9c62e5",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_left_wrist.gif",
+          "bytes": 5218037,
+          "sha256": "68e7796ba9c19207dcbd4a6d615014c5a4caaa12a03081aeaf8d82e8268d0567",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_right_wrist.gif",
+          "bytes": 3014867,
+          "sha256": "7e3767e42a243a74e7e038e2d2466ef8455f47c661105dec66768aed55ccb532",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif",
+          "bytes": 2518482,
+          "sha256": "a012c012b736f548bb747790898f993054d3382462a70e1324c1295334eb6489",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7/rollout_policy_success_triptych.gif",
+          "bytes": 11893780,
+          "sha256": "3f00745aad7abf182c2e5fcf8db0ee2f0a6f6393430b1daa4c13803ebd134564",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev05_h10_Pant_Short_Seen_7"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev06_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 206,
+      "horizon": 10,
+      "settled": false,
+      "ever": false,
+      "conditions": "3/4",
+      "slurm_job_id": "21403392",
+      "slurm_array_task_id": "12",
+      "wall_seconds": 223.5976747709792,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "49b3519c76c38761aa5c9bd36535cdc872c8da4c231fe028d578f39287bcccfd",
+      "tag": "failure",
+      "files": {
+        "rollout_policy_failure.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure.mp4",
+          "bytes": 1802020,
+          "sha256": "2b60c65fb3e631b487c3729a56a544c6f734fda48d54fd4c8fa3b78e1b54d6db",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_left_wrist.png",
+          "bytes": 76593,
+          "sha256": "ef1155ca31397c9e63d4d0737cce9259c3fc16ac2e9d395dd7eeed7935f7f3fd",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_right_wrist.png",
+          "bytes": 49124,
+          "sha256": "2b9ca0aaff913de92c8f4e7d18aa652eecaf29a149b649b4897a106c2343d9ae",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_top.png",
+          "bytes": 54213,
+          "sha256": "ee031ff581ea8b8fc69589f5fb73093d05901b9155426db755c179c2cf852e70",
+          "copied_to": null
+        },
+        "rollout_policy_failure_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_final_triptych.png",
+          "bytes": 205723,
+          "sha256": "6c87c5fc847daf9744bc5e39245157f662da8f957463b1426314c6816007f221",
+          "copied_to": null
+        },
+        "rollout_policy_failure_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_left_wrist.gif",
+          "bytes": 4181305,
+          "sha256": "ae3c94d05e0647bf288a9685461eb818056dad3b0c9195b9b633ad3c4437238a",
+          "copied_to": null
+        },
+        "rollout_policy_failure_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_right_wrist.gif",
+          "bytes": 3004587,
+          "sha256": "98d82590c1e8fde8eb34f92acb8e8f36833d6a30fd6a873a2e9adbb21f4fa009",
+          "copied_to": null
+        },
+        "rollout_policy_failure_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_top.gif",
+          "bytes": 2366390,
+          "sha256": "f61e30f40fb2b8893b50527ae7c6f1f9358de291e7957ce5e16f37e92b53d911",
+          "copied_to": null
+        },
+        "rollout_policy_failure_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9/rollout_policy_failure_triptych.gif",
+          "bytes": 10626776,
+          "sha256": "cb6f4ced5523044305140167bb6976459f0ccf308a54863859c5b4158140bdd3",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev06_h10_Pant_Short_Seen_9"
+    },
+    {
+      "label": "a2-step000250-r2",
+      "phase": "benchmark",
+      "row": "dev07_h10_Pant_Short_Seen_9",
+      "policy": null,
+      "run": null,
+      "garment": "Pant_Short_Seen_9",
+      "seed": 207,
+      "horizon": 10,
+      "settled": true,
+      "ever": true,
+      "conditions": "4/4",
+      "slurm_job_id": "21403368",
+      "slurm_array_task_id": "14",
+      "wall_seconds": 221.35931897512637,
+      "checkpoint_sha256_model": "1444d6ad7fddcf2e9349a75d2da7f179acde16468f8632c063e25677e12022b1",
+      "rollout_sha256": "90151997e99fed4fae790fb50f52fb7dd098829b8067ec01e684eeb5945c83b0",
+      "tag": "success",
+      "files": {
+        "rollout_policy_success.mp4": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success.mp4",
+          "bytes": 1784061,
+          "sha256": "ba61a5e12388bccf9a5a8a8a8e76f7bb405a5aa2ca6819c490af6a95462dffa8",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_left_wrist.png",
+          "bytes": 73398,
+          "sha256": "17336f274b93bc759abfce27bd54256bd8eaa03e0083ae05f554b290abcfee62",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_right_wrist.png",
+          "bytes": 39926,
+          "sha256": "2eb42245e7d3c2b8ec23a9c950f4777ffac608b181e8428f8199d589df19f736",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_top.png",
+          "bytes": 54193,
+          "sha256": "b24092e5468670f7d4d03eea614b83256fd5fb85846ddbd0d76512bbeb64e6a3",
+          "copied_to": null
+        },
+        "rollout_policy_success_final_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png",
+          "bytes": 193254,
+          "sha256": "86ef434a623645129cb4cb95d130406274cef1c89d2f0cee59de475ecffe0739",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_final_triptych.png"
+        },
+        "rollout_policy_success_first_success_left_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_left_wrist.png",
+          "bytes": 58519,
+          "sha256": "6497b9115dd895d3e117f4dc6f422451c7159ef9fa1c3b334bc30018ac40cb78",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_right_wrist.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_right_wrist.png",
+          "bytes": 20524,
+          "sha256": "b48a16954c42cc617d5f6be1ad9277d4d9aea59f84c09bb689df0e59d4f37530",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_top.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_top.png",
+          "bytes": 59046,
+          "sha256": "7497266f94cfcb64a0c4ebdea216a33ce39608b5ac1252064330c74295058ae3",
+          "copied_to": null
+        },
+        "rollout_policy_success_first_success_triptych.png": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_first_success_triptych.png",
+          "bytes": 152852,
+          "sha256": "688ba4ffc421c549539ac6da736981fdb7024d275e247afba496193001edf74f",
+          "copied_to": null
+        },
+        "rollout_policy_success_left_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_left_wrist.gif",
+          "bytes": 4440930,
+          "sha256": "a50e6584341031be6d5be3827f72c40a14096f5a76eab72cf2ba060f17f4b45a",
+          "copied_to": null
+        },
+        "rollout_policy_success_right_wrist.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_right_wrist.gif",
+          "bytes": 2856159,
+          "sha256": "ba694d19ea28c5edefdb0a03064d8896fd872f00f1a4cb1df690e8c32b759f5e",
+          "copied_to": null
+        },
+        "rollout_policy_success_top.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif",
+          "bytes": 2394644,
+          "sha256": "d5613e0371060bba198ce8a4d7c63eab1c75b7874bda4bf306684d617e8d9cbe",
+          "copied_to": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/media/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_top.gif"
+        },
+        "rollout_policy_success_triptych.gif": {
+          "source": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9/rollout_policy_success_triptych.gif",
+          "bytes": 10823315,
+          "sha256": "fbb7beb311d171e47ed838b8fcc1aed670e8a4b92057f12ee12a321390f700b2",
+          "copied_to": null
+        }
+      },
+      "dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260923-recovery-supervision-v4/evaluation/a2-step000250-r2/benchmark/dev07_h10_Pant_Short_Seen_9"
+    }
+  ]
+}

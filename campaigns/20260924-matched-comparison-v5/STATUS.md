@@ -3,10 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none submitted yet |
-| **Current result** | none — campaign being frozen |
+| **Active job** | `21404089` smoke |
+| **Current result** | smoke pending |
 | **Limitation / blocker** | none |
-| **Next automatic action** | smoke (both policies, 2 tasks), then r1 + r2 (64 tasks) |
+| **Next automatic action** | driver advances the next stage when a waited job ends |
+
+_Updated 2026-09-24T00:59:17Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

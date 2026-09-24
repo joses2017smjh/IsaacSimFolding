@@ -1,0 +1,16 @@
+{
+  "campaign": "20260924-matched-comparison-v5",
+  "jobs": [
+    {
+      "job_id": "21404089",
+      "phase": "smoke",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 2,
+      "submitted_by": "driver",
+      "manifest_commit": "6cdd0d463aafa34340d23651b54ed8a755bf64fc",
+      "submitted_utc": "2026-09-24T00:59:17Z",
+      "state": "submitted",
+      "array": "0-1"
+    }
+  ]
+}

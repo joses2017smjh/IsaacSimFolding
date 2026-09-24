@@ -16,7 +16,14 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-24): v4 closed, no preregistered improvement.**
+**In progress (2026-09-24): v5 matched comparison** —
+`campaigns/20260924-matched-comparison-v5/STATUS.md` is the live page. Baseline
+and v4's `a2-step000250` run side by side in interleaved Slurm arrays on the
+same rows, two runs per policy per horizon, unchanged rule; evaluation only.
+`campaigns/20260923-recovery-supervision-v4/gallery.html` shows v4's 13
+settled successes (candidate that did not clear confirmation) with hashes.
+
+**Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
 3x-scaled recovery search (81/384 settled) + whole-episode anchor + lr
 3.3e-6 produced `a2-step000250`: H10 pooled 8/16 vs baseline 2/16 (p = 0.027)
 but H50 3/8 vs 4/8 — missed non-regression by one episode. Baseline retained;
@@ -38,7 +45,8 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report (v4) — latest outcome and next step** | `campaigns/20260923-recovery-supervision-v4/REPORT.md` |
+| **v5 live status (in progress)** | `campaigns/20260924-matched-comparison-v5/STATUS.md` |
+| Final report (v4) — outcome and the step v5 runs | `campaigns/20260923-recovery-supervision-v4/REPORT.md` |
 | Final report (v3) | `campaigns/20260923-recovery-supervision-v3/REPORT.md` |
 | v3 live status table and record | `campaigns/20260923-recovery-supervision-v3/STATUS.md` |
 | v2 final report (AWR negative result; frozen-test baseline measurement) | `campaigns/20260922-closed-loop-training-v2/REPORT.md` |

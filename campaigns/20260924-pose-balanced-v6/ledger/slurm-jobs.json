@@ -9,8 +9,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T16:11:28Z",
-      "state": "submitted",
-      "array": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+      "state": "completed",
+      "array": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15",
+      "final": {
+        "tasks": 16,
+        "states": {
+          "COMPLETED": 16
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 32192,
+        "gpu_hours": 8.9422,
+        "start": "2026-09-24T09:11:29",
+        "end": "2026-09-24T11:41:16"
+      }
     },
     {
       "job_id": "21409327",
@@ -20,8 +31,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T18:41:28Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 448,
+        "gpu_hours": 0.0,
+        "start": "2026-09-24T11:41:37",
+        "end": "2026-09-24T11:49:05"
+      }
     },
     {
       "job_id": "21409491",
@@ -31,8 +53,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T18:49:11Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1615,
+        "gpu_hours": 0.4486,
+        "start": "2026-09-24T11:49:27",
+        "end": "2026-09-24T12:16:22"
+      }
     },
     {
       "job_id": "21409937",
@@ -42,8 +75,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T19:16:27Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 108,
+        "gpu_hours": 0.03,
+        "start": "2026-09-24T12:16:36",
+        "end": "2026-09-24T12:18:24"
+      }
     },
     {
       "job_id": "21409947",
@@ -53,8 +97,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T19:18:26Z",
-      "state": "submitted",
-      "array": null
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1068,
+        "gpu_hours": 0.2967,
+        "start": "2026-09-24T12:18:27",
+        "end": "2026-09-24T12:36:15"
+      }
     },
     {
       "job_id": "21410268",
@@ -64,8 +119,19 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T19:36:23Z",
-      "state": "submitted",
-      "array": "0-31"
+      "state": "completed",
+      "array": "0-31",
+      "final": {
+        "tasks": 32,
+        "states": {
+          "COMPLETED": 32
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 7880,
+        "gpu_hours": 2.1889,
+        "start": "2026-09-24T12:36:36",
+        "end": "2026-09-24T13:12:35"
+      }
     },
     {
       "job_id": "21410269",
@@ -75,8 +141,112 @@
       "submitted_by": "driver",
       "manifest_commit": "9aa80b42628b462d99b39c2f84d7e251a637774a",
       "submitted_utc": "2026-09-24T19:36:23Z",
-      "state": "submitted",
-      "array": "0-31"
+      "state": "completed",
+      "array": "0-31",
+      "final": {
+        "tasks": 32,
+        "states": {
+          "COMPLETED": 32
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 7738,
+        "gpu_hours": 2.1494,
+        "start": "2026-09-24T12:36:36",
+        "end": "2026-09-24T13:44:04"
+      }
     }
-  ]
+  ],
+  "support_jobs": [
+    {
+      "job_id": "21408330",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21408331",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21409000",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21409328",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21409492",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21409938",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21409948",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21410270",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21410710",
+      "name": "lh-v6-tick",
+      "state": "active",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21410713",
+      "name": "lh-v6-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    }
+  ],
+  "reconciled": {
+    "by": "scripts/reconcile_ledger.py from sacct",
+    "stage_jobs": 7,
+    "support_jobs": 10,
+    "gpu_hours_total": 14.056,
+    "outcomes": {
+      "completed": 7
+    },
+    "by_iteration_or_stage": {
+      "search": {
+        "jobs": 2,
+        "gpu_tasks": 16,
+        "gpu_hours": 8.9422
+      },
+      "pb1": {
+        "jobs": 3,
+        "gpu_tasks": 3,
+        "gpu_hours": 0.7753
+      },
+      "run1": {
+        "jobs": 1,
+        "gpu_tasks": 32,
+        "gpu_hours": 2.1889
+      },
+      "run2": {
+        "jobs": 1,
+        "gpu_tasks": 32,
+        "gpu_hours": 2.1494
+      }
+    }
+  }
 }

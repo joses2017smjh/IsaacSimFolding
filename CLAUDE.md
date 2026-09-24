@@ -16,15 +16,19 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-24): v5 matched comparison closed — not improved.**
+**Latest outcome (2026-09-24): v6 pose-balanced supervision closed — not improved.**
+A targeted search at the under-supplied poses (P_B 123/384, P_A 38/384
+settled) and a pose-balanced corpus trained with a2's recipe produced
+`pb1-step000200`: matched H10 4/16 vs 5/16, H50 8/16 vs 7/16. It reaches the
+fold far more often (13/16 vs 5/16 at H10) but loses it within ~6 steps at
+H10; at H50 it settles P_A 6/6 vs 0/6. **The binding constraint is now fold
+holding, not reaching.** Read `campaigns/20260924-pose-balanced-v6/REPORT.md`.
+
+**Previous (2026-09-24): v5 matched comparison closed — not improved.**
 Baseline and v4's `a2-step000250` measured in the same Slurm arrays on the
 same rows, two runs each: H10 8/16 vs 5/16 (margin 3, p = 0.24), H50 7/16
-vs 7/16. The matched baseline is far above the earlier cross-campaign
-numbers (2/16, 4/8) — most of v4's apparent gap was baseline variance
-between campaigns. Baseline retained; final set unspent; 27 settled
-successes with hashed media in `campaigns/20260924-matched-comparison-v5/`
-(`REPORT.md`, `gallery.html`). **Any future comparison must be measured
-this way**, never against numbers from another campaign.
+vs 7/16. **Any future comparison must be measured this way**, never against
+numbers from another campaign.
 
 **Previous outcome (2026-09-24): v4 closed, no preregistered improvement.****Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
 3x-scaled recovery search (81/384 settled) + whole-episode anchor + lr
@@ -48,7 +52,9 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report (v5) — matched comparison, latest outcome** | `campaigns/20260924-matched-comparison-v5/REPORT.md` |
+| **Final report (v6) — latest outcome and remaining limitation** | `campaigns/20260924-pose-balanced-v6/REPORT.md` |
+| v6 live status and record | `campaigns/20260924-pose-balanced-v6/STATUS.md` |
+| Final report (v5) — matched comparison | `campaigns/20260924-matched-comparison-v5/REPORT.md` |
 | v5 settled-success gallery (27 folds, hashed) | `campaigns/20260924-matched-comparison-v5/gallery.html` |
 | Final report (v4) — outcome and the step v5 runs | `campaigns/20260923-recovery-supervision-v4/REPORT.md` |
 | Final report (v3) | `campaigns/20260923-recovery-supervision-v3/REPORT.md` |

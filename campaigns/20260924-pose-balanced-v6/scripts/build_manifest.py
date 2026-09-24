@@ -217,7 +217,7 @@ def main() -> int:
             "baseline_numbers_from_earlier_campaigns": "not pooled in; v6's own baseline runs are the only baseline",
         },
         "media": {"gif_every": 12},
-        "budget": {"gpu_tasks": 150, "gpu_hours": 40.0, "reserve": {"final_set": 16},
+        "budget": {"gpu_tasks": 200, "gpu_hours": 40.0, "reserve": {"final_set": 16},
                    "expected": "search 16 (~9 GPU-h) + train/reload/fit 3 (~1) + evaluation 64 (~5) + final 16 (~1.2)",
                    "note": ("anti-runaway bounds; the user lifted the GPU-hour constraint on 2026-09-24. For "
                             "reference, v2-v5 used 24.8 of the original 45 GPU-hours."),

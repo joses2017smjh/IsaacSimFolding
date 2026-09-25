@@ -93,6 +93,26 @@ def latest_guard_passing(training: dict) -> tuple[dict | None, str]:
     return chosen, f"latest guard-passing checkpoint: step_{int(chosen['step']):06d}"
 
 
+def gate_stop_reason(gate: dict) -> str:
+    """Name the cause of a compile-gate stop; never claim a mechanism result
+    the gate did not produce."""
+    unmet = gate.get("unmet_requirements") or []
+    mech = gate.get("mechanism_check") or {}
+    if gate.get("infrastructure"):
+        why = ("stopped on infrastructure before any conclusion about landing depth; "
+               "search outputs retained under recovery/")
+    elif "mechanism_check" in unmet:
+        why = (f"landing depth did not predict settling on this search (landed-deep {mech.get('deep')} vs "
+               f"shallow {mech.get('shallow')}, stratified p={mech.get('p_one_sided')}): it is not a usable lever here")
+    elif mech.get("passed"):
+        why = (f"landing depth did predict settling (landed-deep {mech.get('deep')} vs shallow "
+               f"{mech.get('shallow')}, stratified p={mech.get('p_one_sided')}) but qualifying supply was "
+               "insufficient even settled-only: a yield shortfall, not a mechanism result")
+    else:
+        why = "the gate did not produce a usable result, so nothing is concluded about landing depth"
+    return f"depth gate unmet: {unmet}; {why}; nothing is trained"
+
+
 def fisher_one_sided(a_success: int, a_n: int, b_success: int, b_n: int) -> float:
     """P(A's success count >= observed | margins), hypergeometric; stdlib only."""
     from math import comb
@@ -440,6 +460,15 @@ class Driver:
         if self.stage_status(key) == "active":
             return None
         if not report.is_file() and key == "smoke":
+            row = self.manifest["recovery_smoke"][0]["id"]
+            err = self.root / "smoke" / "recovery" / row / "rollout.json.error.json"
+            if err.is_file():
+                # the runner raised: deterministic (code, asset or spawn), so no retry
+                e = json.loads(err.read_text())
+                self.state["smoke"] = {"passed": False,
+                                       "problems": [f"runner raised {e.get('error_type')}: {e.get('error')}"]}
+                self.event("smoke: runner raised; not retried", error=e.get("error_type"))
+                return self.state["smoke"]
             # infrastructure failure: move the partial output aside, retry once
             src = self.root / "smoke"
             if src.exists():
@@ -468,7 +497,8 @@ class Driver:
         if st in ("incomplete", "skipped"):
             ok = [r for r in rows if self.read_result(self.root / "recovery" / r["id"])]
             if len(ok) < len(rows) - 1:
-                self.state["search"] = {"passed": False, "unmet_requirements": [f"search {st}"]}
+                self.state["search"] = {"passed": False, "infrastructure": True,
+                                        "unmet_requirements": [f"search {st}"]}
                 return self.state["search"]
         if self.stage("search.compile") is None:
             self.submit("search.compile", "compile.sbatch", [str(self.root)], gpu_tasks=0)
@@ -477,9 +507,10 @@ class Driver:
             return None
         gate_path = self.root / "audit/recovery_coverage_gate.json"
         gate = json.loads(gate_path.read_text()) if gate_path.is_file() else \
-            {"passed": False, "unmet_requirements": ["compile produced no gate report"]}
+            {"passed": False, "infrastructure": True, "unmet_requirements": ["compile produced no gate report"]}
         if gate.get("passed") and not (self.root / "datasets/recovery.npz").is_file():
-            gate = dict(gate, passed=False, unmet_requirements=["gate passed but the corpus was not written"])
+            gate = dict(gate, passed=False, infrastructure=True,
+                        unmet_requirements=["gate passed but the corpus was not written"])
         self.state["search"] = gate
         mech = gate.get("mechanism_check") or {}
         self.event(f"mechanism check + per-pose depth gate passed={gate['passed']}",
@@ -582,8 +613,7 @@ class Driver:
         if gate is None:
             return "wait"
         if not gate.get("passed"):
-            return self.finish(f"depth gate unmet: {gate.get('unmet_requirements')}; landing depth is not "
-                               "a usable lever on this search, so nothing is trained")
+            return self.finish(gate_stop_reason(gate))
         cand = self.train_select_verify()
         if cand == "wait":
             return "wait"
@@ -689,8 +719,9 @@ class Driver:
             per = ", ".join(f"{p} {x.get('successful_branches')}/{x.get('attempts_completed')}"
                             for p, x in g.get("per_pose", {}).items())
             mech = g.get("mechanism_check") or {}
-            parts.append(f"search: depth-qualified {per or '-'}; landed-deep settled {mech.get('deep')} vs "
-                         f"shallow {mech.get('shallow')} (gate {'pass' if g.get('passed') else 'FAIL'})")
+            cuts = g.get("cut_by_pose") or {}
+            parts.append(f"search: qualifying {per or '-'} at cuts {cuts or '-'}; landed-deep settled "
+                         f"{mech.get('deep')} vs shallow {mech.get('shallow')} (gate {'pass' if g.get('passed') else 'FAIL'})")
         at = self.state.get("attempt") or {}
         if at.get("selection"):
             parts.append(f"{at['selection']}" + (f", reload {'ok' if at.get('reload_ok') else 'FAIL'}"

@@ -27,19 +27,38 @@ search    28 training-only rows, baseline as student, early roots 30-180,
           (closure/width margins, gripper-to-cloth distance, cloth lift):
           P_A 4 garments x 2 seeds, P_C 4 x 2, P_B small (Seen_6/8) x 4,
           P_B large (Seen_4/5 pinned at the P_B pose, off-metadata) x 2
-check     MECHANISM: among branches that reached the fold, landed >= 1 cm
-          must settle more often than landed < 1 cm (one-sided Fisher
-          p < 0.05) -- else landing depth is not a lever here; stop untrained
-labels    only branches that settled with terminal min(c1, c2) margin
-          >= 1.5 cm and folded by step 450; gate >= 24 qualifying branches
-          from >= 8 roots and >= 3 rows per pose, >= 3000 labels; no earlier
-          corpus reused (its depth cannot be recovered)
+check     MECHANISM: among branches that reached the fold and landed inside
+          the branch (landings inherited from an already-folded root are
+          excluded), landed >= 1 cm must settle more often than < 1 cm --
+          exact conditional test stratified by pose, p < 0.05 -- else
+          landing depth is not a lever here; stop untrained
+labels    branches that settled with first all-4 by action 450 and terminal
+          min(c1, c2) margin >= each pose's cut: the strictest of 1.5, 1.0,
+          0.5, 0.0 cm (0.0 = settled-only) at which the pose has >= 24
+          qualifying branches from >= 8 (row, root) pairs and >= 3 rows;
+          >= 3000 labels in total; no earlier corpus reused
 train     v6's recipe verbatim from the untouched baseline (pose-balanced
           awr_weight, lr 3.3e-6, fp32 master weights, latest guard-passing)
 evaluate  v5's matched protocol verbatim: baseline and candidate interleaved
           in the same arrays, 2 runs each at H10/H50, same rule; final set
           only if the rule holds
 ```
+
+**Why a cut ladder** (from the pre-launch review, before any v7 data):
+every settled baseline P_A fold ever measured ended below 1.47 cm and P_B
+rarely clears 1.5 cm, while the depth effect in the matched data comes mainly
+from P_C. A single 1.5 cm cut would have stopped the attempt for supply at
+P_A. With the ladder, P_A may train on settled-only labels (v6's criterion)
+while the depth filter acts where supply allows; the chosen cut per pose is
+recorded.
+
+**Same-mesh caveat.** Garments share meshes in groups (PS_049 = Seen_0/1/2,
+PS_050 = Seen_3/4/5, PS_M1_089 = Seen_6/7, PS_Short047 = Seen_8/9), differing
+only in texture, with identical checker thresholds. The large-garment P_B rows
+(Seen_4/5) are therefore dev03's physical garment at dev03's pose, and 6 of 8
+dev rows have their mesh at their exact pose somewhere in the search. The dev
+set selects candidates; it is not a generalisation test. The final set
+(Seen_1/2, PS_049) shares no mesh with any search row and remains the holdout.
 
 The rule needs about 11/16 settled at H10 against a matched baseline near
 5/16, so the attempt must turn v6-level reach into deep landings. Passing is

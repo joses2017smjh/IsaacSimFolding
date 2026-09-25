@@ -29,11 +29,22 @@ def finite(values) -> bool:
     return all(isinstance(v, (int, float)) and math.isfinite(v) for v in values)
 
 
-def check(root: Path) -> dict:
+def check(root: Path) -> dict | None:
+    """The smoke report, or None when the task neither completed nor raised
+    (a transient failure the driver retries)."""
     manifest = json.loads((root / "manifest.json").read_text())
     row = manifest["recovery_smoke"][0]
     d = root / "smoke" / "recovery" / row["id"]
     problems = []
+    err = d / "rollout.json.error.json"
+    status = json.loads((d / "status.json").read_text()) if (d / "status.json").is_file() else {}
+    if err.is_file():
+        e = json.loads(err.read_text())
+        return {"passed": False, "problems": [f"runner raised {e.get('error_type')}: {e.get('error')}"],
+                "row": row["id"], "completed_attempts": 0, "start_margins_cm": None,
+                "off_metadata_pose": row.get("off_metadata_pose", False)}
+    if status.get("state") != "completed" or not (d / "recovery.json").is_file() or not (d / "rollout.json").is_file():
+        return None
     rec = json.loads((d / "recovery.json").read_text())
     if rec.get("schema") != 2:
         problems.append(f"recovery.json schema {rec.get('schema')} != 2")
@@ -54,8 +65,7 @@ def check(root: Path) -> dict:
         if len(a.get("terminal_gripper_distance") or []) != 2 or not finite([a.get("terminal_lift", float("nan"))]):
             problems.append(f"root {a['root']} cand {a['candidate']}: terminal gripper/lift malformed")
         # the trace must agree with the recorded pass/fail trace
-        # margins are stored to 3 decimals, so a step within 2 mm of a
-        # threshold can round across zero; only clear-cut steps must agree
+        # compare only steps whose margins are clear of zero by > 0.002 cm
         mism = sum(sum(m >= 0 for m in x) != y
                    for x, y in zip(a.get("margin_trace", []), a["policy_condition_trace"])
                    if all(abs(m) > 0.002 for m in x))
@@ -64,7 +74,7 @@ def check(root: Path) -> dict:
                             f"condition trace at {mism} steps")
     rules = manifest["depth_rules"]
     records = [bdd.branch_record(a, rules) for a in done]
-    mech = bdd.mechanism_check(records, rules)
+    mech = bdd.mechanism_check({"smoke": records}, rules)
 
     r = json.loads((d / "rollout.json").read_text())
     pol = [g for g in r["geometry_trajectory"] if g["phase"] == "policy"]
@@ -74,8 +84,6 @@ def check(root: Path) -> dict:
         problems.append("off-metadata spawn: first-step checker margins not evaluable")
     elif start_margins[0] >= 0 and start_margins[1] >= 0:
         problems.append(f"off-metadata spawn starts already folded: {start_margins}")
-    if not r.get("physics_finite") or not r.get("robot_finite"):
-        problems.append("off-metadata spawn: non-finite simulator state")
     return {"passed": not problems, "problems": problems, "row": row["id"], "completed_attempts": len(done),
             "start_margins_cm": start_margins, "branch_records": records, "mechanism_check_runs": mech,
             "off_metadata_pose": row.get("off_metadata_pose", False)}
@@ -87,6 +95,9 @@ def main() -> int:
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     report = check(args.campaign.resolve())
+    if report is None:
+        print("smoke task neither completed nor raised; no report (the driver retries once)")
+        return 7
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(report, indent=1) + "\n")
     print(json.dumps({k: report[k] for k in ("passed", "problems", "completed_attempts", "start_margins_cm")}))

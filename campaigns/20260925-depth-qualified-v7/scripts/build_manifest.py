@@ -41,8 +41,8 @@ OFF_METADATA_P_B = [("Pant_Short_Seen_4", 2), ("Pant_Short_Seen_5", 2)]   # (gar
 GARMENT_CLASS = {"Pant_Short_Seen_4": "large", "Pant_Short_Seen_5": "large",
                  "Pant_Short_Seen_6": "small", "Pant_Short_Seen_8": "small"}
 ROOTS = [30, 60, 90, 120, 150, 180]
-DEPTH_RULES = {"landed_deep_cm": 1.0, "mechanism_p": 0.05, "terminal_depth_cm": 1.5,
-               "first_fold_max_step": 450, "min_total_labels": 3000,
+DEPTH_RULES = {"landed_deep_cm": 1.0, "mechanism_p": 0.05, "cut_ladder_cm": [1.5, 1.0, 0.5, 0.0],
+               "first_fold_max_step": 450, "min_total_labels": 3000, "max_excluded_rows": 1,
                "yield_curve_cm": [0.0, 0.5, 1.0, 1.5, 2.0],
                "landing": {"gripper_clear_m": 0.12, "lift_max_m": 0.05, "window": 10}}
 
@@ -183,7 +183,9 @@ def main() -> int:
                       "large-garment P_B supervision; decide under v5's unchanged matched rule"),
         "git": {"commit": commit, "source_hashes_taken_from": "committed blob, verified equal to the working tree"},
         "runner_key": RUNNER_KEY,
-        "runner_provenance": "byte-identical to v4's (and v5's) snapshot of the horizon-pilot runner",
+        "runner_provenance": ("v6's runner snapshot (itself byte-identical to v4/v5) plus passive recovery-branch "
+                              "telemetry (recovery.json schema 2: margin/gripper/lift traces, terminal_*); no "
+                              "physics, render or RNG change; pinned in executed_sources"),
         "executed_sources": executed,
         "task_prompt": "fold the garment on the table",
         "assets": str(DATA / "Assets"),
@@ -193,12 +195,17 @@ def main() -> int:
                                 "sha256": {p.name: file_sha(p) for p in sorted(baseline.iterdir()) if p.is_file()}},
         "pose_clusters": clusters,
         "depth_rules": DEPTH_RULES,
-        "depth_rules_note": ("preregistered from the v6 diagnosis: landed >= 1 cm settled 37/41 vs 13/25 below "
-                             "across 128 matched episodes. Mechanism check: among reached branches with a "
-                             "landing window, landed-deep must settle more often (one-sided Fisher p < 0.05) or "
-                             "nothing is trained. Label rule: settled, terminal min(c1,c2) >= 1.5 cm, first all-4 "
-                             "<= step 450. Landing: first >= 10-step window after the first all-4 step with both "
-                             "gripper link origins > 12 cm from the cloth and max particle lift < 5 cm."),
+        "depth_rules_note": ("preregistered from the v6 diagnosis (landed >= 1 cm settled 37/41 vs 13/25 below "
+                             "across 128 matched episodes) and the pre-launch review. Mechanism check: among "
+                             "reached branches that landed inside the branch (landings inherited from a folded "
+                             "root excluded), landed-deep must settle more often -- exact conditional test "
+                             "stratified by pose, p < 0.05, pooled deep rate above shallow -- or nothing is "
+                             "trained. Label rule per pose: settled, first all-4 action <= 450 (1-based), terminal "
+                             "min(c1,c2) >= the strictest cut in cut_ladder_cm at which the pose meets the gate "
+                             "(0.0 = settled-only; settled baseline P_A folds never exceeded ~1.47 cm, so a single "
+                             "1.5 cm cut would stop P_A for supply). Landing: first >= 10-step window at/after the "
+                             "first all-4 step with both gripper link origins > 12 cm from the cloth and max "
+                             "particle lift < 5 cm."),
         "pose_clusters_note": ("grouped by match_pose identity, never by pose key: key 0 is P_A on garments "
                                "0/7/9 but P_C on garment 3. P_A = dev00/04/06, P_B = dev01/03, P_C = dev02/05/07. "
                                "7 of the 8 final rows are poses absent from dev and from every search."),
@@ -235,11 +242,14 @@ def main() -> int:
             "same_wave": ("each run is ONE Slurm array of 32 tasks in which even indices run the baseline and "
                           "odd the candidate on the same row, throttled at 8 concurrent; r1 and r2 are "
                           "submitted by the same driver tick (v5's protocol)"),
-            "improvement_rule": v5["protocol"]["improvement_rule"],
+            "improvement_rule": {**v5["protocol"]["improvement_rule"],
+                                 "retention_guard": "heldout_gate of the selected checkpoint from this campaign's training",
+                                 "reload": "this campaign's audit/reload_<label>.json: finite and config_matches_baseline",
+                                 "function": "scripts/driver.py::matched_verdict (unchanged from v5/v6)"},
             "n_is_fixed": "two runs per policy per horizon, whatever they show; no third run, no second attempt",
             "final_set": ("v3's untouched 8 rows (v5's final_test, verbatim), run once for BOTH policies in one "
                           "matched array, only if the improvement rule holds; descriptive"),
-            "baseline_numbers_from_earlier_campaigns": "not pooled in; v6's own baseline runs are the only baseline",
+            "baseline_numbers_from_earlier_campaigns": "not pooled in; v7's own baseline runs are the only baseline",
         },
         "media": {"gif_every": 12},
         "budget": {"gpu_tasks": 260, "gpu_hours": 70.0, "reserve": {"final_set": 16},

@@ -1516,9 +1516,10 @@ try:
                         actions.append(a)
                         trace.append(passed)
                         m, dist, lift = _rec_step.last
-                        margin_trace.append([round(x, 3) for x in m])
-                        gripper_trace.append([round(x, 4) for x in dist])
-                        lift_trace.append(round(lift, 4))
+                        # unrounded: the landing test applies strict thresholds
+                        margin_trace.append([float(x) for x in m])
+                        gripper_trace.append([float(x) for x in dist])
+                        lift_trace.append(float(lift))
                     for _ in range(args.terminal_settle_steps):
                         passed_s, total, settled = _rec_step(actions[-1])
                     terminal_m, terminal_dist, terminal_lift = _rec_step.last
@@ -1527,9 +1528,9 @@ try:
                                    actions_executed=len(actions), policy_condition_trace=trace,
                                    margin_trace=margin_trace, gripper_distance_trace=gripper_trace,
                                    lift_trace=lift_trace,
-                                   terminal_margins=[round(x, 3) for x in terminal_m],
-                                   terminal_gripper_distance=[round(x, 4) for x in terminal_dist],
-                                   terminal_lift=round(terminal_lift, 4),
+                                   terminal_margins=[float(x) for x in terminal_m],
+                                   terminal_gripper_distance=[float(x) for x in terminal_dist],
+                                   terminal_lift=float(terminal_lift),
                                    **_progress_summary(trace, total))
                     if settled:
                         stream = np.stack(actions)

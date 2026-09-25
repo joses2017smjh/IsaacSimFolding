@@ -224,6 +224,17 @@ def example_classes(data, manifest: dict, root: Path, n: int):
     return horizon, rel
 
 
+def pooled_groups(pick: dict) -> list[str]:
+    """The origin kinds actually sampled. v7 reuses no earlier corpus and keeps a
+    student episode only if it qualifies itself, so a corpus may have branch
+    labels only; the gate pools whichever kinds are present (for a corpus with
+    both, exactly v6's branch+student order)."""
+    groups = [f"recovery_{k}" for k in sorted(pick) if len(pick[k])]
+    if not groups:
+        raise SystemExit("fit gate: no recovery examples sampled")
+    return groups
+
+
 def run_gate(args, manifest, root, device, data, origin, kind, prov, rng, pick,
              images, state, action, ret_x, ret_s, ret_a, self_aligned, load, predict, errors):
     results = {}
@@ -290,7 +301,8 @@ def run_gate(args, manifest, root, device, data, origin, kind, prov, rng, pick,
                      and rw["bf16_changed_fraction"] >= 0.50)
         db, dc = [], []
         spread = []
-        for grp in ("recovery_branch", "recovery_student"):
+        groups = pooled_groups(pick)
+        for grp in groups:
             b = np.asarray(results[bl][grp]["per_example_rms_first10"])
             c = np.asarray(results[cl][grp]["per_example_rms_first10"])
             db.append(b); dc.append(c)
@@ -306,11 +318,12 @@ def run_gate(args, manifest, root, device, data, origin, kind, prov, rng, pick,
         gate = {"repair_ok": bool(repair_ok), "noninferior_ok": bool(noninferior_ok),
                 "pass": bool(repair_ok and noninferior_ok),
                 "mean_paired_diff": float(diff.mean()), "diff_ci95": ci,
-                "baseline_seed_spread": seed_spread,
+                "baseline_seed_spread": seed_spread, "pooled_groups": groups,
                 "definition": ("PASS iff reloaded bf16 expert change >= 50% (norm-gain count "
                                "reported, not gated -- see amendment 2026-09-23-fit-gate-"
                                "instrument), AND paired (candidate - baseline) 95% CI upper bound <= "
-                               "the baseline's own mean seed-to-seed std, branch+student pooled. "
+                               "the baseline's own mean seed-to-seed std, pooled over the origin kinds "
+                               f"present ({'+'.join(groups)}). "
                                "Necessary condition only; in-sample; never evidence of improvement.")}
         print("GATE:", json.dumps(gate), flush=True)
 

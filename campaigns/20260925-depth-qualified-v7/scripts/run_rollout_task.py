@@ -153,8 +153,8 @@ def main() -> int:
         # A dry run writes nothing, so an existing output is information for
         # the caller (recorded below), not grounds to refuse an inspection.
         raise SystemExit(f"refusing to overwrite retained output {dest}")
-    # v6 executes its own snapshot of the runner, byte-identical to v4's (with
-    # the recovery-search mode); earlier copies stay as they ran.
+    # v7 executes its own snapshot of the runner: v6's (itself byte-identical to
+    # v4/v5) plus passive recovery-branch telemetry; earlier copies stay as they ran.
     runner = root / "scripts" / "render" / "policy_rollout51.py"
     lehome = Path(manifest["lehome"])
     if not runner.is_file() or not lehome.is_dir() or not Path(row["asset_config"]).is_file():

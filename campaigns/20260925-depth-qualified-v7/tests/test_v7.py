@@ -132,44 +132,81 @@ def _attempt(root=30, cand=0, *, settled=True, first=10, n=60, landed=2.0, termi
             "horizon": 10, "full_entries": 1}
 
 
-def test_landed_margin_uses_the_first_clear_window_after_the_fold():
-    assert bdd.landed_margin(_attempt(landed=1.7)) == pytest.approx(1.7)
-    assert bdd.landed_margin(_attempt(first=None)) is None                  # never reached
-    assert bdd.landed_margin(_attempt(clear_from=55)) is None               # window of 10 does not fit
-    a = _attempt(clear_from=0)                                               # clear before the fold: ignored
-    assert bdd.landed_margin(a) == pytest.approx(a["margin_trace"][a["first_full_step_offset"]][0])
+def test_landed_margin_uses_the_manifest_window_after_the_fold():
+    assert bdd.landed_margin(_attempt(landed=1.7), RULES["landing"]) == pytest.approx(1.7)
+    assert bdd.landed_margin(_attempt(first=None), RULES["landing"]) is None                  # never reached
+    assert bdd.landed_margin(_attempt(clear_from=55), RULES["landing"]) is None               # window of 10 does not fit
+    a = _attempt(clear_from=0)                                                    # clear before the fold: ignored
+    assert bdd.landed_margin(a, RULES["landing"]) == pytest.approx(a["margin_trace"][a["first_full_step_offset"]][0])
+    wide = dict(RULES["landing"], window=100)                                                  # the manifest value is what counts
+    assert bdd.branch_record(_attempt(), dict(RULES, landing=wide))["landed_margin_cm"] is None
+    assert bdd.branch_record(_attempt(), RULES)["landed_margin_cm"] == pytest.approx(2.0)
 
 
-def test_branch_qualifies_only_if_settled_deep_and_early():
+def test_qualification_is_settled_early_and_at_least_the_cut():
     ok = bdd.branch_record(_attempt(root=30, first=10, terminal=(1.6, 2.0, 5, 5)), RULES)
-    assert ok["qualifies"] and ok["first_fold_step"] == 40 and ok["terminal_depth_cm"] == pytest.approx(1.6)
-    assert not bdd.branch_record(_attempt(terminal=(1.4, 3.0, 5, 5)), RULES)["qualifies"]      # shallow
-    assert not bdd.branch_record(_attempt(settled=False), RULES)["qualifies"]                  # not settled
-    assert not bdd.branch_record(_attempt(root=180, first=280, n=400), RULES)["qualifies"]     # step 460 > 450
-    assert bdd.branch_record(_attempt(root=180, first=270, n=400), RULES)["qualifies"]         # step 450 ok
+    assert ok["first_fold_step"] == 41                                             # completed actions, 1-based
+    assert bdd.qualifies(ok, 1.5) and not bdd.qualifies(ok, 2.0)
+    assert not bdd.qualifies(bdd.branch_record(_attempt(settled=False), RULES), 0.0)
+    assert bdd.qualifies(bdd.branch_record(_attempt(root=180, first=269, n=420), RULES), 1.5)      # step 450
+    assert not bdd.qualifies(bdd.branch_record(_attempt(root=180, first=270, n=420), RULES), 0.0)  # step 451
 
 
-def test_mechanism_check_needs_deep_landings_to_settle_more_often():
+def test_branch_and_student_count_the_450_bound_the_same_way(tmp_path):
+    branch = bdd.branch_record(_attempt(root=180, first=269, n=420), RULES)
+    d = tmp_path / "row"
+    d.mkdir()
+    geo = [{"phase": "policy", "step": s, "success": s >= 450,
+             "details": {f"condition_{k}": {"margin_cm": 2.0} for k in (1, 2, 3, 4)}} for s in range(1, 601)]
+    geo.append({"phase": "terminal_settle", "step": 660, "success": True,
+                "details": {f"condition_{k}": {"margin_cm": 2.0} for k in (1, 2, 3, 4)}})
+    (d / "rollout.json").write_text(json.dumps({"terminal_success": True, "geometry_trajectory": geo}))
+    ok, info = bdd.student_qualifies(d, RULES, 1.5)
+    assert info["first_fold_step"] == branch["first_fold_step"] == 450 and ok and bdd.qualifies(branch, 1.5)
+
+
+def test_mechanism_check_is_stratified_and_excludes_inherited_landings():
     deep = [bdd.branch_record(_attempt(landed=2.0, settled=True), RULES) for _ in range(12)]
     shallow = [bdd.branch_record(_attempt(landed=0.3, settled=i < 3), RULES) for i in range(12)]
-    m = bdd.mechanism_check(deep + shallow, RULES)
+    m = bdd.mechanism_check({"P_C": deep + shallow}, RULES)
     assert m["passed"] and m["deep"] == "12/12" and m["shallow"] == "3/12" and m["p_one_sided"] < 0.05
-    same = [bdd.branch_record(_attempt(landed=x, settled=i % 2 == 0), RULES)
+    same = [bdd.branch_record(_attempt(landed=x, settled=(i // 2) % 2 == 0), RULES)   # settling independent of depth
             for i, x in enumerate([2.0, 0.3] * 12)]
-    assert not bdd.mechanism_check(same, RULES)["passed"]
-    assert not bdd.mechanism_check(deep, RULES)["passed"]                  # no shallow group: cannot pass
+    assert not bdd.mechanism_check({"P_C": same}, RULES)["passed"]
+    assert not bdd.mechanism_check({"P_C": deep}, RULES)["passed"]                # no shallow group: cannot pass
+    # a pose with only one group contributes nothing, but does not break the test
+    assert bdd.mechanism_check({"P_C": deep + shallow, "P_A": deep}, RULES)["passed"]
+    # landings inherited from an already-folded root are the root's, not the branch's
+    inh = [bdd.branch_record(_attempt(first=0, clear_from=0, landed=2.0), RULES) for _ in range(12)]
+    assert all(r["inherited_landing"] for r in inh)
+    assert not bdd.mechanism_check({"P_C": inh + shallow}, RULES)["passed"]
 
 
-def test_gate_counts_qualifying_branches_per_pose():
+def test_stratified_p_matches_a_single_fisher_table_and_ignores_empty_strata():
+    assert bdd.stratified_p([(12, 12, 3, 12)]) == pytest.approx(bdd.fisher_one_sided(12, 12, 3, 12))
+    assert bdd.stratified_p([(12, 12, 3, 12), (5, 5, 0, 0)]) == pytest.approx(bdd.fisher_one_sided(12, 12, 3, 12))
+    assert bdd.stratified_p([(0, 0, 0, 0)]) == 1.0
+
+
+def _recs(atts):
+    return [bdd.branch_record(a, RULES) for a in atts]
+
+
+def test_ladder_takes_each_poses_strictest_feasible_cut():
     gates = MANIFEST["recovery"]["coverage_gate"]
-    q = {f"a{i}": [_attempt(root=r) for r in (30, 60, 90)] for i in range(8)}
-    q.update({f"b{i}": [_attempt(root=30)] for i in range(2)})
-    q.update({f"c{i}": [_attempt(root=r) for r in (30, 60, 90)] for i in range(8)})
-    rp = {**{f"a{i}": "P_A" for i in range(8)}, **{f"b{i}": "P_B" for i in range(2)},
-          **{f"c{i}": "P_C" for i in range(8)}}
-    g = bdd.pose_gate(q, rp, gates)
-    assert g["per_pose"]["P_A"]["passed"] and g["per_pose"]["P_C"]["passed"]
-    assert not g["passed"] and all(u.startswith("P_B:") for u in g["unmet_requirements"])
+    atts, rp = {}, {}
+    for i in range(8):                                    # P_C: deep supply -> 1.5
+        atts[f"c{i}"] = [_attempt(root=r, terminal=(2.0, 2.0, 5, 5)) for r in (30, 60, 90)]; rp[f"c{i}"] = "P_C"
+    for i in range(8):                                    # P_A: settled but shallow -> 0.0
+        atts[f"a{i}"] = [_attempt(root=r, terminal=(0.3, 0.9, 5, 5)) for r in (30, 60, 90)]; rp[f"a{i}"] = "P_A"
+    for i in range(2):                                    # P_B: too few rows at any cut
+        atts[f"b{i}"] = [_attempt(root=r) for r in (30, 60)]; rp[f"b{i}"] = "P_B"
+    recs = {r: _recs(a) for r, a in atts.items()}
+    g = bdd.ladder_gate(recs, atts, rp, gates, RULES["cut_ladder_cm"])
+    assert g["per_pose"]["P_C"]["chosen_cut_cm"] == 1.5 and g["per_pose"]["P_A"]["chosen_cut_cm"] == 0.0
+    assert g["per_pose"]["P_B"]["chosen_cut_cm"] is None and not g["passed"]
+    assert all(u.startswith("P_B:") for u in g["unmet_requirements"])
+    assert [e["cut_cm"] for e in g["per_pose"]["P_A"]["ladder"]] == [1.5, 1.0, 0.5, 0.0]
 
 
 # ---------------------------------------------------- compiler end to end
@@ -191,6 +228,7 @@ def _row_dir(root, rid, attempts, labels):
              executed_action_stream=np.zeros((600, 12), np.float32),
              images=np.zeros((3, 3, 480, 640, 3), np.uint8), state=np.zeros((3, 12), np.float32))
     (d / "rollout.json").write_text(json.dumps({"terminal_success": False, "geometry_trajectory": []}))
+    (d / "status.json").write_text(json.dumps({"state": "completed"}))
 
 
 def _synthetic(tmp_path, *, shallow_settles=0):
@@ -236,6 +274,25 @@ def test_compiler_keeps_only_deep_qualifying_labels_and_balances_poses(tmp_path)
             assert member in z.files
     gate = json.loads((root / "gate.json").read_text())
     assert gate["passed"] and gate["mechanism_check"]["deep"] == "6/6"
+    assert gate["cut_by_pose"] == {"P_A": 1.5, "P_B": 1.5, "P_C": 1.5} and gate["excluded_rows"] == []
+
+
+def test_compiler_excludes_one_incomplete_row_and_stops_on_two(tmp_path):
+    root = _synthetic(tmp_path, shallow_settles=1)
+    m = json.loads((root / "manifest.json").read_text())
+    extra = dict(m["recovery_search"][0], id="row_P_A_2")
+    _row_dir(root, "row_P_A_2", [_attempt(root=30, cand=0), _attempt(root=60, cand=1)], [(30, 0), (60, 1)])
+    m["recovery_search"].append(extra)
+    (root / "recovery/row_P_A_2/status.json").write_text(json.dumps({"state": "infrastructure_timeout"}))
+    (root / "manifest.json").write_text(json.dumps(m))
+    proc = _compile(root)
+    assert proc.returncode == 0, proc.stderr[-600:]
+    assert json.loads((root / "gate.json").read_text())["excluded_rows"] == ["row_P_A_2"]
+    (root / "datasets/recovery.npz").unlink()
+    (root / "recovery/row_P_B/recovery_examples.npz").unlink()               # a second missing row
+    proc = _compile(root)
+    gate = json.loads((root / "gate.json").read_text())
+    assert proc.returncode == 5 and gate["infrastructure"] and len(gate["excluded_rows"]) == 2
 
 
 def test_compiler_fails_closed_when_depth_does_not_predict_settling(tmp_path):
@@ -279,11 +336,22 @@ def _smoke(tmp_path, *, attempt=None, start_margins=(-3.0, -5.0, 6.0, 6.0)):
     det = {f"condition_{k}": {"margin_cm": m} for k, m in zip((1, 2, 3, 4), start_margins)}
     (d / "rollout.json").write_text(json.dumps({"physics_finite": True, "robot_finite": True,
         "geometry_trajectory": [{"phase": "policy", "step": 1, "details": det, "success": False}]}))
+    (d / "status.json").write_text(json.dumps({"state": "completed"}))
     return root
 
 
 def test_smoke_checker_passes_good_telemetry_and_a_valid_spawn(tmp_path):
     assert ct.check(_smoke(tmp_path))["passed"]
+
+
+def test_smoke_checker_reports_a_raised_runner_and_defers_a_transient_failure(tmp_path):
+    root = _smoke(tmp_path)
+    d = root / "smoke/recovery" / MANIFEST["recovery_smoke"][0]["id"]
+    (d / "status.json").write_text(json.dumps({"state": "infrastructure_timeout"}))
+    assert ct.check(root) is None                                   # no report: the driver retries once
+    (d / "rollout.json.error.json").write_text(json.dumps({"error_type": "ValueError", "error": "nonfinite"}))
+    rep = ct.check(root)
+    assert not rep["passed"] and "ValueError" in rep["problems"][0]
 
 
 @pytest.mark.parametrize("breakage", ["trace_length", "missing_terminal", "sign_mismatch", "folded_spawn"])
@@ -309,6 +377,15 @@ class _Hide:
 
     def __getitem__(self, k):
         return self.z[k]
+
+
+def test_fit_gate_pools_only_the_origin_kinds_present():
+    of = _load("offline_fit")
+    assert of.pooled_groups({"branch": [1, 2], "student": [3]}) == ["recovery_branch", "recovery_student"]
+    assert of.pooled_groups({"branch": [1, 2]}) == ["recovery_branch"]
+    assert of.pooled_groups({"branch": [1], "student": []}) == ["recovery_branch"]
+    with pytest.raises(SystemExit):
+        of.pooled_groups({})
 
 
 def test_offline_fit_provenance_path_equals_v4s_reconstruction_on_v4s_corpus():
@@ -360,7 +437,8 @@ def test_recipe_rule_rows_and_final_set_are_v6s_verbatim():
     for k in ("lr", "batch_size", "grad_accum", "steps", "checkpoint_every", "rollout_fraction", "anchor_mode",
               "checkpoint_rule", "retention", "anchor", "fit_precondition", "seed", "unfreeze"):
         assert MANIFEST["training"][k] == v6["training"][k], k
-    assert MANIFEST["protocol"]["improvement_rule"] == v6["protocol"]["improvement_rule"]
+    for k in ("h10", "h50", "all_rows_valid"):
+        assert MANIFEST["protocol"]["improvement_rule"][k] == v6["protocol"]["improvement_rule"][k]
     assert MANIFEST["benchmark"] == v6["benchmark"] and MANIFEST["final_test"] == v6["final_test"]
     assert MANIFEST["corpus"]["reuse"] is None
 
@@ -395,10 +473,33 @@ def test_after_a_passed_smoke_the_search_is_one_array_of_28(tmp_path):
     assert st["gpu_tasks"] == 28 and st["array"] == ",".join(map(str, range(28)))
 
 
+def test_stop_reasons_name_the_cause():
+    mech = driver.gate_stop_reason({"unmet_requirements": ["mechanism_check"],
+                                    "mechanism_check": {"passed": False, "deep": "5/9", "shallow": "5/8"}})
+    assert "not a usable lever" in mech
+    supply = driver.gate_stop_reason({"unmet_requirements": ["P_A:successful_branches"],
+                                      "mechanism_check": {"passed": True, "deep": "30/34", "shallow": "10/22",
+                                                          "p_one_sided": 0.001}})
+    assert "30/34" in supply and "yield shortfall" in supply and "not a usable lever" not in supply
+    infra = driver.gate_stop_reason({"infrastructure": True, "unmet_requirements": ["search incomplete"]})
+    assert "infrastructure" in infra and "lever" not in infra
+
+
+def test_a_raised_smoke_runner_is_not_retried(tmp_path):
+    root = _temp(tmp_path)
+    d = driver.Driver(root, dry=True)
+    d.state["stages"]["smoke"] = {"job_ids": ["1"], "status": "failed"}
+    err = root / "smoke/recovery" / MANIFEST["recovery_smoke"][0]["id"]
+    err.mkdir(parents=True)
+    (err / "rollout.json.error.json").write_text(json.dumps({"error_type": "ValueError", "error": "spawn"}))
+    sm = d.smoke()
+    assert sm["passed"] is False and "smoke.retry1" not in d.state["stages"]
+
+
 def test_an_unmet_depth_gate_stops_without_training(tmp_path):
     d = driver.Driver(_temp(tmp_path), dry=True)
     d.state["smoke"] = {"passed": True}
-    d.state["search"] = {"passed": False, "unmet_requirements": ["mechanism_check"]}
+    d.state["search"] = {"passed": False, "unmet_requirements": ["mechanism_check"], "mechanism_check": {}}
     d.tick()
     assert d.state["done"] and "depth gate unmet" in d.state["stop_reason"]
     assert not any(k.startswith("dq1") for k in d.state["stages"])

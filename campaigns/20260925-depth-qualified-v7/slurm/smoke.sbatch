@@ -20,7 +20,10 @@ echo "=== [1/3] verify sources ==="
 lh_torch "$campaign/scripts/verify_sources.py" --campaign "$campaign" --skip-checkpoint \
   --out "$campaign/audit/verify_sources_smoke.json"
 echo "=== [2/3] short search row with branch telemetry ==="
-lh_isaac "$campaign/scripts/run_rollout_task.py" --campaign "$campaign" --phase recovery_smoke --index 0 --label smoke
-echo "=== [3/3] telemetry, spawn and compiler checks ==="
-lh_torch "$campaign/scripts/check_telemetry.py" --campaign "$campaign" --out "$campaign/audit/smoke_telemetry.json"
-echo "=== SMOKE COMPLETE ==="
+rc=0
+lh_isaac "$campaign/scripts/run_rollout_task.py" --campaign "$campaign" --phase recovery_smoke --index 0 --label smoke || rc=$?
+echo "=== [3/3] telemetry, spawn and compiler checks (runner exit $rc) ==="
+# runs even if the runner failed, so a raised spawn/code error is reported
+lh_torch "$campaign/scripts/check_telemetry.py" --campaign "$campaign" --out "$campaign/audit/smoke_telemetry.json" || rc=${rc/#0/$?}
+echo "=== SMOKE COMPLETE (exit $rc) ==="
+exit "$rc"

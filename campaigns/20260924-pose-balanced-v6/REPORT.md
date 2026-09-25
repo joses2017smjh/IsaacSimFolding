@@ -37,27 +37,38 @@ descriptive only and carries no claim (`analysis/reach-hold.json`).
    candidate reached it in 13/16 episodes against the baseline's 5/16, and
    early (median policy step 191 vs 461). At H50 it settled every P_A
    episode (6/6 vs 0/6).
-2. **At H10 it moves through the fold instead of stopping in it.** 9 of its
-   13 H10 folds were lost during the policy phase, never in the terminal
-   settle. The full fold lasted a median 15 steps. In 6 of the 8 lost folds
-   with a clean trace, the same condition — condition 2, one fold's closure
-   distance — reopened mid-chunk and stayed open to the end (2 others lost
-   condition 3). At H50, where each 50-step chunk runs to completion, the
-   folds it reached mostly held.
-3. **P_B's H50 loss is not supply-limited.** With ~10× the P_B supervision
-   the candidate still settled 0/4 at H50 against the baseline's 3/4.
+2. **At H10 its folds land shallow.** *(Corrected 2026-09-25 after a
+   verified diagnosis, `analysis/diagnosis/synthesis.json`; the earlier text
+   said it "moves through the fold instead of stopping", which fits only 3 of
+   the 10 losses.)* Of its 10 reached-but-unsettled H10 episodes, 3 were
+   transient crossings while still carrying the hem, 2 were a released flap
+   falling through the fold, 4 were landed folds relaxing open with both
+   grippers more than 10 cm away, and 1 (dev04 r2) was reached at step 593
+   and lost in the terminal settle. Final breaking condition: condition 2 in
+   7 of 9 policy-phase losses, condition 1 in 2. Across all 128 v5+v6
+   episodes, a fold released with its closure margin at least 1 cm inside
+   the threshold settled 37/41 times; below 1 cm, 13/25 (Fisher p = 0.0008).
+   The candidate's H10 folds landed at a median 1.0 cm, against 2.1 cm for
+   a2 and 2.45 cm for the baseline. At H50 it reaches later and lands deeper
+   (median 1.7 cm), which is why P_A settled 6/6 there.
+3. **P_B's H50 loss is a garment-size problem, and rests on about one
+   trajectory per row.** Every P_B label ever used came from the two small
+   training garments with the P_B pose (Seen_6/8, 8.1 cm closure threshold).
+   On dev03's large garment (Seen_3, 9.9 cm class) the candidate grasps
+   inboard, where the small garments need it, and never lifts the cloth.
+   Same-seed runs are near-replicates, so each P_B H50 cell is about one
+   independent trajectory.
 
 ## Remaining limitation
 
-**Stopping at the fold, not reaching it — and not for lack of supervision.**
-64% of the training labels (6,614 of 10,305) are post-fold states from
-branches that then held their fold. 87% of settled branches entered the full
-fold once and stayed in it, and post-fold labels span a median 169 steps
-after the fold, covering the regime the candidate now reaches at about step
-190. The candidate still passes through the fold at H10. The open question is
-why the fine-tune does not reproduce the folding-to-holding transition its
-labels contain when executed at H10. It does so at H50 (P_A 6/6). More data
-of the same kind is not the lever.
+**Landing depth, not stopping.** Replan-boundary jumps, joint-space state
+shift and differences in label content between corpora were each tested and
+refuted. Policies that hold their fold do not stop moving either. The labels
+are the baseline's own continuations filtered only by settled success, from a
+process that loses about 45% of its in-branch folds. About 65% of them are
+post-fold states, but those states are release-and-retract, not stops, and
+nothing in the corpus prefers a deep landing. The next attempt filters
+supervision by landing depth, which the runner does not yet record.
 
 ## Limitations
 

@@ -1,0 +1,201 @@
+{
+ "surviving_findings": [
+  {
+   "key": "reach-gain",
+   "status": "survives (matched, within v6)",
+   "statement": "pb1-step000200 reached all 4 conditions at H10 in 13/16 episodes by the latched official checker (14/16 by the per-step geometric trace), against the baseline's 5/16. Its median first reach was about step 191 against 461. H10 settled was 4/16 vs 5/16. This is the only robust pb1-vs-baseline contrast. The asset worth keeping is early reach; the defect is converting reaches into settles."
+  },
+  {
+   "key": "landing-depth",
+   "status": "survives; independently reproduced from raw artifacts",
+   "statement": "How deep the fold lands after release predicts whether it settles, for every policy. Definitions: the landing step is the first window of at least 10 consecutive steps after the first all-4 step in which both gripper link origins are more than 12 cm from the cloth and maximum_particle_lift is under 5 cm. The landed margin is min(margin_cm of condition_1, condition_2) at that step.\n- Across the 128 v5+v6 episodes, 69 reached the fold and 66 have a landing window. Landed margin >= 1 cm settled 37/41; below 1 cm, 13/25 (Fisher two-sided p=0.0008). At a 0.5 cm cut: 42/46 vs 8/20 (p=2.5e-5).\n- a2 and baseline together (H10+H50) with landed margin >= 1 cm: 29/29 settled.\n- Median landed margin at H10: pb1 1.00 cm (n=12), a2 2.07 cm (n=11; one-sided Mann-Whitney p=0.026, cross-campaign), baseline 2.45 cm (n=9). pb1 at H50: 1.70 cm, and 6/6 of its landings >= 1 cm settled.\n- Residual: pb1 H10 landings >= 1 cm settled only 2/6. dev00 r1 (1.88 cm), dev02 r1 (1.58), dev02 r2 (2.23) and dev06 r1 (1.24) all relaxed open afterwards. The cause is inconclusive.\n- Scripts: /scratch/sanchej7/tmp/claude-19646/-nfs-hpc-share-sanchej7-Humanoid-Lite-lehome-fold-repro/fa9f63ad-7d78-4dcc-a0e7-51bbb05ecedd/scratchpad/diag/synth/landing_check.py and landing_check.json. These reproduce post-fold-motion-skeptic2's landing.py exactly."
+  },
+  {
+   "key": "loss-modes",
+   "status": "survives, corrected (converges across replan-jumps-skeptic2, post-fold-motion skeptics 1 and 2, state-shift-skeptic2)",
+   "statement": "pb1's 10 geometric H10 reached-but-not-settled episodes are not one failure to stop. They split four ways:\n(a) 3 transient threshold crossings while still carrying the lifted hem: dev03 r1, dev07 r1, and dev04 r1 (all-4 only at steps 596-598). Two of these had no replan between entering and losing the fold. Only this group matches 'moves through the fold mid-chunk'.\n(b) dev04 r2: reached at step 593, all-4 through step 600, then condition_2 reopened in the terminal settle. dev04 in both runs is 'too slow', not a pass-through.\n(c) 2 released, and the falling flap passed through the fold within 6-8 steps (dev06 r1/r2).\n(d) 4 landed and then relaxed open with both grippers more than 10 cm from the cloth: dev00 r1/r2 on condition_2, dev02 r1/r2 on condition_1. In r2 dev02 the arm was essentially stationary.\nThe final breaking condition in the policy phase was c2 in 7/9 and c1 in 2/9. First exits were c2 8/11, c3 2 (dev02) and c1 1. a2 also lost dev00 at H10 in both v5 runs, so dev00 is not specific to pb1."
+  },
+  {
+   "key": "replan-jumps",
+   "status": "refuted (both skeptics; the stronger tests come from the skeptics)",
+   "statement": "Replan-boundary discontinuities do not cause the H10 losses.\n- Measured joint speed is flat across the chunk: 0.061 rad/action at position 1 vs 0.054-0.058 at positions 2-10.\n- Time-matched jump AUC is 0.38-0.54.\n- At equal jump size pb1 loses more than a2 (7/66 vs 2/89 for 0.2-0.8 rad).\n- Per-boundary H50 jumps are the same size as H10 jumps (Cliff's delta about 0).\n- In 7 of 10 in-fold losses the drift began before the boundary.\nBoundary smoothing, temporal ensembling and jump clamping are therefore not supported. rollout.json max_action_discontinuity_l2 is a within-chunk step in 70/128 episodes, so it is not a replan metric."
+  },
+  {
+   "key": "motion-not-discriminative",
+   "status": "survives",
+   "statement": "Policies that hold the fold do not stop moving. Post-fold commanded motion is 0.13-0.17 rad/step per arm in every group, holds included.\n- Time-matched at 0-19 steps after the fold, held episodes move as much or more than lost ones (rad per 10 actions): pb1 held 2.12, a2 held 2.00, baseline held 1.04, against pb1 lost 0.99.\n- Twin runs with near-identical actions around the fold split outcomes in 6 of 22 pairs, including pb1 dev07 H10.\n- 'Holders stop' is refuted, and 'the clamped right-arm lift causes the loss' is not established."
+  },
+  {
+   "key": "label-content",
+   "status": "H7 refuted in both forms; reframed",
+   "statement": "The a2 and pb1 corpora encode the same fold-time actions: release plus a fast retract. Draw-weighted arm path over the first 10 actions at rel 0-20 is 4.26 vs 4.06 rad. The gripper opens within 10 actions in 66-93% of labels.\n- No label encodes a stop. Only about 30% of post-fold labels are chunks at rest.\n- The transition-window draw share is equal: 5.46% vs 5.05%, about 175 vs 202 draws.\n- The labels are the baseline's own H10 continuations filtered by settled success. 90 of 329 baseline search branches that reached all-4 never settled (reproduced by two skeptics), and 104 of 233 in-branch folds were lost during the policy phase, at median rel 9 (one source).\n- So the corpus is made of survivors of a near-coin-flip post-fold process. Imitating it plausibly reproduces that hazard. '64% post-fold holding labels' means post-fold states, not stop actions."
+  },
+  {
+   "key": "state-shift",
+   "status": "not supported",
+   "statement": "Time-matched at 0-19 steps after the fold, pb1's losing states are no farther from same-pose post-fold labels than held states: z10 nearest-neighbour distance 0.91 vs 0.71-0.82 (p >= 0.65). The run-level separation came from an asymmetric window. pb1, a2 and the baseline all act like their nearest labels. The one real coverage gap is P_B dev03, whose fold states sit at the 96-99th percentile of the leave-one-garment-out distribution."
+  },
+  {
+   "key": "a2-contrast-weak",
+   "status": "survives as a caveat; drop the 'a2 stops at the fold' framing",
+   "statement": "The a2-vs-pb1 H10 comparison crosses campaigns (v5 vs v6), and how strong it looks depends on how 'kept' is counted:\n- official kept: 8/9 vs 4/13 (p=0.010)\n- per-step geometric: 8/11 vs 4/14 (p=0.036)\n- first fold held through step 600: 5/9 vs 3/13 (p=0.135; about 0.22 by row)\na2 also passed through its first fold on dev06 and dev07 and re-closed. The only clean contrast row is dev02: a2 lands 3.9-4.1 cm deep and holds, while pb1 lands 1.6-2.2 cm deep and condition_1 then relaxes."
+  },
+  {
+   "key": "training-composition",
+   "status": "survives descriptively; causal link not established",
+   "statement": "An exact sampler replay matches pb1's log (12/12 intervals, identical anchor draws).\n- Both runs saw about 100 draws of rel 0-20 states.\n- pb1 got as many fold-preserving continuation draws as a2 at matched step 200: 2038 vs 1965.\n- P_C draws halved, 2137 to 1068 (near-fold 70 to 30).\n- v4-source draws fell at every pose: P_A -68%, P_B -88%, P_C -50%.\n- 84% of P_B labels were never drawn.\n- Retention differences are within noise before step 200.\n- a1@100 (v4 corpus only, lr 1e-5, 879 P_C draws) lost dev02 the same way pb1 did (n=1).\nDose, composition and run-to-run variation cannot be separated from the logs, and per-source loss was not logged."
+  },
+  {
+   "key": "h10-vs-h50",
+   "status": "survives, corrected",
+   "statement": "pb1's H50 advantage is not fewer replans. At H50 it reaches the fold later (actions 264-394 vs 100-217) and lands deeper (median 1.70 vs 1.00 cm). Its H50 losses are passive relaxation with the arm still. pb1 at H50 also lost 5 of 10 folds during the policy phase and re-closed 3 (single source), so 'folds mostly held at H50' is partly re-closure."
+  },
+  {
+   "key": "pb-h50",
+   "status": "survives at about 1 trajectory per policy per row; not binding for the verdict",
+   "statement": "P_B H50 is 0/4 for pb1 vs 3/4 for the baseline, with a2 also 0/4, but it comes down to two row-specific events.\n- dev03: pb1 closes inboard (right gripper x about 0.05 m) and never lifts the large Seen_3. The lift maximum is 0.032 m and conditions stay at 2/4.\n- dev01: a shared condition_1 failure. The baseline's H50 wins are one late re-grasp trajectory.\nPooled H50 non-regression held anyway: 8/16 vs 7/16."
+  },
+  {
+   "key": "pb-garment-coverage",
+   "status": "verified from garment_info.json and the search rows",
+   "statement": "Among the training-only garments (Seen_4/5/6/8), the P_B pose exists only on Seen_6 and Seen_8, both with 8.1 cm closure thresholds. Every P_B label in v4 and v6 comes from those two small garments.\n- dev03's Seen_3 is in the 9.9 cm size class. Its starting condition values (11.7/15.8/29.3/28.9 cm) are identical to Seen_4 and Seen_5 at the shared pose.\n- Seen_4/5 have no P_B key in the pose metadata. The runner's --match_pose can pin any pose, so large-garment P_B supervision is possible only as an off-metadata placement."
+  },
+  {
+   "key": "stitched-labels",
+   "status": "untested; indirect tests negative",
+   "statement": "There are no replan kinks in pb1's 50-row H50 chunks (K 1.04 vs baseline 1.06). First-chunk tails are no less self-consistent (0.42 vs 0.50 rad).\n- 0 of 10,305 labels were executed at H50.\n- A direct test is impossible: the recovery runner's _rec_chunk calls original_predict, and predicted chunks are never saved."
+  },
+  {
+   "key": "search-telemetry-gap",
+   "status": "verified in campaign runner source",
+   "statement": "The recovery branch loop in campaigns/20260924-pose-balanced-v6/scripts/render/policy_rollout51.py (lines ~1415-1500) keeps only per-step condition counts (trace.append(passed)). _rec_step discards checker_details() margins, so no existing label can be filtered by landing or terminal depth. Student and brancher are the same checkpoint: --shadow_policy is replay-only, and a split would need a runner change."
+  },
+  {
+   "key": "rule-arithmetic",
+   "status": "computed",
+   "statement": "With 16 vs 16 episodes and one-sided Fisher, a margin of 4 is not sufficient. Against a baseline of 5/16 the candidate needs 11/16 (p=0.038); 10 vs 5 gives p=0.078. Against a baseline of 8/16 it needs 14/16. Any attempt must turn pb1-level reach (13-14/16) into about 70% settled at H10. The best settled result so far is a2's 8/16."
+  },
+  {
+   "key": "effective-n",
+   "status": "survives",
+   "statement": "r1 and r2 share seeds and are near-replicates. All four baseline dev03 H50 runs across v5 and v6 are one trajectory, and pb1's dev03 H50 runs are identical to step 394. Per-pose cells hold about 2-3 independent initial conditions. The preregistered Fisher test treats r1/r2 as independent; the protocol is fixed, so this is noted only."
+  },
+  {
+   "key": "report-corrections",
+   "status": "survives (converged across analyses)",
+   "statement": "Corrections to REPORT.md and to the pasted summary:\n(1) 'None were lost in the final settle' is wrong. pb1 r2 dev04 H10 was officially reached (sampled at step 595), was all-4 through step 600, and lost condition_2 at settle step 602. That makes 8 policy-phase losses plus 1 settle loss. The geometric-only extra reach is dev04 r1.\n(2) The post-fold label share is 6739/10305 = 65.4%. All 392 student labels carry step_index=-1; with the trace-derived offset it is 63.3%. Those labels are release, retract, then rest; they are not stop labels.\n(3) '6 of 8 reopened condition 2' should read: final losses c2 7/9 and c1 2/9. dev02's c3 exits were first exits, and both dev02 runs re-formed the fold before losing condition_1.\n(4) 'Moves through the fold mid-chunk' fits only 3 of the 10 losses.\n(5) The P_B H50 cells are about 1 trajectory each.\n(6) The pasted 'full fold lasted a median 15 steps' was not re-verified by any analysis. Other counts give median first-loss rel 7 and median first continuous fold 8 steps."
+  },
+  {
+   "key": "dropped-numbers",
+   "status": "did not reproduce; excluded",
+   "statement": "The following were excluded:\n- The dev04 r1/r2 swap in post-fold-motion.\n- 'Step-for-step identical' r1/r2 pairs; only conditions_passed matches.\n- '74.7% / 31.5% of draws were repeats'; the real revisit fraction is 45.1% / 17.1%.\n- pb1 '24.8% in steps 176-200'; the correct figure is 30.2%.\n- The root+0 P_C near-fold count of 172; corrected to 70.\n- 'About 2 independent baseline dev03 trajectories'; it is 1.\n- 'Clamped lift caused 3-4 losses'.\n- 'a2 mostly lost P_A folds'; it is 2/3 official and 2/5 geometric, which contradict each other.\n- 'pb1 re-closed 2 of 11'; it re-closed 5, of which 2 held.\n- pb-h50's '10 successful closes'; there are 12.\n- The grasp-precision generalisation (14/21 vs 11/12). Per episode it is 7/8 vs 6/8."
+  }
+ ],
+ "mechanism": "Best-supported mechanism for pb1 at H10: it reaches the fold early but lands it shallow, rather than failing to stop.\n\nv6's dense early-root supervision taught pb1 to bring the garment to the checker threshold about 270 steps earlier than the baseline. But the fold-time actions in every corpus are the baseline's own H10 continuations: carry the hem, release, fast retract. Those continuations lose about 45% of in-branch folds during the policy phase (104 of 233), so the labels are the survivors of that process, selected only by whether they settled. Nothing in them rewards landing the fold deep.\n\npb1 executes the same release-and-retract. Its folds usually land shallow: median landed closure margin 1.0 cm at H10, against 2.07 for a2 and 2.45 for the baseline. Across all policies, a fold landed below about 1 cm is roughly a coin flip (13/25 settled), against 37/41 at 1 cm or more. The same pattern shows in the row-matched dev02 case: a2 released with condition_1 about 7.7 cm inside the threshold and landed 3.9-4.1 cm deep, while pb1 released at about 2 cm and landed 1.6-2.2 cm deep.\n\nThe 10 lost episodes break down as:\n- 3 are transient crossings while pb1 is still carrying the hem.\n- 2 are a released flap falling through the folded configuration.\n- 4 are landed folds relaxing open with the arms more than 10 cm away.\n- 1 was reached at step 593 and lost in the terminal settle.\n\nNone of these is caused by replan-boundary jumps, by state shift in joint space, or by label content that differs between corpora.\n\nAt H50 the same policy reaches the fold later and lands deeper (median 1.7 cm), which is why its folds, P_A included, mostly settle there. Replanning frequency is not the explanation.\n\nTwo parts are unexplained:\n- pb1's moderately deep landings (1.2-2.2 cm) still relaxed 4 of 6 times, while a2's and the baseline's never did (29/29). This is plausibly a fold configuration that pairwise landmark distances do not capture.\n- The contrast with a2 crosses campaigns and is weak on a held-first basis (p about 0.14). The only training difference is pose and source composition (v4-source exposure fell at every pose, P_C halved), and its causal role is unresolved.",
+ "p_b_h50_explanation": "P_B H50 (pb1 0/4 vs baseline 3/4; a2 also 0/4 in v5) rests on about one independent trajectory per policy per row. Same-seed runs replicate almost exactly, and all four baseline dev03 H50 runs are one trajectory. It did not block the verdict: pooled H50 non-regression held (8/16 vs 7/16). The two rows fail for different reasons.\n\n**dev03 (Pant_Short_Seen_3, the large 9.9 cm-threshold garment).**\n- At H50 pb1 closes both grippers inboard: right gripper x about 0.045-0.056 m against 0.083-0.109 m for all 12 successful dev03 closes. It never lifts the cloth (lift at most 0.032 m, conditions stay at 2/4).\n- That inboard x is the standard P_B grasp location on the smaller garments the P_B labels come from. Every P_B label in v4 and v6 was searched on Seen_6/8 (8.1 cm threshold). That spot also lifts the cloth on dev01's Seen_0.\n- So fine-tuning pulled pb1's P_B grasp target toward a spot that works on small garments and fails on Seen_3.\n- About 77% of the x offset was already present before the pinch chunk began. The baseline, which never saw this data, places correctly on this row even open-loop.\n- pb1's single H10 trajectory on this row grasped correctly, but horizon and noise draw are confounded (n=1). \"Replanning corrects the placement\" is plausible but untested.\n\n**dev01 (Seen_0).**\n- Every policy at every horizon closes only condition_2, with condition_1 at 12.5-15 cm.\n- The exception is one baseline H50 trajectory: a late re-grasp at steps 540-548 lands condition_1 at 6.9-8.2 cm against 8.55, and it settles 2 of 4 runs.\n- pb1 and a2 go static at 3/4 conditions for their last ~250 steps at H50 (58-67% idle steps), which removes that late-retry window. The skeptics disagree on whether the stall is a fine-tune effect, because the baseline also stalls at H50 on other poses (15/32 episodes).\n\n**Not the explanation.**\n- Supply: P_B had ~10x more labels, but all from small garments, 74% post-fold, and 84% never drawn.\n- H10-stitched labels teaching replan kinks: no kinks appear in pb1's chunks.\n- A general grasp-precision deficit: per episode, pb1 H50 lifts in 7/8 vs 6/8.\n\n**What could supply large-garment P_B.** Among the training garments, the only large ones (Seen_4/5) have no P_B pose key. Large-garment P_B supervision would need an off-metadata --match_pose placement.",
+ "interventions": [
+  {
+   "name": "Depth-qualified recovery corpus: settled AND deep-landed branches only (baseline as student/brancher)",
+   "what": "This is the one proposed training attempt, in eight steps.\n\n1. Telemetry change (runner). In the v6-copied policy_rollout51.py recovery loop, `_rec_step` already calls checker_details(). Make it also record, per policy step and at the end of the 60-step settle, margin_cm for condition_1..4, both gripper link-origin distances and maximum_particle_lift. From these, compute each branch's landed margin: min(c1,c2) margin at the first window of at least 10 steps after the first all-4 step in which both grippers are more than 12 cm from the cloth and lift is under 5 cm.\n2. Filter change (compiler). Add a depth filter to build_recovery_dataset.py.\n3. Refreeze. Commit both source changes, then git mv manifest.json manifests/manifest_<commit>.json, run build_manifest.py, and confirm verify_sources passes.\n4. Search. The machinery is otherwise identical to v6:\n   - Student and brancher: the untouched baseline checkpoint.\n   - Student runs at H10; 8 candidates at horizon 10 with seeds 9301-9308; roots {30,60,90,120,150,180}; obs_every 10.\n   - Training-only garments, grouped by match_pose: P_A (key0) on Seen_4/5/6/8 with 2 seeds each, P_C (key1) on Seen_4/5/6/8 with 2 seeds each, and P_B (key2) on Seen_6/8 with 4 seeds each.\n   - That is 24 rows, about 1152 attempts.\n5. Preregistered checks, run before any image is read:\n   - (a) Mechanism check. Among branches that reached all-4, the settle rate must be higher for landed margin >= 1 cm than for < 1 cm (one-sided Fisher p < 0.05). If not, stop untrained.\n   - (b) Label rule. Keep labels only from branches with settled_success, terminal min(c1,c2) margin >= 1.5 cm after the settle, and first all-4 at or before step 450. The step-450 bound keeps the filter from favouring late folds that had no time to relax. Keep every label of a qualifying branch, because landing depth is set by the fold stroke and release (rel -40..+20). Include a student episode only if it qualifies itself. Report the yield at depth thresholds 0/0.5/1.0/1.5/2.0 cm.\n   - (c) Coverage gate per pose: at least 24 qualifying branches from at least 8 distinct roots and 3 rows, and at least 3000 labels in total. Otherwise stop untrained.\n   - Exclude the v4 and v6 corpora. Their landing depth cannot be recovered, and they contain shallow-landing survivors.\n6. Compile with the unchanged pose-balanced awr_weight (1/3 per pose).\n7. Train from the untouched baseline with a2's recipe verbatim: lr 3.3e-6, AdamW with fp32 master weights, unfreeze boundary, batch 4, rollout_fraction 0.5, grad_accum 8, whole-episode anchor of 16 files x 12 frames, seed 4242, 300 steps, checkpoint every 25, select the latest guard-passing checkpoint (<= 1.10). pb1@200 cannot be the init: its retention is already 1.095 against the 1.10 guard. Then run the reload gate and the fit gate.\n8. Evaluate with the unchanged matched protocol.",
+   "why_evidence": "- Landing depth is the strongest surviving predictor of settle, and it reproduced independently: landed >= 1 cm settled 37/41 vs 13/25 below (p=0.0008). a2 and baseline folds landed >= 1 cm settled 29/29.\n- pb1 lands shallow at H10 (median 1.0 cm vs a2 2.07 and baseline 2.45).\n- The existing labels were selected only by settled success, from a baseline process that loses about 45% of its in-branch folds. Shallow-landing survivors are therefore in the corpus, and nothing marks them.\n- Margins were never recorded (verified in the runner), so a fresh search with telemetry is the only way to apply the criterion.\n- The same search machinery on early roots produced pb1's reach gain (13/16 vs 5/16), so replicating it should preserve reach.\n- Changing the criterion from 'settled' to 'settled and deep' is the smallest change that targets the defect every analysis converged on: converting reaches into settles.",
+   "kind": "data",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "The intended outcome is pb1-like early reach with a2- or baseline-like landing depth.\n- Optimistic: if reach stays at 13-14/16 and landings reach median >= 2 cm, the pooled hold rate implies about 11-12/16 settled at H10. That is the minimum needed against a baseline of 5/16 (11 vs 5 gives p=0.038).\n- Realistic: 7-10/16, given pb1's unexplained relaxation of 1-2 cm landings (2/6 held) and cloth nondeterminism at the margin.\n- H50 should stay at or above baseline, since pb1's H50 P_A 6/6 already rests on deep landings.\n- The probability of meeting the preregistered rule is low to moderate. The mechanism check and yield curve are informative even if the attempt stops.",
+   "risks": "- Yield: the baseline's v6 P_A search settled only 38/384. With the depth and step-450 filters, P_A may fall under 24 branches and the gate would stop the attempt after about 14 GPU-h.\n- Luck vs skill: 6/22 near-identical twin pairs split outcomes, so part of the landing depth may be cloth noise the filter cannot teach.\n- Relative to pb1, two things change at once: a fresh corpus and the filter. P_C is re-searched from the baseline and may not reproduce v4's P_C behaviour.\n- The residual relaxation of pb1's 1-2 cm landings is unexplained, so depth at settle may not transfer to dev garments.\n- Terminal depth could still favour slower strokes and trade away reach. Report the first-fold-step distribution of qualifying vs non-qualifying branches.\n- dev03's large-garment P_B placement is not addressed.\n- The runner and compiler source changes must be refrozen correctly or verify_sources will fail the chain.",
+   "cost_gpu": "Search: 24 rows, about 13-14 GPU-h (v6 used about 9 GPU-h for 16 rows). Train, reload and fit gate: about 1 GPU-h. Matched evaluation: 64 tasks, about 5 GPU-h. Total about 20 GPU-h, within the 40 GPU-h cap.",
+   "rank": 1
+  },
+  {
+   "name": "On-policy variant: pb1-step000200 as student/brancher with the same depth filter",
+   "what": "Same telemetry, mechanism check, depth rule (terminal min(c1,c2) >= 1.5 cm, first all-4 at or before step 450), gates, compile, baseline init and a2 recipe as rank 1. The difference is --policy_path pb1-step000200 for the search rows. Student and brancher are necessarily the same checkpoint: _rec_chunk uses original_predict, and --shadow_policy is replay-only. Roots {30,60,90,120,150,180,210,240} span pb1's reach regime (steps 100-220). Rows are the same 24 training-garment rows. This is reward-filtered self-distillation: of pb1's own continuations at the states it actually visits, keep only the deep, settled ones.",
+   "why_evidence": "- pb1 reaches far more often than the baseline, especially at P_A (5/6 H10 reaches on dev vs 0/6), so P_A yield should exceed the baseline's 10%.\n- pb1's own H50 landings are deep (median 1.7 cm; 6/6 settled when >= 1 cm), so deep landings exist in its distribution.\n- The labels would sit exactly on pb1's early-fold states.",
+   "kind": "data",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "Better label yield and state relevance than rank 1 at P_A. If depth selection works, the ceiling is similar to rank 1. It is more likely to keep pb1's reach.",
+   "risks": "- The filter must do all the work: pb1's H10 landings are shallow, so qualifying branches may be rare or lucky.\n- It inherits pb1's inboard P_B grasp and early-release tendencies.\n- pb1 has never been run as a student on training garments, so its yield is unknown.\n- Use it instead of rank 1, not in addition to it: mixing students would add a second changed factor.",
+   "cost_gpu": "About 20 GPU-h total, the same as rank 1.",
+   "rank": 2
+  },
+  {
+   "name": "Compiler-only reweighting: restore v4-source / P_C exposure on the existing corpus",
+   "what": "No new search. Keep the v6 corpus and set awr_weight so v4-source labels get roughly a2's per-label dose, e.g. two-thirds of draws to v4-source labels with uniform weights inside. Give v6-new P_A labels one-third and drop v6-new P_B labels, which come only from small garments. Train from the baseline with a2's recipe, then run the unchanged gates and matched evaluation.",
+   "why_evidence": "Training-dynamics shows that the only data difference between a2 and pb1 was which labels carried the gradient: P_C draws were halved, and v4-source draws fell 50-88% at every pose. a1@100, with a lower P_C dose, lost dev02 the same way pb1 did (n=1).",
+   "kind": "training",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "At best a combination of a2-like H10 (8/16 settled in v5) and pb1-like P_A H50. It does not address landing depth. Even an exact a2 replica (8 vs 5) fails the rule (needs 11), so this is a weak candidate for the single attempt.",
+   "risks": "The comparison is cross-campaign and confounded, and the a2 contrast is weak on a held-first basis (p about 0.14). Composition and dose cannot be separated.",
+   "cost_gpu": "About 1 GPU-h for training, reload and fit gate, plus about 5 GPU-h for matched evaluation.",
+   "rank": 3
+  },
+  {
+   "name": "Checkpoint dose/landing diagnostic on training-garment rows (not a training attempt)",
+   "what": "With the rank-1 telemetry in place, run existing checkpoints at H10 on 12-24 training-garment rows (Seen_4/5/6/8 at P_A/P_B/P_C): a2@125, a2@200, a2@250, pb1@100, pb1@150, pb1@200 and a1@100. Measure first-reach step, landed margin and settle. Do not run them on the dev rows: choosing checkpoints on the matched-protocol rows would contaminate the preregistered comparison, and the protocol fixes n.",
+   "why_evidence": "This separates the three open training-side explanations (P_C dose, v4-source dilution, v6 interference) by asking whether landing depth tracks exposure. It also tests whether pb1's shallow landing reproduces on training garments, which is a precondition for rank 2.",
+   "kind": "evaluation-protocol",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "Informative only. It tells whether depth is dose-driven (making rank 3 more viable) or composition-independent (supporting rank 1 or 2). It produces no candidate.",
+   "risks": "It consumes GPU budget without producing a deliverable, and training-garment behaviour may not transfer to dev garments.",
+   "cost_gpu": "About 0.09 GPU-h per episode. 7 checkpoints x 12-24 rows comes to about 8-15 GPU-h.",
+   "rank": 4
+  },
+  {
+   "name": "Large-garment P_B coverage via --match_pose on Seen_4/5",
+   "what": "Add P_B rows on Seen_4 and Seen_5 (the 9.9 cm class, the same size class as dev03's Seen_3) by pinning the P_B match_pose. These garments have no P_B key in garment_info, and the runner pins any 6-tuple. Smoke-check that the garment spawns validly, then search them with the rank-1 machinery and depth filter. This can be folded into rank 1 as 4 extra rows.",
+   "why_evidence": "pb1's dev03 H50 failure is an inboard grasp at the P_B location typical of the small garments (Seen_6/8, 8.1 cm), which is the only P_B supervision ever used. The large garment needs an outboard grasp.",
+   "kind": "data",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "It could restore dev03 at H50: 2 episodes, which do not bind the verdict.",
+   "risks": "- The pose-garment combination is off-metadata.\n- It could shift P_B grasps outboard on small garments (dev01 is Seen_0).\n- The evidence rests on one trajectory per policy.\n- It does not help the binding H10 criterion.",
+   "cost_gpu": "+2.5-5 GPU-h for 4-8 extra rows.",
+   "rank": 5
+  },
+  {
+   "name": "State-dependent execution horizon (commit to longer chunks near the fold)",
+   "what": "This is an inference-side change. For example, execute 50-action chunks once the fold stroke begins, and 10 otherwise. It changes the deployed policy, so it must be applied identically to both policies in the matched arrays, or declared part of the candidate's checkpoint. It needs a fold detector that uses only the policy's own observations; using the checker at test time is not allowed.",
+   "why_evidence": "pb1 lands deeper and settles more at H50 than at H10. But the H10-vs-H50 difference is confounded by reach timing (264-394 vs 100-217), the per-replan hazard match was coincidental, and pb1's H50 losses are passive relaxation.",
+   "kind": "inference",
+   "changes_evaluation_protocol": true,
+   "expected_effect": "Uncertain. It might recover some pb1 H10 folds.",
+   "risks": "It changes the deployed policy and effectively the H10 protocol condition. No clean evidence supports the mechanism, and a detector error could cost reaches.",
+   "cost_gpu": "About 5 GPU-h for evaluation plus engineering time. No training.",
+   "rank": 6
+  },
+  {
+   "name": "Hold-at-fold supervision or an action-queue flush at the first all-4 step (not recommended)",
+   "what": "Synthesize zero-motion 'hold current target' labels at in-fold states, or flush the action queue when all four conditions first pass.",
+   "why_evidence": "The evidence is against it:\n- Holding policies do not stop moving.\n- 4 of pb1's losses relax with the arms more than 10 cm away, and the r2 dev02 arm was stationary.\n- dev04 r2 lost its fold during the hold-last-target terminal settle.\n- At the first all-4 step the flap is often still in the air.\n- A flush uses the scorer at test time, so it can only ever be a diagnostic.",
+   "kind": "data",
+   "changes_evaluation_protocol": false,
+   "expected_effect": "Likely none or negative. The labels would also have to be simulator-validated, which the search already does implicitly.",
+   "risks": "It teaches freezing at transient crossings. The flush variant changes the deployed policy (that variant does change the evaluation protocol).",
+   "cost_gpu": "About 20 GPU-h if simulator-validated.",
+   "rank": 7
+  },
+  {
+   "name": "Replan-boundary smoothing / temporal ensembling (not recommended)",
+   "what": "Blend overlapping chunks, or clamp boundary jumps at replans.",
+   "why_evidence": "Refuted by both skeptics:\n- Joint speed is flat across the chunk.\n- Time-matched jump AUC is 0.38-0.54.\n- At equal jump size pb1 loses more than a2.\n- Most losses begin before the boundary.",
+   "kind": "inference",
+   "changes_evaluation_protocol": true,
+   "expected_effect": "None expected on fold holding.",
+   "risks": "It changes the deployed policy for both arms of the comparison and could slow reach.",
+   "cost_gpu": "About 5 GPU-h for evaluation.",
+   "rank": 8
+  }
+ ],
+ "recommended_plan": "Proposed next attempt: rank 1, the depth-qualified recovery corpus.\n\n1. **Fix the record.** Before anything is launched, correct REPORT.md and the pasted summary. Nothing under campaigns/ was modified in this analysis. The corrections:\n   - pb1 r2 dev04 was lost in the terminal settle.\n   - The post-fold label share is 65.4%, and those labels are release/retract, not stop labels.\n   - Final losses are c2 7/9 and c1 2/9.\n   - 'Moves through the fold mid-chunk' fits only 3 of 10 losses.\n   - The P_B H50 cells are about one trajectory each.\n   - The a2-vs-pb1 'hold' contrast crosses campaigns and is weak on a held-first basis.\n2. **Open a new dated campaign** that snapshot-copies the v6 runner and compiler. Make two source changes, both flagged as source changes: margin/distance/lift telemetry in the recovery branch loop (per step and at the terminal settle, plus each branch's landed margin), and a depth filter in the compiler. Commit, refreeze the manifest (git mv into manifests/, then build_manifest.py), and confirm verify_sources passes.\n3. **Search.** The baseline is student and brancher. 24 training-garment rows, grouped by match_pose:\n   - P_A on Seen_4/5/6/8, 2 seeds each\n   - P_C on Seen_4/5/6/8, 2 seeds each\n   - P_B on Seen_6/8, 4 seeds each\n\n   Roots {30..180 step 30}, 8 candidates at H10, seeds 9301-9308. About 13-14 GPU-h.\n4. **Stop conditions, preregistered and checked before any image is read:**\n   - (a) Mechanism check: among branches that reached all-4, landed >= 1 cm must settle more often than landed < 1 cm (one-sided Fisher p < 0.05).\n   - (b) Coverage gate per pose, counting only qualifying branches (settled, terminal min(c1,c2) margin >= 1.5 cm, first all-4 at or before step 450): at least 24 branches from at least 8 roots and 3 rows, and at least 3000 labels in total.\n   - If either fails, stop untrained and report the yield curve at 0/0.5/1/1.5/2 cm.\n5. **Compile** only qualifying branches (all of each branch's labels) with the unchanged 1/3-per-pose awr_weight. Exclude the v4/v6 corpora, whose depth is unknowable.\n6. **Train from the untouched baseline** with a2's recipe verbatim: lr 3.3e-6, fp32 master weights, grad_accum 8, whole-episode anchor, 300 steps, checkpoint every 25, latest guard-passing <= 1.10. Log per-pose rollout loss.\n7. **Gate and evaluate.** Reload and fit gate unchanged. Matched evaluation unchanged: baseline and candidate interleaved in the same arrays, 16 rows x 2 runs, H10 and H50. The rule needs about 11/16 vs a baseline of about 5/16 at H10.\n8. **Record descriptively** (these carry no verdict): landed margin, first-reach step, and first-fold-held vs re-closed, per episode.\n\nRank 2 (pb1 as brancher) replaces rank 1 only if a decision is made before launch that on-policy states matter more than unchanged machinery. Rank 4 can run first, on training garments only, if the budget allows. Do not spend the attempt on smoothing, hold-at-fold labels, or more P_B/P_A data of the same kind. Expected outcome: passing the rule is plausible but not likely. The mechanism check and yield curve settle whether landing depth is teachable, even if the attempt stops early.",
+ "open_questions": [
+  "Why do pb1's moderately deep H10 landings (1.2-2.2 cm) relax open with the arms more than 10 cm away, when a2's and the baseline's never did (29/29)? A fold configuration or flap slide that the pairwise landmark distances miss is plausible. Settling this needs per-step landmark positions or mesh snapshots at release and after settle.",
+  "Does landed depth predict settle on the training garments, inside the recovery search? It has never been recorded; the rank-1 mechanism check answers it.",
+  "Is landing depth controllable by the policy, or mostly cloth nondeterminism? 6 of 22 near-identical twin pairs split outcomes, so rejection sampling may select luck.",
+  "Will the depth filter leave enough qualifying branches per pose? The baseline's v6 P_A search settled only 38/384 before any depth filter.",
+  "Does pb1 reach and land shallow on the training garments as it does on dev? It has never been run as a student there.",
+  "The a2-vs-pb1 H10 contrast has never been measured in one campaign. Is a2's 'hold' advantage real, or run-to-run variation (held-first p about 0.14)?",
+  "Which training-side change coincides with the shallower landings: P_C dose, dilution of v4-source labels at every pose, or interference from the v6 content? The logs cannot separate them, and per-source loss was not logged.",
+  "Is the dev01 H50 freeze at 3/4 a fine-tune x H50 effect or a shared stall? The skeptics disagree: pb1/a2 are 58-67% idle there, but the baseline stalls at H50 on other poses (15/32).",
+  "Would H10 replanning recover dev03's inboard placement from the H50 state? n=1, with horizon confounded with the noise draw.",
+  "Are H10-stitched labels self-consistent beyond their first 10 rows? Predicted chunks were never recorded, because _rec_chunk bypasses measured_predict.",
+  "The preregistered Fisher test treats r1/r2 as independent, although they share seeds and are near-replicates (about half the nominal n). The protocol is fixed, so this is noted only.",
+  "The pasted claim that 'the full fold lasted a median 15 steps' was not re-verified. Other counts give median first-loss rel 7 and median first continuous fold 8 steps."
+ ]
+}

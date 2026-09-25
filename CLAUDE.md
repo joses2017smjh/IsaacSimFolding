@@ -20,10 +20,10 @@ Many `.md` files here are **historical records that were true when written**.
 A targeted search at the under-supplied poses (P_B 123/384, P_A 38/384
 settled) and a pose-balanced corpus trained with a2's recipe produced
 `pb1-step000200`: matched H10 4/16 vs 5/16, H50 8/16 vs 7/16. It reaches the
-fold far more often (13/16 vs 5/16 at H10) but loses it within ~6 steps at
-H10 (it moves through the fold mid-chunk); at H50 it settles P_A 6/6 vs 0/6.
-**The binding constraint is stopping at the fold at H10 — and 64% of the
-training labels already show post-fold holding, so it is not data supply.** Read `campaigns/20260924-pose-balanced-v6/REPORT.md`.
+fold far more often (13/16 vs 5/16 at H10) but lands it shallow (median
+closure margin 1.0 cm vs the baseline's 2.45; landings under 1 cm settle only
+about half the time). Replan jumps, state shift and label-content
+differences were tested and refuted (`analysis/diagnosis/`). Read `campaigns/20260924-pose-balanced-v6/REPORT.md`.
 
 **Previous (2026-09-24): v5 matched comparison closed — not improved.**
 Baseline and v4's `a2-step000250` measured in the same Slurm arrays on the

@@ -1,0 +1,1035 @@
+{
+  "schema_version": 1,
+  "campaign": "20260925-depth-qualified-v7",
+  "kind": "one bounded training attempt: depth-qualified supervision from a fresh telemetry search",
+  "predecessor": {
+    "campaign": "20260924-pose-balanced-v6",
+    "result": "matched: pb1-step000200 H10 4/16 vs 5/16, H50 8/16 vs 7/16 -- not improved; reached the fold 13/16 at H10 but landed it shallow (median 1.0 cm vs baseline 2.45); P_B H50 lost on the large garment",
+    "final_commit": "719959f70bd4d082806df88673ab3f7e7f6e5865"
+  },
+  "analysis": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260924-pose-balanced-v6/analysis/diagnosis/synthesis.json",
+  "objective": "keep v6's early reach and land the fold deep: labels only from branches that settled with terminal closure margin >= 1.5 cm and folded by step 450, gated on a preregistered check that landing depth predicts settling in this search; plus large-garment P_B supervision; decide under v5's unchanged matched rule",
+  "git": {
+    "commit": "c74ce4b6a4443777b0845f409937e5a8e43728a4",
+    "source_hashes_taken_from": "committed blob, verified equal to the working tree"
+  },
+  "runner_key": "campaigns/20260925-depth-qualified-v7/scripts/render/policy_rollout51.py",
+  "runner_provenance": "v6's runner snapshot (itself byte-identical to v4/v5) plus passive recovery-branch telemetry (recovery.json schema 2: margin/gripper/lift traces, terminal_*); no physics, render or RNG change; pinned in executed_sources",
+  "executed_sources": {
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/__init__.py": "340ca1d763fc7c252fbad26cbd9d4ac0098d0e0dc705770738023041ab97d077",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/awr.py": "9ad4f608c9133413ba07c767444ff372a356cb227a11750b85306e06932e0be5",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/behavior_telemetry.py": "52ef2e26d3a6e4e047f32507ac45ed5fd83bd3f20d1c45a0b7b6583e5b188125",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/calibration.py": "e0dc5dfe14db72339c17ec024290b318c4ad1f51c625aac05ea88436ce8d6b4d",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/ckpt.py": "3606310228a3ad837cfc05955a026a037d577eb6a923ab8d65eebf3395dadd6e",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/eval_kwargs.py": "1265e708ec790a2975375232af956343851902416f5eb5bea0f1a9c8b4780dd7",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/eval_log.py": "87e7e3a2ebb2008a102e0ed53da6fca856825ae0d9b7ebe1583cef4c60de55fb",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/folding_geometry.py": "994e2595c525e85795594efbfdeabe432d32943842120c561a52786ecadd4123",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/labels.py": "42a10e536043d6bb87afb87b537e7c1122503ba2fd1f0296e48bde0401fee632",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/policy_media.py": "b87670cf785ae7671af6ee6e3042cfe80cabf7388bbd35a3193440a9bf6eba07",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/policy_wrap.py": "0e977131ad046c378d71c49d21d6841b37eed3570af057e559a80a379daf92e1",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/recap.py": "f0d3eed70019a9656d880c806334b11ed6144356fdb13230a396cd8062f10ea8",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/splits.py": "46aef9bbabb65ef6c2e5eff94fd7bec71b480b8971fb4093f8a8a207d2404ea7",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_camera.py": "86733fe8b942053d9821a395720dd06e0c9933837e2faa57ebea1c4206d6b7aa",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_eval.py": "a9ff6e54e1d5fbd724c7e5446609d3cf7818659d60948b232c4902bfea5c5ec0",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_obs.py": "e7893063ea37f25fe30948ad239234e1e7a5d167072b4cb21dbc096cf565f7c0",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/strict_observer.py": "270ca70ca33990b942838983bdcffba19f341a80e99ca6b0e6cbd3c8e404e3af",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/switch_trace.py": "1ccfd7b78c419cfe05ba7675e434a30d65961ce1017facda391090e6a601fb30",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/thompson.py": "6d4f248f6ea47d7f544ddbd72fe2a96c6bb0c375213f23a5159ae146469c083a",
+    "campaigns/20260921-horizon-pilot/src/lehome_fold/value_head.py": "148af05ab50c374904250205f8f80e60765a5a39b990f88ab087921c9a3141f8",
+    "campaigns/20260925-depth-qualified-v7/scripts/build_depth_dataset.py": "62413819de27756a1b41f2b3e21d29c4bdd1b5e4a97f6ab8f0188a4a6c02fcf1",
+    "campaigns/20260925-depth-qualified-v7/scripts/build_manifest.py": "17961ed61c4ea17a4381e04eed25485a2610a4b0e6371d7c8a271b63504aac9d",
+    "campaigns/20260925-depth-qualified-v7/scripts/build_recovery_dataset.py": "b66d6ee9bef767a4850f57bbc8ba56a7e37c5dbcc896c06d419408c5b5abfa07",
+    "campaigns/20260925-depth-qualified-v7/scripts/check_checkpoint.py": "8063d41ad26069b2a4c78f49c5ab34c351c4af7760dba7029df8f40041515387",
+    "campaigns/20260925-depth-qualified-v7/scripts/check_telemetry.py": "5761ba8474f3bb332dfd384f0a02c9ef3dbfe02ef6a7c298ea05a24650bf4407",
+    "campaigns/20260925-depth-qualified-v7/scripts/driver.py": "89221800c234f287bd818fec8bc09565950e5942bb38e5858aed5428792f151f",
+    "campaigns/20260925-depth-qualified-v7/scripts/offline_fit.py": "cdbb4dde9ed0b969f8cdae4e4bea2dd5b4cc5eca90e5ac91beb18b5ab90230da",
+    "campaigns/20260925-depth-qualified-v7/scripts/reconcile_ledger.py": "9448bd12dec2852576ed5cf94d2df83cafdca52ef487eb1cb005bfd8740b95b6",
+    "campaigns/20260925-depth-qualified-v7/scripts/render/asset_paths.py": "6fd2a2f8626c19aaba792ae9bda20325656a9708c00789e90ce5540827f6d819",
+    "campaigns/20260925-depth-qualified-v7/scripts/render/policy_rollout51.py": "d9d644f7e0f7fcf7771f2939013fdfe262e0aa28040e0f15ba1fe32d4164ec1f",
+    "campaigns/20260925-depth-qualified-v7/scripts/render/rollout_audit_utils.py": "1cfbf9df55db4f5c2640d2a41c92be7d76859d41dd555144db3adca3a6947e25",
+    "campaigns/20260925-depth-qualified-v7/scripts/rollout_weighted_finetune.py": "da36e90ea95bc69d7f3ca6ca24114de6ab00bb836f3ffd5e6087c573a0ae3a31",
+    "campaigns/20260925-depth-qualified-v7/scripts/run_matched_task.py": "597340c9e55057487b0b4a207d66eea846195f6b7e4dd384e17b69575840eac2",
+    "campaigns/20260925-depth-qualified-v7/scripts/run_rollout_task.py": "8fa7db0ed98967889529f3af5f37c41ff26ebc9f66c3de890c6921752d33fe0d",
+    "campaigns/20260925-depth-qualified-v7/scripts/verify_sources.py": "5ff5f0ebbd9ef6c875be12d9f11a11b8bbbcedb968a73494fda554e879bdcfa8",
+    "campaigns/20260925-depth-qualified-v7/slurm/_common.sh": "b01a21d3cdca618b94bdd0e6ad03dd7a3be0f84e1fb20130d9087ff422f440a1",
+    "campaigns/20260925-depth-qualified-v7/slurm/compile.sbatch": "aa26b5a60073b5fc5133fbb1e9c45b982bd1ecf0b773ad5d8b90d88aa98549cb",
+    "campaigns/20260925-depth-qualified-v7/slurm/matched.sbatch": "91af680484a17bfe1ab8142a733485beff16590b33b95025c4abfd7641fc9ca7",
+    "campaigns/20260925-depth-qualified-v7/slurm/offline_fit.sbatch": "8a2cc6b653856f388835b57f53ed82c1ec1366ed95046e99b366e2910b50e1b0",
+    "campaigns/20260925-depth-qualified-v7/slurm/recovery.sbatch": "11254aa18cf8464becb6a79beccd57211f836fb44bd35f58d3423032ca7c17c6",
+    "campaigns/20260925-depth-qualified-v7/slurm/reload.sbatch": "97e4662d1d5c74bbe1b1a5e1295a9ccf99831ad0ba9ba06b6b2957a20bea8755",
+    "campaigns/20260925-depth-qualified-v7/slurm/smoke.sbatch": "89fcb7948b7ca84277a15d2e3c0c910a508dfe620a12fe7579595b733134c9ca",
+    "campaigns/20260925-depth-qualified-v7/slurm/tick.sbatch": "4172e9c9318d5225847e5eb45f882bd8e006298d1a21dc36d30302de9ba1ed46",
+    "campaigns/20260925-depth-qualified-v7/slurm/train.sbatch": "3a70fb76e43a0006339514d084f9f1b220e246f871c4fea734a4f3bb3775d58c",
+    "campaigns/20260925-depth-qualified-v7/tests/test_v7.py": "da9cd2514efbbcdb10f06f30a20631dfd8f69f65d55f20fbfe29aff2e36f40bb",
+    "src/lehome_fold/__init__.py": "340ca1d763fc7c252fbad26cbd9d4ac0098d0e0dc705770738023041ab97d077",
+    "src/lehome_fold/awr.py": "8de659a3c068c08eb0de6d1397460b151425ca346f379eac03ee36e8387c677e",
+    "src/lehome_fold/calibration.py": "e0dc5dfe14db72339c17ec024290b318c4ad1f51c625aac05ea88436ce8d6b4d",
+    "src/lehome_fold/ckpt.py": "3606310228a3ad837cfc05955a026a037d577eb6a923ab8d65eebf3395dadd6e",
+    "src/lehome_fold/eval_kwargs.py": "1265e708ec790a2975375232af956343851902416f5eb5bea0f1a9c8b4780dd7",
+    "src/lehome_fold/eval_log.py": "87e7e3a2ebb2008a102e0ed53da6fca856825ae0d9b7ebe1583cef4c60de55fb",
+    "src/lehome_fold/labels.py": "42a10e536043d6bb87afb87b537e7c1122503ba2fd1f0296e48bde0401fee632",
+    "src/lehome_fold/policy_wrap.py": "0e977131ad046c378d71c49d21d6841b37eed3570af057e559a80a379daf92e1",
+    "src/lehome_fold/recap.py": "f0d3eed70019a9656d880c806334b11ed6144356fdb13230a396cd8062f10ea8",
+    "src/lehome_fold/splits.py": "46aef9bbabb65ef6c2e5eff94fd7bec71b480b8971fb4093f8a8a207d2404ea7",
+    "src/lehome_fold/storm_camera.py": "86733fe8b942053d9821a395720dd06e0c9933837e2faa57ebea1c4206d6b7aa",
+    "src/lehome_fold/storm_eval.py": "a9ff6e54e1d5fbd724c7e5446609d3cf7818659d60948b232c4902bfea5c5ec0",
+    "src/lehome_fold/storm_obs.py": "e7893063ea37f25fe30948ad239234e1e7a5d167072b4cb21dbc096cf565f7c0",
+    "src/lehome_fold/thompson.py": "6d4f248f6ea47d7f544ddbd72fe2a96c6bb0c375213f23a5159ae146469c083a",
+    "src/lehome_fold/value_head.py": "148af05ab50c374904250205f8f80e60765a5a39b990f88ab087921c9a3141f8"
+  },
+  "task_prompt": "fold the garment on the table",
+  "assets": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets",
+  "lehome": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260921-horizon-pilot/external/lehome-challenge",
+  "pose_metadata": {
+    "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Datasets/example/four_types_merged/meta/garment_info.json",
+    "sha256": "0c3a3eea8bfeed866fabf3d0efdfc8b53d5da98ed07278becb24a1bb9fadf794"
+  },
+  "baseline_checkpoint": {
+    "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+    "label": "baseline",
+    "immutable": true,
+    "sha256": {
+      "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+      "finetune.json": "27ccbc58f8942ee8729d1c4f35aeadd5b73c1cfe6277756721c4d43bcca7b9ef",
+      "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+      "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+      "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+      "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+      "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+      "train_config.json": "e4a9782f17c1552eb8aedc87433674b85c9353730f8cbd1097cecdb419fa73df"
+    }
+  },
+  "pose_clusters": {
+    "P_A": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+    "P_B": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+    "P_C": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90"
+  },
+  "depth_rules": {
+    "landed_deep_cm": 1.0,
+    "mechanism_p": 0.05,
+    "cut_ladder_cm": [
+      1.5,
+      1.0,
+      0.5,
+      0.0
+    ],
+    "first_fold_max_step": 450,
+    "min_total_labels": 3000,
+    "max_excluded_rows": 1,
+    "yield_curve_cm": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "landing": {
+      "gripper_clear_m": 0.12,
+      "lift_max_m": 0.05,
+      "window": 10
+    }
+  },
+  "depth_rules_note": "preregistered from the v6 diagnosis (landed >= 1 cm settled 37/41 vs 13/25 below across 128 matched episodes) and the pre-launch review. Mechanism check: among reached branches that landed inside the branch (landings inherited from a folded root excluded), landed-deep must settle more often -- exact conditional test stratified by pose, p < 0.05, pooled deep rate above shallow -- or nothing is trained. Label rule per pose: settled, first all-4 action <= 450 (1-based), terminal min(c1,c2) >= the strictest cut in cut_ladder_cm at which the pose meets the gate (0.0 = settled-only; settled baseline P_A folds never exceeded ~1.47 cm, so a single 1.5 cm cut would stop P_A for supply). Landing: first >= 10-step window at/after the first all-4 step with both gripper link origins > 12 cm from the cloth and max particle lift < 5 cm.",
+  "pose_clusters_note": "grouped by match_pose identity, never by pose key: key 0 is P_A on garments 0/7/9 but P_C on garment 3. P_A = dev00/04/06, P_B = dev01/03, P_C = dev02/05/07. 7 of the 8 final rows are poses absent from dev and from every search.",
+  "recovery": {
+    "roots": [
+      30,
+      60,
+      90,
+      120,
+      150,
+      180
+    ],
+    "candidates": [
+      {
+        "horizon": 10,
+        "seed": 9301
+      },
+      {
+        "horizon": 10,
+        "seed": 9302
+      },
+      {
+        "horizon": 10,
+        "seed": 9303
+      },
+      {
+        "horizon": 10,
+        "seed": 9304
+      },
+      {
+        "horizon": 10,
+        "seed": 9305
+      },
+      {
+        "horizon": 10,
+        "seed": 9306
+      },
+      {
+        "horizon": 10,
+        "seed": 9307
+      },
+      {
+        "horizon": 10,
+        "seed": 9308
+      }
+    ],
+    "obs_every": 10,
+    "max_seconds": 8100,
+    "why": "v4/v6 search machinery unchanged (baseline as student and brancher, every candidate executed to a settled verdict, every attempt recorded), plus passive per-step branch telemetry (margins, gripper distances, lift) so landing depth can select labels.",
+    "coverage_gate": {
+      "P_A": {
+        "min_successful_branches": 24,
+        "min_distinct_roots": 8,
+        "min_rows": 3
+      },
+      "P_B": {
+        "min_successful_branches": 24,
+        "min_distinct_roots": 8,
+        "min_rows": 3
+      },
+      "P_C": {
+        "min_successful_branches": 24,
+        "min_distinct_roots": 8,
+        "min_rows": 3
+      }
+    },
+    "coverage_gate_note": "counts DEPTH-QUALIFYING branches only, per pose; plus depth_rules.min_total_labels"
+  },
+  "recovery_search": [
+    {
+      "id": "search_p_a_pant_short_seen_4_key0_s84000",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84000,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_4_key0_s84001",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84001,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_5_key0_s84002",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84002,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_5_key0_s84003",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84003,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_6_key0_s84004",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84004,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_6_key0_s84005",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84005,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_8_key0_s84006",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84006,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_a_pant_short_seen_8_key0_s84007",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 84007,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_A",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_4_key1_s84008",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84008,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_4_key1_s84009",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84009,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_5_key1_s84010",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84010,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_5_key1_s84011",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84011,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "large",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_6_key1_s84012",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84012,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_6_key1_s84013",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84013,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_8_key1_s84014",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84014,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_c_pant_short_seen_8_key1_s84015",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 84015,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_C",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_6_key2_s84016",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84016,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_6_key2_s84017",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84017,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_6_key2_s84018",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84018,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_6_key2_s84019",
+      "garment": "Pant_Short_Seen_6",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_6/PS_M1_089_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84019,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s84020",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84020,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s84021",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84021,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s84022",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84022,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_8_key2_s84023",
+      "garment": "Pant_Short_Seen_8",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_8/PS_Short047_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84023,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "small",
+      "off_metadata_pose": false
+    },
+    {
+      "id": "search_p_b_pant_short_seen_4_pinned_s84024",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": null,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84024,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "large",
+      "off_metadata_pose": true
+    },
+    {
+      "id": "search_p_b_pant_short_seen_4_pinned_s84025",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": null,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84025,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "large",
+      "off_metadata_pose": true
+    },
+    {
+      "id": "search_p_b_pant_short_seen_5_pinned_s84026",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": null,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84026,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "large",
+      "off_metadata_pose": true
+    },
+    {
+      "id": "search_p_b_pant_short_seen_5_pinned_s84027",
+      "garment": "Pant_Short_Seen_5",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_5/PS_050_obj_exp.json",
+      "pose_key": null,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84027,
+      "steps": 600,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "large",
+      "off_metadata_pose": true
+    }
+  ],
+  "recovery_smoke": [
+    {
+      "id": "smoke_search_p_b_pant_short_seen_4_pinned",
+      "garment": "Pant_Short_Seen_4",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_4/PS_050_obj_exp.json",
+      "pose_key": null,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 84900,
+      "steps": 150,
+      "horizon": 10,
+      "trajectory_every": 10,
+      "pose": "P_B",
+      "garment_class": "large",
+      "off_metadata_pose": true
+    }
+  ],
+  "recovery_smoke_config": {
+    "roots": [
+      60
+    ],
+    "candidates": [
+      {
+        "horizon": 10,
+        "seed": 9301
+      },
+      {
+        "horizon": 10,
+        "seed": 9302
+      }
+    ],
+    "obs_every": 10,
+    "max_seconds": 1200
+  },
+  "corpus": {
+    "reuse": null,
+    "note": "no earlier corpus is reused: its landing depth cannot be recovered",
+    "balance": "awr_weight = N / (P * n_pose); the trainer samples proportional to it (unchanged)"
+  },
+  "training": {
+    "steps": 300,
+    "batch_size": 4,
+    "rollout_fraction": 0.5,
+    "lr": 3.3e-06,
+    "optimizer": "AdamW",
+    "unfreeze": "boundary",
+    "seed": 4242,
+    "grad_accum": 8,
+    "checkpoint_every": 25,
+    "checkpoint_rule": "latest_guard_passing",
+    "checkpoint_rule_note": "preregistered BEFORE any v4 result: v3 attempt 2 breached retention at every 100-step checkpoint while both training losses fell, so v4 checkpoints every 25 optimizer steps and selects the LATEST guard-passing checkpoint, else none",
+    "anchor_mode": "whole_episode",
+    "anchor_mode_note": "THE preregistered recipe factor: the episode-start anchor -- the first 8 frames of each file, the home-to-ready snap -- protected nothing the retention guard measures; whole-episode frames span approach, grasp, fold and release on the same 16 anchor files",
+    "anchor": {
+      "glob": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture/ep*.npz",
+      "files": 16,
+      "frames": 12
+    },
+    "retention": {
+      "files": [
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep833.npz",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep864.npz",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep176.npz",
+        "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep354.npz"
+      ],
+      "frames_per_episode": 16,
+      "tolerance": 1.1,
+      "definition": "whole demonstration episodes; garments disjoint from anchor, training, development and final sets"
+    },
+    "anchor_fit_metric": {
+      "glob": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/storm_capture100/ep*.npz",
+      "files": 4,
+      "frames": 8,
+      "role": "the v2 guard, reported only"
+    },
+    "fit_precondition": true,
+    "recipe_source": "v4 attempt 2 (plans/attempt2.json over v4's manifest training block), verbatim",
+    "changed_factor": "label criterion only: depth-qualified branches from a fresh search (with large-garment P_B rows); recipe, init (untouched baseline), steps, checkpoint rule, retention guard and pose balance identical to v6",
+    "weighting": "pose-balanced; see corpus.balance"
+  },
+  "protocol": {
+    "rows": "v2's 16 development rows (8 poses x H10/H50, seeds 200-207), verbatim",
+    "runs_per_policy_per_horizon": 2,
+    "run_labels": [
+      "r1",
+      "r2"
+    ],
+    "same_wave": "each run is ONE Slurm array of 32 tasks in which even indices run the baseline and odd the candidate on the same row, throttled at 8 concurrent; r1 and r2 are submitted by the same driver tick (v5's protocol)",
+    "improvement_rule": {
+      "h10": "pooled candidate H10 (16) vs pooled baseline H10 (16): margin >= 4 AND one-sided Fisher exact p < 0.05",
+      "h50": "pooled candidate H50 (16) >= pooled baseline H50 (16), both measured in this campaign (non-regression)",
+      "retention_guard": "heldout_gate of the selected checkpoint from this campaign's training",
+      "reload": "this campaign's audit/reload_<label>.json: finite and config_matches_baseline",
+      "all_rows_valid": "every one of the 64 development episodes completed as a valid rollout",
+      "function": "scripts/driver.py::matched_verdict (unchanged from v5/v6)"
+    },
+    "n_is_fixed": "two runs per policy per horizon, whatever they show; no third run, no second attempt",
+    "final_set": "v3's untouched 8 rows (v5's final_test, verbatim), run once for BOTH policies in one matched array, only if the improvement rule holds; descriptive",
+    "baseline_numbers_from_earlier_campaigns": "not pooled in; v7's own baseline runs are the only baseline"
+  },
+  "media": {
+    "gif_every": 12
+  },
+  "budget": {
+    "gpu_tasks": 260,
+    "gpu_hours": 70.0,
+    "reserve": {
+      "final_set": 16
+    },
+    "expected": "smoke 1 + search 28 (~20 GPU-h) + train/reload/fit 3 (~1) + evaluation 64 (~5) + final 16 (~1.2)",
+    "note": "anti-runaway bounds; the user lifted the GPU-hour constraint on 2026-09-24",
+    "rollout_timeout_seconds": {
+      "benchmark": 1500,
+      "recovery": 9600,
+      "smoke": 1500
+    }
+  },
+  "smoke": [
+    {
+      "id": "smoke_pant_short_seen0_pose0",
+      "garment": "Pant_Short_Seen_0",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 3100,
+      "steps": 80,
+      "trajectory_every": 2
+    }
+  ],
+  "benchmark": [
+    {
+      "id": "dev00_h10_Pant_Short_Seen_0",
+      "garment": "Pant_Short_Seen_0",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 200,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 0
+    },
+    {
+      "id": "dev00_h50_Pant_Short_Seen_0",
+      "garment": "Pant_Short_Seen_0",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 200,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 0
+    },
+    {
+      "id": "dev01_h10_Pant_Short_Seen_0",
+      "garment": "Pant_Short_Seen_0",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 201,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 1
+    },
+    {
+      "id": "dev01_h50_Pant_Short_Seen_0",
+      "garment": "Pant_Short_Seen_0",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 201,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 1
+    },
+    {
+      "id": "dev02_h10_Pant_Short_Seen_3",
+      "garment": "Pant_Short_Seen_3",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 202,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 2
+    },
+    {
+      "id": "dev02_h50_Pant_Short_Seen_3",
+      "garment": "Pant_Short_Seen_3",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3/PS_050_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 202,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 2
+    },
+    {
+      "id": "dev03_h10_Pant_Short_Seen_3",
+      "garment": "Pant_Short_Seen_3",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 203,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 3
+    },
+    {
+      "id": "dev03_h50_Pant_Short_Seen_3",
+      "garment": "Pant_Short_Seen_3",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3/PS_050_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02527160197:0.02281407639:0.6700000167:0.5693775415:4.805557728:90",
+      "match_scale": 0.45,
+      "seed": 203,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 3
+    },
+    {
+      "id": "dev04_h10_Pant_Short_Seen_7",
+      "garment": "Pant_Short_Seen_7",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_7/PS_M1_089_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 204,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 4
+    },
+    {
+      "id": "dev04_h50_Pant_Short_Seen_7",
+      "garment": "Pant_Short_Seen_7",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_7/PS_M1_089_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 204,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 4
+    },
+    {
+      "id": "dev05_h10_Pant_Short_Seen_7",
+      "garment": "Pant_Short_Seen_7",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_7/PS_M1_089_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 205,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 5
+    },
+    {
+      "id": "dev05_h50_Pant_Short_Seen_7",
+      "garment": "Pant_Short_Seen_7",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_7/PS_M1_089_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 205,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 5
+    },
+    {
+      "id": "dev06_h10_Pant_Short_Seen_9",
+      "garment": "Pant_Short_Seen_9",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_9/PS_Short047_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 206,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 6
+    },
+    {
+      "id": "dev06_h50_Pant_Short_Seen_9",
+      "garment": "Pant_Short_Seen_9",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_9/PS_Short047_obj_exp.json",
+      "pose_key": 0,
+      "match_pose": "0.01989311725:-0.02301287092:0.6700000167:-12.66381931:-10.17940331:90",
+      "match_scale": 0.45,
+      "seed": 206,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 6
+    },
+    {
+      "id": "dev07_h10_Pant_Short_Seen_9",
+      "garment": "Pant_Short_Seen_9",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_9/PS_Short047_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 207,
+      "steps": 600,
+      "horizon": 10,
+      "development_pose_slot": 7
+    },
+    {
+      "id": "dev07_h50_Pant_Short_Seen_9",
+      "garment": "Pant_Short_Seen_9",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_9/PS_Short047_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 207,
+      "steps": 600,
+      "horizon": 50,
+      "development_pose_slot": 7
+    }
+  ],
+  "final_test": [
+    {
+      "id": "final00_h10_Pant_Short_Seen_1_key1",
+      "garment": "Pant_Short_Seen_1",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_1/PS_049_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.007094617933:-0.02635806985:0.6700000167:17.95542145:24.21286583:90",
+      "match_scale": 0.45,
+      "seed": 95000,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final01_h10_Pant_Short_Seen_1_key2",
+      "garment": "Pant_Short_Seen_1",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_1/PS_049_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.07587337494:0.03274563327:0.6700000167:6.500891209:-9.791024208:90",
+      "match_scale": 0.45,
+      "seed": 95001,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final02_h10_Pant_Short_Seen_1_key3",
+      "garment": "Pant_Short_Seen_1",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_1/PS_049_obj_exp.json",
+      "pose_key": 3,
+      "match_pose": "-0.008252002299:0.03374993801:0.6700000167:-12.16068554:-23.64818192:90",
+      "match_scale": 0.45,
+      "seed": 95002,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final03_h10_Pant_Short_Seen_1_key4",
+      "garment": "Pant_Short_Seen_1",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_1/PS_049_obj_exp.json",
+      "pose_key": 4,
+      "match_pose": "-0.06308909506:0.02417575754:0.6700000167:19.47547722:14.15672779:90",
+      "match_scale": 0.45,
+      "seed": 95003,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final04_h10_Pant_Short_Seen_2_key1",
+      "garment": "Pant_Short_Seen_2",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_2/PS_049_obj_exp.json",
+      "pose_key": 1,
+      "match_pose": "-0.02816659771:-0.0167016685:0.6700000167:-14.42024517:-10.80847836:90",
+      "match_scale": 0.45,
+      "seed": 95004,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final05_h10_Pant_Short_Seen_2_key2",
+      "garment": "Pant_Short_Seen_2",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_2/PS_049_obj_exp.json",
+      "pose_key": 2,
+      "match_pose": "-0.007094617933:-0.02635806985:0.6700000167:17.95542145:24.21286583:90",
+      "match_scale": 0.45,
+      "seed": 95005,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final06_h10_Pant_Short_Seen_2_key3",
+      "garment": "Pant_Short_Seen_2",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_2/PS_049_obj_exp.json",
+      "pose_key": 3,
+      "match_pose": "-0.01439476665:-0.02521164343:0.6700000167:11.00531292:22.85394478:90",
+      "match_scale": 0.45,
+      "seed": 95006,
+      "steps": 600,
+      "horizon": 10
+    },
+    {
+      "id": "final07_h10_Pant_Short_Seen_2_key4",
+      "garment": "Pant_Short_Seen_2",
+      "asset_config": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_2/PS_049_obj_exp.json",
+      "pose_key": 4,
+      "match_pose": "-0.06308909506:0.02417575754:0.6700000167:19.47547722:14.15672779:90",
+      "match_scale": 0.45,
+      "seed": 95007,
+      "steps": 600,
+      "horizon": 10
+    }
+  ]
+}

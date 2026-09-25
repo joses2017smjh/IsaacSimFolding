@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-25T21:56:17Z",
+  "stages": {
+    "smoke": {
+      "job_ids": [
+        "21423191"
+      ],
+      "submitted_utc": "2026-09-25T21:56:17Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-25T21:59:16Z"
+    },
+    "search.collect": {
+      "job_ids": [
+        "21423233"
+      ],
+      "submitted_utc": "2026-09-25T21:59:16Z",
+      "status": "submitted",
+      "gpu_tasks": 28,
+      "array": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27"
+    }
+  },
+  "search": null,
+  "attempt": {},
+  "scores": {},
+  "verdict": null,
+  "final": {},
+  "ticks": {
+    "chain": "21423234",
+    "chain_deps": [
+      "21423233"
+    ],
+    "chain_begin": null,
+    "watchdog": "21423193"
+  },
+  "done": false,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-25T21:56:17Z",
+      "message": "submitted smoke -> 21423191",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-25T21:59:16Z",
+      "message": "smoke passed=True",
+      "problems": [],
+      "start_margins_cm": [
+        -0.6424961786335341,
+        -5.886384465924305,
+        5.64438760497492,
+        5.668603615876169
+      ]
+    },
+    {
+      "utc": "2026-09-25T21:59:16Z",
+      "message": "submitted search.collect -> 21423233",
+      "gpu_tasks": 28
+    }
+  ],
+  "smoke": {
+    "passed": true,
+    "problems": [],
+    "completed_attempts": 2,
+    "start_margins_cm": [
+      -0.6424961786335341,
+      -5.886384465924305,
+      5.64438760497492,
+      5.668603615876169
+    ],
+    "off_metadata_pose": true
+  }
+}

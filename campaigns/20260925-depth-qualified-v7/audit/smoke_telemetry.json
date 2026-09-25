@@ -1,0 +1,58 @@
+{
+ "passed": true,
+ "problems": [],
+ "row": "smoke_search_p_b_pant_short_seen_4_pinned",
+ "completed_attempts": 2,
+ "start_margins_cm": [
+  -0.6424961786335341,
+  -5.886384465924305,
+  5.64438760497492,
+  5.668603615876169
+ ],
+ "branch_records": [
+  {
+   "root": 60,
+   "candidate": 0,
+   "settled": false,
+   "reached": true,
+   "first_fold_step": 118,
+   "terminal_depth_cm": -0.5800125508191183,
+   "landed_margin_cm": -0.03737932965095858,
+   "inherited_landing": false,
+   "post_landing_root": false,
+   "settled_early": false
+  },
+  {
+   "root": 60,
+   "candidate": 1,
+   "settled": false,
+   "reached": false,
+   "first_fold_step": null,
+   "terminal_depth_cm": -5.9058827271252206,
+   "landed_margin_cm": null,
+   "inherited_landing": false,
+   "post_landing_root": false,
+   "settled_early": false
+  }
+ ],
+ "mechanism_check_runs": {
+  "test": "exact conditional, stratified by pose, one-sided (deep settles more)",
+  "threshold_cm": 1.0,
+  "deep": "0/0",
+  "shallow": "0/1",
+  "deep_rate": null,
+  "shallow_rate": 0.0,
+  "p_one_sided": 1.0,
+  "per_pose": {
+   "smoke": {
+    "deep": "0/0",
+    "shallow": "0/1",
+    "inherited_landings_excluded": 0,
+    "reached": 1,
+    "with_landing_window": 1
+   }
+  },
+  "passed": false
+ },
+ "off_metadata_pose": true
+}

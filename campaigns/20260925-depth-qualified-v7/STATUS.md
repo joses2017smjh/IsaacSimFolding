@@ -3,10 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none submitted yet |
-| **Current result** | none — campaign being frozen |
+| **Active job** | `21423233` search.collect |
+| **Current result** | smoke pass |
 | **Limitation / blocker** | none |
-| **Next automatic action** | smoke (telemetry + off-metadata spawn), then the 28-row search |
+| **Next automatic action** | driver advances the next stage when a waited job ends |
+
+_Updated 2026-09-25T21:59:16Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

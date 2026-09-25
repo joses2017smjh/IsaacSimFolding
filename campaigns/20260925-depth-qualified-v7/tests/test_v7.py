@@ -266,7 +266,7 @@ def test_compiler_keeps_only_deep_qualifying_labels_and_balances_poses(tmp_path)
     with np.load(root / "datasets/recovery.npz", allow_pickle=False) as z:
         assert len(z["pose"]) == 9                                   # 3 deep labels per pose; shallow dropped
         assert set(zip(z["root"].tolist(), z["candidate"].tolist())) == {(30, 0), (60, 1)}
-        assert (z["terminal_depth_cm"] >= RULES["terminal_depth_cm"]).all()
+        assert (z["terminal_depth_cm"] >= 1.5).all()                  # every pose chose the 1.5 cm cut
         w, pose = z["awr_weight"], z["pose"]
         for p in ("P_A", "P_B", "P_C"):
             assert w[pose == p].sum() / w.sum() == pytest.approx(1 / 3)

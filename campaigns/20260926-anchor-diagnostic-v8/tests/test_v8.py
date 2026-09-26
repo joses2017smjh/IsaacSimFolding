@@ -111,7 +111,9 @@ def test_endpoint_prediction_needs_both_parts(tmp_path):
 def test_confirm_rows_are_the_final_poses_at_both_horizons_with_fresh_seeds():
     rows = MANIFEST["final_confirm"]
     final = MANIFEST["final_test"]
-    assert len(rows) == 48 and len({r["id"] for r in rows}) == 48 and len({r["seed"] for r in rows}) == 48
+    # as on the development rows, a pose shares its seed across H10 and H50: 8 poses x 3 runs
+    assert len(rows) == 48 and len({r["id"] for r in rows}) == 48 and len({r["seed"] for r in rows}) == 24
+    assert len({(r["seed"], r["horizon"]) for r in rows}) == 48
     assert sorted({r["horizon"] for r in rows}) == [10, 50]
     for r in rows:
         src = next(f for f in final if f["id"] == r["source_row"])

@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21423233` search.collect |
-| **Current result** | smoke pass |
-| **Limitation / blocker** | none |
-| **Next automatic action** | driver advances the next stage when a waited job ends |
+| **Active job** | none — campaign complete |
+| **Current result** | smoke pass; search: qualifying P_A 30/384, P_B 26/576, P_C 80/384 at cuts {'P_A': 1.5, 'P_B': 1.0, 'P_C': 1.5}; landed-deep settled 169/219 vs shallow 89/191 (gate pass); latest guard-passing checkpoint: step_000200, reload ok, fit gate pass; baseline: H10 2/8+1/8, H50 4/8+3/8; dq1-step000200: H10 4/8+3/8, H50 2/8+4/8; not improved (H10 7/16 vs 3/16, p=0.126; H50 6/16 vs 7/16); FINAL: `baseline` delivered |
+| **Limitation / blocker** | the candidate did not meet the preregistered rule |
+| **Next automatic action** | none — campaign complete; see REPORT.md |
 
-_Updated 2026-09-25T21:59:16Z by scripts/driver.py._
+_Updated 2026-09-26T05:57:24Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

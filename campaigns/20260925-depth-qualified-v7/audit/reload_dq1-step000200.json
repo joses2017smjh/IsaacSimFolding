@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260925-depth-qualified-v7/training/dq1/checkpoints/step_000200",
+  "checkpoint_model_sha256": "5d257ee314fb35269b2f40c1b9c09ff60333c56a27a93a4d61f97710c18dc325",
+  "config_matches_baseline": true,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260925-depth-qualified-v7/datasets/recovery.npz",
+  "action_shape": [
+    1,
+    12
+  ],
+  "action_sha256": "ec8db37747a4cb156c6247f8e96bf5e74f5d7ad9b4213b0990ef18dd27e5fb28",
+  "finite": true,
+  "device": "cuda"
+}

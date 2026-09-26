@@ -1,0 +1,16 @@
+{
+  "state": "completed",
+  "phase": "recovery",
+  "task": "search_p_c_pant_short_seen_4_key1_s84008",
+  "slurm_job_id": "21423580",
+  "slurm_array_task_id": "8",
+  "started_utc": "2026-09-25T22:57:15Z",
+  "child_pid": 891396,
+  "returncode": 0,
+  "success": false,
+  "terminal_success": false,
+  "terminal_conditions": 2,
+  "terminal_conditions_total": 4,
+  "wall_seconds": 2615.8496951658744,
+  "completed_utc": "2026-09-25T23:40:51Z"
+}

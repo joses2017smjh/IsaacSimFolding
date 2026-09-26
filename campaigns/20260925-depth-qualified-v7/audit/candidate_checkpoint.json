@@ -1,0 +1,17 @@
+{
+  "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260925-depth-qualified-v7/training/dq1/checkpoints/step_000200",
+  "label": "dq1-step000200",
+  "step": 200,
+  "selection": "latest guard-passing checkpoint: step_000200",
+  "sha256": {
+    "checkpoint.json": "73a27b001050a3bf1f5347add02fa21c2b3b828a3cbde1680497be83d1791702",
+    "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+    "model.safetensors": "5d257ee314fb35269b2f40c1b9c09ff60333c56a27a93a4d61f97710c18dc325",
+    "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+    "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "train_config.json": "e4a9782f17c1552eb8aedc87433674b85c9353730f8cbd1097cecdb419fa73df"
+  },
+  "written_utc": "2026-09-26T03:28:56Z"
+}

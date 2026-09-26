@@ -16,14 +16,18 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-24): v6 pose-balanced supervision closed — not improved.**
-A targeted search at the under-supplied poses (P_B 123/384, P_A 38/384
-settled) and a pose-balanced corpus trained with a2's recipe produced
-`pb1-step000200`: matched H10 4/16 vs 5/16, H50 8/16 vs 7/16. It reaches the
-fold far more often (13/16 vs 5/16 at H10) but lands it shallow (median
-closure margin 1.0 cm vs the baseline's 2.45; landings under 1 cm settle only
-about half the time). Replan jumps, state shift and label-content
-differences were tested and refuted (`analysis/diagnosis/`). Read `campaigns/20260924-pose-balanced-v6/REPORT.md`.
+**Latest outcome (2026-09-26): v7 depth-qualified supervision closed — not improved.**
+Fresh telemetry search, depth-qualified pose-balanced corpus, v6 recipe:
+`dq1-step000200` matched H10 7/16 vs 3/16 (p = 0.126), H50 6/16 vs 7/16.
+The H50 deficit is P_B (0/12 across all fine-tunes vs the baseline's 9/12),
+caused by an early-H50 shift every fine-tune shares (first chunk opens only
+the right gripper, 38/48 vs 6/48; first lift 150-200 actions later). Suspect:
+the byte-identical BC anchor (12/16 tops). Read
+`campaigns/20260925-depth-qualified-v7/REPORT.md`.
+
+**Previous (2026-09-24): v6 pose-balanced supervision closed — not improved.**
+`pb1-step000200` reached the fold 13/16 at H10 but landed it shallow; matched
+H10 4/16 vs 5/16, H50 8/16 vs 7/16.
 
 **Previous (2026-09-24): v5 matched comparison closed — not improved.**
 Baseline and v4's `a2-step000250` measured in the same Slurm arrays on the
@@ -53,7 +57,8 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report (v6) — latest outcome and remaining limitation** | `campaigns/20260924-pose-balanced-v6/REPORT.md` |
+| **Final report (v7) — latest outcome, diagnosis, next step** | `campaigns/20260925-depth-qualified-v7/REPORT.md` |
+| Final report (v6) | `campaigns/20260924-pose-balanced-v6/REPORT.md` |
 | v6 live status and record | `campaigns/20260924-pose-balanced-v6/STATUS.md` |
 | Final report (v5) — matched comparison | `campaigns/20260924-matched-comparison-v5/REPORT.md` |
 | v5 settled-success gallery (27 folds, hashed) | `campaigns/20260924-matched-comparison-v5/gallery.html` |

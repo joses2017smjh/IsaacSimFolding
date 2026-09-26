@@ -48,6 +48,8 @@ descriptive only and carries no claim (`analysis/reach-hold.json`).
    7 of 9 policy-phase losses, condition 1 in 2. Across all 128 v5+v6
    episodes, a fold released with its closure margin at least 1 cm inside
    the threshold settled 37/41 times; below 1 cm, 13/25 (Fisher p = 0.0008).
+   *(Corrected in v7's report: the 13/25 pools 6 folds already undone at
+   release; on held folds alone it is 12/19 vs 37/41, one-sided p = 0.017.)*
    The candidate's H10 folds landed at a median 1.0 cm, against 2.1 cm for
    a2 and 2.45 cm for the baseline. At H50 it reaches later and lands deeper
    (median 1.7 cm), which is why P_A settled 6/6 there.

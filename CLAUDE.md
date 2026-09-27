@@ -16,7 +16,18 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-26): v7 depth-qualified supervision closed — not improved.**
+**Latest outcome (2026-09-27): v8 anchor diagnostic closed — not improved.**
+- **What changed.** Only the BC anchor, replaced with 16 pants demos. Everything else was v7's, unchanged: the corpus, the recipe and the matched evaluation.
+- **Endpoints: SUPPORTED.** The first H50 chunk opens only the right gripper in 0/16 episodes (baseline 2/16), and dev03 lifts 0.117 m by action 150.
+- **Score.** `an1-step000300` passed H10 at 9/16 vs 2/16 (p = 0.012), the first H10 pass in a matched comparison. It failed H50 at 6/16 vs 8/16, and the whole deficit is dev01 H50 (0/2 vs 2/2), a late fold miss.
+- **H10 is fragile.** dev04 and dev06 carry it, and dev06's gain exists only on A40.
+- **P_A H50 is a trade-off.** Restoring the baseline's early plan also restored the baseline's own right-arm drag.
+- **Status.** The baseline is delivered, the final set is unspent, and nothing needs rerunning.
+- **Next step, needs the user's go.** A GPU-pinned, fresh-seed, measurement-only re-measurement.
+
+Read `campaigns/20260926-anchor-diagnostic-v8/REPORT.md`.
+
+**Previous (2026-09-26): v7 depth-qualified supervision closed — not improved.**
 Fresh telemetry search, depth-qualified pose-balanced corpus, v6 recipe:
 `dq1-step000200` matched H10 7/16 vs 3/16 (p = 0.126), H50 6/16 vs 7/16.
 The H50 deficit is P_B (0/12 across all fine-tunes vs the baseline's 9/12),
@@ -35,7 +46,7 @@ same rows, two runs each: H10 8/16 vs 5/16 (margin 3, p = 0.24), H50 7/16
 vs 7/16. **Any future comparison must be measured this way**, never against
 numbers from another campaign.
 
-**Previous outcome (2026-09-24): v4 closed, no preregistered improvement.****Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
+**Previous outcome (2026-09-24): v4 closed, no preregistered improvement.**
 3x-scaled recovery search (81/384 settled) + whole-episode anchor + lr
 3.3e-6 produced `a2-step000250`: H10 pooled 8/16 vs baseline 2/16 (p = 0.027)
 but H50 3/8 vs 4/8 — missed non-regression by one episode. Baseline retained;
@@ -57,7 +68,9 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report (v7) — latest outcome, diagnosis, next step** | `campaigns/20260925-depth-qualified-v7/REPORT.md` |
+| **Final report (v8) — latest outcome, diagnosis, next step** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
+| v8 diagnosis (4 lenses × 2 skeptics, synthesis, README fact-check) | `campaigns/20260926-anchor-diagnostic-v8/analysis/diagnosis/diagnosis.json` |
+| Final report (v7) | `campaigns/20260925-depth-qualified-v7/REPORT.md` |
 | Final report (v6) | `campaigns/20260924-pose-balanced-v6/REPORT.md` |
 | v6 live status and record | `campaigns/20260924-pose-balanced-v6/STATUS.md` |
 | Final report (v5) — matched comparison | `campaigns/20260924-matched-comparison-v5/REPORT.md` |
@@ -196,11 +209,11 @@ The pure half runs anywhere. **Verified on 2026-09-22:**
 
 ```bash
 PYTHONPATH=src /nfs/hpc/share/sanchej7/Humanoid_Lite/venv/bin/python tests/test_pure.py
-# -> 51 passed, 0 failed   (exit 0)
+# -> 56 passed, 0 failed   (exit 0; re-verified 2026-09-27, it was 51 on 2026-09-22)
 ```
 
 The README's Sep-21 banner says "16 CPU tests pass" — that refers to a
-different (campaign) suite or is stale; the root suite is 51. CI runs the same
+different (campaign) suite or is stale; the root suite is 56. CI runs the same
 command on Python 3.11 (`.github/workflows/tests.yml`).
 
 Campaign tests are **pytest**, unlike the root suite's hand-rolled runner. Run
@@ -301,10 +314,11 @@ trajectories, so a partial collection must never reach the compiler.
   renderer-domain gap (action-prediction correlation +0.976 path-traced vs
   −0.038 rasterised on the same checkpoint).
 - **Aspirational vs actual.** The README architecture diagram draws one closed
-  loop. In reality: RECAP's gradient update is **unimplemented**; the success
-  head has never been fit on mixed-class data (the released demonstrations are
-  all successes — see `labels.py`'s own docstring); the G2 calibration gate has
-  never been reached; `results/stage4_thompson.json` records a Thompson run
+  loop. In reality: RECAP's gradient update is **unimplemented**; the released
+  demonstrations are all successes (see `labels.py`'s own docstring). The value
+  head was fit once, on 20 matched-pose replay episodes (15 success / 5
+  failure), and passes G2 at ECE 0.0717, MCE 0.438
+  (`results/g2_calibration.txt`). No campaign from v2 to v8 has used it. `results/stage4_thompson.json` records a Thompson run
   whose earlier numbers were invalidated by a wrong-garment bug. Treat
   `scripts/trainer_loop.py` + `scripts/rollout_worker.py` as never having run a
   full RECAP iteration.
@@ -324,6 +338,22 @@ trajectories, so a partial collection must never reach the compiler.
   1/4 in the pilot and 3/4 in v2 on the same seed, checkpoint and runner —
   GPU cloth physics is not bitwise deterministic. Compare baseline and
   candidate only when measured in the same campaign, never across campaigns.
+- **The GPU model is an uncontrolled second quasi-seed (found in v8).**
+  - Slurm assigns an NVIDIA A40 or a Quadro RTX 8000.
+  - Same policy, same seed and same model: the runs replay identical actions
+    for about 70 actions at H10 before diverging. On different models they
+    differ from action 1.
+  - Within a row, baseline outcomes depend on the model. At dev06 H10: A40 0/6,
+    RTX 8000 4/4.
+  - The model is recorded only in `rollout.log`'s device table, not in
+    `request.json`.
+  - The cluster exposes `a40` and `rtx8000` as node features, so
+    `--constraint=a40` pins it. Record it, and pin it or balance it per
+    (row, seed), in any future matched comparison. Identical RNG digests
+    across arms do **not** rule out luck.
+- **Checkpoints ship at H50.** Every checkpoint's `config.json` has
+  `n_action_steps = 50`, and the challenge loader passes no override. An
+  H10-only gain is not a gain for the policy as shipped.
 - **Checkpoints only load on a GPU.** The saved preprocessor pins
   `device_processor` to `cuda`; on a CPU node `make_pre_post_processors`
   asserts. Reload gates must request a GPU.

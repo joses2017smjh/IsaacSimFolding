@@ -1,6 +1,6 @@
 {
   "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260926-anchor-diagnostic-v8",
-  "commit": "b7fc29b25f3481311b6e247798bd9caf7ebb5cf9",
+  "commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
   "sources_declared": 55,
   "sources_checked": 55,
   "checkpoint_checked": true,

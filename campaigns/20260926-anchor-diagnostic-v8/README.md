@@ -25,12 +25,21 @@ recipe    v7's verbatim from the untouched baseline; latest guard-passing
           checkpoint; reload; fit gate
 ```
 
+**Declared second factor.** The anchor's *source* also moves, unavoidably:
+`storm_capture/` holds only 4 pants episodes, so the pants anchor comes from
+`storm_capture100/` (the baseline raster fine-tune's own capture). Shared
+episodes have identical state and action; later frames differ slightly.
+Composition and source cannot be separated in this run.
+
 **How it is judged.**
 
-1. **Mechanistic endpoints first** (`scripts/endpoints.py`, preregistered):
-   the anchor hypothesis is supported iff the candidate opens both grippers
-   in the first H50 chunk on >= 5 of 8 H50 rows AND lifts dev03 above 5 cm by
-   action 150 (run r1). Anything else refutes the anchor as the driver.
+1. **Mechanistic endpoints first** (`scripts/endpoints.py`, preregistered and
+   calibrated on history): **supported** iff the candidate is right-only in
+   the first H50 chunk on <= 3 of 8 H50 rows AND lifts dev03 above 5 cm by
+   action 150 (run r1); **refuted** otherwise with all rows valid;
+   **indeterminate** if any r1 H50 row is missing/unfinished or the baseline in
+   the same arrays does not show that pattern itself. On v5, v6 and v7 the
+   rule refutes a2, pb1 and dq1 and supports the baseline, every time.
 2. **Development screen:** v5's matched rule on the 16 development rows,
    baseline and candidate interleaved, two runs each. Four fine-tunes were
    already scored on these rows, so this is a screen only.

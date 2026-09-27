@@ -142,9 +142,14 @@ def main() -> int:
     training["anchor"] = dict(v7["training"]["anchor"], glob=str(ROOT / "anchor_pants/ep*.npz"),
                               files=16, frames=12, records=anchor_records,
                               composition="16 pants (8 Pant_Short + 8 Pant_Long), one episode per garment")
-    training["changed_factor"] = ("the BC anchor only: 16 pants demonstrations instead of v7's 12 tops + 4 pants, "
-                                  "same size (16 files), frame schedule (whole_episode, 12 frames) and 50% batch "
-                                  "fraction; corpus, recipe, init, steps, checkpoint rule and guard are v7's")
+    training["changed_factor"] = ("the BC anchor: 16 pants demonstrations instead of v7's 12 tops + 4 pants, same size "
+                                  "(16 files), frame schedule (whole_episode, 12 frames) and 50% batch fraction; corpus, "
+                                  "recipe, init, steps, checkpoint rule and guard are v7's")
+    training["second_factor_declared"] = ("the anchor SOURCE also moves, unavoidably: from storm_capture/ (a separate "
+                                          "16-episode capture holding only 4 pants episodes) to storm_capture100/ (the "
+                                          "baseline raster fine-tune's own 91-episode capture). Shared episodes have "
+                                          "identical state and action; later frames differ slightly (mean abs ~0.7-1.3/255, "
+                                          "3-4% of pixels > 8). Composition and source cannot be separated in this run.")
     training["v7_anchor"] = "storm_capture/ep*.npz first 16 (12 tops, 4 pants; path-list sha1 57a584de2e)"
 
     manifest = {
@@ -176,15 +181,23 @@ def main() -> int:
         "training": training,
         "endpoints": {
             "script": "scripts/endpoints.py",
-            "E1": "chunk-1 gripper opening per H50 development row: both grippers' targets > 0.10 rad within actions 1-50",
+            "E1": ("right-only chunk-1 opening per H50 development row: the right gripper target > 0.10 rad at some "
+                   "action in 1-50 and the left never (the diagnosed shift)"),
             "E2": "maximum particle lift over actions 1-150 at dev03 H50",
-            "prediction": ("anchor hypothesis supported iff the candidate (run r1) opens both grippers in chunk 1 on "
-                           ">= 5 of 8 H50 rows AND lifts dev03 above 0.05 m by action 150; anything else refutes the "
-                           "anchor as the driver"),
+            "prediction": ("SUPPORTED iff the candidate (run r1) is right-only on <= 3 of 8 H50 rows AND lifts dev03 "
+                           "above 0.05 m by action 150; REFUTED iff not, with all rows valid and the positive control "
+                           "met; INDETERMINATE if any r1 H50 row of either policy is missing/unfinished or the "
+                           "baseline in the same arrays does not show the same pattern"),
             "reference": "v7 diagnosis: baseline opens both in 42/48 H50 episodes; fine-tunes right-only 38/48",
+            "calibration": ("before launch the rule classifies the baseline as supported and a2, pb1, dq1 as refuted in "
+                            "every one of v5, v6, v7 (tests/test_v8.py)"),
             "order": "recorded before the settled-count verdict; they decide the diagnostic question, not the deliverable",
         },
         "protocol": dict(v7["protocol"], screen="the v5 rule on the 16 development rows, 2 runs per policy: a SCREEN only",
+                         final_set=("used only as the confirmatory gate (confirmatory_gate / final_confirm); the 8-row "
+                                    "descriptive final_test run is not executed in v8"),
+                         baseline_numbers_from_earlier_campaigns=("not pooled in; v8's own baseline runs (r1, r2, c1) "
+                                                                  "are the only baseline"),
                          confirmatory_gate=("only if the screen passes: the 8 untouched final-set poses (Seen_1/2, mesh "
                                             "PS_049, 7 of 8 poses absent from dev and every search) x H10/H50 x 3 "
                                             "distinct seeds per policy in ONE interleaved array (96 episodes); a "

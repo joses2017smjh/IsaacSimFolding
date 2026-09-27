@@ -411,13 +411,14 @@ class Driver:
                 for which in POLICIES}
 
     # ---- the campaign
-    def finish(self, reason: str | None, winner: str = "baseline") -> str:
+    def finish(self, reason: str | None, winner: str = "baseline",
+               final_set: str = "unspent: no candidate passed the development screen") -> str:
         fin = self.state["final"]
         block = checkpoint_block(self.root, self.manifest, winner)
         fin["selected"] = {"label": block["label"], "checkpoint": block["path"]}
+        fin["final_set"] = final_set
         if reason:
             self.state["stop_reason"] = reason
-            fin.setdefault("skipped", "no candidate met the preregistered rule; the final set stays unspent")
         fin["completed_utc"] = stamp()
         self.state["done"] = True
         self.event("campaign complete" + (f": {reason}" if reason else ""), selected=block["label"])
@@ -448,6 +449,7 @@ class Driver:
         tj = self.root / "training" / TAG / "training.json"
         if not tj.is_file():
             if self.stage(f"{TAG}.train.retry1") is None:
+                (self.root / "attempts").mkdir(parents=True, exist_ok=True)   # same-filesystem rename, not a copy
                 if tj.parent.exists():
                     shutil.move(str(tj.parent), str(self.root / "attempts" / f"training-{TAG}.attempt1"))
                 self.submit(f"{TAG}.train.retry1", "train.sbatch", train_args, gpu_tasks=1)
@@ -536,10 +538,11 @@ class Driver:
             ep = endpoints.compute(self.root, {"baseline": self.label("baseline"),
                                                "candidate": self.label("candidate")})
             self.state["endpoints"] = ep
-            self.event("mechanistic endpoints: anchor hypothesis " +
-                       ("SUPPORTED" if ep["anchor_hypothesis_supported"] else "not supported"),
-                       candidate_both_open=ep.get("candidate-r1", {}).get("both_open_rows"),
-                       baseline_both_open=ep.get("baseline-r1", {}).get("both_open_rows"),
+            self.event(f"mechanistic endpoints: anchor hypothesis {ep['status'].upper()}",
+                       candidate_right_only=ep.get("candidate-r1", {}).get("right_only_rows"),
+                       baseline_right_only=ep.get("baseline-r1", {}).get("right_only_rows"),
+                       candidate_tally=ep.get("candidate-r1", {}).get("tally"),
+                       missing=ep.get("candidate-r1", {}).get("missing_rows"),
                        candidate_dev03_lift=ep.get("candidate-r1", {}).get("dev03_early_lift_m"),
                        baseline_dev03_lift=ep.get("baseline-r1", {}).get("dev03_early_lift_m"))
         self.state["scores"] = self.scores_now()
@@ -564,13 +567,20 @@ class Driver:
                 for which in POLICIES}
         cv = matched_verdict(conf["candidate"], conf["baseline"], cand["guard"], cand["reload_ok"],
                              expected_rows=len(rows) // 2)
+        if sf == "skipped":
+            return self.finish("the dev screen passed but the confirmatory gate was refused by the budget; "
+                               "baseline kept", final_set="unspent: confirmatory array refused by the budget")
         fin.update(status=sf, confirm_scores=conf, confirm_verdict=cv)
         self.event("confirmatory final set: " + ("IMPROVED" if cv["improved"] else "not confirmed"),
-                   candidate_h10=cv["candidate_h10"], baseline_h10=cv["baseline_h10"],
+                   status=sf, candidate_h10=cv["candidate_h10"], baseline_h10=cv["baseline_h10"],
                    candidate_h50=cv["candidate_h50"], baseline_h50=cv["baseline_h50"], p_value=round(cv["p_value"], 4))
+        spent = f"SPENT on the confirmatory gate (status {sf})"
+        if sf == "incomplete":
+            return self.finish("the dev screen passed but the confirmatory gate was not fully measured "
+                               "(infrastructure); baseline kept", final_set=spent)
         if not cv["improved"]:
-            return self.finish("the dev screen passed but the confirmatory final set did not")
-        return self.finish(None, "candidate")
+            return self.finish("the dev screen passed but the confirmatory final set did not", final_set=spent)
+        return self.finish(None, "candidate", final_set=spent)
 
     def tick(self) -> None:
         if not self.state["done"]:
@@ -640,10 +650,9 @@ class Driver:
             parts.append(f"reused corpus {'verified' if co.get('passed') else 'MISMATCH'}")
         ep = self.state.get("endpoints")
         if ep:
-            parts.append(f"endpoints: chunk-1 both-open rows cand {ep.get('candidate-r1', {}).get('both_open_rows')} "
-                         f"vs base {ep.get('baseline-r1', {}).get('both_open_rows')}; dev03 early lift cand "
-                         f"{ep.get('candidate-r1', {}).get('dev03_early_lift_m')} m; anchor hypothesis "
-                         f"{'supported' if ep.get('anchor_hypothesis_supported') else 'not supported'}")
+            parts.append(f"endpoints: right-only chunk-1 rows cand {ep.get('candidate-r1', {}).get('right_only_rows')} "
+                         f"vs base {ep.get('baseline-r1', {}).get('right_only_rows')}; dev03 early lift cand "
+                         f"{ep.get('candidate-r1', {}).get('dev03_early_lift_m')} m; anchor hypothesis {ep.get('status')}")
         at = self.state.get("attempt") or {}
         if at.get("selection"):
             parts.append(f"{at['selection']}" + (f", reload {'ok' if at.get('reload_ok') else 'FAIL'}"
@@ -657,9 +666,16 @@ class Driver:
                 parts.append(f"{self.label(which)}: " + ", ".join(bits))
         v = self.state.get("verdict")
         if v:
-            parts.append(("IMPROVED" if v["improved"] else "not improved")
+            parts.append(("dev screen passed" if v["improved"] else "dev screen not passed")
                          + f" (H10 {v['candidate_h10']} vs {v['baseline_h10']}, p={v['p_value']:.3f}; "
                            f"H50 {v['candidate_h50']} vs {v['baseline_h50']})")
+        cv = self.state["final"].get("confirm_verdict")
+        if cv:
+            parts.append(("confirmatory: IMPROVED" if cv["improved"] else "confirmatory: not confirmed")
+                         + f" (H10 {cv['candidate_h10']} vs {cv['baseline_h10']}, p={cv['p_value']:.3f}; "
+                           f"H50 {cv['candidate_h50']} vs {cv['baseline_h50']})")
+        elif self.stage("confirm") is not None and not self.state["done"]:
+            parts.append("confirmatory final set pending")
         if self.state["done"]:
             sel = self.state["final"].get("selected", {})
             parts.append(f"FINAL: `{sel.get('label')}` delivered")

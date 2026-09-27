@@ -68,6 +68,20 @@ def main() -> int:
         elif file_sha(pose) != manifest["pose_metadata"]["sha256"]:
             problems.append("pose metadata changed; the frozen rows were derived from it")
 
+    # v8: the campaign's one changed variable, the anchor, is verified at train
+    # time too -- the trainer's glob must select exactly the pinned files, byte
+    # for byte. Not under --skip-checkpoint: it guards the experiment itself.
+    anchor = manifest.get("training", {}).get("anchor", {})
+    if anchor.get("records"):
+        import glob as _glob
+        selected = [str(Path(p).resolve()) for p in sorted(_glob.glob(anchor["glob"]))[:int(anchor["files"])]]
+        pinned = sorted(r["target"] for r in anchor["records"])
+        if selected != pinned:
+            problems.append(f"anchor glob selects {len(selected)} files that differ from the pinned records")
+        for r in anchor["records"]:
+            if not Path(r["target"]).is_file() or file_sha(Path(r["target"])) != r["sha256"]:
+                problems.append(f"anchor file changed: {r['target']}")
+
     report = {
         "campaign": str(root),
         "commit": manifest["git"]["commit"],

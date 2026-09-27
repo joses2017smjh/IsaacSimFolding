@@ -1,0 +1,17 @@
+{
+  "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260926-anchor-diagnostic-v8/training/an1/checkpoints/step_000300",
+  "label": "an1-step000300",
+  "step": 300,
+  "selection": "latest guard-passing checkpoint: step_000300",
+  "sha256": {
+    "checkpoint.json": "049b2aba78d510dc90c96f6713c054a31644797f460b13257407143f23408073",
+    "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+    "model.safetensors": "0c5e73b6d3cea1fbb0dd6fb607439a499fcd75edd2b0a70ea5a499e6f35b26f0",
+    "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+    "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+    "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+    "train_config.json": "e4a9782f17c1552eb8aedc87433674b85c9353730f8cbd1097cecdb419fa73df"
+  },
+  "written_utc": "2026-09-27T00:49:12Z"
+}

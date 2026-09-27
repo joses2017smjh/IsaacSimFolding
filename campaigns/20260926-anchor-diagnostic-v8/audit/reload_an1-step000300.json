@@ -1,0 +1,13 @@
+{
+  "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260926-anchor-diagnostic-v8/training/an1/checkpoints/step_000300",
+  "checkpoint_model_sha256": "0c5e73b6d3cea1fbb0dd6fb607439a499fcd75edd2b0a70ea5a499e6f35b26f0",
+  "config_matches_baseline": true,
+  "dataset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260925-depth-qualified-v7/datasets/recovery.npz",
+  "action_shape": [
+    1,
+    12
+  ],
+  "action_sha256": "b4c61a27de35d532a77840b34141317d8096dade2077350b6854c7f397288e0b",
+  "finite": true,
+  "device": "cuda"
+}

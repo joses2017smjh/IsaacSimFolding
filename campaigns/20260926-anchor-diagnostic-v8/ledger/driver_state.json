@@ -1,0 +1,461 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-27T00:15:40Z",
+  "stages": {
+    "an1.train": {
+      "job_ids": [
+        "21435064"
+      ],
+      "submitted_utc": "2026-09-27T00:15:42Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-27T00:35:02Z"
+    },
+    "an1.reload": {
+      "job_ids": [
+        "21435112"
+      ],
+      "submitted_utc": "2026-09-27T00:35:02Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-27T00:36:15Z"
+    },
+    "an1.fit": {
+      "job_ids": [
+        "21435116"
+      ],
+      "submitted_utc": "2026-09-27T00:36:15Z",
+      "status": "completed",
+      "gpu_tasks": 1,
+      "array": null,
+      "finished_utc": "2026-09-27T00:49:06Z"
+    },
+    "run1": {
+      "job_ids": [
+        "21435135"
+      ],
+      "submitted_utc": "2026-09-27T00:49:12Z",
+      "status": "completed",
+      "gpu_tasks": 32,
+      "array": "0-31",
+      "finished_utc": "2026-09-27T02:18:11Z"
+    },
+    "run2": {
+      "job_ids": [
+        "21435136"
+      ],
+      "submitted_utc": "2026-09-27T00:49:12Z",
+      "status": "completed",
+      "gpu_tasks": 32,
+      "array": "0-31",
+      "finished_utc": "2026-09-27T02:21:57Z"
+    }
+  },
+  "search": null,
+  "attempt": {
+    "selection": "latest guard-passing checkpoint: step_000300",
+    "label": "an1-step000300",
+    "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260926-anchor-diagnostic-v8/training/an1/checkpoints/step_000300",
+    "guard": true,
+    "retention_loss": 0.07711427105823532,
+    "retention_baseline": 0.0714326745364815,
+    "reload_ok": true,
+    "fit_gate": {
+      "pass": true,
+      "repair_ok": true,
+      "noninferior_ok": true,
+      "mean_paired_diff": 0.0006602474502869881,
+      "diff_ci95": [
+        -0.002150423939219763,
+        0.00318622514568233
+      ],
+      "baseline_seed_spread": 0.01996857405484147
+    },
+    "candidate_record_sha256": "81c946af6ec00f4ed876236ca4ecbb4d21000c911935a35632923f524294b593"
+  },
+  "scores": {
+    "baseline": {
+      "h10": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 1,
+          "ever": 2,
+          "mean_conditions": 2.75,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 1,
+          "ever": 1,
+          "mean_conditions": 2.5,
+          "invalid": []
+        }
+      ],
+      "h50": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.0,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 4,
+          "ever": 4,
+          "mean_conditions": 3.125,
+          "invalid": []
+        }
+      ]
+    },
+    "candidate": {
+      "h10": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 6,
+          "ever": 6,
+          "mean_conditions": 3.625,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 5,
+          "mean_conditions": 3.25,
+          "invalid": []
+        }
+      ],
+      "h50": [
+        {
+          "run": "r1",
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 4,
+          "mean_conditions": 2.625,
+          "invalid": []
+        },
+        {
+          "run": "r2",
+          "rows": 8,
+          "valid": 8,
+          "settled": 3,
+          "ever": 4,
+          "mean_conditions": 2.625,
+          "invalid": []
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "improved": false,
+    "checks": {
+      "pooled_h10_margin_ge_4": true,
+      "fisher_one_sided_p_lt_0.05": true,
+      "pooled_h50_not_below_baseline": false,
+      "retention_guard": true,
+      "reload": true,
+      "all_rows_valid": true
+    },
+    "p_value": 0.011666747271525528,
+    "candidate_h10": "9/16",
+    "baseline_h10": "2/16",
+    "candidate_h50": "6/16",
+    "baseline_h50": "8/16",
+    "h10_margin": 7,
+    "h50_margin": -2,
+    "run_status": {
+      "run1": "done",
+      "run2": "done"
+    }
+  },
+  "final": {
+    "selected": {
+      "label": "baseline",
+      "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full"
+    },
+    "final_set": "unspent: no candidate passed the development screen",
+    "completed_utc": "2026-09-27T02:21:59Z"
+  },
+  "ticks": {
+    "chain": "21435594",
+    "chain_deps": [
+      "21435136"
+    ],
+    "chain_begin": null,
+    "watchdog": "21435581"
+  },
+  "done": true,
+  "stop_reason": "the candidate did not pass the development screen",
+  "log": [
+    {
+      "utc": "2026-09-27T00:15:42Z",
+      "message": "reused corpus verified=True"
+    },
+    {
+      "utc": "2026-09-27T00:15:42Z",
+      "message": "submitted an1.train -> 21435064",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-27T00:35:02Z",
+      "message": "submitted an1.reload -> 21435112",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-27T00:36:15Z",
+      "message": "submitted an1.fit -> 21435116",
+      "gpu_tasks": 1
+    },
+    {
+      "utc": "2026-09-27T00:49:12Z",
+      "message": "candidate pinned: an1-step000300",
+      "sha256_model": "0c5e73b6d3cea1fbb0dd6fb607439a499fcd75edd2b0a70ea5a499e6f35b26f0"
+    },
+    {
+      "utc": "2026-09-27T00:49:12Z",
+      "message": "submitted run1 -> 21435135",
+      "gpu_tasks": 32
+    },
+    {
+      "utc": "2026-09-27T00:49:12Z",
+      "message": "submitted run2 -> 21435136",
+      "gpu_tasks": 32
+    },
+    {
+      "utc": "2026-09-27T02:21:58Z",
+      "message": "mechanistic endpoints: anchor hypothesis SUPPORTED",
+      "candidate_right_only": 0,
+      "baseline_right_only": 1,
+      "candidate_tally": {
+        "both": 8
+      },
+      "missing": [],
+      "candidate_dev03_lift": 0.1166,
+      "baseline_dev03_lift": 0.1169
+    },
+    {
+      "utc": "2026-09-27T02:21:59Z",
+      "message": "dev screen: not passed",
+      "candidate_h10": "9/16",
+      "baseline_h10": "2/16",
+      "candidate_h50": "6/16",
+      "baseline_h50": "8/16",
+      "p_value": 0.0117,
+      "failed": [
+        "pooled_h50_not_below_baseline"
+      ]
+    },
+    {
+      "utc": "2026-09-27T02:21:59Z",
+      "message": "campaign complete: the candidate did not pass the development screen",
+      "selected": "baseline"
+    }
+  ],
+  "corpus": {
+    "passed": true,
+    "sha256": "c5f5c88e9eeb0ddc03c1d05b893524d5b35e3cccda8974065a0f444cc74e68cf",
+    "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260925-depth-qualified-v7/datasets/recovery.npz"
+  },
+  "endpoints": {
+    "definitions": {
+      "open_rad": 0.1,
+      "chunk1_actions": 50,
+      "early_actions": 150,
+      "lift_m": 0.05,
+      "max_right_only_rows": 3,
+      "prediction": "candidate r1: right-only chunk-1 opening on <= 3 of 8 H50 rows AND dev03 H50 lift > 0.05 m by action 150; indeterminate unless every r1 H50 row is valid for both policies and the baseline shows the same pattern"
+    },
+    "baseline-r1": {
+      "rows": {
+        "dev00": {
+          "chunk1": "both",
+          "early_lift_m": 0.0708
+        },
+        "dev01": {
+          "chunk1": "both",
+          "early_lift_m": 0.1009
+        },
+        "dev02": {
+          "chunk1": "both",
+          "early_lift_m": 0.0837
+        },
+        "dev03": {
+          "chunk1": "both",
+          "early_lift_m": 0.1169
+        },
+        "dev04": {
+          "chunk1": "both",
+          "early_lift_m": 0.1025
+        },
+        "dev05": {
+          "chunk1": "both",
+          "early_lift_m": 0.0953
+        },
+        "dev06": {
+          "chunk1": "both",
+          "early_lift_m": 0.0363
+        },
+        "dev07": {
+          "chunk1": "right",
+          "early_lift_m": 0.0171
+        }
+      },
+      "missing_rows": [],
+      "tally": {
+        "both": 7,
+        "right": 1
+      },
+      "right_only_rows": 1,
+      "both_open_rows": 7,
+      "dev03_early_lift_m": 0.1169
+    },
+    "baseline-r2": {
+      "rows": {
+        "dev00": {
+          "chunk1": "both",
+          "early_lift_m": 0.0707
+        },
+        "dev01": {
+          "chunk1": "both",
+          "early_lift_m": 0.1009
+        },
+        "dev02": {
+          "chunk1": "both",
+          "early_lift_m": 0.0826
+        },
+        "dev03": {
+          "chunk1": "both",
+          "early_lift_m": 0.1169
+        },
+        "dev04": {
+          "chunk1": "both",
+          "early_lift_m": 0.1026
+        },
+        "dev05": {
+          "chunk1": "both",
+          "early_lift_m": 0.0952
+        },
+        "dev06": {
+          "chunk1": "both",
+          "early_lift_m": 0.0344
+        },
+        "dev07": {
+          "chunk1": "right",
+          "early_lift_m": 0.0171
+        }
+      },
+      "missing_rows": [],
+      "tally": {
+        "both": 7,
+        "right": 1
+      },
+      "right_only_rows": 1,
+      "both_open_rows": 7,
+      "dev03_early_lift_m": 0.1169
+    },
+    "candidate-r1": {
+      "rows": {
+        "dev00": {
+          "chunk1": "both",
+          "early_lift_m": 0.1137
+        },
+        "dev01": {
+          "chunk1": "both",
+          "early_lift_m": 0.1052
+        },
+        "dev02": {
+          "chunk1": "both",
+          "early_lift_m": 0.118
+        },
+        "dev03": {
+          "chunk1": "both",
+          "early_lift_m": 0.1166
+        },
+        "dev04": {
+          "chunk1": "both",
+          "early_lift_m": 0.1263
+        },
+        "dev05": {
+          "chunk1": "both",
+          "early_lift_m": 0.0917
+        },
+        "dev06": {
+          "chunk1": "both",
+          "early_lift_m": 0.1101
+        },
+        "dev07": {
+          "chunk1": "both",
+          "early_lift_m": 0.1175
+        }
+      },
+      "missing_rows": [],
+      "tally": {
+        "both": 8
+      },
+      "right_only_rows": 0,
+      "both_open_rows": 8,
+      "dev03_early_lift_m": 0.1166
+    },
+    "candidate-r2": {
+      "rows": {
+        "dev00": {
+          "chunk1": "both",
+          "early_lift_m": 0.1137
+        },
+        "dev01": {
+          "chunk1": "both",
+          "early_lift_m": 0.1053
+        },
+        "dev02": {
+          "chunk1": "both",
+          "early_lift_m": 0.118
+        },
+        "dev03": {
+          "chunk1": "both",
+          "early_lift_m": 0.1163
+        },
+        "dev04": {
+          "chunk1": "both",
+          "early_lift_m": 0.1265
+        },
+        "dev05": {
+          "chunk1": "both",
+          "early_lift_m": 0.0916
+        },
+        "dev06": {
+          "chunk1": "both",
+          "early_lift_m": 0.11
+        },
+        "dev07": {
+          "chunk1": "both",
+          "early_lift_m": 0.1174
+        }
+      },
+      "missing_rows": [],
+      "tally": {
+        "both": 8
+      },
+      "right_only_rows": 0,
+      "both_open_rows": 8,
+      "dev03_early_lift_m": 0.1163
+    },
+    "baseline_control_ok": true,
+    "anchor_hypothesis_supported": true,
+    "status": "supported"
+  }
+}

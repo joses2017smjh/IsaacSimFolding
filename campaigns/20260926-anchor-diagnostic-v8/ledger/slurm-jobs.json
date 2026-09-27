@@ -1,1 +1,185 @@
-{"campaign": "20260926-anchor-diagnostic-v8", "jobs": []}
+{
+  "campaign": "20260926-anchor-diagnostic-v8",
+  "jobs": [
+    {
+      "job_id": "21435064",
+      "phase": "an1.train",
+      "script": "slurm/train.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
+      "submitted_utc": "2026-09-27T00:15:42Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 1149,
+        "gpu_hours": 0.3192,
+        "start": "2026-09-26T17:15:45",
+        "end": "2026-09-26T17:34:54"
+      }
+    },
+    {
+      "job_id": "21435112",
+      "phase": "an1.reload",
+      "script": "slurm/reload.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
+      "submitted_utc": "2026-09-27T00:35:02Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 64,
+        "gpu_hours": 0.0178,
+        "start": "2026-09-26T17:35:05",
+        "end": "2026-09-26T17:36:09"
+      }
+    },
+    {
+      "job_id": "21435116",
+      "phase": "an1.fit",
+      "script": "slurm/offline_fit.sbatch",
+      "gpu_tasks": 1,
+      "submitted_by": "driver",
+      "manifest_commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
+      "submitted_utc": "2026-09-27T00:36:15Z",
+      "state": "completed",
+      "array": null,
+      "final": {
+        "tasks": 1,
+        "states": {
+          "COMPLETED": 1
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 758,
+        "gpu_hours": 0.2106,
+        "start": "2026-09-26T17:36:26",
+        "end": "2026-09-26T17:49:04"
+      }
+    },
+    {
+      "job_id": "21435135",
+      "phase": "run1",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
+      "submitted_utc": "2026-09-27T00:49:12Z",
+      "state": "completed",
+      "array": "0-31",
+      "final": {
+        "tasks": 32,
+        "states": {
+          "COMPLETED": 32
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 7611,
+        "gpu_hours": 2.1142,
+        "start": "2026-09-26T17:49:15",
+        "end": "2026-09-26T19:18:08"
+      }
+    },
+    {
+      "job_id": "21435136",
+      "phase": "run2",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 32,
+      "submitted_by": "driver",
+      "manifest_commit": "d6f5e5d863f85faf5e804723f688ee8c16756699",
+      "submitted_utc": "2026-09-27T00:49:12Z",
+      "state": "completed",
+      "array": "0-31",
+      "final": {
+        "tasks": 32,
+        "states": {
+          "COMPLETED": 32
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 7127,
+        "gpu_hours": 1.9797,
+        "start": "2026-09-26T17:53:19",
+        "end": "2026-09-26T19:21:48"
+      }
+    }
+  ],
+  "support_jobs": [
+    {
+      "job_id": "21435065",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435066",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435113",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435117",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435137",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435581",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21435594",
+      "name": "lh-v8-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    }
+  ],
+  "reconciled": {
+    "by": "scripts/reconcile_ledger.py from sacct",
+    "stage_jobs": 5,
+    "support_jobs": 7,
+    "gpu_hours_total": 4.641,
+    "outcomes": {
+      "completed": 5
+    },
+    "by_iteration_or_stage": {
+      "an1": {
+        "jobs": 3,
+        "gpu_tasks": 3,
+        "gpu_hours": 0.5476
+      },
+      "run1": {
+        "jobs": 1,
+        "gpu_tasks": 32,
+        "gpu_hours": 2.1142
+      },
+      "run2": {
+        "jobs": 1,
+        "gpu_tasks": 32,
+        "gpu_hours": 1.9797
+      }
+    }
+  }
+}

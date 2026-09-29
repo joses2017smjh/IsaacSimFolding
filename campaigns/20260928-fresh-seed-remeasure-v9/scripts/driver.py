@@ -240,8 +240,9 @@ class Driver:
             self.state["stages"][key] = {"job_ids": [], "status": "skipped", "reason": "gpu hour budget"}
             return None
         logs = self.root / "logs"
+        name = key.replace(":", "_")
         argv = [f"--chdir={self.root}",
-                f"--output={logs}/{key}-%A_%a.out" if array else f"--output={logs}/{key}-%j.out",
+                f"--output={logs}/{name}-%A_%a.out" if array else f"--output={logs}/{name}-%j.out",
                 *sbatch_extra]
         if array:
             argv.append(f"--array={array}%8" if gpu_tasks else f"--array={array}")

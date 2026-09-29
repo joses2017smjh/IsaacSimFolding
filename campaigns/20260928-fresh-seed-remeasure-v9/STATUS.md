@@ -3,10 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | none |
-| **Current result** | not started |
-| **Limitation / blocker** | pre-launch review pending |
-| **Next automatic action** | none until launch |
+| **Active job** | `21462341` block:a40, `21462342` block:rtx8000 |
+| **Current result** | preflight passed; a40: queued or running; rtx8000: queued or running |
+| **Limitation / blocker** | block:a40: 0 running, pending (PENDING ReqNodeNotAvail, May be reserved for other job); block:rtx8000: 0 running, pending (PENDING BadConstraints) |
+| **Next automatic action** | driver advances when a waited job ends (2-hour watchdog) |
+
+_Updated 2026-09-29T03:01:12Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

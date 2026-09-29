@@ -16,7 +16,27 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Latest outcome (2026-09-27): v8 anchor diagnostic closed — not improved.**
+**Running now (launched 2026-09-29): v9 fresh-seed, GPU-pinned re-measurement.**
+- **Scope.** Measurement only: no training, the final set untouched, and the
+  baseline stays the deliverable.
+- **Design.** The baseline and v8's an1-step000300 run on 48 fresh-seed dev
+  rows (seeds 97000+) in two interleaved arrays. Each array is pinned to one
+  GPU model:
+  - a40, **primary**: job 21462341;
+  - rtx8000, secondary: job 21462342.
+- **Waiting on hardware.** At launch the A40s were drained for maintenance
+  and the RTX 8000s were full.
+- **Automation.** The driver advances by itself (chain tick plus a 2-hour
+  watchdog).
+- **Deadline and reading.** The deadline is 2026-10-06T00:00Z. The rules are
+  preregistered in `manifest.json` → `protocol`: A40 reading first, an
+  interaction test before any claim of hardware dependence, and power stated
+  in advance (A40 20%, RTX 74% at p1 = 0.45).
+
+Live page: `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md`. When both
+blocks are terminal, write `REPORT.md` from `analysis/remeasure/results.json`.
+
+**Latest closed outcome (2026-09-27): v8 anchor diagnostic closed — not improved.**
 - **What changed.** Only the BC anchor, replaced with 16 pants demos. Everything else was v7's, unchanged: the corpus, the recipe and the matched evaluation.
 - **Endpoints: SUPPORTED.** The first H50 chunk opens only the right gripper in 0/16 episodes (baseline 2/16), and dev03 lifts 0.117 m by action 150.
 - **Score.** `an1-step000300` passed H10 at 9/16 vs 2/16 (p = 0.012), the first H10 pass in a matched comparison. It failed H50 at 6/16 vs 8/16, and the whole deficit is dev01 H50 (0/2 vs 2/2), a late fold miss.
@@ -68,7 +88,9 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **Final report (v8) — latest outcome, diagnosis, next step** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
+| **v9 live status (running)** | `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md` |
+| v9 design, preregistration and review | `campaigns/20260928-fresh-seed-remeasure-v9/README.md`, `manifest.json`, `analysis/review/prelaunch-review.json` |
+| **Final report (v8) — latest closed outcome, diagnosis** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
 | v8 diagnosis (4 lenses × 2 skeptics, synthesis, README fact-check) | `campaigns/20260926-anchor-diagnostic-v8/analysis/diagnosis/diagnosis.json` |
 | Final report (v7) | `campaigns/20260925-depth-qualified-v7/REPORT.md` |
 | Final report (v6) | `campaigns/20260924-pose-balanced-v6/REPORT.md` |
@@ -332,8 +354,15 @@ trajectories, so a partial collection must never reach the compiler.
   any argument containing a space breaks and any glob character is expanded.
   `--wrap "..."` fails with "Script arguments not permitted". The driver calls
   the real binary and adds `--mail-user` itself.
-- **8 GPUs per user** (`QOSMaxGRESPerUser`), shared with every other job you
-  run. Array throttles above that are moot; a 16-row evaluation is ~3 waves.
+- **GPU caps are per partition QoS, not a flat 8.** They are shared with
+  every other job you run, and array throttles above them are moot.
+  - `gpu` (RTX 8000): gres/gpu=8 but cpu=40, so at most 5 tasks at 8 CPUs.
+  - `ampere` (A40): gres/gpu=2 per user.
+  - Backfill tests one job per user per partition (`bf_max_job_user_part=1`).
+- **A multi-partition job may show `BadConstraints`** (e.g. `gpu,ampere` with
+  `--constraint=rtx8000`). The reason comes from the last partition tested.
+  `sbatch --test-only` shows whether it is still schedulable in the other
+  partition.
 - **Identical seeds do not reproduce outcomes.** Baseline dev00 at H10 scored
   1/4 in the pilot and 3/4 in v2 on the same seed, checkpoint and runner —
   GPU cloth physics is not bitwise deterministic. Compare baseline and

@@ -13,9 +13,10 @@ v9 copy of v8's matched runner, with three changes:
 
 --matched-index N is the single source of truth for the interleaving that
 makes a run "same wave": even N runs the baseline, odd N the candidate, on
-row N // 2, so ONE Slurm array holds both policies and every concurrent
-batch of 8 tasks runs four of each.  The driver reads results through the
-same function.
+row N // 2, so ONE Slurm array holds both policies and each row's two
+episodes start adjacently in the same queue and node pool. (Concurrency is
+set by the partition QoS: at most 5 tasks at 8 CPUs on gpu, 2 GPUs on
+ampere.) The driver reads results through the same function.
 """
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ import os
 from pathlib import Path
 import re
 import signal
+import socket
 import subprocess
 import sys
 import time
@@ -143,11 +145,24 @@ def main() -> int:
                     help="run label appended to the checkpoint label, e.g. r1")
     ap.add_argument("--gpu-model", required=True, choices=sorted(GPU_NAMES),
                     help="the block's pinned GPU model; a task on any other model is an infrastructure error")
+    ap.add_argument("--manifest-sha256", required=True,
+                    help="digest of the manifest the driver submitted under; the task refuses any other")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
     root = args.campaign.resolve()
+    manifest_sha = digest(root / "manifest.json")
+    if manifest_sha != args.manifest_sha256:
+        raise SystemExit(f"manifest.json is {manifest_sha[:12]}, the driver submitted under "
+                         f"{args.manifest_sha256[:12]}; refusing to run under a different protocol")
     manifest = json.loads((root / "manifest.json").read_text())
+    # Every pinned source is re-verified at task start, not only at the
+    # driver's preflight: the a40 block may start days after launch.
+    repo = root.parents[1]
+    drift = sorted(rel for rel, sha in manifest["executed_sources"].items()
+                   if not (repo / rel).is_file() or digest(repo / rel) != sha)
+    if drift:
+        raise SystemExit(f"executed sources differ from the manifest: {drift}")
     if not re.fullmatch(r"[A-Za-z0-9_-]{1,16}", args.run):
         raise SystemExit(f"invalid run label {args.run!r}")
     rows = manifest[args.phase]
@@ -159,15 +174,16 @@ def main() -> int:
     block = checkpoint_block(root, manifest, which)
     label = f"{block['label']}-{args.run}"
     checkpoint = Path(block["path"]).resolve()
-    ckpt = checkpoint_record(checkpoint)
-    # Both checkpoints are declared immutable: every file the manifest pinned
-    # is checked, not only the weights, because a changed normalizer or
-    # preprocessor silently shifts the action space this campaign measures.
+    checkpoint_record(checkpoint)   # the four files the runner cannot start without
+    # Both checkpoints are declared immutable: EVERY file the manifest pinned is
+    # checked (all eight, including the postprocessor the runner loads), because a
+    # changed normalizer or processor silently shifts the action space measured here.
     pinned = block["sha256"]
-    drifted = sorted(name for name, sha in ckpt.items() if name in pinned and sha != pinned[name])
-    missing = sorted(name for name in ckpt if name not in pinned)
+    missing = sorted(name for name in pinned if not (checkpoint / name).is_file())
+    ckpt = {name: digest(checkpoint / name) for name in pinned if name not in missing}
+    drifted = sorted(name for name, sha in ckpt.items() if sha != pinned[name])
     if drifted or missing:
-        raise SystemExit(f"immutable {which} checkpoint changed: altered={drifted} unpinned={missing}")
+        raise SystemExit(f"immutable {which} checkpoint changed: altered={drifted} missing={missing}")
 
     dest = destination(root, args.phase, row, label)
     if dest.exists() and not args.dry_run:
@@ -219,6 +235,8 @@ def main() -> int:
         "checkpoint": {"path": str(checkpoint), "label": block["label"], "sha256": ckpt},
         "runner": {"path": str(runner), "sha256": digest(runner)},
         "campaign_commit": manifest["git"]["commit"],
+        "manifest_sha256": manifest_sha,
+        "host": socket.gethostname(),
         "task_script_sha256": digest(Path(__file__).resolve()),
         "command": command,
         "capture": capture,
@@ -238,6 +256,7 @@ def main() -> int:
         "state": "running", "phase": args.phase, "task": row["id"], "policy": which, "run": args.run,
         "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
         "slurm_array_task_id": os.environ.get("SLURM_ARRAY_TASK_ID"),
+        "host": socket.gethostname(),
         "started_utc": request["created_utc"],
     }
     (dest / "status.json").write_text(json.dumps(status, indent=2) + "\n")

@@ -1,0 +1,733 @@
+{
+ "lenses": [
+  {
+   "lens": "protocol-stats",
+   "review": {
+    "findings": [
+     {
+      "id": "PS-1",
+      "title": "'replicates on X only (hardware-conditional)' is issued without any block x policy interaction test, and at the historical baseline rates it is the most likely label even when the gain is the same on both GPU models",
+      "severity": "major",
+      "where": "scripts/analysis.py:314-326 (classify, line 324); README.md:54-61; manifest protocol.classification (scripts/build_manifest.py:232-234)",
+      "evidence": "classify() labels a result 'hardware-conditional' whenever the H10 clause holds in exactly one block. No test checks whether the two blocks' effects differ. Computed with analysis.fisher_one_sided (scratchpad protocol-stats/power.py, power2.py), assuming independent blocks. (1) Same rates on both models (p0=0.234, p1=0.45): per-block power 0.360, P(label says hardware-conditional)=0.461. At p1=0.5625 it is 0.438. (2) Same candidate rate, but each baseline at its v5-v8 per-model H10 history (RTX 8000 3/24 = 0.125, all at dev06; A40 12/40 = 0.30): at p1=0.45 the power is 0.736 on RTX and 0.196 on A40, so P('replicates on rtx8000 only')=0.592. At p1=0.35 it is 0.442 and at p1=0.54 it is 0.523. (3) Concrete pairs that get the label: 8/24 vs 2/24 (p=0.036, passes) with 7/24 vs 3/24 (p=0.143, fails); 7/24 vs 1/24 with 6/24 vs 2/24. For both, Zelen's exact homogeneity p=1.000 and the Wald difference-of-differences p is about 0.57-0.60. For context, multiplicity itself is small: the per-block clause's real size is about 2.6% at n=24 (Fisher is conservative), so P(at least 1 of 2 blocks passes under the null) is about 5.2%. The problem is the interaction inference, not Bonferroni.",
+      "failure_scenario": "The candidate's true H10 rate does not depend on the GPU. The RTX block passes, because its baseline sits near 3/24, and the A40 block misses by one or two episodes. results.json and STATUS.md then record 'replicates on rtx8000 only (hardware-conditional)', a hardware claim the data cannot support. The stop rule blocks any change to that label after launch.",
+      "fix": "Before freezing, preregister an interaction test. Options: Zelen's exact conditional test of equal odds ratios over the two blocks' 2x2 tables, or, since the rows are shared, an exact sign-flip over the 8 rows of (cand-base margin on rtx8000) minus (cand-base margin on a40). Emit 'hardware-conditional' only when that test gives p < 0.05. Otherwise emit 'H10 clause holds on X, not on Y; block x policy interaction not established (p=...)'. Add one README sentence: the design cannot separate the candidate's hardware sensitivity from the baseline's (RTX H10 3/24 vs A40 12/40 historically). Name cross_block as the descriptive tool for that question. Record the multiplicity figure (about 5.2% familywise for 'passes somewhere') in the protocol."
+     },
+     {
+      "id": "PS-2",
+      "title": "No preregistered power, so 'does not replicate' will read as a negative result; the approved A40 block has 6-42% power",
+      "severity": "major",
+      "where": "manifest protocol (scripts/build_manifest.py:221-260), README.md:47-61, scripts/analysis.py:325-326 and 350-367 (combined test)",
+      "evidence": "v8's manifest preregistered 'confirmatory_power'. v9's protocol has no power statement at all. Per-block H10 clause power on 24 vs 24: at pooled p0=0.234 it is 0.142, 0.360 and 0.676 for p1 = 0.35, 0.45 and 0.5625. At the A40 baseline's history (p0=0.30) it is 0.057, 0.196 and 0.418 for p1 = 0.35, 0.45 and 0.54. With p0=0.234 and p1=0.45, P(neither block passes) = 0.410. The combined 48 vs 48 Fisher has power 0.664 in the same scenario, and P(neither block passes AND pooled 48 vs 48 p<0.05) = 0.126. So in about 1 run in 8, 'does not replicate' would sit beside a significant combined test, and the protocol does not say which one governs. It only lists the block x pose test as 'secondary_reported_not_gated'. The minimum candidate count to pass is 5/24 against 0, 8 against 2, 9 against 3, 11 against 4 and 14 against 7. The margin >= 4 clause never binds, because p < 0.05 already forces a margin of at least 5.",
+      "failure_scenario": "an1 truly raises H10 from about 0.30 to 0.45 on A40. The approved A40 block fails the clause about 80% of the time and reports 'does not replicate'. Readers take that as evidence against the gain, even when the pooled 48 vs 48 test is significant.",
+      "fix": "Add protocol.power with a per-model table (RTX p0 about 0.125, A40 p0 about 0.30; p1 = 0.35, 0.45, 0.54). Rename the negative label to 'not replicated (power X-Y%)'. Decide now whether the block x pose stratified 48 vs 48 test is primary, or state that it cannot override the per-block reading. Note that at 24 vs 24 the binding threshold is p < 0.05, which requires a margin of at least 5 to 7."
+     },
+     {
+      "id": "PS-3",
+      "title": "'partially measured' holds a complete block's reading hostage to the other block; the user approved an A40-only design, and A40 completion before the deadline is uncertain",
+      "severity": "major",
+      "where": "scripts/analysis.py:317-320; README.md:61 and 76-78; manifest protocol.deadline_rule",
+      "evidence": "classify() returns 'partially measured' whenever len(measured) < len(blocks), whatever the complete block shows. The approved step was A40-only: 96 episodes with --constraint=a40. sinfo now: cn-r-1/2 draining, cn-r-3..6, cn-s-1..3 and cn-gpu5 drained. Reservation root_204 (2026-10-01 08:00-16:00, MAINT) covers cn-gpu[5-7], cn-r-[1-6], cn-s-[1-5] and cn-t-1. The deadline is 2026-10-06. There is no preregistered reading for a single complete block. Nothing in the protocol forbids or records a manual scancel of a queued block after the other block's result appears in STATUS.md (driver.record_block writes per-block H10/H50 and p as soon as that block ends).",
+      "failure_scenario": "The RTX block completes on about 09-29 and the A40 block misses 10-06. The campaign reports 'partially measured', and the author decides after seeing the data how to read the RTX result. Or, after seeing the RTX result, someone cancels the A40 array, and no rule records that as a deviation.",
+      "fix": "Preregister that each complete block's H10 and H50 clause results are readings in their own right: A40 is the approved primary, RTX 8000 is replication on a second model. Restrict 'partially measured' to the cross-model classification. Add to the stop rule: 'no manual cancellation of a block; any cancellation other than the deadline is reported as a protocol deviation'."
+     },
+     {
+      "id": "PS-4",
+      "title": "The second half of the stated question (does an1's dev01 H50 loss survive?) has no preregistered decision rule",
+      "severity": "major",
+      "where": "README.md:11-13; manifest 'question'; scripts/analysis.py:301-303 (p_b_settled, descriptive only)",
+      "evidence": "The question reads: 'Do an1's H10 gain ... and its dev01 H50 loss survive fresh seeds'. The only dev01 output is hb['p_b_settled'], raw per-block counts over 3 vs 3 episodes, listed as 'reported, not gated'. The classification covers only the H10 gain. History is GPU-dependent: baseline dev01 H50 was 4/4 on A40 and 1/4 on RTX 8000 over v5-v8; an1 was 0/2, both on A40 (my tabulation, scratchpad history_rows.json).",
+      "failure_scenario": "On RTX the baseline also fails dev01 H50, say 0/3 vs 0/3, while on A40 it is 3/3 vs 0/3. With no rule, the author decides after seeing the data whether the loss 'survived', 'is A40-only' or 'is inconclusive'.",
+      "fix": "Either preregister a rule now, for example 'the dev01 H50 loss replicates in a complete block iff baseline dev01 H50 settled > candidate; reported per block and pooled; 3 vs 3 per block is descriptive and cannot reach significance', or remove dev01 from the question and list it only as descriptive."
+     },
+     {
+      "id": "PS-5",
+      "title": "'The two blocks ... measure the GPU effect directly' is inaccurate: shared seeds give no pairing across models, and the blocks are confounded with date, node set, driver and kernel, none of which the analysis records",
+      "severity": "major",
+      "where": "README.md:40-41; manifest protocol.why_two_blocks (scripts/build_manifest.py:225-228); scripts/analysis.py:184-212 (episode) and 332-347 (cross_block)",
+      "evidence": "v8 REPORT finding 5: episodes on different GPU models 'differ from action 1 (0 of 219 H10 pairs share an action)'. Sharing seeds across blocks therefore adds no variance reduction, and cross_block is an unpaired 48 vs 48. The blocks will run on different days, and very likely on opposite sides of the 2026-10-01 all-GPU maintenance (root_204). The v8 rollout.log device table shows 'Driver Version: 595.71.05' (line 38) and kernel 5.14.0-611.55.1.el9_7. The login node already runs 5.14.0-687.52.1.el9_8. episode() extracts only the GPU name. Driver version, kernel and hostname are neither parsed nor reported.",
+      "failure_scenario": "The A40 block runs after a driver or kernel upgrade during maintenance. cross_block and the classification attribute the between-block difference to 'GPU model' even though the driver, date and node pool changed too.",
+      "fix": "In episode(), also parse 'Driver Version', the kernel line and the hostname (or read NodeList from sacct), and report them per block in block_results. Rewrite README:40-41 and why_two_blocks to say it is an unpaired comparison of two blocks, confounded with node set, date and software stack unless those match. Soften any GPU-model attribution in the report if the driver or kernel differ between blocks."
+     },
+     {
+      "id": "PS-6",
+      "title": "'pose_stratified_exact_p' and 'pose_sign_flip_p' are row-stratified (8 dev slots), not pose-stratified in v8's sense, and the 3-cluster test v8 reported is not computed",
+      "severity": "minor",
+      "where": "scripts/analysis.py:215-216, 251-257, 272-274; README.md:64; manifest protocol.secondary_reported_not_gated[0]",
+      "evidence": "The strata are keyed by development_pose_slot (8 rows). tests/test_v9.py:99-100 assert 0.012 and 0.047, which are v8 REPORT's 'by row p = 0.012' and 'rows as the unit 0.047'. v8 REPORT separately reports 'by pose 0.011', the P_A/P_B/P_C clusters. The approved next step said 'row-stratified and row sign-flip tests'. CLAUDE.md warns that pose-grouping errors have already produced a wrong claim once.",
+      "failure_scenario": "The v9 report sets 'pose-stratified p' beside v8's 'by pose 0.011' and compares two different tests.",
+      "fix": "Rename the fields and docs to row_stratified_exact_p and row_sign_flip_p. Optionally add a cluster-stratified test using cluster_of()."
+     },
+     {
+      "id": "PS-7",
+      "title": "The retry scope in the docs is narrower than the code: tasks that produced a rollout but failed validation are also re-drawn",
+      "severity": "minor",
+      "where": "README.md:75-76; manifest protocol.stop_rule; scripts/driver.py:265-276 and 320-333; scripts/run_matched_task.py:265-283",
+      "evidence": "The README says 'one retry only for tasks that left no completed rollout'. driver.read_result returns None for any status other than 'completed'. That includes validate_result failures such as 'non-finite simulator state' and checker/terminal disagreement, where rollout.json exists. Those outputs are moved to attempts/ and re-run. Such failures can depend on the policy. Historical rate across v5-v8 matched evaluations: 0 of 376 (every status.json reads 'completed'; no attempts/ directories).",
+      "failure_scenario": "The candidate's aggressive grasp drives the physics non-finite. The episode is retried rather than counted as a failure, which shifts the count toward the policy that destabilises the simulation.",
+      "fix": "Document exactly which states trigger a retry, and record the retried directories with their states in the block results. Or treat 'non-finite simulator state' as a policy outcome (invalid for both arms of that row) rather than as infrastructure."
+     },
+     {
+      "id": "PS-8",
+      "title": "Secondary p-values are unadjusted, and for incomplete blocks the reported counts and the paired tests use different denominators",
+      "severity": "minor",
+      "where": "scripts/analysis.py:245-259 and 268-276; manifest protocol.secondary_reported_not_gated",
+      "evidence": "Each block and horizon reports Fisher, row-stratified, sign-flip and McNemar tests, plus the combined test, with no multiplicity statement. cs, cn, bs and bn count every valid episode per arm, while strata, diffs and McNemar use only rows where both arms are valid. The two sets diverge only in incomplete blocks, which are descriptive.",
+      "failure_scenario": "An incomplete block shows 'candidate 7/23' next to a stratified p computed on 22 pairs. A reader takes them as the same sample.",
+      "fix": "Add a protocol sentence that secondary p-values are unadjusted and descriptive. In block_results, report n_paired beside the paired tests, or compute the headline counts on paired rows when a block is incomplete."
+     }
+    ],
+    "checked_ok": [
+     "fisher_one_sided matches scipy.stats.fisher_exact(alternative='greater'): max |diff| 3.3e-16 over 3000 random tables (n up to 30 per arm).",
+     "stratified_exact matches brute-force enumeration of per-stratum hypergeometrics: max |diff| 1.0e-15 over 300 random strata sets. It also matches a 200k-rep Monte Carlo permutation under fixed stratum margins (0.02278 vs 0.02331; 0.05055 vs 0.05022, within about 1.6 MC SE). With a single stratum it equals Fisher exactly.",
+     "sign_flip equals itertools enumeration exactly (500 random vectors of length 1-9). mcnemar_exact equals scipy.stats.binomtest(greater) (max |diff| 2.2e-16 over 0..24 x 0..24).",
+     "The per-block primary equals v8 matched_verdict (v8 scripts/driver.py:107-130). It uses the same Fisher formula (the test asserts equality with v8's function), margin >= 4, p < 0.05, H50 cand >= base and settled = terminal_success. 'complete' requires 48 valid rows per policy (96 episodes). analysis.episode also invalidates any episode whose status or log GPU differs from the block's pinned model (analysis.py:207-208), which is stricter than v8.",
+     "At 24 vs 24 the margin >= 4 clause never binds: p < 0.05 already requires cand - base >= 5 (minimum candidate count 5, 6, 8, 9 and 11 for baseline 0 to 4).",
+     "Seed freshness: rg over every non-binary file in the repo (runtime logs, request.json, ledgers, plans, media indexes) found 97000-97207 only in v9's own files. The other hits were PNG IDAT byte counts in isaaclab logs, a hex digest '97201f45...' and a media byte count 97207. There were no hits in lehome-data/outputs. The runner seeds the python, numpy, torch, cuda and garment RNGs directly from --seed (policy_rollout51.py:328-331, 486-488).",
+     "Seed sharing matches the description: each of the 24 (pose, seed_block) cells has exactly one seed, used by both the H10 and H50 rows. Both policies share a row through the index // 2 interleave, and both blocks read the same manifest rows.",
+     "rid[3:5] == development_pose_slot on all 48 rows, so compute() and block_results group identically. cluster_of maps P_A to dev00/04/06, P_B to dev01/03 and P_C to dev02/05/07 by match_pose, matching CLAUDE.md.",
+     "NaN or None margins: 0 of 256 valid v5-v8 episodes. The runner float()s all four condition margins (policy_rollout51.py:1426), and geometric_ever_success is present in all 256, so results JSON will not contain NaN.",
+     "Multiplicity of 'passes on at least one model': the per-block clause's real size is about 2.6% (p0 = 0.2 to 0.3), so the familywise rate is about 5.2%. This is near nominal and belongs as a statement (see PS-1), not a correction.",
+     "tests/test_v9.py: 13 passed on the login node."
+    ]
+   },
+   "verify": {
+    "verdicts": [
+     {
+      "id": "PS-1",
+      "refuted": false,
+      "severity_after": "major",
+      "reason": "Reproduced independently (scratchpad protocol-stats-verify/power.py, combined.py). classify() (analysis.py:319-326) issues 'replicates on X only (hardware-conditional)' whenever exactly one complete block passes, and no interaction test is run. Numbers: with the same rates on both models (p0=0.234, p1=0.45), per-block power is 0.360 and P(exactly one block passes) is 0.461; at p1=0.5625 it is 0.438. With per-model baselines (RTX 0.125, A40 0.30), P('rtx8000 only') is 0.442, 0.592 and 0.523 at p1 = 0.35, 0.45 and 0.54. The concrete pairs check out: 8/24 vs 2/24 (p=0.0361, passes) against 7/24 vs 3/24 (p=0.1432, fails) gives Zelen p=1.000 and Wald difference-of-differences p=0.603. 7/24 vs 1/24 (p=0.0240) against 6/24 vs 2/24 (p=0.1224) gives Zelen 1.000 and Wald 0.568. The null size per block is 0.019-0.030, so the familywise rate is about 5.2%. One caveat: scenario (2) is not a false label, because the risk-difference gain really does differ by model when the baselines differ. The clean false-positive case is scenario (1), P about 0.46, which is enough on its own to rate this major.",
+      "fix_after": "Replace the '(hardware-conditional)' label with 'H10 clause holds on <X>, not on <Y>'. Preregister an interaction test and name its scale: Zelen's exact test on the two blocks' 2x2 tables (odds ratio), or an exact sign-flip over the 8 shared rows of (cand-base margin on rtx8000) minus (cand-base margin on a40) (risk difference). Claim hardware dependence only if that test gives p<0.05. State in the protocol that at 24 per arm per block the test is nearly powerless, so 'interaction not established' cannot be read as 'no hardware effect'. Also state that a model-dependent gain can come from the baseline's own hardware sensitivity (RTX H10 3/24 vs A40 12/40 historically), not the candidate's. Record the ~5.2% familywise rate for 'passes in at least one block'. Add tests for the 'exactly one' and 'neither' branches."
+     },
+     {
+      "id": "PS-2",
+      "refuted": false,
+      "severity_after": "major",
+      "reason": "Reproduced exactly. v8's manifest has protocol.confirmatory_power; v9's manifest and README contain no power statement (grep -i power on the v9 manifest returns nothing). Per-block power at p0=0.234 is 0.142, 0.360 and 0.676 for p1 = 0.35, 0.45 and 0.5625. At A40 p0=0.30 it is 0.057, 0.196 and 0.418 for p1 = 0.35, 0.45 and 0.54. With p0=0.234 and p1=0.45, P(neither block passes) is 0.410. The pooled 48 vs 48 Fisher has power 0.664, and P(neither passes AND pooled p<0.05) is 0.126. With the code's actual block x row stratified test (Monte Carlo, 20k draws) the figures are 0.651 and 0.124. Minimum passing counts at 24 vs 24: 5, 6, 8, 9 and 11 against 0-4, and 14 against 7. Margin >= 4 never binds (the minimum margin with p<0.05 is 5). One sub-claim is overstated: 'the protocol does not say which one governs'. Listing the combined test under secondary_reported_not_gated already implies it does not govern. The power gap stands without that sub-claim.",
+      "fix_after": "Add protocol.power with a per-model table. Use preregistered p1 values (0.35, 0.45, 0.54) and per-model p0 taken from the v5-v8 history (RTX 3/24 = 0.125, A40 12/40 = 0.30, pooled 15/64 = 0.234), so the quoted range is not chosen after the fact. Rename the negative label to 'not replicated at this power (A40 x%, RTX y%)'. State explicitly that the block x row combined test is descriptive and cannot override the per-block readings. Note that at 24 vs 24 the binding threshold is p<0.05, which needs a margin of at least 5, and that margin >= 4 is vestigial."
+     },
+     {
+      "id": "PS-3",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Overstated. protocol.per_block_primary already gives each block its own preregistered reading. For a partial result, classify() still emits h10_clause_holds_on and v5_rule_holds_on for the complete block, and record_block writes the full per-block result. So nothing is held hostage; only the headline label reads 'partially measured'. The cluster facts are correct: cn-r-1/2 are draining, cn-r-3..6, cn-s-1..5, cn-t-1 and cn-gpu5 are drained (maint), and root_204 (2026-10-01 08:00-16:00) covers all of them. But about 96 x ~4 min / 8 GPUs is about an hour of work, and there are ~4 days between that maintenance and the 10-06 deadline, so non-completion is plausible, not likely. The manual-scancel point is wrong as stated. A manually cancelled block is not left unrecorded: sacct CANCELLED goes to summarize() as 'failed', and block_stage (driver.py:314-333) then auto-resubmits every unfinished task as the block's single retry and logs 'one outcome-blind retry of N tasks without a completed rollout'. So the cancellation would be mislabeled as a task failure, not left unrecorded.",
+      "fix_after": "When exactly one block is complete, have classify() emit '<block> measured: H10 clause holds/fails; cross-model classification not available (<other> incomplete)'. Name A40 as the approved primary block in the protocol (see missed item 1). In block_stage, compare sacct CANCELLED states against the driver's own deadline cancellations, and log an external cancellation as a protocol deviation rather than a retry. Add to the stop rule that any cancellation other than the deadline is reported as a deviation."
+     },
+     {
+      "id": "PS-4",
+      "refuted": false,
+      "severity_after": "major",
+      "reason": "Confirmed. The README (lines 11-13) and manifest 'question' both ask whether 'its dev01 H50 loss' survives, but the only dev01 output is the descriptive hb['p_b_settled'] (analysis.py:301-303), 3 vs 3 per block. No rule states what counts as the loss surviving. My independent tabulation of v5-v8 (history.py) shows this exact cell split by GPU model for the baseline: dev01 H50 is A40 4/4 and RTX 8000 1/4, and an1's 0/2 was entirely on A40. The per-block readings will therefore probably diverge, which leaves a headline question open to a post-hoc story. At 3 vs 3 a block cannot reach p<0.05 (0/3 vs 3/3 gives p=0.05 exactly), so any rule has to be descriptive, but it still has to be written down before launch.",
+      "fix_after": "Either preregister a descriptive rule, for example 'the dev01 H50 loss recurs in a complete block iff baseline dev01 H50 settled > candidate; reported per block and pooled over 6 vs 6 (one-sided Fisher reported, not gated); 3 vs 3 per block cannot reach significance', or remove dev01 from the question and keep it only under secondary_reported_not_gated."
+     },
+     {
+      "id": "PS-5",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Primary evidence contradicts the failure scenario. I compared exact executed_action_rad prefixes from rollout.json.behavior.jsonl over every v5-v8 same-policy, same-row, same-seed pair (driver_prefix.py). There are 58 same-model pairs on different drivers (595.71.05/el9_7 vs 615.71.09/el9_8; 34 A40 episodes ran on 615, including v8's three on cn-s-2). They share action prefixes with the same distribution as same-driver pairs: median 70 actions at H10 and 100 at H50, and no pair has a zero-length prefix. All 254 cross-model pairs diverge at action 1. So the driver and kernel are not quasi-seeds, and 'the A40 block runs after a maintenance upgrade' is not a confound. Date has no mechanism in a code-pinned simulation. Two small points survive. (a) The node platform varies with the GPU model and cannot be separated from it here: sinfo features show the A40 nodes are epyc/AVX2 and the RTX nodes cascadelake/AVX-512. README:40-41's 'GPU effect' is therefore really a hardware-platform effect. 'Shared seeds give no pairing' is true, but the README does not claim pairing; it claims a balanced comparison, which holds. (b) The A40 pool is mid-upgrade: cn-s-2, cn-s-4 and cn-t-1 are on 5.14.0-687.44.1.el9_8, the rest on 611.55.1.el9_7. The A40 block will therefore probably run on mixed stacks, and episode() parses only the GPU name. The raw rollout.log keeps the Driver Version, and status.json keeps slurm_job_id, which sacct can map to NodeList, so provenance can be recovered. It just is not reported.",
+      "fix_after": "Reword README:40-41 and protocol.why_two_blocks to 'the two blocks compare hardware platforms (GPU model and its node pool) on the same rows and seeds; an unpaired, balanced comparison'. In episode(), parse 'Driver Version' from the rollout.log device table, and report per-block counts of (driver, host) in block_results, so the report can show that the stack did not matter. Cite the v5-v8 prefix evidence in the report rather than softening the GPU attribution."
+     },
+     {
+      "id": "PS-6",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. pose_index() returns development_pose_slot (8 rows). On v8's H10 data, the v9 'pose_stratified' function gives 0.0122, which is v8's 'by row p = 0.012'. The true cluster-stratified test (P_A/P_B/P_C via cluster_of) gives 0.0111, v8's 'by pose 0.011'. These are different tests under the same name. The misnomer also appears in compute(): analysis.py:361-367 keys strata by rid[3:5] (row slot) and names the field block_x_pose_stratified_exact_p. The manifest's secondary_reported_not_gated[0] and [2] inherit it, and so do driver.record_block (driver.py:370) and the per_pose_diff key.",
+      "fix_after": "Rename pose_stratified_exact_p to row_stratified_exact_p, pose_sign_flip_p to row_sign_flip_p, per_pose_diff to per_row_diff and block_x_pose_stratified_exact_p to block_x_row_stratified_exact_p, in analysis.py, driver.py:370, the README and manifest secondary_reported_not_gated. Optionally add a cluster-stratified exact test using cluster_of(). A 3-unit cluster sign-flip bottoms out at p=0.125, so it should not be offered."
+     },
+     {
+      "id": "PS-7",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. driver.read_result (driver.py:265-276) treats any status other than 'completed' as retry-eligible. run_matched_task.py:265-283 sets infrastructure_error on validate_result failures ('non-finite simulator state', checker/terminal disagreement, parameter mismatch) even though rollout.json exists. The README's 'no completed rollout' fits the code only if 'completed' is read as the status state, and the manifest stop_rule has the same ambiguity. There is a sharper consequence than the reviewer gave: a policy-caused validation failure that recurs on the single retry is never counted as a failure. It makes the block incomplete, and the block is then excluded from the classification altogether. Historically the risk is low: 256/256 v5-v8 dev benchmark status.json files read 'completed', and no v5-v8 campaign has an attempts/ directory.",
+      "fix_after": "List in the protocol exactly which states trigger a retry. Record every retried directory with its state and error in block_results. Pick one of two options: treat 'non-finite simulator state' as a policy outcome (counted as not settled and flagged, and not able to make the block incomplete), or declare now that a repeated validation failure voids the block, and say why."
+     },
+     {
+      "id": "PS-8",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed in code. In analysis.py:245-248 and 268, cs/cn/bs/bn and Fisher count every valid episode per arm, while the strata, diffs and McNemar (lines 243-259) use only rows where both arms are valid. The two sets differ only in incomplete blocks, which are already descriptive. The secondary p-values carry no multiplicity statement. This is close to cosmetic.",
+      "fix_after": "Add one protocol sentence: the secondary p-values are unadjusted and descriptive. Report n_paired beside the stratified, sign-flip and McNemar outputs in block_results."
+     }
+    ],
+    "missed": [
+     "Major: the protocol does not say which block is primary, and the added block drives the positive labels. The relayed user approval covered one A40 block ('--constraint=a40 ... 96 episodes, about 6 GPU-hours'). STATUS.md:31-34 records the RTX 8000 block as a 'design change' justified only by the standing GPU-hour lift. No user approval of the design is quoted. classify() (analysis.py:314-329) and protocol.classification then treat both blocks symmetrically. Per-model H10 baseline history over v5-v8 (my history.py, 256/256 episodes): RTX 8000 3/24, all at dev06, so 0/21 elsewhere; A40 12/40. The added block therefore has 2.1x to 8x the power of the approved one: 0.469 vs 0.057, 0.736 vs 0.196 and 0.898 vs 0.418 at p1 = 0.35, 0.45 and 0.54. Most positive labels the design can issue will come from the block the user did not approve, and the combined block x row test pools it in. Fix: name the A40 block primary in protocol (the approved design) and the RTX 8000 block secondary or exploratory. Headline the A40 per-block reading. Put the scope change in front of the user rather than recording it only as a design change.",
+     "Minor: tests/test_v9.py:215-217 exercise only the 'partially measured' and 'replicates on both' branches of classify(). The 'exactly one block' (hardware-conditional) and 'does not replicate' branches, which are the most likely outcomes by the power figures above, are untested. The PS-1, PS-2 and PS-3 fixes will rewrite classify(). Fix: add synthetic-block tests for all four outcomes and for the new interaction or power fields."
+    ]
+   }
+  },
+  {
+   "lens": "execution",
+   "review": {
+    "findings": [
+     {
+      "id": "EXEC-1",
+      "title": "A failed sbatch inside advance() stops the tick before any tick is scheduled; --test-only cannot check the a40 block while the A40 nodes are drained",
+      "severity": "minor",
+      "where": "scripts/driver.py:413-420 (tick), 102-108 (sbatch raises RuntimeError), 255 (submit), 332 (retry submit)",
+      "evidence": "(1) Simulation F in scratch sim2.py: a mocked sbatch rejects --constraint=a40 at launch. The tick raises, and the persisted driver_state holds stages {'block:rtx8000': 'submitted'} with ticks {} (no chain, no watchdog). (2) Simulation E: sbatch raises on the retry submit. The bad dirs have already moved to attempts/, and schedule_ticks never runs. The next tick recovers correctly (retry array '1,2', no double move), but only if some tick still exists to run it. (3) The real binary gives `/apps/slurm/current/bin/sbatch --test-only --constraint=a40 --array=0-95%8 slurm/matched.sbatch ...` -> 'allocation failure: Requested node configuration is not available' (exit 1). --constraint=rtx8000 is accepted (cn-gpu7, est. 2026-10-01T17:41). The same error appears for the drained RTX node (`--partition=gpu --constraint=rtx8000 --nodelist=cn-gpu5`), so it comes from the drain and is not a config error. A real submission is accepted: squeue shows 21454050/21454051 (ampere, feature a40, submitted 2026-09-28T11:45:09, after the 11:41:06 maint drain) PENDING with ReqNodeNotAvail.",
+      "failure_scenario": "Any sbatch error in a tick aborts that tick before schedule_ticks, whether a rejection or a transient one ('Socket timed out', slurmctld busy). If the failing tick was a chain tick, the watchdog already pending from the previous tick recovers within 2 h. If the failing tick was the watchdog itself, no tick remains and the campaign stalls with nothing reported until a person runs `tick`. Examples: a retry submission after the A40 block ends, or deadline handling. At launch, an operator who uses --test-only as a gate will see the a40 block 'fail' even though a real submission would pend.",
+      "fix": "In Driver.tick(), wrap self.advance() in try/finally so that update_status/schedule_ticks/save always run (re-raise afterwards so the tick log still shows the error). Optionally, in block_stage, catch RuntimeError from self.submit per block, log an event, and leave the stage absent so the next tick retries. Also note in README/STATUS that `sbatch --test-only` is not a valid launch check for the a40 block while cn-r-*/cn-s-* are drained."
+     },
+     {
+      "id": "EXEC-2",
+      "title": "The nvidia-smi pre-Isaac GPU gate is unverified on A40/RTX 8000 hardware, and it has two different failure branches",
+      "severity": "minor",
+      "where": "scripts/run_matched_task.py:73-82 (allocated_gpu_names), 244-253 (gate)",
+      "evidence": "The gate compares NVML names from `nvidia-smi --query-gpu=name` against GPU_NAMES ('NVIDIA A40', 'Quadro RTX 8000'). Those strings are validated only against Isaac's Vulkan device table (gpu_scan.py: 256/256 v5-v8 logs parse, 140 A40 / 116 RTX 8000). NVML output on these nodes has never been captured in the repo, and no test in tests/test_v9.py exercises allocated_gpu_names. Branches: nvidia-smi absent, non-zero exit or a 60 s timeout returns None, and the gate is skipped silently (only request.json gpu.nvidia_smi=null records it). nvidia-smi present but listing nothing returns [], and set([]) != {expected} fails closed. Verified in the container on this node (apptainer exec --nv --cleanenv bhl.sif): /usr/bin/nvidia-smi is bound, and it ignores CUDA_VISIBLE_DEVICES (CVD=1 still listed 2x 'NVIDIA GeForce RTX 2080 Ti').",
+      "failure_scenario": "If NVML names the card differently from the Vulkan table (e.g. a vendor prefix), every task in that block exits 3 within seconds. The single outcome-blind retry fails the same way, and the stop rule then locks the block as 'incomplete' with 0 valid episodes. The preregistered classification becomes 'partially measured' for a reason unrelated to the measurement.",
+      "fix": "Before launch, the operator runs a 10-second `srun -p gpu --constraint=rtx8000 --gres=gpu:1 -t 1 nvidia-smi --query-gpu=name --format=csv,noheader` (and the a40 equivalent once cn-r/cn-s return) and confirms the exact strings. Alternatively, make the pre-check fail closed only on a positive mismatch (names contain another GPU_NAMES value) and record anything else, leaving the proven post-run Isaac-table check as the gate. Add a unit test that mocks subprocess for the None, [], match and mismatch cases."
+     },
+     {
+      "id": "EXEC-3",
+      "title": "Sources are verified once at the first tick, and the per-task checkpoint check covers 4 of the pinned files, although the code comment says all of them",
+      "severity": "minor",
+      "where": "scripts/run_matched_task.py:49-55, 163-170; scripts/driver.py:338-354 (preflight cached in state)",
+      "evidence": "checkpoint_record hashes only config.json, model.safetensors, policy_preprocessor.json and policy_preprocessor_step_5_normalizer_processor.safetensors. The `missing` test at line 168 iterates ckpt, not pinned, so it can never flag pinned files that were never hashed: policy_postprocessor.json, the policy_postprocessor_step_0_unnormalizer_processor.safetensors that maps actions back to joint space, finetune.json and checkpoint.json. The comment at lines 163-165 ('every file the manifest pinned is checked') is therefore false. The driver runs verify_sources once and caches `preflight.passed`. The a40 block can start days later (A40 nodes in maint since 2026-09-28T11:41; all-GPU reservation 2026-10-01). Per task, only the runner hash is re-checked. run_matched_task.py, analysis.py, endpoints.py, _common.sh and matched.sbatch are not re-checked, and analysis/endpoints digests are not written to request.json, although analysis.gpu_model decides validity inside the task.",
+      "failure_scenario": "The a40 block or a retry could run with different in-task code or different postprocessor bytes than the rtx8000 block. It is still recorded as the same frozen experiment, and nothing in request.json would show which analysis.py gated the GPU check.",
+      "fix": "In run_matched_task, hash every file named in `pinned` (iterate pinned.items(), not the 4 required names). Verify the manifest digests of run_matched_task.py, analysis.py and endpoints.py at task start, and write them into request.json. Alternatively, have the driver re-run `verify_sources.py --skip-checkpoint` (sources only, a few seconds) before every block or retry submission, not only at the first tick."
+     },
+     {
+      "id": "EXEC-4",
+      "title": "STATUS.md's blocker line is hard-coded to say the a40 block waits in queue, even after the a40 block has finished",
+      "severity": "minor",
+      "where": "scripts/driver.py:494-496 (describe)",
+      "evidence": "Simulation sim3.py: a40 completed, rtx8000 still pending. The rendered STATUS.md shows '| **Current result** | rtx8000: queued or running; a40 (done): H10 8/24 vs 8/24 ...' next to '| **Limitation / blocker** | A40 nodes drained for maintenance at launch; the a40 block waits in queue |'.",
+      "failure_scenario": "The live status page contradicts itself whenever the A40 block finishes first, or while the RTX block is the one waiting.",
+      "fix": "Build the blocker line from state: list each block whose stage is still 'submitted' and active (e.g. 'rtx8000 block pending in queue'), and fall back to 'none' once no block is waiting."
+     }
+    ],
+    "checked_ok": [
+     "The analysis module is importable inside the container. With the exact lh_isaac environment (apptainer exec --nv --cleanenv bhl.sif, same PYTHONPATH), `import analysis, run_matched_task` resolves analysis and endpoints to campaigns/20260928-fresh-seed-remeasure-v9/scripts/*.py. The script's own directory is sys.path[0], which comes before PYTHONPATH, so no other module named analysis can win.",
+     "nvidia-smi is bound into the container at /usr/bin/nvidia-smi through /etc/apptainer/nvliblist.conf (apptainer 1.5.3), and it resolves under --cleanenv's PATH. It ignores CUDA_VISIBLE_DEVICES: with CVD=1 it still listed both GPUs. The gate is still safe on this cluster because Slurm has ConstrainDevices=yes (scontrol show config), so a 1-GPU job only sees its own device, and every GPU node carries a single GPU-model feature (sinfo), so set(names) is one name.",
+     "The post-run check analysis.gpu_model parses 256/256 v5-v8 rollout.logs (140 NVIDIA A40, 116 Quadro RTX 8000). Every table has exactly one row, and the largest table offset is 9093 chars, well inside the 400 kB read window.",
+     "Timeouts are generous. The longest v5-v8 wall time is 329 s (RTX 8000 H10); the medians are A40 208-222 s and RTX 8000 277-287 s. The rollout timeout is 1500 s and the Slurm --time is 45 min.",
+     "Task dry-runs at indices 0, 1, 94 and 95, for both --gpu-model values, all exit 0. Even indices are the baseline and odd the candidate. Rows: 0/1 -> dev00_h10_s97000 (seed 97000, H10), 94/95 -> dev07_h50_s97207 (seed 97207, H50). The destinations evaluation/{baseline|an1-step000300}-{a40|rtx8000}/remeasure/<id> are distinct and match driver.dest and analysis.block_results. Expected names are 'NVIDIA A40' and 'Quadro RTX 8000'. The runner hash matches the manifest pin, and the 4 checkpoint files match.",
+     "`sbatch --test-only` with the real binary accepts the rtx8000 main array (--constraint=rtx8000 --array=0-95%8, partition gpu,ampere), the comma-list retry form --array=1,5,7,94%8, and the tick job with --begin=now+7200. With --partition=gpu,ampere, a constraint that one of the partitions cannot satisfy is not rejected.",
+     "sacct -n -X -P -j works on day-old job ids (21399500, 21387601). A live throttled array shows its not-yet-started tasks as a pseudo-row (21442470_[67-73%1]|PENDING), so summarize() returns 'active', and the driver cannot mark a block finished early and waste the retry.",
+     "Driver simulation against a fake Slurm (scratch sim_driver.py, sim2.py):\n- The first tick submits both blocks, each once, with --constraint=rtx8000 / --constraint=a40 and --array=0-95%8, plus a chain tick (afterany on both) and a watchdog.\n- Idle ticks never resubmit.\n- When a block ends with invalid tasks (infrastructure_error, wrong model, status 'running', no dir), exactly one retry goes out, covering only those indices ('3,10,41,77%8') with the same --constraint. Existing bad dirs move to attempts/...attempt1.\n- A retry that ends with a task still bad gives 'incomplete' and no second retry. A clean retry gives 'done'.\n- While the other block is pending, advance returns 'wait'.",
+     "Driver simulation, continued:\n- If the deadline passes while a block is pending, or while its retry is running, the driver calls scancel, sets the stage to 'cancelled', marks the block 'incomplete' and finishes, classifying the result as 'partially measured'.\n- Once both blocks are terminal it computes the results, runs the classification and finish(), and later ticks submit nothing.\n- record_block does not repeat its work across ticks.\n- 'cancelled' is handled in stage_status, the live check and describe.\n- After driver_state.json is deleted, the block:rtx8000, block:a40 and block:rtx8000.retry1 stages are rebuilt from the ledger, nothing is resubmitted, and the retry then resolves to 'done'.\n- No path found resubmits a block twice. The deadline bounds every wait, including sacct returning nothing ('unknown' is treated as active until the deadline cancel).",
+     "Mount and I/O paths match v8's working setup. _common.sh differs from v8 only in comments. The lehome logs bind target exists. Both checkpoints are read through the read-only /nfs bind, as the baseline was in v5-v8. Outputs go only under the campaign directory, which is bound read-write.",
+     "tests/test_v9.py: 13 passed (run with -p no:cacheprovider and PYTHONDONTWRITEBYTECODE=1). git status for the campaign is unchanged (only the untracked manifest.json, as before). Scratch files are in /scratch/sanchej7/tmp/claude-19646/-nfs-hpc-share-sanchej7-Humanoid-Lite-lehome-fold-repro/fa9f63ad-7d78-4dcc-a0e7-51bbb05ecedd/scratchpad/review-v9/execution/ (gpu_scan.py, sim_driver.py, sim2.py, sim3.py, dry_*.json)."
+    ]
+   },
+   "verify": {
+    "verdicts": [
+     {
+      "id": "EXEC-1",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. driver.py:413-420 runs advance() with no try/finally, so any sbatch RuntimeError (102-108) skips update_status/schedule_ticks/save. submit() saves after each successful submission (261-262). I reproduced this in scratch sim.py case B: a mocked sbatch that rejects --constraint=a40 leaves stages {block:rtx8000: submitted} and ticks {}. A second tick raises again and ticks stay {}. The real binary gives the same split: `sbatch --test-only --constraint=a40 --array=0-95%8 slurm/matched.sbatch ...` returns 'allocation failure: Requested node configuration is not available' (exit 1). --constraint=rtx8000 is accepted (cn-gpu6, est. 2026-10-01T05:54), and tick.sbatch is accepted. Two corrections. (a) The 'watchdog fails -> no tick remains' clause is overstated. While any block is active, schedule_ticks (437-446) keeps a chain tick pending with afterany deps, and that chain survives a failed watchdog. A stall needs two consecutive failing ticks (the chain, then the watchdog) or a persistent exception. (b) The claim that 'a real submission is accepted' rests on partition `ampere` only: gagliarc's 21454050/1 and sanchej7's 21461306, both PENDING ReqNodeNotAvail. v9 submits `--partition=gpu,ampere`, and sacct shows no post-drain gpu,ampere + a40-only job. Acceptance is therefore inferred, not verified. If multi-partition rejection applies, every manual first tick raises and no ticks are scheduled until the A40 nodes return. The operator would see the error but could not start the rtx8000 chain. That makes the fix worth doing before launch. It stays minor because no data is lost and recovery on the next successful tick is correct (no double move to attempts/).",
+      "fix_after": "In Driver.tick(), wrap self.advance() in try/finally. The finally runs update_status(*self.describe()) BEFORE schedule_ticks() and then save(), because describe() refills self.waiting for stages advance() never reached. Re-raise afterwards so the tick log keeps the traceback. In block_stage, catch RuntimeError from self.submit per block, record an event, and leave the stage absent so the next tick retries that block alone and the other block's chain still gets scheduled. In README/STATUS, state that `sbatch --test-only` is not a valid launch check for the a40 block while cn-r-*/cn-s-*/cn-t-1 are drained."
+     },
+     {
+      "id": "EXEC-2",
+      "refuted": true,
+      "severity_after": "none",
+      "reason": "The core risk, that NVML might name the cards differently from GPU_NAMES, is disproven on these exact nodes. /nfs/hpc/share/sanchej7/Humanoid_Lite/logs holds 340 single-GPU sibling-job logs with `nvidia-smi --query-gpu=name,...` output (from bhl-robustness-ladder/slurm/57_rtx_probe.sbatch:30, 02_smoke_train.sbatch:24 and others). 171 lines read exactly 'Quadro RTX 8000' and 169 read exactly 'NVIDIA A40'. Examples: build60-21017802.out:'NVIDIA A40, 595.71.05' (job on cn-r-5, partition ampere) and bhl-build-20928152.out:'Quadro RTX 8000, 595.71.05, 46080 MiB' (job on cn-gpu5, partition gpu). Every file lists exactly one GPU, so devices are cgroup-constrained and run_matched_task.py:248 `set(names) != {expected_gpu}` evaluates False on a correct allocation. apptainer --nv binds the host nvidia-smi/NVML, so the in-container names are the same. The None branch (nvidia-smi absent or failing) is a deliberate skip, recorded as request.json gpu.nvidia_smi=null and backstopped by the post-run Isaac-table check at 267-269, which parses 256/256 v5-v8 logs. The [] branch fails closed, which is conservative. The only residual is that no test covers allocated_gpu_names (grep of tests/test_v9.py finds none), which is not a defect.",
+      "fix_after": "No action needed. Optionally add a unit test that mocks subprocess.run for the four branches (None, [], match, mismatch). No pre-launch srun probe is needed, because the strings are already verified from the 340 logs."
+     },
+     {
+      "id": "EXEC-3",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. Each checkpoint in manifest.json pins 8 files. Baseline: config, finetune.json, model.safetensors, policy_postprocessor.json, policy_postprocessor_step_0_unnormalizer_processor.safetensors, policy_preprocessor.json, the step_5 normalizer, train_config.json. Candidate: checkpoint.json in place of finetune.json. run_matched_task.py:49-55 hashes only 4 of them. Line 168 iterates ckpt, not pinned, so it can never flag a pinned-but-unhashed file, and the comment at 163-165 is false. The reviewer's unchecked list also omits train_config.json. The runner consumes the postprocessor at policy_rollout51.py:685 (make_pre_post_processors), so the unnormalizer is load-bearing. Two corrections. First, run_matched_task.py's own digest IS written to request.json (line 222, task_script_sha256): it is recorded but not checked against the manifest. analysis.py (imported at line 35; its gpu_model gates validity at 267), endpoints.py and _common.sh (sourced at runtime) are neither recorded nor checked. Second, the gap is temporal, not a coverage gap in the preflight. verify_sources.py:58-64 checks all 8 pinned files, but driver.py:339-340 caches the preflight after the first tick. The a40 array is submitted in that same tick but can start days later (A40 nodes drained, all-GPU MAINT reservation root_204 on 2026-10-01). Only the runner hash is re-checked per task (181-185), and a retry re-reads matched.sbatch from disk at retry time. It stays minor: the checkpoints live in directories nobody writes to, and nothing indicates drift, but the frozen-and-verified claim does not hold per task.",
+      "fix_after": "In run_matched_task.py, hash every file in block['sha256'] (iterate pinned.items() and fail on any absent or mismatched file). At task start, verify the manifest digests of every executed source the task imports or sources: run_matched_task.py, analysis.py, endpoints.py, slurm/_common.sh, and the pilot src modules the runner imports. A per-task `verify_sources.py --skip-checkpoint` call costs seconds. Write these digests into request.json. In the driver, also re-run `verify_sources.py --skip-checkpoint` before every retry submission, not only at the first tick."
+     },
+     {
+      "id": "EXEC-4",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed by inspection of driver.py:494-496 and by scratch sim.py case C, with a40 done and rtx8000 pending. describe() returns 'Current result' = 'rtx8000: queued or running; a40 (done): H10 8/24 vs 8/24 (p=0.620), H50 9/24 vs 9/24' next to 'Limitation / blocker' = 'A40 nodes drained for maintenance at launch; the a40 block waits in queue'. The blocker string is constant whenever the campaign is not done and no stop_reason is set, so it is also wrong once the A40 nodes return and the a40 block is running.",
+      "fix_after": "Build the blocker line from state. For each block whose stage (main or retry) is still 'submitted', report its live Slurm state and pending reason (e.g. squeue %R: 'a40 block pending: ReqNodeNotAvail'). Report 'none' when no block is waiting. Keep stop_reason first."
+     }
+    ],
+    "missed": [
+     "MINOR, dry-run mutates the evaluation tree, contradicting README.md:96 ('--dry-run  # the plan, writes nothing'). driver.py:323-329 runs shutil.move of every bad task directory into attempts/<...>.attempt1 without checking self.dry. main() at driver.py:556-558 runs dry ticks without taking the Lock, so a dry run can race a real tick: both call shutil.move on the same dir, one hits FileNotFoundError, and the EXEC-1 abort follows. Evidence: scratch sim.py case A (review-v9/execution-verify/sim.py). With the rtx8000 array COMPLETED and one task infrastructure_error, Driver(root, dry=True).tick() moved evaluation/an1-step000300-rtx8000/remeasure/dev02_h10_s97002/{status.json,rollout.json} to attempts/evaluation/an1-step000300-rtx8000/remeasure/dev02_h10_s97002.attempt1/. The only dry-run test (tests/test_v9.py:240) checks a fresh state, not a finished array. No data is lost, and the next real tick still submits the retry, because the missing dir still counts as bad. Fix: guard the move with `if not self.dry` and print the planned moves instead; make dry runs take or respect the Lock (refuse if a real tick holds it); add a test with a finished array and one bad task asserting that nothing under evaluation/ or attempts/ changes.",
+     "MINOR risk, the per-user GPU cap is shared with the user's other pending work, so the 'four of each per concurrent batch' claim (run_matched_task.py:16-17, matched.sbatch:1-5) will not hold. Evidence: `sacctmgr show qos` gives gpu/eecs MaxTRESPU gres/gpu=8. `squeue -u sanchej7` shows 9 pending prune-* entries on gpu,ampere or ampere that compete for the same 8 GPUs as both v9 arrays (each throttled %8). Examples: 21442470_[52-53,66-73] gpu,ampere 1:00:00 PENDING (Priority); 21442471_[0-4%1] gpu,ampere 1:20:00; 21442472/4 ampere 8:00:00. Array tasks start in index order, so baseline(2k) and candidate(2k+1) stay adjacent in time. The competing volume (roughly 10-20 GPU-h) is small against the 2026-10-06 block deadline. Fix: reword the docstring and comment to 'pairs start adjacently'. Record in STATUS.md that other jobs share the 8-GPU cap, or hold them while a v9 block runs."
+    ]
+   }
+  },
+  {
+   "lens": "provenance",
+   "review": {
+    "findings": [
+     {
+      "id": "PROV-1",
+      "title": "The frozen EBL detector's description contradicts its own frozen calibration and the v8 diagnosis rows",
+      "severity": "major",
+      "where": "scripts/analysis.py:23-26 (EBL definition, early_bimanual_lift at :100-119); scripts/build_manifest.py:265 (copies the docstring into manifest detectors.ebl); tests/test_v9.py:135-139",
+      "evidence": "The manifest labels EBL \"the baseline's early-H50 plan\". Its calibration (build_manifest.calibration(), reproduced bit for bit) fires for the baseline on dev00/01/03/04/05 (8 each) and for an1 on dev00/01/03/04/05/06/07 (2 each). The v8 diagnosis (diagnosis.json analyses[0].verdicts[1].problems and the synthesis) says an1 \"waist-grasps on exactly the baseline's rows (dev00/01/04/05, 2/2 each)\", with waist meaning both link y > -0.03. Per-episode recompute (scratch detector_detail.py and ebl_waist.py): an1 fires EBL at dev06 (action 76, links y -0.058/-0.109) and dev07 (action 89, y -0.033/-0.121), where the baseline is 0/8 on both rows. Both policies fire at dev03 (action 84, y about -0.05/-0.09), which is not a waist grasp. Adding the diagnosis's constraint (both link y > -0.03 at the later close) reproduces exactly dev00/01/04/05 for the baseline (8 each) and an1 (2 each), plus pb1 dev05 (2). test_v9.py:139 checks an1's EBL rows with `>=`, which is what lets the dev06/dev07 divergence pass.",
+      "failure_scenario": "After launch no rule change is allowed, so this definition is fixed for the whole campaign. The report reads an EBL hit as 'an1 restores the baseline's early plan'. an1 would then be credited with the baseline's plan on dev06/dev07, where the baseline never does it, and on dev03, where the event is not a waist grasp. The result is a wrong mechanistic claim in a preregistered secondary reading. v5 once produced a wrong mechanism claim in a similar way.",
+      "fix": "Choose one of two fixes before the rebuild. (a) Add the diagnosis's waist constraint to early_bimanual_lift (both link_origin y > -0.03 at the later close), which reproduces the diagnosis rows exactly. (b) Rename it a generic 'early bimanual table-level lift' and state in the manifest that on the history it also fires on dev03 (both policies) and on dev06/dev07 (an1 only, baseline 0/16). Either way, make test_v9.py:136-139 check equality against the chosen calibration instead of `>=`, so the frozen text and the frozen calibration agree."
+     },
+     {
+      "id": "PROV-2",
+      "title": "Unconfirmed risk: an a40 sbatch rejection would crash the tick after the rtx8000 block is submitted, leaving that block with no chain tick or watchdog",
+      "severity": "major",
+      "where": "scripts/driver.py:102-108 (sbatch raises), 255-262 (rtx8000 submitted and saved first), 390-400 (advance loops blocks in manifest order rtx8000, a40), 413-420 (tick: schedule_ticks after advance)",
+      "evidence": "`/apps/slurm/current/bin/sbatch --test-only --constraint=a40 --array=0-95%8 slurm/matched.sbatch ...` returned 'allocation failure: Requested node configuration is not available'. The same test with --constraint=rtx8000 returned 'Job ... to start at 2026-10-01T05:54:22 ... on nodes cn-gpu6 in partition gpu'. The A40 node configuration fits the request (cn-r-*/cn-s-*: 48-64 CPUs, 252000 MB, gpu:2, feature a40, partition ampere), so the failure is probably the drain state. I cannot confirm without a real submission (not allowed here) whether a real sbatch would pend or reject. This is outside the provenance lens, but no other lens has this evidence.",
+      "failure_scenario": "If the real sbatch rejects the a40 array, sbatch() raises RuntimeError inside block_stage('a40'). By then the rtx8000 array is already submitted, recorded in the ledger and saved (submit -> save at :262). The exception escapes advance() and tick(), so schedule_ticks() never runs and neither a chain tick nor a watchdog exists. The rtx8000 block then runs orphaned: no retry, no record_block, no STATUS update until someone runs a tick by hand, and every manual tick hits the same exception.",
+      "fix": "In block_stage/submit, catch the sbatch failure. Record the stage as 'submit_failed' with the stderr and a timestamp, without adding a job id, and return 'wait' so tick() still schedules the chain tick and watchdog. The next tick then retries the submission until block_deadline_utc. The infra lens should confirm with a real submission once the A40 nodes undrain, or check it with a held job (--hold) that is cancelled immediately, if the user authorizes that."
+     },
+     {
+      "id": "PROV-3",
+      "title": "Episodes do not record which manifest they ran under, and preflight does not require a committed manifest",
+      "severity": "minor",
+      "where": "scripts/run_matched_task.py:213-228 (request.json); scripts/driver.py:193-198 (ledger record), 338-354 (preflight); scripts/verify_sources.py (no manifest check)",
+      "evidence": "request.json stores campaign_commit = manifest['git']['commit']. That is the commit the sources were hashed from, not the manifest's own hash. The ledger stores the same manifest_commit. manifest.json is currently untracked (git status: '?? campaigns/20260928-fresh-seed-remeasure-v9/manifest.json'). Neither verify_sources.py nor driver.preflight checks that manifest.json is committed and clean.",
+      "failure_scenario": "The a40 block may start days after the rtx8000 block (A40 nodes drained, all-GPU maintenance on 2026-10-01). If the manifest is rebuilt or edited in between, for example the detector fix in PROV-1, episodes from the two blocks cannot be tied to the preregistration they ran under. Both blocks' request.json files would show the same campaign_commit.",
+      "fix": "Record sha256(manifest.json) in request.json (for example request['manifest_sha256']) and in every ledger entry. In preflight, refuse to launch unless `git ls-files --error-unmatch manifest.json` succeeds and `git diff --quiet HEAD -- manifest.json` is clean. In block_results, check that every episode carries the same manifest hash."
+     },
+     {
+      "id": "PROV-4",
+      "title": "The task-time checkpoint check hashes only 4 of the 8 pinned files, although the code comment says it checks every pinned file",
+      "severity": "minor",
+      "where": "scripts/run_matched_task.py:49-55 (checkpoint_record), 163-170 (the comment and the check), 219 (request.json checkpoint hashes); scripts/driver.py:338-340 (preflight cached once)",
+      "evidence": "checkpoint_record hashes only config.json, model.safetensors, policy_preprocessor.json and the step_5 normalizer. The manifest pins 8 files per policy. policy_postprocessor.json and policy_postprocessor_step_0_unnormalizer_processor.safetensors are loaded by the runner (policy_rollout51.py:685, make_pre_post_processors(pretrained_path=...)) but are never hashed at task time. The comment at :163-165 says 'every file the manifest pinned is checked, not only the weights', which is not true. The full 8-file check runs only in verify_sources at the first preflight, and driver.py:339-340 caches that result for the whole campaign, including retries and a block that may start days later. request.json:219 records only the 4 hashes, so no episode record shows which postprocessor bytes ran. This was inherited from v8. It is minor because both checkpoints currently share byte-identical postprocessor files (293bd851.../3cdd19eb...).",
+      "failure_scenario": "If a postprocessor or unnormalizer file changes after preflight, a retry or the late a40 block runs with a changed action de-normalization. The task still passes its check, and the episode's own record cannot show it.",
+      "fix": "Make checkpoint_record hash every name in block['sha256']. Refuse on any drift, any missing file, and any unpinned extra file in the checkpoint directory. Write all 8 hashes into request.json."
+     },
+     {
+      "id": "PROV-5",
+      "title": "The LeHome scorer and env code on the executed path are not hash-pinned or preflight-verified",
+      "severity": "minor",
+      "where": "slurm/_common.sh:39 (PYTHONPATH includes $pilot/external/lehome-challenge/source/lehome and $pilot/external/lehome-challenge); scripts/build_manifest.py:62-70 (executed_sources); scripts/render/policy_rollout51.py:344-348",
+      "evidence": "The runner imports lehome.tasks.bedroom.garment_bi_v2, garment_bi_cfg_v2, lehome.assets.object.Garment and lehome.utils.success_checker_chanllege. That last module is the challenge scorer behind every settled/terminal verdict. None of the 67 tracked .py files under campaigns/20260921-horizon-pilot/external/lehome-challenge appear among the 49 executed_sources, and verify_sources never reads them. They are currently committed and clean: `git status --porcelain --ignored` shows only the ignored Assets/ and logs/. So they are pinned only indirectly, through the commit recorded in git.commit. This was inherited from v2-v8.",
+      "failure_scenario": "If a scorer or env file in the pilot's LeHome checkout is edited between freeze and a late block, the change goes undetected. Settled counts would then be scored by different code from the other block, or from v8.",
+      "fix": "In executed_sources(), add the tracked .py files under campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome, or at least success_checker_chanllege.py, garment_bi_v2.py, garment_bi_cfg_v2.py and assets/object/Garment.py. verify_sources then covers them at preflight."
+     },
+     {
+      "id": "PROV-6",
+      "title": "The seed-freshness scan reads only manifests and plans, so the README's 'proves' is overstated (no v9 seed was actually used)",
+      "severity": "minor",
+      "where": "scripts/build_manifest.py:72-94 (used_seeds globs */manifest.json, */manifests/*.json, */plans/*.json); README.md:31",
+      "evidence": "The scan misses used seeds 101-104 in campaigns/20260921-horizon-pilot/analysis/fixed-rng-replanning/seed-panel.json. A broader independent scan found no collision with the v9 seeds 97000-97207: 1052 request.json/status.json files (including --seed values in the command lines), 1502 other JSON files under campaigns/ and results/, and a text grep over json/jsonl/md/py/sbatch/sh/csv/yaml/txt. The two textual hits were a byte count ('bytes': 97207) and an RNG digest prefix. The scan also skips seed-like keys whose values are not ints, such as a {'base': N} dict under a seed key.",
+      "failure_scenario": "A later campaign relies on the same scan. A seed used only in an analysis panel, a request.json or a derived-seed rule would be declared fresh.",
+      "fix": "Extend used_seeds() to walk every */evaluation/**/request.json, status.json, rollout.json and */analysis/**/*.json, and to parse --seed in command lists. Alternatively, change README:31 to say 'checked against every earlier manifest and plan' and record the broader scan's result in the manifest."
+     },
+     {
+      "id": "PROV-7",
+      "title": "Detector documentation miscounts the calibration set and mislabels the drag pose cluster",
+      "severity": "minor",
+      "where": "README.md:71; scripts/analysis.py:13-14 and :18",
+      "evidence": "README.md:71 and analysis.py:14 say the calibration covers '256 v5-v8 development episodes'. calibration() globs only dev0?_h50_* (build_manifest.py:118), so it covers 128 H50 episodes (baseline 64 + an1/a2/pb1/dq1 16 each). 256 is the count of all dev episodes. Drag is described as 'the baseline's P_A failure step', but for the baseline it fires on dev00, dev02 and dev04 (8/8 each). dev02 is P_C under pose_clusters, and the P_A row dev06 never triggers it for the baseline (0/8). 'Failure step' itself holds: baseline dev02 H50 settles 0/8. Firing actions match the v8 synthesis within about 1 action (dev00 134 vs 135, dev02 85 vs 86). The baseline dev04 event registers at 162 against the synthesis's 173.",
+      "failure_scenario": "The report states the detector was calibrated on 256 episodes, or attributes drag to P_A, while the frozen calibration shows 128 episodes and dev02 (P_C).",
+      "fix": "Change the text to '128 v5-v8 H50 development episodes'. Describe drag as firing on the baseline at dev00/dev02/dev04 (P_A and P_C), not as P_A-specific."
+     }
+    ],
+    "checked_ok": [
+     "All 49 executed_sources entries match the committed blob at 970cd33, HEAD (970cd33) and the working tree (0 mismatches). No v8 shared-path source is missing from v9. endpoints.py, verify_sources.py, reconcile_ledger.py, _common.sh and the render helpers are byte-identical to v8's pins.",
+     "Runner hash d9d644f7e0f7... equals v8's pinned runner and v7's; v5/v6 used a8274656. build_manifest.py refuses to build if the runner differs from v8's.",
+     "The executed path is covered for this repo's code. Coverage: run_matched_task.py imports analysis, which imports endpoints. driver.py imports run_matched_task and analysis and calls verify_sources. The runner imports rollout_audit_utils and asset_paths plus the pilot src modules (storm_obs, strict_observer, folding_geometry, behavior_telemetry, policy_media, switch_trace), all pinned. The runner's own sys.path insert resolves to a nonexistent v9/src, so the pilot src from PYTHONPATH wins. repo src is pinned but shadowed. lehome51-site holds no lehome_fold. The LeHome checkout is the exception (PROV-5).",
+     "Checkpoints: all 8 baseline files and all 8 candidate files hash equal to the manifest pins, with no unpinned extra files in either directory. The candidate pins equal v8's audit/candidate_checkpoint.json (path and all sha256). audit/v8_candidate_checkpoint.json is byte-identical to v8's record (record_sha256 81c946af... matches). The baseline block equals v8's baseline_checkpoint exactly. The 4 hashes in v8's evaluation request.json files match both pins.",
+     "verify_sources.py checks candidate_checkpoint. A scratch manifest with one wrong candidate hash made it exit 5 with 'candidate_checkpoint config.json changed'. The same manifest corrected exits 0. The real v9 manifest passes (49/49 sources, both checkpoints, pose metadata).",
+     "All 48 remeasure rows copy every field of their v8 source dev row except id and seed (0 differences). Each has 600 steps, the horizon matches its id, development_pose_slot matches the dev index, and seed = 97000 + 100*seed_block + pose. There are 24 distinct seeds, each shared by H10/H50 and by both policies.",
+     "pose_clusters equals v8's. Grouped by match_pose identity: P_A = dev00/04/06, P_B = dev01/03, P_C = dev02/05/07, as CLAUDE.md states, although pose_key differs across garments (for example dev02 is key 0 but P_C).",
+     "build_manifest.py refuses to overwrite an existing manifest.json. It refuses dirty executed sources through the porcelain check and, more robustly, through a committed-blob vs working-tree hash check per file.",
+     "Detector calibration reproduces bit for bit from build_manifest.calibration(). The drag rows (baseline dev00/02/04 at 8 each; an1 dev00/02/04/06 at 2 each; a2/pb1/dq1 none) and the right-only counts (a2+pb1+dq1 = 38/48, baseline 8/64, an1 0/16) match the v8 synthesis and CLAUDE.md.",
+     "No v9 seed (97000-97207) appears as a seed anywhere in campaigns/ or results/.",
+     "The manifest's predecessor text (H10 9/16 vs 2/16, p = 0.0117; H50 6/16 vs 8/16) matches the v8 diagnosis. gpu_model() parses all 64 v8 logs (51 A40, 13 RTX 8000).",
+     "tests/test_v9.py: 13/13 pass. Run with PYTHONDONTWRITEBYTECODE=1, -p no:cacheprovider and --basetemp in the scratchpad; `git status` of the campaign was unchanged before and after.",
+     "sbatch --test-only with --constraint=rtx8000 validates: it would start on cn-gpu6 in partition gpu. No job was submitted."
+    ]
+   },
+   "verify": {
+    "verdicts": [
+     {
+      "id": "PROV-1",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "The numbers reproduce exactly (scratch provenance-verify/ebl_check.py). calibration() equals the frozen manifest block: 128 episodes. an1 fires EBL at dev06 (action 76, left/right y -0.058/-0.109) and at dev07 (action 89, y -0.033/-0.121). The baseline is 0/8 on each of those rows. Adding the waist constraint (both y > -0.03) gives exactly dev00/01/04/05 for the baseline (8 each) and an1 (2 each), plus pb1 dev05 (2). The finding overstates two things, though. (1) v9's EBL was never v8's waist-grasp detector. v8's detector (diagnosis.json analyses 'how_computed') uses a -0.05 rad close threshold, an 8-step pair window and z < 0.625. EBL uses a 0.10 rad crossing, a 4-action window and z < 0.62. So EBL firing at dev03 is not a defect. (2) dev03 is the row that v8's own E2 reference pattern treats as the baseline's early plan: endpoints.pattern requires dev03 lift > 0.05 m by action 150. So the dev03 hits, for both policies, are consistent with 'the baseline's early-H50 plan'. The real defect is narrower: that label is false for an1's dev06/dev07 hits. It is minor, not major. EBL is reported, not gated. block_results prints ebl_by_pose per policy, so the baseline's zeros appear next to an1's counts, and nothing in the classification or the v5 rule reads EBL. test_v9.py:139 uses `>=`, and pb1's dev05 hits are not asserted at all (only a2 and dq1 are, at :138).",
+      "fix_after": "Use option (b) only. Reject option (a): the waist constraint would drop dev03 and make EBL contradict E2's dev03 reference pattern in the same manifest. Rename EBL in analysis.py:23-26 to something like 'early bimanual table-level lift (fires on the baseline's early-H50 plan rows dev00/01/03/04/05; on the v5-v8 history an1 also fires on dev06/dev07, where the baseline is 0/8)'. build_manifest.py:265 then copies the corrected text. Replace test_v9.py:136-139 with exact equality on every policy's ebl:* key set and counts. baseline: dev00/01/03/04/05 = 8 each. an1: dev00/01/03/04/05/06/07 = 2 each. pb1: {dev05: 2}. a2 and dq1: none."
+     },
+     {
+      "id": "PROV-2",
+      "refuted": true,
+      "severity_after": "none",
+      "reason": "The trigger evidence does not support a rejection. The ampere nodes (cn-r-[1-6], cn-s-[1-5]) were drained at 2026-09-28T11:41:06 (sinfo -R). After that, job 21461306 was submitted at 19:02:56 with Partition=ampere, Features=a40, Account=eecs, gres/gpu=1, 8 CPU, 48G and an array with a throttle. It was ACCEPTED and is PENDING with Reason=ReqNodeNotAvail,_May_be_reserved_for_other_job. Running `sbatch --test-only` on that job's exact parameters prints the same 'allocation failure: Requested node configuration is not available'. So --test-only is a will-run check over available nodes, not a submit-time rejection predictor. Submit limits are not binding either. QOS normal has MaxSubmitPU=1000 and MaxJobsPU=400, and the user has 32 job records queued, so 2x96 tasks fit. The ampere QOS is DenyOnLimit with MaxTRESPU gres/gpu=2, and a 1-GPU/8-CPU/64G task conforms. One residual is untested: there is no exact precedent for gpu,ampere + a40 under EnforcePartLimits=ALL. The mirror case (gpu,ampere + rtx8000, where ampere has no rtx8000 node) passes test-only, and 21442470 (gpu,ampere) was accepted. Even if sbatch did raise, the first tick is run by hand (README 'Running it'), so the operator sees the traceback at once. On later Slurm-run ticks, the watchdog is already pending (it is re-submitted only when not alive, driver.py:447-454), so it re-runs the tick after a transient failure. The code path (an uncaught RuntimeError at driver.py:106-107 escapes advance/tick before schedule_ticks) exists, but the stated scenario is not reachable on current evidence.",
+      "fix_after": "Not needed before launch. Optional hardening: in submit(), catch the RuntimeError from sbatch(), record the stage as {'status':'submit_failed','stderr':...,'utc':...} with no job id, log an event, and make block_stage return 'wait' so that tick() still reaches schedule_ticks(). On a later tick, treat 'submit_failed' as absent until block_deadline_utc."
+     },
+     {
+      "id": "PROV-3",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. run_matched_task.py:221 stores campaign_commit = manifest['git']['commit'], which is the commit the sources were hashed from. driver.py:196 stores the same value as manifest_commit. `git ls-files --error-unmatch campaigns/20260928-fresh-seed-remeasure-v9/manifest.json` fails: the manifest is untracked. Neither verify_sources.py nor driver.preflight checks the manifest itself. v8 had the identical gap: its request.json campaign_commit is d6f5e5d, while the manifest was committed later in 9adbd6c. So this is inherited, which is why it is minor. What makes it matter more in v9: run_matched_task.py:150 reads manifest.json LIVE at task execution, and Driver.__init__ reloads it on every tick. Both arrays are submitted in the first tick, but the a40 tasks may start days later (A40s drained, all-GPU maintenance on 2026-10-01). They would then run whatever rows, seeds and pins are on disk at that time. request.json does record the executed row and command, so the parameters are traceable, but no manifest hash is recorded or enforced.",
+      "fix_after": "At submit, compute sha256(manifest.json) and pass it to matched.sbatch as an extra positional argument (or --env). run_matched_task then refuses to start if the on-disk manifest's hash differs, and writes it into request.json as manifest_sha256. Record the same hash in every ledger entry (driver.record) and in state['preflight']. In preflight, refuse to launch unless `git ls-files --error-unmatch manifest.json` succeeds and `git diff --quiet HEAD -- manifest.json` is clean. block_results should check that every episode's request.json carries the same manifest_sha256."
+     },
+     {
+      "id": "PROV-4",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. checkpoint_record (run_matched_task.py:49-55) hashes 4 files. The manifest pins 8 per policy. The comment at :163-165 ('every file the manifest pinned is checked') is false. The 'unpinned' check at :168 cannot fire, because the 4 required names are always pinned. The runner loads the postprocessor through make_pre_post_processors(pretrained_path=args.policy_path) at policy_rollout51.py:685. The only in-runner hashing of policy_postprocessor*.json/.safetensors (policy_rollout51.py:1343-1350) sits inside the boundary_capture_enabled branch, which remeasure never takes. A v8 benchmark rollout.json carries only landmark_mapping/mesh_sha256, and v8 request.json checkpoint.sha256 has the same 4 keys. So no episode record shows which postprocessor bytes ran. The full 8-file check runs only in verify_sources, once, cached at driver.py:339-340. The postprocessor files are currently byte-identical across both checkpoints (293bd851..., 3cdd19eb...).",
+      "fix_after": "Hash every name in block['sha256'] in checkpoint_record. Refuse on any drifted or missing file. Write all 8 hashes into request.json['checkpoint']['sha256']. Also fix the comment. The task already hashes the 1.2-1.4 GB model.safetensors, so the four extra small files add almost nothing. Merge this with the task-time source verification in 'missed'."
+     },
+     {
+      "id": "PROV-5",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. `git ls-files` shows 67 tracked .py files under campaigns/20260921-horizon-pilot/external/lehome-challenge. They include success_checker_chanllege.py, garment_bi_v2.py, garment_bi_cfg_v2.py and assets/object/Garment.py. The runner imports all four (policy_rollout51.py:344-348) and wraps gbv.success_checker_garment_fold, the scorer behind every settled verdict. None of them appear among the manifest's 49 executed_sources, and manifest['lehome'] is only a path. `git status --porcelain --ignored` shows the tree clean apart from the ignored Assets/ and logs/, so today they are pinned only indirectly, through git.commit. Also unpinned and outside the repo: $workspace/lehome51-site, which comes first on PYTHONPATH (_common.sh:39) and supplies lerobot, including make_pre_post_processors. The container binds /nfs/hpc/share/sanchej7 read-only, so only an edit from the login node can cause drift. The gap is inherited from v2-v8.",
+      "fix_after": "In executed_sources(), add the tracked .py files under campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome, or at minimum the four imported modules and success_checker_chanllege.py. verify_sources then covers them. For lehome51-site, record a digest (for example a sorted sha256 over its lerobot/policies/**/*.py, or its dist-info RECORD) in the manifest, and re-check it in verify_sources."
+     },
+     {
+      "id": "PROV-6",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed by an independent scan (scratch provenance-verify/seed_scan.py). The scan read 4298 JSON files under campaigns/ (excluding v9) and results/: every seed-like int key plus '--seed N' in command lists. It found 182 distinct seeds and no collision with 97000-97207. The largest seed ever used is 96207. build_manifest.used_seeds() sees 176. It misses 6 used seeds, [2, 8, 101, 102, 103, 104]. Seeds 101-104 are in campaigns/20260921-horizon-pilot/analysis/fixed-rng-replanning/seed-panel.json. So README.md:31 ('proves no earlier campaign used any of them') and build_manifest.py:13 overstate the check, although the conclusion (fresh) holds.",
+      "fix_after": "Extend used_seeds() to walk */evaluation/**/{request,status,rollout}.json and */analysis/**/*.json, and to parse '--seed N' out of command lists. Or change README:31 and the docstring to 'checked against every earlier manifest and plan', and record the broader scan's result (files scanned, distinct seeds, max seed 96207, no collision) in manifest['seeds']."
+     },
+     {
+      "id": "PROV-7",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. The v5-v8 benchmark directories hold 256 development episodes (128 H10 + 128 H50). calibration() globs dev0?_h50_* and totals 128, which matches the frozen manifest. README.md:71 ('all 256 v5-v8 episodes') and analysis.py:14 are therefore wrong. The drag detector fires for the baseline at dev00 (P_A, action 134), dev02 (P_C, 85) and dev04 (P_A, 162), 8/8 each. The P_A row dev06 fires 0/8 for the baseline (an1 2/2 at 453). pose_clusters maps dev02 to P_C, so 'P_A failure step' is inaccurate. The mislabel is inherited from v8 REPORT section 3, which lists dev02 under 'P_A H50'. Something the finding did not name: the v9 drag definition is not v8's diagnosis detector. v8's detector requires >= 8 cm inboard drag and no left close within 8 steps. v9's requires the right link to cross x < 0 and has no no-left-close clause. That explains dev04 at 162 vs v8's 173.",
+      "fix_after": "Change README.md:71 and analysis.py:14 to '128 v5-v8 H50 development episodes'. Describe drag as 'adapted from the v8 diagnosis's one-arm drag, and firing on the baseline at dev00/dev02/dev04 (P_A and P_C)', not as 'the baseline's P_A failure step, as diagnosed in v8'. State in the manifest text that its first-event actions differ from v8's (dev04 162 vs 173) because the criterion differs."
+     }
+    ],
+    "missed": [
+     "Within the provenance lens: task-time verification is much narrower than the launch check, and v9's design builds in a gap of several days between them. driver.py:339-340 caches the single verify_sources preflight for the whole campaign, including retries. After that, run_matched_task.py:181 re-checks only the runner hash, and checkpoint_record only 4 of the 8 checkpoint files. Nothing re-checks, at task time, analysis.py (imported by the task at run_matched_task.py:35, its gpu_model/GPU_NAMES decide validity and wrong_gpu_model), endpoints.py, the pilot's src/lehome_fold modules that write the behaviour jsonl the drag/EBL detectors read (behavior_telemetry.py, strict_observer.py, folding_geometry.py), _common.sh, or matched.sbatch. request.json hashes only the runner and the task script (:220-222). Both arrays are submitted in the first tick, but the a40 tasks may start days later (A40 drain since 2026-09-28T11:41, all-GPU maintenance on 2026-10-01). A source edit in between would go undetected and would confound the same-seed cross-block GPU comparison. v8 never ran verify_sources at evaluation time (only in train.sbatch), but its arrays did not wait days. Fix, which also covers PROV-4: have matched.sbatch run `verify_sources.py --campaign $campaign` (49 small sources plus checkpoint pins; the task already hashes the 1.2-1.4 GB safetensors) before run_matched_task and fail the task as infrastructure_error on any problem. Or record sha256 of every executed_source in request.json and have block_results refuse on mixed digests.",
+     "Out of lens, for the infra reviewer: partition ampere carries QOS 'ampere' with MaxTRESPU cpu=64,gres/gpu=2,mem=250G (DenyOnLimit), per `scontrol show partition ampere` and `sacctmgr show qos ampere`. The a40 block therefore runs at most 2 tasks at a time, not 8. README.md:33-35 ('throttled at 8') and the run_matched_task.py/matched.sbatch comments ('every concurrent batch runs four of each') are inaccurate for that block, although index-order dispatch still pairs baseline and candidate. From v8 wall times (H10 236 s, H50 220 s mean) the block is about 6.1 GPU-h, about 3 h wall alone. But the user's own pending ampere jobs (prune-vision-pilot 21461306 with a40, prune-train-lighting 21442470 with gpu,ampere) share the same 2-GPU cap. That bears on the 2026-10-06 block deadline once the A40s return."
+    ]
+   }
+  },
+  {
+   "lens": "slurm-cluster",
+   "review": {
+    "findings": [
+     {
+      "id": "SC-1",
+      "title": "The block deadline is checked only when a tick runs; a block that finishes after the deadline is recorded as complete",
+      "severity": "major",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/scripts/driver.py:286-287, 307, 314-335 (block_stage), 265-276 (read_result); scripts/analysis.py (never mentions block_deadline_utc)",
+      "evidence": "past_deadline() is called only inside block_stage, at tick time. When a block has no live stage, it is marked 'done' as soon as every destination has status=completed and rollout.json. Neither read_result nor analysis.py compares the task's completed_utc (run_matched_task.py writes it around line 285) with protocol.block_deadline_utc. Ticks fire either when a waited array ends (the chain tick) or every 2 h (the watchdog). So an array that ends between the deadline and the next tick fires a chain tick that sees live=[] and bad=[] and returns 'done'. The matched arrays carry no Slurm --deadline, so Slurm does not enforce the deadline either. Tick latency makes this worse right now: `sbatch --test-only` of tick.sbatch in `share` estimates a start at 2026-09-30T11:50 PDT (18:50Z), about 33 h away. Historically the 66 v3-v8 ticks waited a median of about 1 s and at most 44 s. `--deadline=now+596648` and `--deadline=2026-10-05T17:00:00` both pass --test-only on the matched array (testonly_extra.txt).",
+      "failure_scenario": "The a40 block, delayed by drained nodes, starts late and its last task finishes at 2026-10-06T01:10Z. Its chain tick fires, or it fires late because `share` is starved. block_stage finds all 96 results and returns 'done', record_block stores complete=True, and the block enters the preregistered classification. The rule says that block is 'incomplete' and must be excluded, so the classification can move from 'partially measured' to 'replicates on both' or 'on one model'.",
+      "fix": "(a) Append a Slurm-native deadline to the per-block sbatch args at driver.py:307, e.g. `extra = [f\"--constraint={...}\", f\"--deadline={relative_begin(parse_utc(self.manifest['protocol']['block_deadline_utc']))}\"]`, so it covers both the block array and the retry. Slurm then never starts a task that cannot end by the deadline. (b) In read_result, or in analysis.block_results, treat a rollout whose status.completed_utc is later than block_deadline_utc as invalid. (c) Note for the write-up: tasks that Slurm removes with state DEADLINE (from deadline minus 45 min onward) make the array look 'failed' before past_deadline() is true. The retry would then be submitted, but because it also carries --deadline it cannot start, and the next tick reports 'incomplete'. That matches the rule."
+     },
+     {
+      "id": "SC-2",
+      "title": "Any sbatch failure inside an unattended tick crashes the driver before it reschedules the chain tick and the watchdog, so the campaign stalls silently",
+      "severity": "major",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/scripts/driver.py:102-108 (sbatch raises RuntimeError), 413-420 (tick: advance() then schedule_ticks(), no try/except), 323-333 (retry submitted from inside a tick)",
+      "evidence": "sbatch() raises RuntimeError on any non-zero exit. tick() calls self.advance() and only then self.update_status/self.schedule_ticks/self.save, with no exception handling. If the running tick is the watchdog or the chain tick, the exception means no successor chain or watchdog is ever submitted. The Lock is released, but nothing calls the driver again. The campaign runs unattended for up to 7 days through conditions that make a transient submission failure plausible. The controller was upgraded today: /apps/slurm/current moved to 25.11 at 09:23 PDT, and `scontrol show config` reports SLURM_VERSION=25.11.8 while the PATH clients are 25.05.9. The all-GPU maintenance reservation root_204 runs 2026-10-01 08:00-16:00 PDT (15:00-23:00Z). The a40 submission is also unproven (SC-3). The same pattern exists in v7 and v8, but those runs lasted hours, not days. Caveat: the first tick is run interactively, so a failure at launch would be seen.",
+      "failure_scenario": "The rtx8000 array ends and its chain tick tries to submit block:rtx8000.retry1 for two tasks that left no rollout. slurmctld briefly returns 'Socket timed out' or 'Slurm temporarily unable to accept job' during the maintenance, sbatch exits 1 and the tick dies. No chain tick or watchdog exists, so the a40 block's completion, the deadline cancellation and the final classification never happen until a person notices.",
+      "fix": "Wrap the advance step, e.g. `try: self.advance()` then `except Exception as exc: self.event(f\"tick error: {exc!r}\")`, then always run update_status/schedule_ticks/save. Inside schedule_ticks, retry each sbatch once after a short sleep. If the chain submit still fails, still try to submit the watchdog so a successor tick always exists."
+     },
+     {
+      "id": "SC-3",
+      "title": "The a40 block cannot be validated with --test-only while the A40 nodes are drained, and the gpu,ampere multi-partition form of a real submission is untested",
+      "severity": "minor",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/scripts/driver.py:307 (only --constraint is added); slurm/matched.sbatch:12-13 (#SBATCH --partition=gpu,ampere, --constraint=a40|rtx8000)",
+      "evidence": "The exact driver argv with --test-only gives rtx8000 'to start at 2026-10-01T05:54:22 [PDT = 12:54Z] ... cn-gpu6 in partition gpu' (exit 0). For a40 it gives 'allocation failure: Requested node configuration is not available' (exit 1). The same happens with --partition=ampere alone. All 11 ampere A40 nodes are DRAIN with 'maint [root@2026-09-28T11:41:06]'. A real submission probably succeeds: the user's job 21461306 (partition=ampere, Features=a40) was submitted at 19:02:56 PDT, after the drain, and pends with ReqNodeNotAvail. In 25.11.8 job_mgr.c, the submit path keeps ESLURM_NODE_NOT_AVAIL as a non-fatal rc_best across partitions. So the rejection above is will_run behaviour. Still, only the ampere-only form is proven, and `gpu` contains no a40 node at all (sinfo), so listing it adds nothing but risk. Real acceptance was not verified, because nothing was submitted.",
+      "failure_scenario": "If the gpu,ampere + a40 submission is rejected, the first tick has already submitted block:rtx8000 and then raises (see SC-2). The rtx8000 block runs while the A40 block is never queued, and no tick is scheduled.",
+      "fix": "Pass the partition per block on the driver command line: add a 'partition' key to manifest.blocks ({rtx8000: gpu}, {a40: ampere}) and append `--partition=<p>` next to --constraint at driver.py:307. The a40 submission then has the same shape as the accepted job 21461306, and each block's pool is explicit in the ledger."
+     },
+     {
+      "id": "SC-4",
+      "title": "Tick jobs in the `share` partition are starved by the maintenance drain; the `eecs` partition would start them immediately",
+      "severity": "minor",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/slurm/tick.sbatch:6 (#SBATCH --partition=share)",
+      "evidence": "`sbatch --test-only` gives these estimated starts for tick.sbatch: share 2026-09-30T11:50 PDT on cn-a25; share,preempt 11:53 on 09-30; preempt 00:10 on 09-30; eecs 2026-09-28T19:15:52, i.e. now, on cn-gpu3. Most `share` nodes are drained or draining for 'maint', including cn-b01 and cn-b04, where every v8 tick ran. The eecs partition allows accounts eecs and coeit, has QoS=eecs (per user cpu=40, mem=250G), PreemptMode=OFF and PriorityTier=3. The eecs probe reported 'Preempts: 21461153', a job in the `preempt` partition (tier 1, PreemptMode=REQUEUE), which is requeued by that partition's design. The tick itself cannot be preempted in eecs. The ?-afterany chain form and --begin=now+7200 were also accepted in share.",
+      "failure_scenario": "The rtx8000 array ends, but its chain tick and the 2-hour watchdog pend for more than a day, which delays result recording and the one allowed retry. Near the deadline, a delayed tick is what turns SC-1 into a misclassification. It can also push the retry past past_deadline(), so a block that could have been completed is reported as incomplete.",
+      "fix": "Set `#SBATCH --partition=share,eecs` in tick.sbatch (1 CPU, 2G, 20 min fits both QoS). Slurm picks whichever can start first. Refreeze the manifest afterwards."
+     },
+     {
+      "id": "SC-5",
+      "title": "Throughput of the a40 block: a per-user cap of 2 GPUs on ampere, contended by the user's own older A40 jobs, on nodes whose return date is unknown",
+      "severity": "minor",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/manifest.json protocol.block_deadline_utc (2026-10-06T00:00:00Z); cluster QoS `ampere`",
+      "evidence": "sacctmgr QoS limits: ampere has MaxTRESPU cpu=64, gres/gpu=2, mem=250G and GrpTRES gres/gpu=14. gpu has MaxTRESPU cpu=40, gres/gpu=8, mem=750G, so 5 tasks of 8 CPUs, and GrpTRES gres/gpu=20. v8 observed at most 2 concurrent tasks on ampere and 1 on gpu, with means of 214 s (A40, n=51) and 294 s (RTX 8000, n=13). The a40 block therefore needs 5.7 GPU-h, at least 2.9 h of wall time at 2 concurrent. The rtx8000 block needs 7.8 GPU-h, at least 1.6 h at 5 concurrent. The user's own pending jobs compete for the same per-user slots. There are 14 ampere+a40 tasks: 2 x 8 h prune-finetune-da2 (21442472/4) and 12 x 25 min prune-vision-pilot, chained with %1. There are also 17 gpu,ampere tasks: prune-train-lighting and prune-finetune-eval, 1-1.3 h each. All were submitted 09-27/28, so they rank ahead of v9 on age. Once running, the two da2 jobs alone would hold both ampere slots for 8 h. Other ampere users rank higher (steeleha 10.16M, zhouling 10.15M, omorim 10.14M, gagliarc 9.67M, fuadk 9.29M vs sanchej7 8.59M). Under GrpTRES 14 at 2 GPUs per user, sanchej7 still fits. There is no a40 start estimate. No rtx8000 task is estimated before 2026-10-01 12:54Z, 2 h before root_204 (15:00-23:00Z). After that maintenance about 97 h remain before the deadline. The deadline is sensible, and the rule ('incomplete', excluded, 'partially measured') bounds the starvation, so no block can be starved indefinitely. But if the 11 drained A40 nodes are not back by about 2026-10-04, the approved A40 block is the one that ends up 'partially measured'.",
+      "failure_scenario": "The A40 nodes return late on 10-03. The two 8-h da2 jobs and the vision-pilot chain take the user's two ampere slots first, and the a40 block reaches the deadline with part of its 96 tasks unrun. The campaign then reports 'partially measured' for reasons unrelated to the policies.",
+      "fix": "This is the user's decision, not a code change. Before launch, tell the user that their own queued A40 jobs share the 2-GPU ampere cap with the a40 block. Options: hold them (`scontrol hold 21442472,21442474,21461306,...`) or raise their nice value while the a40 block runs, or accept the delay. Record the choice in STATUS.md. Keep the deadline as is."
+     },
+     {
+      "id": "SC-6",
+      "title": "The docs overstate concurrency and understate the RTX 8000 cost",
+      "severity": "minor",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/README.md:34; slurm/matched.sbatch:4-5; scripts/build_manifest.py:223, 274 (manifest protocol.design, budget.expected); STATUS.md:34; /nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/CLAUDE.md:335",
+      "evidence": "matched.sbatch:4-5 says the array is 'throttled at %8, every concurrent batch runs four of each'. The real per-user caps are 5 on gpu (cpu=40 / 8 CPUs) and 2 on ampere (gres/gpu=2), and v8 measured 1 and 2. The manifest's '~6 GPU-h each' and STATUS's 'about 12 GPU-h' compare with the v8-timed estimate of 5.7 (a40) + 7.8 (rtx8000) = 13.5 GPU-h, well within the 40 GPU-h cap. CLAUDE.md's '8 GPUs per user (QOSMaxGRESPerUser)' holds for QoS gpu and eecs only. For ampere it is 2.",
+      "failure_scenario": "Readers plan wall-clock time (for example 'a 16-row evaluation is ~3 waves') and judge the deadline from 8-wide concurrency that neither partition allows.",
+      "fix": "State the actual caps: gpu at most 5 concurrent (40-CPU/user), ampere at most 2 (2-GPU/user). The ordering even=baseline, odd=candidate still interleaves the two policies. Use ~7.8 GPU-h for rtx8000 and ~5.7 for a40. Qualify CLAUDE.md's 8-GPU note as QoS-specific."
+     },
+     {
+      "id": "SC-7",
+      "title": "sbatch() silently falls back to the site wrapper, which word-splits and globs its arguments",
+      "severity": "minor",
+      "where": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/scripts/driver.py:103",
+      "evidence": "`binary = REAL_SBATCH if Path(REAL_SBATCH).exists() else \"sbatch\"`. On PATH, `sbatch` resolves first to /apps/slurm/bin/sbatch, which is `/apps/slurm/current/bin/sbatch --mail-user=$USER $@` with $@ unquoted. The chain argument `--dependency=afterany:A?afterany:B` contains a glob character. /apps/slurm/current was repointed today (09:23 PDT), so a transient missing path during the upgrade is not hypothetical. Today the real binary exists and is 25.11.8, matching the controller.",
+      "failure_scenario": "During a symlink swap the tick uses the wrapper. The '?' dependency is glob-expanded if a matching file exists in the cwd (unlikely but unguarded), and --mail-user is doubled. The failure is not recorded anywhere.",
+      "fix": "Fail closed: if REAL_SBATCH does not exist, raise, or better, log and let the SC-2 handler reschedule. Do not fall back to PATH `sbatch`."
+     }
+    ],
+    "checked_ok": [
+     "Driver dry-run (`driver.py --campaign ... tick --dry-run`) exits cleanly, prints both block argvs (--constraint=rtx8000 / a40, --array=0-95%8, matched.sbatch <root> remeasure <block> <block>), and writes nothing: no ledger/ or logs/ entries appear and git status is unchanged.",
+     "rtx8000 block, exact driver argv with --test-only: accepted (exit 0). Estimated start 2026-10-01T05:54:22 PDT (12:54Z) on cn-gpu6 in partition gpu. Accepted the same way with --partition=gpu alone and without the array.",
+     "The command-line --constraint overrides the '#SBATCH --constraint=a40|rtx8000' directive. Directive only: starts on cn-gpu6. Command-line a40: rejected, because every A40 is drained. Command-line rtx8000: partition gpu. So the directive is replaced, not ANDed.",
+     "tick.sbatch is accepted in share (1 CPU, 2G, 20 min). The chain form `--dependency=afterany:X?afterany:Y` is accepted, as are the watchdog form `--begin=now+7200` and dependency plus --begin combined (testonly_forms.txt).",
+     "The driver submits through /apps/slurm/current/bin/sbatch (25.11.8, same as SLURM_VERSION 25.11.8 from scontrol show config), adds --mail-user itself and strips SLURM_*/SBATCH_* from the environment. The site wrapper /apps/slurm/bin/sbatch is not used while the real binary exists. The PATH clients sacct/scancel/squeue (25.05.9) worked against the 25.11.8 controller in this session.",
+     "Constraint to GPU model is consistent across 256 v5-v8 episodes. cn-gpu5/6/7 (feature rtx8000) always report 'Quadro RTX 8000' and cn-r-*/cn-s-* (feature a40) always report 'NVIDIA A40', matching manifest.gpu_models and the task's nvidia-smi and device-table checks. The rtx8000 feature exists only in partition gpu (plus gpu-dmv/preempt) and a40 only in ampere among gpu,ampere, so neither block can land on the other model.",
+     "Resource shape is within limits. --time=00:45:00 against v8's slowest matched task (322 s) and rollout_timeout 1500 s. --mem=64G x 2 fits ampere's per-user 250G; 64G x 5 fits gpu's 750G. --cpus-per-task=8 is within the per-job MaxTRES cpu=48. MaxArraySize 1001 is well above 96.",
+     "Job-count headroom: the user has 32 jobs queued or running. Adding 2 x 96 array tasks and 2 ticks gives 226, well under normal QoS MaxJobsPU 400 and MaxSubmitPU 1000.",
+     "Maintenance reservations (local PDT): root_202 2026-09-29 08:00-16:00 (cn-gpu6, cn-r-3/4, cn-e*, ...), root_203 2026-09-30 08:00-16:00 (cn-a*, cn-b*), root_204 2026-10-01 08:00-16:00 (all GPU nodes: cn-gpu5-7, cn-r-1..6, cn-s-1..5, cn-t-1). A 45-minute task that would overlap a MAINT reservation is simply not started, so no task is killed by maintenance. The deadline 2026-10-06T00:00Z = 2026-10-05 17:00 PDT leaves about 97 h after root_204 ends at 23:00Z.",
+     "STATUS.md's cluster description matches the live state: every public A40 (cn-r-*, cn-s-*, cn-t-1) is drained with reason maint since 2026-09-28T11:41; sail-gpu0 is the only A40 up and is reachable only via sail/preempt; cn-gpu6/7 are fully allocated (8/8 GPUs); cn-gpu5 is drained.",
+     "The Slurm 25.11.8 source (/apps/slurm/src/slurm-25.11.8/src/slurmctld/job_scheduler.c) shows that a multi-partition job hitting ESLURM_REQUESTED_NODE_CONFIG_UNAVAILABLE in one partition is only logged ('non-runnable in partition'). It is not held as BadConstraints with priority 0, so a queued gpu,ampere+a40 array would not be held because `gpu` lacks a40 nodes.",
+     "GPU-hour budget accounting (driver.gpu_hours) parses the AllocTRES format seen in sacct ('billing=24,cpu=8,gres/gpu=1,mem=64G,node=1'). The 40 GPU-h and 400-task caps cover 2 blocks x 96 plus one retry (about 13.5 GPU-h expected from v8 timings)."
+    ]
+   },
+   "verify": {
+    "verdicts": [
+     {
+      "id": "SC-1",
+      "refuted": false,
+      "severity_after": "major",
+      "reason": "Confirmed in the code. past_deadline() is called only inside block_stage (driver.py:316, 323). When a block has no live stage and every destination has status=completed and rollout.json (driver.py:320-322), the block is marked 'done'. Nothing compares status.completed_utc (run_matched_task.py:250, 285) with protocol.block_deadline_utc: a grep for 'deadline' finds no hit in analysis.py or read_result. The block arrays carry only --constraint (driver.py:307). An array that ends after 2026-10-06T00:00Z, and before the next watchdog tick (every 2 h, plus queue latency), therefore fires a chain tick that returns 'done' with complete=True. The manifest's deadline_rule says that block is 'incomplete' and excluded, so the classification can move away from 'partially measured'. This is a misapplication of a preregistered rule, which puts it at major. It is bounded (at most about 2 h plus tick latency) and outcome-blind (driven by timestamps, never by results), so it is not a blocker. The proposed fix (a) is harmful as written. `sbatch --test-only --deadline=now+1800` on the 45-min matched job returns 'Requested time limit is invalid' (exit 1). job_mgr.c:6950-6955 (25.11.8, the running controller version) rejects at submit any job whose earliest_start + time_limit is after the deadline. A retry the driver submits in the last 45 min before the deadline would therefore be rejected, and sbatch() would raise inside an unattended tick (see SC-2). now+3600 and now+596648 are accepted.",
+      "fix_after": "Primary fix (b): decide completeness from on-disk timestamps. In analysis.episode(), also return status.get('completed_utc'). In block_results(), set valid=False, state='after_deadline' when completed_utc > manifest['protocol']['block_deadline_utc'] (the parse_utc format). 'complete' and classify() then follow the preregistered rule however late a tick runs. Optionally mirror the check in driver.read_result so the block stage reads 'incomplete' rather than 'done' with complete=False. Do not add --deadline as written. If a Slurm --deadline is wanted anyway, add it only while deadline - now > time_limit (45 min) plus a margin, skip the retry otherwise, and treat a rejected submission as 'incomplete', not as an exception. Then refreeze the manifest."
+     },
+     {
+      "id": "SC-2",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "The defect is real, but the reviewer's failure scenario is wrong. sbatch() raises on a non-zero exit (driver.py:106-107), and tick() runs advance() before update_status/schedule_ticks/save with no try/except (413-420). But when the crashing tick is the chain tick, the watchdog submitted by the previous tick is still pending: schedule_ticks only resubmits the watchdog when it is not alive and never cancels it (447-454). That watchdog, with --begin=now+7200, re-runs advance() within about 2 h. So 'no chain tick or watchdog exists' is false for the rtx8000-retry case the reviewer describes. A stall needs the failure to recur at that watchdog. Alternatively, it needs a crash in a watchdog tick while no chain is pending. There is one real single-failure path. In a watchdog tick whose `waiting` differs from chain_deps (for example, it just submitted a retry), line 435 runs scancel(chain), then line 444 runs sbatch for the new chain before the watchdog check at 447. If that one sbatch fails, the old chain is gone, no new chain exists, and me == watchdog, so nothing follows. Two findings rule out a deterministic chain rejection. A dependency on a purged job is rejected only for afterok/afternotok, not afterany (job_scheduler.c:4132-4141). And the ?-afterany and --begin=now+7200 shapes pass --test-only under 25.11.8. The consequence is a delay until someone re-runs the tick: the arrays keep running and the data are intact. Because no --mail-type is set, the stall is silent. If it spans the deadline, it compounds SC-1, which fix (b) above neutralises.",
+      "fix_after": "Wrap advance(): `try: self.advance()`, then on `except Exception as exc`, record `self.event(f'tick error: {exc!r}')`. Always run update_status/schedule_ticks/save afterwards. In schedule_ticks, secure a successor before cancelling anything: submit the watchdog first when this tick is the watchdog (or it is not alive), and scancel the old chain only after the new chain sbatch succeeds. Retry each sbatch once after a short sleep, and never let a failed chain submission skip the watchdog submission. Optionally add --mail-type=FAIL to tick.sbatch."
+     },
+     {
+      "id": "SC-3",
+      "refuted": true,
+      "severity_after": "none",
+      "reason": "Slurm 25.11.8 source (/apps/slurm/src/slurm-25.11.8, matching SLURM_VERSION=25.11.8 from scontrol show config) shows the real gpu,ampere + --constraint=a40 submission is accepted and queued, not rejected. (1) Under PARTITION_ENFORCE_ALL (EnforcePartLimits=ALL here), _select_nodes_base rejects only on ESLURM_REQUESTED_PART_CONFIG_UNAVAILABLE (job_mgr.c:3895-3898). gpu has no a40 node and returns ESLURM_REQUESTED_NODE_CONFIG_UNAVAILABLE from _build_node_list (node_scheduler.c:4090). That code falls through to 'return SLURM_ERROR', and the next partition is tried. (2) ampere, whose A40 nodes are drained, returns ESLURM_NODE_NOT_AVAIL, which becomes rc_best. It is in job_allocate's non-fatal list, so the job stays queued (job_mgr.c:4383-4398). (3) For jobs with a part_ptr_list, the main scheduler only logs 'non-runnable in partition' (job_scheduler.c:1968-1975) and does not hold. (4) Backfill skips only on extra_constraints (backfill.c:3399-3403). The ampere+a40 leg is shown live: job 21461306 (ampere, a40, submitted 19:02:56 PDT) pends with 'ReqNodeNotAvail, May be reserved for other job', which is the state_desc of ESLURM_NODE_NOT_AVAIL. The --test-only rejection is will_run behaviour (drained nodes are excluded from the will_run bitmap), not a submit rejection. Separately, the first tick is interactive, so any rejection would be seen at launch. My re-run of the exact driver argv reproduces the reviewer's results: rtx8000 exit 0, estimated start 2026-10-01T04:58 PDT on cn-gpu7; a40 exit 1, 'Requested node configuration is not available', both with gpu,ampere and with ampere alone.",
+      "fix_after": "No fix required. A per-block --partition (gpu for rtx8000, ampere for a40) is harmless hygiene that makes each block's pool explicit in the ledger, but it does not fix a reachable defect."
+     },
+     {
+      "id": "SC-4",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Reproduced with the real binary and --test-only. share gives an estimated start of 2026-09-30T12:12 PDT on cn-e02, and 12:19 PDT on cn-a25 for the chain/watchdog argv. preempt gives 2026-09-29T23:10. eecs and share,eecs both give 'now' on cn-gpu3, with 'Preempts: 21461383', a job in the tier-1 REQUEUE `preempt` partition. sinfo shows 30 share nodes draining and 21 drained ('maint 2026-09-28T11:41:06'). The share estimates are optimistic: cn-a25 lies inside maintenance reservation root_203 (2026-09-30 08:00-16:00 PDT), so the real wait is at least as long. The practical harm is limited, because the rtx8000 block is not estimated to start before 2026-10-01 and the latency matters most when an array ends. Still, root_204 (2026-10-01 08:00-16:00 PDT) covers every share node except cn-gpu[3-4], so share-only ticks cannot run in that window at all. share,eecs passes EnforcePartLimits=ALL (1 CPU, 2G, 20 min fits both QoS; eecs AllowAccounts=eecs,coeit).",
+      "fix_after": "Set `#SBATCH --partition=share,eecs` in tick.sbatch. eecs (cn-gpu[3-4]) is outside every scheduled maintenance reservation, so ticks stay live through root_203 and root_204. Refreeze the manifest afterwards."
+     },
+     {
+      "id": "SC-5",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed with sacctmgr: ampere MaxTRESPU is cpu=64,gres/gpu=2,mem=250G (GrpTRES gres/gpu=14); gpu is cpu=40,gres/gpu=8,mem=750G, so at most 5 tasks of 8 CPUs. From v8's sacct (jobs 21435135/21435136) I recomputed mean elapsed of 214 s on A40 (n=51) and 294 s on RTX 8000 (n=13). That is 5.71 and 7.83 GPU-h per 96 tasks, with at most 2 concurrent on ampere and 1 on gpu. squeue confirms the user's own competing jobs. On ampere with a40: 21442472 and 21442474 (8 h each, pending on Dependency), and 21461306/7/8 (4 tasks each, %1, 25 min). On gpu,ampere: 21442470, 21442471, 21442473, 21442475 and 21461896. All were submitted earlier, so they outrank v9 on age. SchedulerParameters also sets bf_max_job_user_part=1, so backfill considers only one of the user's jobs per partition per cycle, which sharpens the self-contention. The deadline rule bounds the harm, since a starved block becomes 'partially measured'.",
+      "fix_after": "Before launch, tell the user that their queued A40 jobs share the 2-GPU ampere cap, and that under bf_max_job_user_part=1 they compete with the a40 block for backfill slots. The options are to hold or nice them while the a40 block runs, or to accept the delay. Record the choice in STATUS.md and keep the deadline."
+     },
+     {
+      "id": "SC-6",
+      "refuted": false,
+      "severity_after": "minor",
+      "reason": "Confirmed. matched.sbatch:4-5 says 'throttled at %8, every concurrent batch runs four of each'. run_matched_task.py:16-17 says 'every concurrent batch of 8 tasks runs four of each'. README.md:34 says 'throttled at 8'. build_manifest.py:274 says '~6 GPU-h each', and STATUS.md:34 says 'about 12 GPU-h'. The measured caps are 5 on gpu and 2 on ampere (see SC-5), and the v8-timed cost is 5.7 + 7.8 = 13.5 GPU-h, still well under the 40 GPU-h cap. CLAUDE.md:335 ('8 GPUs per user') holds for QoS gpu and eecs but not for ampere (2). The even/odd pairing still keeps consecutive baseline/candidate tasks together, so the 'same hour' claim survives; only the numbers are wrong.",
+      "fix_after": "State the actual caps: gpu at most 5 concurrent (40 CPUs per user), ampere at most 2 (2 GPUs per user). Use about 7.8 GPU-h for rtx8000 and about 5.7 for a40, about 13.5 in total. Correct matched.sbatch:4-5, run_matched_task.py:16-17, README.md:34, build_manifest.py:223/274 and STATUS.md:34, and qualify CLAUDE.md:335 as QoS-specific."
+     },
+     {
+      "id": "SC-7",
+      "refuted": true,
+      "severity_after": "none",
+      "reason": "The fallback cannot succeed where the primary path fails. `which -a sbatch` resolves first to /apps/slurm/bin/sbatch, whose whole body is `/apps/slurm/current/bin/sbatch --mail-user=$USER $@`. If REAL_SBATCH (/apps/slurm/current/bin/sbatch) is missing, the wrapper runs the same missing path, exits 127, and sbatch() raises RuntimeError (driver.py:106-107). That is the same fail-closed outcome the reviewer asks for. The glob concern needs a file in --chdir named literally like the '?' dependency string, and word-splitting needs a space in an argument; neither occurs. The doubled --mail-user is harmless. /apps/slurm/current is a symlink to 25.11, then 25.11.8, and exists today.",
+      "fix_after": "None required. Optionally drop the fallback for clarity, which changes no behaviour."
+     }
+    ],
+    "missed": [
+     "SC-1's proposed fix (a) creates a new tick-crash path. `sbatch --test-only --constraint=rtx8000 --deadline=now+1800 --array=3,17%8 matched.sbatch ...` fails with 'allocation failure: Requested time limit is invalid' (exit 1). job_mgr.c:6950-6955 (25.11.8) rejects at submit when earliest_start + time_limit (45 min) > deadline. Also, tasks that Slurm removes in state DEADLINE make summarize() return 'failed' before past_deadline() is true. The driver would then submit the retry, which would be rejected, and the unattended tick would crash (SC-2). If a Slurm --deadline is used at all, the retry must be skipped when deadline - now < time_limit.",
+     "STATUS.md:29-30 lists two maintenance reservations, but `scontrol show res` shows three: root_202 (2026-09-29 08:00-16:00 PDT: cn-gpu6, cn-r-[3-4], cn-e share nodes), root_203 (2026-09-30: cn-a and cn-b, which are share nodes) and root_204 (2026-10-01: every share node except cn-gpu[3-4], plus cn-gpu[5-7] and all ampere nodes). Share-only tick jobs therefore cannot run during root_204 whatever the drain state. This is the concrete reason tick.sbatch should include eecs (SC-4), and the STATUS record should list all three reservations."
+    ]
+   }
+  }
+ ],
+ "synthesis": {
+  "confirmed": [
+   {
+    "id": "PS-1",
+    "lens": "protocol-stats",
+    "severity": "major",
+    "title": "'replicates on X only (hardware-conditional)' is issued with no block x policy interaction test, and under equal effects on both models it is the most likely label",
+    "evidence": "scripts/analysis.py:314-326 (classify; line 324 emits the label whenever exactly one complete block passes). README.md:54-61 and build_manifest.py:232-234 preregister the same rule. I recomputed per-block power at 24 vs 24 with analysis.fisher_one_sided and the margin clause: at p0=0.234 and p1=0.45 (the same rates on both models), power is 0.360, P(exactly one block passes) is 0.461 and P(neither passes) is 0.410. Example: 8/24 vs 2/24 gives p=0.0361 (passes) and 7/24 vs 3/24 gives p=0.1432 (fails), so the label is issued although the verifier's Zelen homogeneity p=1.000 and Wald difference-of-differences p=0.603. Familywise size of 'passes in at least one block' is about 5.2% (per-block real size 0.019-0.030). tests/test_v9.py:215-217 test only the 'partially measured' and 'both' branches. The 'exactly one' and 'neither' branches, the most likely outcomes, are untested.",
+    "fix": "scripts/analysis.py classify(): replace '(hardware-conditional)' with 'H10 clause holds on <X>, not on <Y>'. Add a preregistered interaction test and name its scale: Zelen's exact test of equal odds ratios over the two blocks' H10 2x2 tables, or an exact sign-flip over the 8 shared rows of (cand-base on rtx8000) minus (cand-base on a40). Emit a hardware-dependence claim only if that test gives p<0.05, and otherwise emit 'block x policy interaction not established (p=...)'. Mirror the change in build_manifest.py protocol.classification and README.md:54-61. In tests/test_v9.py, add synthetic-block tests for all four classify outcomes and for the interaction field."
+   },
+   {
+    "id": "PS-9",
+    "lens": "protocol-stats (skeptic-missed, spot-checked)",
+    "severity": "major",
+    "title": "No primary block is named. The RTX 8000 block the user did not approve doubles the scope and carries most of the power, and classify() treats both blocks symmetrically",
+    "evidence": "The relayed approval covered one A40 block ('--constraint=a40 ... 96 episodes, about 6 GPU-hours'). STATUS.md:31-34 records the RTX 8000 block only as a 'Design change ... within the user's standing lift of the GPU-hour constraint'. The only lift on record is v5's STATUS.md:23 ('user asked for it, with the GPU-hour constraint lifted'). classify() (analysis.py:314-329) and compute()'s pooled block x row test treat the two blocks symmetrically. v5-v8 history, which I recomputed from 256 rollout.log device tables: baseline H10 is 3/24 on RTX 8000 and 12/40 on A40. Per-block H10 clause power, RTX (p0=0.125) vs A40 (p0=0.30), is 0.469 vs 0.057 at p1=0.35, 0.736 vs 0.196 at p1=0.45, and 0.898 vs 0.418 at p1=0.54. Most positive labels the design can issue would therefore come from the block the user did not approve.",
+    "fix": "In build_manifest.py protocol, add 'primary_block': 'a40' (the approved design) and describe rtx8000 as a secondary replication on a second hardware platform. Have classify() and README headline the A40 per-block reading first. Put the scope change (192 episodes, about 13.5 GPU-h, instead of 96 and about 6) to the user before the first tick instead of recording it only as a design change. If the user declines, remove the rtx8000 entry from manifest.blocks."
+   },
+   {
+    "id": "PS-2",
+    "lens": "protocol-stats",
+    "severity": "major",
+    "title": "No preregistered power, so 'does not replicate' will read as a negative result, although the approved A40 block has 6-42% power",
+    "evidence": "v8's manifest had protocol.confirmatory_power. v9's protocol (build_manifest.py:221-260) and README have none. At 24 vs 24 the recomputed per-block power at p0=0.30 (A40 history) is 0.057, 0.196 and 0.418 for p1 = 0.35, 0.45 and 0.54. At p0=0.234 it is 0.142, 0.360 and 0.614. The minimum passing candidate count is 5, 6, 8, 9 and 11 against baselines of 0-4, so p<0.05 already forces a margin of at least 5 and 'margin >= 4' never binds. With p0=0.234 and p1=0.45, P(neither block passes AND pooled 48 vs 48 p<0.05) is about 0.126.",
+    "fix": "Add protocol.power to build_manifest.py: a per-model table with p0 taken from the v5-v8 history (RTX 3/24=0.125, A40 12/40=0.30, pooled 15/64=0.234) and p1 in {0.35, 0.45, 0.54}. Rename the negative label in classify() to 'not replicated at this power (A40 x%, RTX y%)'. State that the block x row combined test is descriptive and cannot override the per-block readings, and that 'margin >= 4' is vestigial at n=24."
+   },
+   {
+    "id": "PS-4",
+    "lens": "protocol-stats",
+    "severity": "major",
+    "title": "The stated question includes 'its dev01 H50 loss survive', but no preregistered rule decides it",
+    "evidence": "README.md:11-13 and the manifest 'question' (build_manifest.py:200-201) ask about the dev01 H50 loss. The only output is the descriptive hb['p_b_settled'] (analysis.py:301-303), 3 vs 3 per block. On the recomputed history this cell depends on the GPU model (baseline dev01 H50 A40 4/4, RTX 8000 1/4; an1's 0/2 both on A40), so the per-block readings will probably diverge and leave room for a post-hoc story. At 3 vs 3 even a 3/3 vs 0/3 split gives Fisher p=0.05 exactly, so no block can reach significance.",
+    "fix": "In build_manifest.py protocol, and README, preregister a descriptive rule. For example: 'the dev01 H50 loss recurs in a complete block iff baseline dev01 H50 settled > candidate; reported per block and pooled over 6 vs 6 with a one-sided Fisher p, not gated; 3 vs 3 cannot reach significance'. Alternatively, drop dev01 from the question and keep it only under secondary_reported_not_gated."
+   },
+   {
+    "id": "SC-1",
+    "lens": "slurm-cluster",
+    "severity": "major",
+    "title": "The block deadline is enforced only at tick time, so a block that finishes after 2026-10-06T00:00Z is recorded as complete and enters the classification",
+    "evidence": "past_deadline() is called only in block_stage (driver.py:316, 323). If the last task finishes after the deadline and before the next tick, the chain tick sees live=[] and bad=[] and returns 'done' (driver.py:314-322). grep finds no 'deadline' in analysis.py or run_matched_task.py, and read_result (driver.py:265-276) ignores status.completed_utc. The manifest deadline_rule says such a block is 'incomplete ... excluded from the classification'. The reviewer's fix (a), a Slurm --deadline, is harmful. The verifier showed that `sbatch --test-only --deadline=now+1800` on the 45-minute job is rejected with 'Requested time limit is invalid' (job_mgr.c:6950-6955), so a retry submitted inside the last 45 minutes would raise in an unattended tick.",
+    "fix": "In analysis.episode(), also return status['completed_utc']. In block_results(), mark an episode valid=False, state='after_deadline' when completed_utc > manifest['protocol']['block_deadline_utc']. Mirror the check in driver.read_result() so block_stage returns 'incomplete' rather than 'done' with complete=False. Do not add a Slurm --deadline. If one is ever used, skip the retry when deadline - now < time_limit + margin, and treat a rejected submission as 'incomplete', not as an exception."
+   },
+   {
+    "id": "EXEC-1+SC-2",
+    "lens": "execution, slurm-cluster",
+    "severity": "minor",
+    "title": "An sbatch failure inside advance() aborts the tick before update_status/schedule_ticks/save, and schedule_ticks cancels the old chain before securing a new one",
+    "evidence": "sbatch() raises RuntimeError on a non-zero exit (driver.py:102-108). tick() runs advance() with no try/finally (driver.py:413-420). Reviewer simulation: a mocked a40 rejection leaves stages {block:rtx8000: submitted} and ticks {}. Skeptic correction: a pending watchdog usually survives a failed chain tick, so a stall needs two consecutive failures. There is one real single-failure path. In a watchdog tick whose deps changed, driver.py:435 runs scancel(chain) before the new chain sbatch at :444. If that sbatch fails, no successor exists (me == watchdog). No --mail-type is set, so the stall is silent.",
+    "fix": "In driver.py Driver.tick(), use `try: self.advance()` followed by `except Exception as exc: self.event(f'tick error: {exc!r}')`. Afterwards always run update_status(*self.describe()), then schedule_ticks(), then save(), and re-raise last so the tick log keeps the traceback. In schedule_ticks, submit the replacement chain (and the watchdog when this tick is the watchdog) before scancel(old chain), retry each sbatch once after a short sleep, and never let a failed chain submission skip the watchdog submission. Optionally add #SBATCH --mail-type=FAIL to tick.sbatch."
+   },
+   {
+    "id": "EXEC-3+PROV-4",
+    "lens": "execution, provenance",
+    "severity": "minor",
+    "title": "Task-time verification covers 4 of 8 pinned checkpoint files and does not re-check analysis.py, endpoints.py, _common.sh or matched.sbatch, although the a40 block may start days after the cached preflight",
+    "evidence": "checkpoint_record (run_matched_task.py:49-55) hashes config.json, model.safetensors, policy_preprocessor.json and the step_5 normalizer. The manifest pins 8 files per policy, including policy_postprocessor.json and policy_postprocessor_step_0_unnormalizer_processor.safetensors, which the runner loads at policy_rollout51.py:685. The 'missing' check at :168 iterates ckpt, not pinned, so it cannot fire, and the comment at :163-165 ('every file the manifest pinned is checked') is false. request.json records only 4 checkpoint hashes (:219). task_script_sha256 is recorded but not compared with the manifest. analysis.py (imported at :35; gpu_model decides validity at :267), endpoints.py and _common.sh are neither recorded nor checked. driver.py:339-340 caches the single verify_sources preflight for the whole campaign, including retries. The A40 nodes have been drained since 2026-09-28T11:41, and root_204 falls on 2026-10-01.",
+    "fix": "run_matched_task.py: iterate block['sha256'].items(), fail on any drifted or missing file and write all 8 hashes into request.json. At task start, compare the manifest digests of run_matched_task.py, analysis.py, endpoints.py, slurm/_common.sh and slurm/matched.sbatch, fail as infrastructure_error on any mismatch, and record the digests in request.json. The simplest form: matched.sbatch runs `verify_sources.py --campaign $campaign --skip-checkpoint` before the task. driver.py: re-run verify_sources before every retry submission. Fix the comment at :163-165."
+   },
+   {
+    "id": "PROV-3",
+    "lens": "provenance",
+    "severity": "minor",
+    "title": "Episodes do not record which manifest they ran under; the task reads manifest.json live and preflight does not require it to be committed",
+    "evidence": "request.json stores campaign_commit = manifest['git']['commit'] (run_matched_task.py:221), and the ledger stores the same value (driver.py:196). That is the commit the sources were hashed from, not the manifest's hash. run_matched_task.py:150 reads manifest.json at execution time, so a40 tasks that start days later run whatever manifest is on disk. manifest.json is currently untracked (git status: '?? campaigns/20260928-fresh-seed-remeasure-v9/manifest.json'), and neither verify_sources.py nor preflight checks it.",
+    "fix": "In driver.submit, compute sha256(manifest.json) and pass it to matched.sbatch (an extra positional argument or --env). run_matched_task refuses to start if the on-disk hash differs, and writes it to request.json as manifest_sha256. Record the hash in every ledger entry and in state['preflight']. In preflight, require `git ls-files --error-unmatch manifest.json` and a clean `git diff --quiet HEAD -- manifest.json`. In block_results, check that every episode carries the same manifest_sha256."
+   },
+   {
+    "id": "PROV-1",
+    "lens": "provenance",
+    "severity": "minor",
+    "title": "The frozen EBL description ('the baseline's early-H50 plan') is contradicted by its own calibration: an1 fires at dev06/dev07, where the baseline is 0/8",
+    "evidence": "analysis.py:23-26 is copied into manifest detectors.ebl (build_manifest.py:265). The calibration reproduces: baseline dev00/01/03/04/05 at 8 each; an1 dev00/01/03/04/05/06/07 at 2 each (dev06 at action 76, dev07 at action 89); pb1 dev05 at 2. tests/test_v9.py:139 asserts with `>=`, which hides the dev06/dev07 hits, and pb1 is not asserted at all. The skeptic showed that the dev03 hits are consistent with v8's E2 reference pattern. Adding the waist constraint would therefore contradict E2 in the same manifest.",
+    "fix": "Use option (b) only. Rewrite analysis.py:23-26 as 'early bimanual table-level lift (fires on the baseline's early-H50 rows dev00/01/03/04/05; on the v5-v8 history an1 also fires on dev06/dev07, where the baseline is 0/8)'. Do not add a waist constraint. Replace test_v9.py:136-139 with exact equality on every policy's ebl:* keys and counts: baseline five rows at 8 each, an1 seven rows at 2 each, pb1 {dev05: 2}, a2 and dq1 none."
+   },
+   {
+    "id": "PROV-7",
+    "lens": "provenance",
+    "severity": "minor",
+    "title": "Detector documentation says 256 calibration episodes (it is 128 H50) and calls drag the baseline's 'P_A failure step' (it fires on dev00/dev02/dev04, and dev02 is P_C)",
+    "evidence": "README.md:71 and analysis.py:13-14 say 256 episodes. calibration() globs dev0?_h50_* (build_manifest.py:118), which gives 128 episodes (baseline 64 + 4 x 16). Drag fires for the baseline at dev00 (P_A), dev02 (P_C) and dev04 (P_A), 8/8 each, and at 0/8 on the P_A row dev06. The criterion differs from v8's diagnosis detector (dev04 fires at action 162 vs v8's 173).",
+    "fix": "Change README.md:71 and analysis.py:14 to '128 v5-v8 H50 development episodes'. Change analysis.py:18 to 'adapted from the v8 diagnosis's one-arm drag; fires on the baseline at dev00/dev02/dev04 (P_A and P_C)', and state in the manifest text that first-event actions differ from v8's because the criterion differs."
+   },
+   {
+    "id": "PROV-5",
+    "lens": "provenance",
+    "severity": "minor",
+    "title": "The LeHome scorer and env modules on the executed path are not hash-pinned or preflight-verified",
+    "evidence": "_common.sh:39 puts the pilot's external/lehome-challenge on PYTHONPATH. The runner imports success_checker_chanllege, garment_bi_v2, garment_bi_cfg_v2 and assets/object/Garment (policy_rollout51.py:344-348). The first is the scorer behind every settled verdict. None of the 67 tracked .py files there are among the 49 executed_sources (build_manifest.py:61-69). lehome51-site (lerobot, make_pre_post_processors) is also unpinned. The gap is inherited from v2-v8, and the tree is currently clean.",
+    "fix": "In build_manifest.executed_sources(), add the tracked .py files under campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome, at minimum the four imported modules. Record a digest of lehome51-site's lerobot/policies/**/*.py (or its dist-info RECORD) in the manifest, and check it in verify_sources.py."
+   },
+   {
+    "id": "PROV-6",
+    "lens": "provenance",
+    "severity": "minor",
+    "title": "The seed-freshness scan reads only manifests and plans, so README's 'proves' is overstated (the v9 seeds are nonetheless fresh)",
+    "evidence": "used_seeds() (build_manifest.py:72-94) finds 176 distinct seeds. An independent scan of 4298 JSON files, including --seed in command lists, finds 182. It misses seeds 2, 8 and 101-104 (for example campaigns/20260921-horizon-pilot/analysis/fixed-rng-replanning/seed-panel.json). No collision with 97000-97207; the largest seed ever used is 96207.",
+    "fix": "Extend used_seeds() to walk */evaluation/**/{request,status,rollout}.json and */analysis/**/*.json and to parse '--seed N' in command lists. Or reword README.md:31 and build_manifest.py:13 to 'checked against every earlier manifest and plan', and record the broader scan (files scanned, 182 distinct seeds, max 96207, no collision) in manifest['seeds']."
+   },
+   {
+    "id": "PS-3",
+    "lens": "protocol-stats",
+    "severity": "minor",
+    "title": "With one block complete the headline reads only 'partially measured', and an external scancel would be logged as an outcome-blind retry rather than as a deviation",
+    "evidence": "classify() returns 'partially measured' whenever len(measured) < len(blocks) (analysis.py:319-320). The per-block results are still recorded (record_block), so nothing is lost. A manual scancel produces sacct CANCELLED, which summarize() collapses to 'failed', and block_stage (driver.py:320-333) then resubmits as 'one outcome-blind retry', mislabelling the cancellation.",
+    "fix": "In classify(), when exactly one block is complete, emit '<block> measured: H10 clause holds/fails; cross-model classification not available (<other> incomplete)'. In block_stage, distinguish CANCELLED tasks not issued by cancel_block and log them as a protocol deviation. Add to protocol.stop_rule: 'any cancellation other than at the deadline is reported as a protocol deviation'."
+   },
+   {
+    "id": "PS-5",
+    "lens": "protocol-stats",
+    "severity": "minor",
+    "title": "'measure the GPU effect directly' is really a hardware-platform comparison, and driver version and host are not reported per block",
+    "evidence": "README.md:40-41 and protocol.why_two_blocks (build_manifest.py:225-228). The A40 nodes are epyc/AVX2 and the RTX nodes cascadelake/AVX-512 (sinfo features), so the GPU model is confounded with the platform. Per the skeptic, driver and kernel are not quasi-seeds: 58 same-model pairs on different drivers share action prefixes like same-driver pairs. But the A40 pool is on mixed kernels, and episode() parses only the GPU name.",
+    "fix": "Reword README.md:40-41 and why_two_blocks to 'the two blocks compare hardware platforms (GPU model and its node pool) on the same rows and seeds; an unpaired, balanced comparison'. In analysis.episode(), parse 'Driver Version' from the rollout.log device table and take the host from sacct NodeList via status.slurm_job_id. Report per-block (driver, host) counts in block_results. Cite the v5-v8 prefix evidence rather than softening the attribution."
+   },
+   {
+    "id": "PS-6",
+    "lens": "protocol-stats",
+    "severity": "minor",
+    "title": "'pose_stratified' and 'pose sign-flip' are stratified by row (8 dev slots), not by pose cluster; v8's 'by pose 0.011' is a different test",
+    "evidence": "pose_index() returns development_pose_slot (analysis.py:215-216), which feeds strata at :251-257, the fields at :272-274 and compute() at :361-367 (block_x_pose_stratified_exact_p). On v8 H10 this gives 0.0122 (v8's 'by row'), while the cluster-stratified test gives 0.0111 (v8's 'by pose'). The names also appear in driver.py:369-370, README.md:64-66 and manifest secondary_reported_not_gated[0] and [2].",
+    "fix": "Rename to row_stratified_exact_p, row_sign_flip_p, per_row_diff and block_x_row_stratified_exact_p in analysis.py:272-274 and :367 and driver.py:369-370 in the same commit. A half-rename raises KeyError inside record_block in an unattended tick, which is the EXEC-1+SC-2 crash path. Update README and the manifest text. Optionally add a cluster-stratified exact test via cluster_of(). Do not add a 3-cluster sign-flip, whose floor is p=0.125."
+   },
+   {
+    "id": "PS-7",
+    "lens": "protocol-stats",
+    "severity": "minor",
+    "title": "The retry scope is broader than documented: tasks that wrote rollout.json but failed validation (non-finite physics, checker disagreement) are also retried, and a recurrence voids the block",
+    "evidence": "driver.read_result (driver.py:265-276) treats any state other than 'completed' as bad. run_matched_task.py:265-283 sets infrastructure_error on validate_result failures after rollout.json exists. README.md:75-76 says 'tasks that left no completed rollout'. A policy-caused non-finite state that recurs on the retry makes the block incomplete, and the block is then excluded. Historical rate: 0/256 (every v5-v8 status reads 'completed').",
+    "fix": "List the retry-triggering states in protocol.stop_rule and README. Record each retried directory with its state and error in block_results. Choose one of two options now: count 'non-finite simulator state' as not settled and flagged, never block-voiding; or declare that a repeated validation failure voids the block, and say why."
+   },
+   {
+    "id": "PS-8",
+    "lens": "protocol-stats",
+    "severity": "minor",
+    "title": "Secondary p-values are unadjusted with no statement, and in incomplete blocks the headline counts and the paired tests use different denominators",
+    "evidence": "analysis.py:245-248 and :268 count every valid episode per arm, while the strata, diffs and McNemar at :243-259 use only rows where both arms are valid.",
+    "fix": "Add a protocol sentence: 'secondary p-values are unadjusted and descriptive'. Report n_paired beside the stratified, sign-flip and McNemar outputs in block_results."
+   },
+   {
+    "id": "SC-4",
+    "lens": "slurm-cluster",
+    "severity": "minor",
+    "title": "Tick jobs run only in 'share', which the maintenance drains and reservations starve; STATUS.md lists two of the three reservations",
+    "evidence": "tick.sbatch:6 is --partition=share. share: 21 nodes drained and 30 draining (sinfo). root_203 (2026-09-30 08:00-16:00, cn-a/cn-b) and root_204 (2026-10-01, which covers every share node except cn-gpu[3-4]) block share-only ticks. The eecs partition (Nodes=cn-gpu[3-4], AllowAccounts=eecs,coeit, QoS cpu=40/user) is outside every reservation, and --test-only starts a tick there 'now'. STATUS.md:29-30 omits root_203.",
+    "fix": "Set `#SBATCH --partition=share,eecs` in slurm/tick.sbatch. List root_202, root_203 and root_204 with their node sets in STATUS.md's cluster record."
+   },
+   {
+    "id": "SC-5+SC-6",
+    "lens": "slurm-cluster, execution, provenance",
+    "severity": "minor",
+    "title": "Concurrency and cost are misstated (ampere allows 2 GPUs per user, not 8), and the user's own queued A40 jobs compete with the a40 block",
+    "evidence": "sacctmgr: ampere MaxTRESPU cpu=64,gres/gpu=2,mem=250G; gpu cpu=40,gres/gpu=8 (so 5 tasks of 8 CPUs). matched.sbatch:4-5 ('every concurrent batch runs four of each'), run_matched_task.py:16-17, README.md:34 ('throttled at 8'), build_manifest.py:223/274 ('~6 GPU-h each') and STATUS.md:34 ('about 12 GPU-h') do not match. v8 timings give 5.7 GPU-h for a40 plus 7.8 for rtx8000, 13.5 in total. squeue -u sanchej7 shows ampere+a40 jobs 21442472 and 21442474 (8 h each) and 21461306/7/8 (%1, 25 min), plus gpu,ampere jobs 21442470/1/3/5 and 21461896, all older than v9. bf_max_job_user_part=1.",
+    "fix": "Correct the docs: gpu at most 5 concurrent, ampere at most 2; about 5.7 + 7.8 = 13.5 GPU-h; 'pairs start adjacently' instead of 'four of each'. Qualify CLAUDE.md's '8 GPUs per user' as QoS-specific. Before launch, ask the user whether to hold (scontrol hold 21442472,21442474,21461306,21461307,21461308) or nice their A40 jobs while the a40 block runs, and record the choice in STATUS.md. Keep the deadline."
+   },
+   {
+    "id": "EXEC-4",
+    "lens": "execution",
+    "severity": "minor",
+    "title": "STATUS.md's blocker line is hard-coded to 'the a40 block waits in queue' whatever the state",
+    "evidence": "driver.py:494-496 returns the constant whenever the campaign is not done and no stop_reason is set. The reviewer's simulation shows 'a40 (done): H10 8/24 vs 8/24' next to 'the a40 block waits in queue'.",
+    "fix": "In describe(), build the blocker line from state: for each block whose main or retry stage is still 'submitted', report its squeue state and pending reason (e.g. 'a40 block pending: ReqNodeNotAvail'). Report 'none' when no block is waiting. Keep stop_reason first."
+   },
+   {
+    "id": "EXEC-5",
+    "lens": "execution (skeptic-missed, spot-checked)",
+    "severity": "minor",
+    "title": "'tick --dry-run' moves bad task directories into attempts/, and dry runs skip the lock, although README says a dry run writes nothing",
+    "evidence": "driver.py:323-329 calls shutil.move with no `if not self.dry` guard. main() at driver.py:556-558 runs a dry tick without taking the Lock, so it can race a real tick on the same directory (FileNotFoundError, which is then the EXEC-1 crash). README.md:96 says '# the plan, writes nothing'. The only dry-run test (tests/test_v9.py:228-240) uses fresh state, not a finished array. The skeptic's simulation moved dev02_h10_s97002 on a dry tick.",
+    "fix": "Guard the move in block_stage with `if not self.dry` and print the planned moves instead. Make a dry run refuse while ledger/.driver.lock is held by a live holder. Add a test with a finished fake array containing one infrastructure_error task, asserting that nothing under evaluation/ or attempts/ changes."
+   }
+  ],
+  "refuted": [
+   "EXEC-2 (NVML names unverified): 340 single-GPU sibling logs show nvidia-smi names exactly 'NVIDIA A40' (169) and 'Quadro RTX 8000' (171). Devices are cgroup-constrained, so the set comparison is sound. Optional: unit-test the four branches of allocated_gpu_names.",
+   "PROV-2 (a40 sbatch rejection orphans rtx8000): job 21461306 (ampere, a40) was accepted after the drain and pends with ReqNodeNotAvail. --test-only's rejection is will-run behaviour, not a submit rejection. The residual tick-crash path is kept as EXEC-1+SC-2.",
+   "SC-3 (gpu,ampere + a40 may be rejected): Slurm 25.11.8 source shows that NODE_CONFIG_UNAVAILABLE in 'gpu' falls through to the next partition, and ampere's NODE_NOT_AVAIL is non-fatal, so the job queues. A per-block --partition is optional hygiene only.",
+   "SC-7 (fallback to the site sbatch wrapper): the wrapper calls the same /apps/slurm/current/bin/sbatch path, so when that path is missing it exits 127 and sbatch() raises. That is already fail-closed, and no argument contains a space or a glob match."
+  ],
+  "preregistration_additions": [
+   "Primary block: name A40 (the user-approved design) as primary and RTX 8000 as a secondary replication on a second hardware platform. Headline the A40 reading. Launching the RTX block requires the user's explicit confirmation of the doubled scope (192 episodes, ~13.5 GPU-h).",
+   "Power table per model at 24 vs 24 with p0 from the v5-v8 history (RTX 3/24=0.125, A40 12/40=0.30, pooled 15/64=0.234) and p1 in {0.35, 0.45, 0.54}: A40 0.057/0.196/0.418, RTX 0.469/0.736/0.898. Note that p<0.05 already needs a margin of at least 5, so 'margin >= 4' is vestigial.",
+   "Negative label reads 'not replicated at this power (A40 x%, RTX y%)', not 'does not replicate'.",
+   "Hardware dependence is claimed only if a named interaction test (Zelen exact on the two H10 2x2 tables, or an exact sign-flip over the 8 rows of the cross-block difference in margins) gives p<0.05. 'Interaction not established' is not evidence of no hardware effect. A model-dependent gain may come from the baseline's own hardware sensitivity. The familywise rate of 'passes in at least one block' is about 5.2%.",
+   "Each complete block is a reading in its own right. 'Partially measured' applies only to the cross-model label. No manual cancellation of a block; any cancellation other than at the deadline is reported as a protocol deviation.",
+   "dev01 H50: 'the loss recurs in a complete block iff baseline dev01 H50 settled > candidate; reported per block and pooled 6 vs 6 with a one-sided Fisher p, not gated; 3 vs 3 cannot reach significance'. Or remove dev01 from the question.",
+   "Deadline: any episode whose status.completed_utc is later than 2026-10-06T00:00:00Z is invalid, however late the driver's tick runs.",
+   "Enumerate retry-triggering states (no status or rollout, infrastructure_error including wrong GPU model, infrastructure_timeout, validation failures). Declare how a policy-caused non-finite state is counted (not settled and flagged, or block-voiding), and record every retried directory and its state.",
+   "The block x row combined test and all secondary p-values are unadjusted and descriptive, reported with n_paired, and cannot override the per-block readings.",
+   "Stratified and sign-flip tests are by row (8 development slots), not by pose cluster. They are named row_* and are not comparable with v8's 'by pose 0.011'.",
+   "Concurrency and cost: gpu QoS at most 5 concurrent tasks, ampere at most 2; ~5.7 GPU-h (a40) + ~7.8 GPU-h (rtx8000). The user's own A40 jobs share the ampere cap (record the hold or nice decision).",
+   "The two blocks compare hardware platforms (GPU model plus node pool, CPU ISA and driver), unpaired and balanced on rows and seeds. Driver version and host are reported per block.",
+   "Each task records sha256 of manifest.json and of every executed source it imports or sources. Tasks refuse on mismatch, and block_results refuses mixed digests.",
+   "Detectors: calibration covers 128 v5-v8 H50 episodes. Drag fires on the baseline at dev00/dev02/dev04 (P_A and P_C). EBL is described as an early bimanual table-level lift that on the history also fires for an1 on dev06/dev07 (baseline 0/8).",
+   "Seed freshness is stated with the scope actually scanned (or the scan is broadened to evaluation and analysis JSON), with 182 distinct prior seeds, max 96207 and no collision.",
+   "STATUS cluster record lists all three maintenance reservations (root_202 on 09-29, root_203 on 09-30, root_204 on 10-01)."
+  ],
+  "launch_ready_after_fixes": true,
+  "notes": "Synthesis of 4 lenses x (review + skeptic). Four findings were refuted and dropped (EXEC-2, PROV-2, SC-3, SC-7). Duplicates were merged: EXEC-1+SC-2 (tick crash and successor ordering); EXEC-3+PROV-4+provenance-missed-1 (task-time verification); SC-5+SC-6+execution-missed-2+provenance-missed-2 (ampere cap of 2, cost, own-job contention); SC-4+slurm-missed-2 (tick partition, third reservation). The slurm skeptic's missed item on --deadline is folded into SC-1's fix. The protocol-stats skeptic's missed test-coverage item is folded into PS-1. Where the skeptic changed the fix, the skeptic's version is carried: PROV-1 option (b) only, PS-5 reword rather than soften, SC-1 on-disk timestamp check rather than Slurm --deadline. I spot-checked every missed item, from my own reads rather than the reviewers' numbers:\n- `sacctmgr` shows the ampere QoS at gres/gpu=2 per user.\n- `scontrol show res` lists root_202, root_203 and root_204.\n- `squeue -u sanchej7` shows the competing A40 jobs.\n- driver.py:323-329 moves directories with no dry guard.\n- Baseline H10 history, recomputed from 256 rollout.log device tables: A40 12/40, RTX 8000 3/24.\n- Power recomputed with analysis.fisher_one_sided: A40 0.057/0.196/0.418, RTX 0.469/0.736/0.898 at p1 = 0.35/0.45/0.54.\n- tests/test_v9.py:215-217 cover only 2 of the 4 classify branches.\nNo blockers. Five majors remain: PS-1, PS-9, PS-2, PS-4 and SC-1. They are ranked by effect on the preregistered reading, not strictly ordered. The measurement machinery itself checked out: exact tests match scipy and enumeration; seeds are fresh and correctly shared; checkpoints and sources match their pins; a dry-run and simulation of the driver's retry, deadline and adoption paths behaved as specified; rtx8000 passes --test-only; ampere+a40 is accepted and queues.\n\nLaunch-readiness is conditional on four things:\n1. The code, doc and protocol fixes above are applied. PS-6's rename must change analysis.py and driver.py:369-370 in the same commit, or record_block raises KeyError.\n2. The manifest is refrozen: commit the fixes, `git mv manifest.json manifests/manifest_970cd33.json` (build_manifest.py:134-135 refuses to overwrite), run build_manifest.py and commit the new manifest. It is currently untracked.\n3. tests/test_v9.py is extended and passes.\n4. Two user decisions are made before the first tick. (a) Whether the RTX 8000 block stays, and if so as secondary: the relayed approval covered 96 episodes on A40, about 6 GPU-h, and the doubling is recorded only as a 'design change'. (b) Whether to hold the user's own queued A40 jobs 21442472, 21442474 and 21461306-8 while the a40 block runs.\n\nScratch: /scratch/sanchej7/tmp/claude-19646/-nfs-hpc-share-sanchej7-Humanoid-Lite-lehome-fold-repro/fa9f63ad-7d78-4dcc-a0e7-51bbb05ecedd/scratchpad/review-v9/synthesis/ (history.py, power.py). No repository file was modified and nothing was submitted."
+ }
+}

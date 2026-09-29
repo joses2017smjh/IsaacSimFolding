@@ -3,7 +3,7 @@
 # Runs on the host, not in the container, because it calls sbatch and sacct.
 #SBATCH --job-name=lh-v9-tick
 #SBATCH --account=eecs
-#SBATCH --partition=share
+#SBATCH --partition=share,eecs
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2G
 #SBATCH --time=00:20:00

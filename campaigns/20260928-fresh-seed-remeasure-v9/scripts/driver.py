@@ -8,17 +8,22 @@ resubmitted while its key holds a live or finished job):
 
     preflight       verify_sources.py over every pinned source, both pinned
                     checkpoints and the pose metadata, before any submission
-    block:<model>   ONE interleaved matched array per GPU-model block, pinned by
-                    a Slurm --constraint (rtx8000, a40): 48 fresh-seed rows x
-                    {baseline, candidate}, even index = baseline, odd =
-                    candidate on row index // 2                                  96 each
-    retry           one outcome-blind resubmission per block, only for tasks
-                    that left no completed rollout (or ran on the wrong model)
+    block:<model>   ONE interleaved matched array per platform block, pinned by
+                    a Slurm GPU-model --constraint (a40 primary, rtx8000
+                    secondary): 48 fresh-seed rows x {baseline, candidate},
+                    even index = baseline, odd = candidate on row index // 2     96 each
+    retry           one outcome-blind resubmission per block of every task whose
+                    status is not 'completed' (no status/rollout, infrastructure
+                    error incl. wrong GPU model or validation failure, timeout),
+                    after re-running verify_sources
     results         scripts/analysis.py per block as soon as it ends, and the
                     preregistered classification once every block is terminal
 
-A block that has not finished by the manifest's block_deadline_utc has its
-outstanding jobs cancelled and is reported as incomplete (descriptive only).
+The deadline (manifest protocol.block_deadline_utc) is enforced on each
+episode's own completion time, not on tick time: an episode that completed
+later is invalid, and a block still running at the deadline has its jobs
+cancelled and is reported as incomplete. Any other cancellation is logged
+as a protocol deviation.
 
 Infrastructure is v4-v8's: chain ticks on Slurm `?` OR-dependencies, a
 2-hour watchdog, a lock that recognises a dead holder, stage adoption from
@@ -108,6 +113,15 @@ def sbatch(args: list[str]) -> str:
     return out.stdout.strip().split(";")[0]
 
 
+def sbatch_retry(args: list[str]) -> str:
+    """sbatch once more after a short pause before giving up (transient controller errors)."""
+    try:
+        return sbatch(args)
+    except RuntimeError:
+        time.sleep(20)
+        return sbatch(args)
+
+
 def scancel(job_id: str) -> None:
     subprocess.run(["scancel", job_id], env=clean_env(), capture_output=True)
 
@@ -149,6 +163,7 @@ class Driver:
         self.root = root.resolve()
         self.dry = dry
         self.manifest = json.loads((self.root / "manifest.json").read_text())
+        self.manifest_sha = file_sha(self.root / "manifest.json")
         self.caps = self.manifest["budget"]
         self.state_path = self.root / "ledger/driver_state.json"
         self.ledger_path = self.root / "ledger/slurm-jobs.json"
@@ -165,7 +180,8 @@ class Driver:
         if self.state_path.is_file():
             return json.loads(self.state_path.read_text())
         return {"schema": 1, "created_utc": stamp(), "stages": {}, "preflight": None, "blocks": {},
-                "results": None, "final": {}, "ticks": {}, "done": False, "stop_reason": None, "log": []}
+                "retried": {}, "deviations": [], "results": None, "final": {}, "ticks": {}, "done": False,
+                "stop_reason": None, "log": []}
 
     def adopt(self) -> None:
         """Rebuild any stage the state lost from the ledger (see v2 tick 21400711)."""
@@ -194,6 +210,7 @@ class Driver:
         data = self.ledger()
         data["jobs"].append({"job_id": job, "phase": stage, "script": script, "gpu_tasks": gpu_tasks,
                              "submitted_by": "driver", "manifest_commit": self.manifest["git"]["commit"],
+                             "manifest_sha256": self.manifest_sha,
                              "submitted_utc": stamp(), "state": "submitted", **extra})
         self.ledger_path.write_text(json.dumps(data, indent=2) + "\n")
 
@@ -263,17 +280,29 @@ class Driver:
         return job
 
     def read_result(self, directory: Path) -> dict | None:
-        """A task counts only when it completed and wrote its rollout; the task
-        itself marks a wrong-model run as an infrastructure error."""
+        """A task counts only when it completed, wrote its rollout, and finished
+        before the block deadline; the task itself marks a wrong-model run as
+        an infrastructure error."""
         sp, rp = directory / "status.json", directory / "rollout.json"
         if not sp.is_file() or not rp.is_file():
             return None
         try:
-            if json.loads(sp.read_text()).get("state") != "completed":
-                return None
+            status = json.loads(sp.read_text())
         except ValueError:
             return None
+        if status.get("state") != "completed" or not status.get("completed_utc"):
+            return None
+        if parse_utc(status["completed_utc"]) > parse_utc(self.manifest["protocol"]["block_deadline_utc"]):
+            return None
         return {"ok": True}
+
+    @staticmethod
+    def task_state(directory: Path) -> dict:
+        try:
+            st = json.loads((directory / "status.json").read_text())
+            return {"state": st.get("state"), "error": st.get("error")}
+        except (OSError, ValueError):
+            return {"state": "no status.json", "error": None}
 
     # ---- matched evaluation, one pinned GPU-model block
     def label(self, which: str) -> str:
@@ -303,7 +332,7 @@ class Driver:
         key, retry = f"block:{block['key']}", f"block:{block['key']}.retry1"
         n = 2 * len(rows)
         indices = list(range(n))
-        args = [str(self.root), PHASE, block["key"], block["key"]]
+        args = [str(self.root), PHASE, block["key"], block["key"], self.manifest_sha]
         extra = [f"--constraint={block['constraint']}"]
         if self.stage(key) is None:
             self.submit(key, "matched.sbatch", args, gpu_tasks=n, array=f"0-{n - 1}", sbatch_extra=extra,
@@ -317,28 +346,82 @@ class Driver:
                 self.cancel_block(live)
             else:
                 return "wait"
+        self.note_external_cancellations([key, retry])
         bad = [i for i in indices if self.read_result(self.dest(i, block, rows)) is None]
         if not bad:
             return "done"
         if self.stage(retry) is None and not self.past_deadline():
+            if not self.verify_before_retry(block["key"]):
+                return "incomplete"
+            record = {}
             for i in bad:
                 src = self.dest(i, block, rows)
+                record[str(i)] = {"dir": str(src.relative_to(self.root)), **self.task_state(src)}
                 if src.exists():
                     dst = self.root / "attempts" / src.relative_to(self.root)
+                    if self.dry:
+                        print(f"[dry-run] would move {src} -> {dst}.attempt1", flush=True)
+                        continue
                     dst.parent.mkdir(parents=True, exist_ok=True)
                     shutil.move(str(src), str(dst) + ".attempt1")
-            self.event(f"{key}: one outcome-blind retry of {len(bad)} tasks without a completed rollout",
-                       indices=bad)
+            self.state["retried"][block["key"]] = record
+            self.event(f"{key}: one outcome-blind retry of {len(bad)} tasks whose status is not completed",
+                       indices=bad, states=sorted({r["state"] or "?" for r in record.values()}))
             self.submit(retry, "matched.sbatch", args, gpu_tasks=len(bad), array=",".join(map(str, bad)),
                         sbatch_extra=extra, block=block["key"])
             return "wait"
         return "incomplete"
+
+    def note_external_cancellations(self, keys: list[str]) -> None:
+        """A CANCELLED task the driver did not cancel (at the deadline) is a protocol deviation."""
+        for key in keys:
+            st = self.stage(key)
+            if not st or st.get("status") == "cancelled" or st.get("deviation_checked") or not st.get("job_ids"):
+                continue
+            if self.dry or str(st["job_ids"][0]).startswith("DRY"):
+                continue
+            states = [s for j in st["job_ids"] for s in job_states(st["job_ids"]).get(j, [])]
+            cancelled = sum(s.split()[0].rstrip("+") == "CANCELLED" for s in states)
+            st["deviation_checked"] = True
+            if cancelled:
+                self.state["deviations"].append({"utc": stamp(), "stage": key, "cancelled_tasks": cancelled,
+                                                 "note": "cancelled outside the driver's deadline rule"})
+                self.event(f"PROTOCOL DEVIATION: {cancelled} task(s) of {key} were cancelled outside the driver")
+
+    def verify_before_retry(self, block_key: str) -> bool:
+        """Re-run verify_sources before any retry submission; the preflight is days old by then."""
+        if self.dry:
+            return True
+        out = self.root / "audit" / f"verify_sources_retry_{block_key}.json"
+        proc = subprocess.run([sys.executable, str(self.root / "scripts/verify_sources.py"),
+                               "--campaign", str(self.root), "--out", str(out)], capture_output=True, text=True)
+        ok = proc.returncode == 0
+        self.event(f"verify_sources before the {block_key} retry passed={ok}")
+        if not ok:
+            self.state["deviations"].append({"utc": stamp(), "stage": f"block:{block_key}.retry1",
+                                             "note": "retry not submitted: sources or checkpoints drifted",
+                                             "report": str(out)})
+        return ok
 
     # ---- the campaign
     def preflight(self) -> bool:
         if self.state.get("preflight") is not None:
             return bool(self.state["preflight"]["passed"])
         out = self.root / "audit" / "verify_sources_launch.json"
+        repo = self.root.parents[1]
+        rel = str((self.root / "manifest.json").relative_to(repo))
+        tracked = subprocess.run(["git", "-C", str(repo), "ls-files", "--error-unmatch", rel],
+                                 capture_output=True).returncode == 0
+        clean = subprocess.run(["git", "-C", str(repo), "diff", "--quiet", "HEAD", "--", rel],
+                               capture_output=True).returncode == 0
+        if not (tracked and clean):
+            if self.dry:
+                print(f"[dry-run] preflight would fail: manifest tracked={tracked} clean={clean}", flush=True)
+                return True
+            self.state["preflight"] = {"passed": False, "utc": stamp(), "manifest_sha256": self.manifest_sha,
+                                       "problems": [f"manifest.json tracked={tracked} clean={clean}"]}
+            self.event(f"preflight: manifest.json must be committed and clean (tracked={tracked}, clean={clean})")
+            return False
         cmd = [sys.executable, str(self.root / "scripts/verify_sources.py"), "--campaign", str(self.root)]
         if not self.dry:
             cmd += ["--out", str(out)]
@@ -349,7 +432,7 @@ class Driver:
             return passed
         report = json.loads(out.read_text()) if out.is_file() else {"problems": [proc.stderr[-2000:]]}
         self.state["preflight"] = {"passed": passed, "report": str(out), "utc": stamp(),
-                                   "problems": report.get("problems", [])}
+                                   "manifest_sha256": self.manifest_sha, "problems": report.get("problems", [])}
         self.event(f"preflight verify_sources passed={passed}")
         return passed
 
@@ -366,11 +449,12 @@ class Driver:
             out.write_text(json.dumps(res, indent=1) + "\n")
         self.state["blocks"][block["key"]] = {
             "status": status, "results": str(out), "complete": res["complete"], "valid": res["valid"],
+            "role": res["role"],
             "h10": {k: res["h10"][k] for k in ("candidate", "baseline", "margin", "fisher_one_sided_p",
-                                              "pose_stratified_exact_p", "pose_sign_flip_p")},
-            "h50": {k: res["h50"][k] for k in ("candidate", "baseline", "margin")},
-            "rule": res["rule"], "gpu_models_seen": res["gpu_models_seen"]}
-        self.event(f"block {block['key']} {status}: H10 {res['h10']['candidate']} vs {res['h10']['baseline']} "
+                                              "row_stratified_exact_p", "row_sign_flip_p")},
+            "h50": {k: res["h50"][k] for k in ("candidate", "baseline", "margin", "dev01")},
+            "rule": res["rule"], "platforms": res["platforms"]}
+        self.event(f"block {block['key']} ({res['role']}) {status}: H10 {res['h10']['candidate']} vs {res['h10']['baseline']} "
                    f"(p={res['h10']['fisher_one_sided_p']:.4f}); H50 {res['h50']['candidate']} vs "
                    f"{res['h50']['baseline']}; complete={res['complete']}")
 
@@ -406,18 +490,31 @@ class Driver:
             out.write_text(json.dumps(res, indent=1) + "\n")
         self.state["results"] = {"path": str(out), "classification": res["classification"],
                                  "combined": res["combined"], "block_status": status}
-        self.event(f"classification: H10 gain {res['classification']['h10_gain']}",
+        self.event(f"classification: {res['classification']['headline']}",
                    v5_rule_holds_on=res["classification"]["v5_rule_holds_on"])
         return self.finish(None)
 
     def tick(self) -> None:
+        error = None
         if not self.state["done"]:
-            self.advance()
+            try:
+                self.advance()
+            except Exception as exc:  # keep the chain alive; re-raise after saving
+                error = exc
+                self.event(f"tick error: {exc!r}")
         if self.dry:
+            if error:
+                raise error
             return
-        self.update_status(*self.describe())
-        self.schedule_ticks()
-        self.save()
+        try:
+            self.update_status(*self.describe())
+        finally:
+            try:
+                self.schedule_ticks()
+            finally:
+                self.save()
+        if error:
+            raise error
 
     # ---- ticks and status (as v4-v8)
     def schedule_ticks(self) -> None:
@@ -427,31 +524,39 @@ class Driver:
         chain = ticks.get("chain")
         pending = chain and chain != me and \
             [s for v in job_states([chain]).values() for s in v][:1] == ["PENDING"]
-        if pending and ticks.get("chain_deps") == waiting and \
-                ticks.get("chain_begin") == (stamp(self.begin_at) if self.begin_at else None):
-            pass
-        else:
-            if pending:
-                scancel(chain)
-            chain = None
-        if chain is None and (waiting or self.begin_at) and not self.state["done"]:
+        keep = pending and ticks.get("chain_deps") == waiting and \
+            ticks.get("chain_begin") == (stamp(self.begin_at) if self.begin_at else None)
+        (self.root / "ledger/ticks").mkdir(parents=True, exist_ok=True)
+        errors = []
+        if not keep and (waiting or self.begin_at) and not self.state["done"]:
             argv = [f"--chdir={self.root}", f"--output={self.root}/ledger/ticks/tick-%j.out"]
             if waiting:
                 argv.append("--dependency=" + "?".join(f"afterany:{j}" for j in waiting))
             if self.begin_at:
                 argv.append(f"--begin={relative_begin(self.begin_at)}")
-            (self.root / "ledger/ticks").mkdir(parents=True, exist_ok=True)
-            ticks["chain"] = sbatch(argv + [str(self.root / "slurm/tick.sbatch"), str(self.root)])
-            ticks["chain_deps"] = waiting
-            ticks["chain_begin"] = stamp(self.begin_at) if self.begin_at else None
+            try:   # the replacement is secured BEFORE the old chain is cancelled
+                new = sbatch_retry(argv + [str(self.root / "slurm/tick.sbatch"), str(self.root)])
+                if pending:
+                    scancel(chain)
+                ticks["chain"], ticks["chain_deps"] = new, waiting
+                ticks["chain_begin"] = stamp(self.begin_at) if self.begin_at else None
+            except RuntimeError as exc:
+                errors.append(exc)
+                self.event(f"chain tick submission failed: {exc}")
         watchdog = ticks.get("watchdog")
         alive = watchdog and watchdog != me and \
             summarize([s for v in job_states([watchdog]).values() for s in v]) == "active"
         if not alive and not self.state["done"]:
-            (self.root / "ledger/ticks").mkdir(parents=True, exist_ok=True)
-            ticks["watchdog"] = sbatch([f"--chdir={self.root}", f"--output={self.root}/ledger/ticks/watchdog-%j.out",
-                                        f"--begin={relative_begin(now() + dt.timedelta(hours=2))}",
-                                        str(self.root / "slurm/tick.sbatch"), str(self.root)])
+            try:
+                ticks["watchdog"] = sbatch_retry([f"--chdir={self.root}",
+                                                  f"--output={self.root}/ledger/ticks/watchdog-%j.out",
+                                                  f"--begin={relative_begin(now() + dt.timedelta(hours=2))}",
+                                                  str(self.root / "slurm/tick.sbatch"), str(self.root)])
+            except RuntimeError as exc:
+                errors.append(exc)
+                self.event(f"watchdog submission failed: {exc}")
+        if errors:
+            raise errors[0]
 
     def update_status(self, active, latest, blocker, nxt) -> None:
         path = self.root / "STATUS.md"
@@ -480,20 +585,30 @@ class Driver:
         for block in self.manifest["blocks"]:
             b = self.state["blocks"].get(block["key"])
             if b:
-                parts.append(f"{block['key']} ({b['status']}): H10 {b['h10']['candidate']} vs {b['h10']['baseline']} "
+                parts.append(f"{block['key']} [{b.get('role')}] ({b['status']}): H10 {b['h10']['candidate']} vs {b['h10']['baseline']} "
                              f"(p={b['h10']['fisher_one_sided_p']:.3f}), H50 {b['h50']['candidate']} vs "
                              f"{b['h50']['baseline']}")
             elif self.stage(f"block:{block['key']}") is not None:
                 parts.append(f"{block['key']}: queued or running")
         res = self.state.get("results")
         if res:
-            parts.append(f"H10 gain: {res['classification']['h10_gain']}")
+            parts.append(res["classification"]["headline"])
+        if self.state.get("deviations"):
+            parts.append(f"{len(self.state['deviations'])} protocol deviation(s) logged")
         if self.state["done"]:
             parts.append("deliverable unchanged: baseline")
         active = ", ".join(live) if live else ("none — campaign complete" if self.state["done"] else "none")
-        blocker = self.state.get("stop_reason") or (
-            "A40 nodes drained for maintenance at launch; the a40 block waits in queue"
-            if not self.state["done"] else "none")
+        waiting = []
+        for block in self.manifest["blocks"]:
+            for key in (f"block:{block['key']}", f"block:{block['key']}.retry1"):
+                st = self.stage(key)
+                if st and st.get("status") == "submitted" and st.get("job_ids") and not self.dry:
+                    out = subprocess.run(["squeue", "-h", "-j", st["job_ids"][0], "-o", "%T %r"],
+                                         capture_output=True, text=True).stdout.split("\n")
+                    pend = sorted({ln.strip() for ln in out if ln.strip().startswith("PENDING")})
+                    run = sum(ln.strip().startswith("RUNNING") for ln in out)
+                    waiting.append(f"{key}: {run} running" + (f", pending ({'; '.join(pend)})" if pend else ""))
+        blocker = self.state.get("stop_reason") or ("; ".join(waiting) if waiting else "none")
         nxt = ("none — campaign complete; see REPORT.md" if self.state["done"]
                else "driver advances when a waited job ends (2-hour watchdog)")
         return active, "; ".join(parts) or "not started", blocker, nxt
@@ -554,6 +669,9 @@ def main() -> int:
         print(json.dumps(Driver(root, dry=True).state, indent=2))
         return 0
     if args.dry_run:
+        lock = Lock(root / "ledger/.driver.lock")
+        if lock.path.exists() and lock.holder_alive():
+            raise SystemExit("a live tick holds the driver lock; not dry-running concurrently")
         Driver(root, dry=True).tick()
         return 0
     (root / "ledger").mkdir(parents=True, exist_ok=True)

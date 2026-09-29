@@ -26,6 +26,15 @@ def file_sha(path: Path) -> str:
     return h.hexdigest()
 
 
+def tree_digest(base: Path, pattern: str) -> tuple[str, int]:
+    """SHA-256 over the sorted (relative path, file SHA-256) list of base.rglob(pattern)."""
+    h = hashlib.sha256()
+    files = sorted(p for p in base.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
+    for path in files:
+        h.update(f"{path.relative_to(base)}\0{file_sha(path)}\n".encode())
+    return h.hexdigest(), len(files)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--campaign", type=Path, required=True)
@@ -81,6 +90,14 @@ def main() -> int:
         for r in anchor["records"]:
             if not Path(r["target"]).is_file() or file_sha(Path(r["target"])) != r["sha256"]:
                 problems.append(f"anchor file changed: {r['target']}")
+
+    # v9: installed packages on the executed path that are not repository
+    # sources (lerobot in lehome51-site) are pinned by a tree digest.
+    for name, rec in (manifest.get("environment_digests") or {}).items():
+        actual, count = tree_digest(Path(rec["path"]), rec["glob"])
+        if actual != rec["sha256"] or count != rec["files"]:
+            problems.append(f"environment {name} changed: {count} files, digest {actual[:12]} "
+                            f"(manifest {rec['files']} files, {rec['sha256'][:12]})")
 
     report = {
         "campaign": str(root),

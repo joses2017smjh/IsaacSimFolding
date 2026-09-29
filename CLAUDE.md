@@ -89,6 +89,7 @@ covers the AWR negative result.
 | Live now | File |
 |---|---|
 | **v9 live status (running)** | `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md` |
+| Pending tasks and stretch goals | `PENDING.md` |
 | v9 design, preregistration and review | `campaigns/20260928-fresh-seed-remeasure-v9/README.md`, `manifest.json`, `analysis/review/prelaunch-review.json` |
 | **Final report (v8) — latest closed outcome, diagnosis** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
 | v8 diagnosis (4 lenses × 2 skeptics, synthesis, README fact-check) | `campaigns/20260926-anchor-diagnostic-v8/analysis/diagnosis/diagnosis.json` |

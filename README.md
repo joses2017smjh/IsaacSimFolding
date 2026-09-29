@@ -40,7 +40,7 @@ Per pose (settled / reached / episodes; reached is counted from the per-step geo
 - **A rerun would probably fail.** A matched rerun would pass the H10 clause about 35–45% of the time if hardware is ignored, and 18–52% depending on the GPU mix the scheduler assigns. It would pass the full rule 10–20% of the time.
 - **The gain is at the wrong horizon for shipping.** Checkpoints ship at H50: `n_action_steps = 50`, and the challenge loader applies no override. At H50, an1 scores 6/16 vs 8/16.
 
-**Next step (not launched; needs authorization).** A measurement-only re-measurement of the baseline and an1 on the development poses. It would use fresh seeds, pin the GPU model with a Slurm constraint (`a40` / `rtx8000` are node features), and run 96 episodes (about 6.1 GPU-hours). The final set would stay untouched. See the [v8 report](campaigns/20260926-anchor-diagnostic-v8/REPORT.md). Targeted training toward dev01 is not supported by the supervision that exists.
+**Running now: v9, a fresh-seed re-measurement with the GPU model pinned.** It is measurement only: the baseline and an1 run on 48 fresh-seed development rows. The A40 block is primary and the RTX 8000 block is secondary; both are queued behind cluster maintenance. The final set stays untouched and the baseline stays the deliverable. See the [v9 status](campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md) and the [pending tasks and stretch goals](PENDING.md).
 
 **Campaign reports:**
 - [v2](campaigns/20260922-closed-loop-training-v2/REPORT.md): AWR self-imitation

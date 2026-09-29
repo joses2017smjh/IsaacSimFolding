@@ -8,7 +8,7 @@
 | **Limitation / blocker** | block:a40: 0 running, pending (PENDING ReqNodeNotAvail, May be reserved for other job); block:rtx8000: 0 running, pending (PENDING BadConstraints) |
 | **Next automatic action** | driver advances when a waited job ends (2-hour watchdog) |
 
-_Updated 2026-09-29T03:01:12Z by scripts/driver.py._
+_Updated 2026-09-29T15:03:54Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record

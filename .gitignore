@@ -47,3 +47,7 @@ __pycache__/
 
 # Full-size Storm renders (~13 MB each). Web-sized copies live in docs/gifs/.
 results/*.gif
+
+# Slurm writes slurm-<job>.out into the submit directory when a job sets no
+# --output; they are kept locally under logs/root-slurm-out/, never committed.
+/slurm-*.out

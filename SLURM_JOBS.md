@@ -1,4 +1,14 @@
-# Job ledger
+# Job ledger (historical: 2026-08-27 to 2026-09-08)
+
+> **Historical record, no longer updated.** This hand-kept ledger stops on
+> 2026-09-08 at job 21214241. Later jobs are recorded per campaign:
+> - v2-v9: `campaigns/<campaign>/ledger/slurm-jobs.json`, written by each
+>   campaign's driver and reconciled from `sacct`;
+> - the horizon pilot: `campaigns/20260921-horizon-pilot/audit/job_ledger.json`
+>   and `submissions.jsonl`;
+> - earlier campaigns: their own `STATUS.md` records. The entries below are kept as written; later records
+> supersede some of their verdicts (see the notes inside rows such as
+> 21204986 and 21214156-57).
 
 Every job submitted from this repo, updated at submission. Kept because a
 deliverable went missing once when it was not.

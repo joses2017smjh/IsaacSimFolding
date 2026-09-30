@@ -1287,5 +1287,63 @@ def promoted_glue_modules_import_without_their_heavy_dependencies():
     assert callable(write_mp4) and callable(read_rgb)
 
 
+
+# ------------------------------------------------ the challenge's own metric
+@test
+def challenge_sampler_phase_starts_at_27_and_drifts_ten_steps_per_failure():
+    from lehome_fold import challenge_metric as M
+
+    assert M.sampled_phase(0) == M.FRESH_PROCESS_PHASE == 27
+    never = [[]] * 6
+    assert [p for p, _ in M.evaluate_sequence(never)] == [27, 37, 47, 7, 17, 27]
+    assert M.episode_calls(None) == 20 + 3 * 600
+    assert M.episode_calls(100) == 20 + 300 + 2 * 49
+    assert M.episode_calls(580) == 20 + 1740 + 2 * 20          # tail capped at max_steps
+    # a latched success resets nothing: the phase keeps following the counter
+    (p1, f1), (p2, _) = M.evaluate_sequence([range(1, 601), []])
+    assert (p1, f1) == (27, 27) and p2 == M.sampled_phase(M.episode_calls(27))
+
+
+@test
+def challenge_sampler_latches_first_sampled_success_not_the_final_state():
+    from lehome_fold import challenge_metric as M
+
+    transient = list(range(100, 140))           # folded at 100-139, undone before the end
+    assert M.first_sampled_success(transient, 27) == 127
+    assert M.first_sampled_success(transient, 45) is None     # samples 95, 145: missed
+    late = list(range(582, 601))                # folded only after the last phase-27 sample (577)
+    assert M.first_sampled_success(late, 27) is None
+    close(M.phase_average(late), 19 / 50)       # phases 32-50 catch it
+    assert M.phase_average(range(1, 601)) == 1.0 and M.phase_average([]) == 0.0
+    rollout = {"geometry_trajectory": [{"phase": "settle", "step": 1, "success": True},
+                                        {"phase": "policy", "step": 5, "success": True},
+                                        {"phase": "policy", "step": 6, "success": False},
+                                        {"phase": "terminal_settle", "step": 7, "success": True}]}
+    assert M.trace_from_rollout(rollout) == [5]
+
+
+@test
+def challenge_sampler_reproduces_the_real_evaluators_logged_first_successes():
+    """Replays the project's logged runs of the actual challenge evaluator: every
+    first success must fall on the step the call-counter model predicts."""
+    from lehome_fold import challenge_metric as M
+
+    path = Path(__file__).resolve().parent.parent / "campaigns/20260920-folding-pilot-v3/audit/baseline_episodes.json"
+    cells = json.loads(path.read_text())["cells"]
+    checked = 0
+    for cell in cells:
+        counter = 0
+        for e in cell["episodes"]:
+            phase = M.sampled_phase(counter)
+            first = e["first_success_action_1based"] if e["ever_success"] else None
+            if first is not None:
+                assert (first - phase) % M.PERIOD == 0, (cell["slurm_job_id"], e["garment"], first, phase)
+                checked += 1
+            else:
+                assert e["reported_pre_success_length"] == M.MAX_STEPS
+            counter += M.episode_calls(first)
+    assert checked == 11, checked
+
+
 if __name__ == "__main__":
     raise SystemExit(main())

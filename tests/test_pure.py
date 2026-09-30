@@ -8,7 +8,10 @@ the environment is under repair.
 
 What is covered: splits, labels, calibration, AWR, RECAP, Thompson, checkpoint
 provenance, the eval-log parser, and the value heads. That is every piece of
-the paper's method that this repo implements itself.
+the paper's method that this repo implements itself. Also covered: the modules
+promoted from the horizon pilot on 2026-09-30 (behaviour telemetry, landmark
+welding and the scorer adapter, switch tracing); the media and strict-observer
+glue is import-checked only.
 
 What is NOT covered, and cannot be here: the seam between our heads and a live
 LeRobot backbone (scripts/probe_backbone.py exists to pin that once the stack
@@ -1084,6 +1087,204 @@ def trainer_does_not_consume_dotfile_sidecars_as_rollouts():
         kept = [f for f in sorted(d.glob("*.jsonl"))
                 if not f.name.startswith(".")]
         assert [f.name for f in kept] == ["rollout_w000_0001.jsonl"], kept
+
+
+# ------------------------------------------ promoted from the horizon pilot
+# behavior_telemetry, folding_geometry, policy_media, strict_observer and
+# switch_trace lived only in campaigns/20260921-horizon-pilot/src until
+# 2026-09-30. The root copies are byte-identical, and campaign jobs still
+# import the pilot's copies first (their PYTHONPATH puts the pilot's src
+# ahead of this one), so promotion changes nothing that runs.
+PROMOTED = ("behavior_telemetry", "folding_geometry", "policy_media", "strict_observer", "switch_trace")
+
+
+def _raises(exc, fn, *args, **kwargs):
+    try:
+        fn(*args, **kwargs)
+    except exc:
+        return
+    raise AssertionError(f"{fn.__name__}{args} did not raise {exc.__name__}")
+
+
+@test
+def promoted_modules_are_byte_identical_to_the_pilot_copies():
+    root = Path(__file__).resolve().parent.parent
+    pilot = root / "campaigns/20260921-horizon-pilot/src/lehome_fold"
+    for name in PROMOTED:
+        ours, theirs = root / "src/lehome_fold" / f"{name}.py", pilot / f"{name}.py"
+        assert ours.read_bytes() == theirs.read_bytes(), f"{name}.py diverged from the pilot copy"
+
+
+@test
+def behavior_telemetry_is_passive_and_measures_replan_boundaries():
+    """Ported from the pilot's test_behavior_telemetry: boundary jumps and camera
+    changes at replans, proximity never reported as contact, and neither the
+    inputs nor the global RNG are touched."""
+    from lehome_fold.behavior_telemetry import BehaviorTelemetry
+
+    points = np.array([[0., 0., 0.], [0.1, 0, 0]])
+    links = {side: (np.array([[0., 0, .01], [.3, 0, 0]]), np.zeros((2, 4))) for side in ("left", "right")}
+    geom = {"conditions_passed": 1, "conditions_total": 4, "success": False, "details": {}}
+    with tempfile.TemporaryDirectory() as tmp:
+        writer = BehaviorTelemetry(Path(tmp) / "behavior.jsonl", points, 2, 1 / 90,
+                                   {side: ["gripper", "jaw"] for side in links})
+        state = np.random.get_state()
+        originals = points.copy(), links["left"][0].copy()
+        for step in range(1, 7):
+            action = np.full(12, float(step // 3))
+            images = {k: np.full((16, 16, 3), step * 10, dtype=np.uint8) for k in ("top_rgb", "left_rgb", "right_rgb")}
+            writer.record(step, action, np.zeros(12), images, points, links, geom)
+            assert np.array_equal(action, np.full(12, float(step // 3)))
+        result = writer.finish()
+        assert [r["action"] for r in result["replan_boundary_jumps"]] == [3, 5]
+        close(result["replan_boundary_jumps"][0]["l2_rad"], float(np.sqrt(12)))
+        assert result["steps"] == 6
+        assert result["first_cloth_contact"] is None and result["successful_cloth_acquisition"] is None
+        assert result["first_link_origin_proximity_under_3cm_action"]["left"] == 1
+        assert len(Path(result["path"]).read_text().splitlines()) == 6
+        assert len(result["camera_changes_between_replans"]) == 2
+        assert np.array_equal(points, originals[0]) and np.array_equal(links["left"][0], originals[1])
+        after = np.random.get_state()
+        assert np.array_equal(state[1], after[1]) and state[2:] == after[2:]
+    _raises(ValueError, BehaviorTelemetry, "/dev/null", points, 2, 1 / 90, {"left": ["wrist"], "right": ["jaw"]})
+
+
+@test
+def weld_correspondence_merges_seam_duplicates_in_first_seen_order():
+    from lehome_fold.folding_geometry import validate_indices, weld_correspondence
+
+    pts = np.array([[0., 0, 0], [1, 0, 0], [0, 0, 0], [0, 1, 0], [1, 0, 0]])
+    mapping, unique = weld_correspondence(pts)
+    assert mapping.tolist() == [0, 1, 0, 2, 1], mapping
+    assert np.array_equal(unique, [[0, 0, 0], [1, 0, 0], [0, 1, 0]])
+    assert np.allclose(unique[mapping], pts)
+    _raises(ValueError, weld_correspondence, np.zeros((3, 2)))
+    _raises(ValueError, weld_correspondence, np.array([[0., 0, np.nan]]))
+    validate_indices([0, 1, 2, 0, 1, 2], 3)
+    for bad in ([0, 1, 2], [0, 1, 2, 3, 4, 5], [0, 1, 2, 0, 1, True], [0, 1, 2, 0, 1, -1]):
+        _raises(ValueError, validate_indices, bad, 3)
+
+
+@test
+def particle_correspondence_accepts_translation_and_rejects_permutation():
+    from lehome_fold.folding_geometry import verify_cooked_rest, verify_initial_correspondence
+
+    rest = np.arange(18.).reshape(6, 3)
+    proof = verify_initial_correspondence(rest + [0, 0, -.002], rest)
+    assert proof["max_rest_correspondence_error_m"] < 1e-10
+    assert np.allclose(proof["uniform_initial_translation_m"], [0, 0, -.002])
+    _raises(ValueError, verify_initial_correspondence, rest[::-1], rest)
+    _raises(ValueError, verify_initial_correspondence, rest[:5], rest)
+    _raises(ValueError, verify_initial_correspondence, rest + np.nan, rest)
+    assert verify_cooked_rest(rest, rest.copy(), 6)["max_rest_correspondence_error_asset_units"] == 0.0
+    _raises(ValueError, verify_cooked_rest, rest, rest, 5)
+    _raises(ValueError, verify_cooked_rest, rest + [0, 0, 1e-3], rest, 6)
+
+
+@test
+def physx_remap_is_validated_never_inferred():
+    from lehome_fold.folding_geometry import verify_physx_remap
+
+    distinct = np.array([[0., 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    mapping, proof = verify_physx_remap(distinct, distinct.copy(), np.array([]), np.array([]), 4)
+    assert mapping.tolist() == [0, 1, 2, 3] and proof["proof_source"].startswith("Unwelded")
+    welded = np.array([[0., 0, 0], [1, 0, 0], [0, 0, 0]])
+    mapping, proof = verify_physx_remap(welded, welded.copy(), np.array([0, 1, 0]), np.array([0, 1]), 2)
+    assert mapping.tolist() == [0, 1, 0] and proof["max_rest_correspondence_error_asset_units"] == 0.0
+    _raises(ValueError, verify_physx_remap, welded, welded.copy(), np.array([0, 1, 0]), np.array([1, 0]), 2)
+    _raises(ValueError, verify_physx_remap, welded, welded.copy(), np.array([]), np.array([]), 3)
+    _raises(ValueError, verify_physx_remap, welded, welded.copy(), np.array([0, 2, 0]), np.array([0, 1]), 2)
+    _raises(ValueError, verify_physx_remap, welded, welded + 1e-3, np.array([0, 1, 0]), np.array([0, 1]), 2)
+
+
+@test
+def scorer_adapter_maps_landmarks_and_keeps_official_margins():
+    """mapped_positions_cm reads live particles through the verified weld map;
+    fresh_geometry passes them to the OFFICIAL predicates unchanged and only
+    derives margins, refusing a predicate-count change."""
+    from types import SimpleNamespace
+
+    import torch
+    from lehome_fold.folding_geometry import fresh_geometry, mapped_positions_cm
+
+    live = np.arange(18.).reshape(6, 3) / 100
+    view = SimpleNamespace(get_world_positions=lambda: torch.tensor(live).unsqueeze(0))
+    obj = SimpleNamespace(_folding_vertex_to_particle=np.array([5, 4, 3, 2, 1, 0]), _folding_particle_count=6,
+                          _cloth_prim_view=view, check_points=[0, 1, 2, 3, 4, 5], init_scale=[0.5, 0.5, 0.5],
+                          success_distance=[8, 8, 40, 40])
+    assert np.allclose(mapped_positions_cm(obj, [0, 1, 2, 3, 4, 5]), live[[5, 4, 3, 2, 1, 0]] * 100)
+    _raises(ValueError, mapped_positions_cm, SimpleNamespace(), [0, 1, 2, 3, 4, 5])
+    seen = {}
+
+    def check_pant_short(points, thresholds):
+        seen["points"], seen["thresholds"] = points, thresholds
+        details = {"condition_1": {"description": "d(p0,p1) <= t", "value": 3.0, "threshold": 4.0, "passed": True},
+                   "condition_2": {"description": "d(p2,p3) <= t", "value": 5.0, "threshold": 4.0, "passed": False},
+                   "condition_3": {"description": "d(p4,p5) >= t", "value": 25.0, "threshold": 20.0, "passed": True},
+                   "condition_4": {"description": "d(p0,p5) >= t", "value": 21.0, "threshold": 20.0, "passed": True}}
+        return False, details
+
+    def unused(points, thresholds):
+        raise AssertionError("fresh_geometry called the wrong garment's predicate")
+
+    def official(pant_short):
+        return SimpleNamespace(check_top_sleeve=unused, check_pant_long=unused, check_pant_short=pant_short)
+
+    out = fresh_geometry(obj, "short-pant", official(check_pant_short))
+    assert seen["thresholds"] == [4.0, 4.0, 20.0, 20.0], seen["thresholds"]
+    assert (out["success"], out["conditions_passed"], out["conditions_total"]) == (False, 3, 4)
+    margins = [out["details"][f"condition_{i}"]["margin_cm"] for i in range(1, 5)]
+    assert margins == [1.0, -1.0, 5.0, 1.0], margins
+    three = lambda points, thresholds: (True, dict(list(check_pant_short(points, thresholds)[1].items())[:3]))  # noqa: E731
+    _raises(ValueError, fresh_geometry, obj, "short-pant", official(three))
+
+
+@test
+def switch_trace_records_the_upstream_switch_and_the_camera_retarget():
+    import json as _json
+    from types import SimpleNamespace
+
+    from lehome_fold.switch_trace import trace_switch
+
+    calls = []
+
+    class Env:
+        def switch_garment(self, garment):
+            calls.append(("switch", garment))
+
+    class Observer:
+        cfg = SimpleNamespace(assets="/assets")
+
+        def retarget(self, directory):
+            calls.append(("retarget", directory))
+
+    before = sys.gettrace()
+    with tempfile.TemporaryDirectory() as td:
+        path = Path(td) / "trace.jsonl"
+        trace_switch(Env(), "Pant_Short_Seen_3", path, Observer())
+        events = [_json.loads(line) for line in path.read_text().splitlines()]
+    names = [e["event"] for e in events]
+    assert names[0] == "switch_begin" and names[-1] == "switch_exit", names
+    for required in ("upstream_switch_returned", "camera_retarget_begin", "camera_retarget_end"):
+        assert required in names, required
+    assert any(e["event"] == "call" and e.get("function") == "switch_garment" for e in events)
+    assert calls == [("switch", "Pant_Short_Seen_3"),
+                     ("retarget", "/assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3")], calls
+    assert sys.gettrace() is before
+
+
+@test
+def promoted_glue_modules_import_without_their_heavy_dependencies():
+    """policy_media needs Pillow and ffmpeg only inside write_mp4; strict_observer
+    needs pxr and Pillow only inside render/read_rgb. Both import on a bare
+    numpy install. Their behaviour needs Isaac Sim or ffmpeg and is not covered
+    here."""
+    from lehome_fold.policy_media import write_mp4
+    from lehome_fold.storm_obs import StormObserver
+    from lehome_fold.strict_observer import StrictStormObserver, read_rgb
+
+    assert issubclass(StrictStormObserver, StormObserver)
+    assert callable(write_mp4) and callable(read_rgb)
 
 
 if __name__ == "__main__":

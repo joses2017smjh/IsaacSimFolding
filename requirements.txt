@@ -1,6 +1,6 @@
 # The dependency-light half: src/lehome_fold and tests/test_pure.py.
 # Verified by import audit -- these two are the only third-party names either
-# imports. 37 tests run anywhere both exist, with no GPU and no simulator.
+# imports. The suite runs anywhere both exist, with no GPU and no simulator.
 numpy>=1.24
 torch>=2.0
 

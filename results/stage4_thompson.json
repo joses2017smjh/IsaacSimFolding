@@ -1,235 +1,37 @@
 {
   "gain": {
-    "best_arm": null,
-    "best_mean": null,
-    "best_pulls": 0.0,
-    "baseline_arm": "c1_k30_t1_s10",
-    "baseline_mean": 0.02,
-    "baseline_pulls": 24.0,
-    "gain": null,
-    "separated": 0.0,
     "arms_pulled": 2,
-    "arms_total": 36,
-    "total_successes": 0,
-    "note": "no arm recorded a single success in 36 episodes; posterior means here rank by fewest pulls, not by quality -- no ranking valid. The gain of 0.48 written by the original run compared an arm with ZERO pulls, sitting at the Beta(0.5,0.5) prior, against a measured baseline. Corrected in place; see thompson.gain_over_baseline."
+    "arms_total": 3,
+    "total_successes": 5,
+    "note": null,
+    "best_arm": "c1_k30_t1_s10",
+    "best_mean": 0.2692307692307692,
+    "best_pulls": 12.0,
+    "baseline_arm": "c1_k30_t1_s10",
+    "baseline_mean": 0.2692307692307692,
+    "baseline_pulls": 12.0,
+    "gain": 0.0,
+    "best_ci_lo": 0.09576092355457295,
+    "best_ci_hi": 0.48521780742290554,
+    "baseline_ci_lo": 0.09641694279384759,
+    "baseline_ci_hi": 0.4793575099147743,
+    "separated": 0.0,
+    "cost_ratio": 1.0
   },
   "arms": [
     {
-      "name": "c1_k15_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.26666666666666666
-    },
-    {
-      "name": "c1_k15_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.6666666666666666
-    },
-    {
-      "name": "c1_k15_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.26666666666666666
-    },
-    {
-      "name": "c1_k15_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.6666666666666666
-    },
-    {
-      "name": "c1_k30_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.13333333333333333
-    },
-    {
-      "name": "c1_k30_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.3333333333333333
-    },
-    {
-      "name": "c1_k30_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.13333333333333333
-    },
-    {
       "name": "c1_k30_t1_s10",
-      "pulls": 24,
-      "successes": 0,
-      "posterior_mean": 0.02,
+      "pulls": 12,
+      "successes": 3,
+      "posterior_mean": 0.2692307692307692,
       "cost": 0.3333333333333333
-    },
-    {
-      "name": "c1_k50_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.08
-    },
-    {
-      "name": "c1_k50_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.2
-    },
-    {
-      "name": "c1_k50_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.08
-    },
-    {
-      "name": "c1_k50_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.2
-    },
-    {
-      "name": "c4_k15_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 1.0666666666666667
-    },
-    {
-      "name": "c4_k15_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 2.6666666666666665
-    },
-    {
-      "name": "c4_k15_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 1.0666666666666667
-    },
-    {
-      "name": "c4_k15_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 2.6666666666666665
-    },
-    {
-      "name": "c4_k30_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.5333333333333333
-    },
-    {
-      "name": "c4_k30_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 1.3333333333333333
-    },
-    {
-      "name": "c4_k30_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.5333333333333333
     },
     {
       "name": "c4_k30_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
+      "pulls": 12,
+      "successes": 2,
+      "posterior_mean": 0.19230769230769232,
       "cost": 1.3333333333333333
-    },
-    {
-      "name": "c4_k50_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.32
-    },
-    {
-      "name": "c4_k50_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.8
-    },
-    {
-      "name": "c4_k50_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.32
-    },
-    {
-      "name": "c4_k50_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 0.8
-    },
-    {
-      "name": "c16_k15_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 4.266666666666667
-    },
-    {
-      "name": "c16_k15_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 10.666666666666666
-    },
-    {
-      "name": "c16_k15_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 4.266666666666667
-    },
-    {
-      "name": "c16_k15_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 10.666666666666666
-    },
-    {
-      "name": "c16_k30_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 2.1333333333333333
-    },
-    {
-      "name": "c16_k30_t0.5_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 5.333333333333333
-    },
-    {
-      "name": "c16_k30_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 2.1333333333333333
     },
     {
       "name": "c16_k30_t1_s10",
@@ -237,43 +39,17 @@
       "successes": 0,
       "posterior_mean": 0.5,
       "cost": 5.333333333333333
-    },
-    {
-      "name": "c16_k50_t0.5_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 1.28
-    },
-    {
-      "name": "c16_k50_t0.5_s10",
-      "pulls": 12,
-      "successes": 0,
-      "posterior_mean": 0.038461538461538464,
-      "cost": 3.2
-    },
-    {
-      "name": "c16_k50_t1_s4",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 1.28
-    },
-    {
-      "name": "c16_k50_t1_s10",
-      "pulls": 0,
-      "successes": 0,
-      "posterior_mean": 0.5,
-      "cost": 3.2
     }
   ],
   "run": {
-    "job": 21204986,
-    "state": "TIMEOUT at 5h",
-    "episodes_spent": 36,
-    "episodes_budget": 60,
-    "garment": "Pant_Short_Seen_0",
-    "renderer": "Storm (LH_STORM_EVAL=1)",
-    "note": "partial: the incremental write preserved 36 of 60 episodes"
+    "job": 21214243,
+    "job_attribution": "the file carries no job id; 21214243 (lh-tune, scripts/tune_inference.py) is the only lh-tune job that was running when it was last written, 2026-09-08 12:05:35 PDT (sacct: 09:18-21:18)",
+    "state": "TIMEOUT at 12 h; the incremental write last fired at 12:05, after 24 episodes",
+    "episodes_spent": 24,
+    "physics": "real: SIM_DEVICE=cuda:0, Storm following switch_garment (both fixes from 2026-09-07/08)",
+    "garment_sweep": "pant_short, LeHome's 12-garment sweep",
+    "reading": "partial and inconclusive: the c16 arm never completed a pull; the best arm IS the baseline arm (c1, 3/12) with c4 at 2/12, gain 0.0 and overlapping intervals -- no valid ranking",
+    "supersedes": "job 21204986's 0/36 (commit 562e660, preserved in git history), measured on frozen cloth (CPU simulation device) through the wrong-garment bug; see SLURM_JOBS.md rows 21204986 and 21214156-57",
+    "recorded": "provenance added 2026-09-30 when this file was committed as the current Stage 4 result"
   }
 }

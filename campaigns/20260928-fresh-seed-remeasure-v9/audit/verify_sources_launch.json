@@ -1,0 +1,9 @@
+{
+  "campaign": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9",
+  "commit": "26bd2a14d9c5b47e8d38abab604ab2a6330b21f3",
+  "sources_declared": 116,
+  "sources_checked": 116,
+  "checkpoint_checked": true,
+  "passed": true,
+  "problems": []
+}

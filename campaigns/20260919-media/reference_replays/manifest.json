@@ -1,0 +1,98 @@
+[
+  {
+    "garment": "Top_Short_Seen_0",
+    "success": true,
+    "mode": "replay",
+    "episode": 2,
+    "gif": "reference_replays/rollout_Top_Short_Seen_0_replay_ep2_success.gif",
+    "result": "reference_replays/rollout_Top_Short_Seen_0_replay_ep2.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Short_Seen_0_replay_ep2_success.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Short_Seen_0_replay_ep2.json",
+    "gif_sha256": "4e92ae20d6be574633ee871026d34e01cb33a0ffb561b6fc68c4138ba23d79b2",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Top_Short_Seen_0",
+    "success": false,
+    "mode": "replay",
+    "episode": 1,
+    "gif": "reference_replays/rollout_Top_Short_Seen_0_replay_ep1_failure.gif",
+    "result": "reference_replays/rollout_Top_Short_Seen_0_replay_ep1.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Short_Seen_0_replay_ep1_failure.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Short_Seen_0_replay_ep1.json",
+    "gif_sha256": "5a932d01e8efbfbbbbbb2d723c01f82fea6fbe26d03bf7eaa7f73845dcf89fdb",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Top_Long_Seen_0",
+    "success": true,
+    "mode": "replay",
+    "episode": 251,
+    "gif": "reference_replays/rollout_Top_Long_Seen_0_v2_ep251_replay_ep251_success.gif",
+    "result": "reference_replays/rollout_Top_Long_Seen_0_v2_ep251.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Long_Seen_0_v2_ep251_replay_ep251_success.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Long_Seen_0_v2_ep251.json",
+    "gif_sha256": "26885cfcafeb6118b1bd4bf30d0af18b639afd9deb9417722735fc75ac04c32d",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Top_Long_Seen_0",
+    "success": false,
+    "mode": "replay",
+    "episode": 250,
+    "gif": "reference_replays/rollout_Top_Long_Seen_0_v2_ep250_replay_ep250_failure.gif",
+    "result": "reference_replays/rollout_Top_Long_Seen_0_v2_ep250.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Long_Seen_0_v2_ep250_replay_ep250_failure.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Top_Long_Seen_0_v2_ep250.json",
+    "gif_sha256": "42459f22aa0594d58309858c962c82584e5eda4abd70876bf348907ef0563eb7",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Pant_Short_Seen_0",
+    "success": true,
+    "mode": "replay",
+    "episode": 501,
+    "gif": "reference_replays/rollout_Pant_Short_Seen_0_v2_ep501_replay_ep501_success.gif",
+    "result": "reference_replays/rollout_Pant_Short_Seen_0_v2_ep501.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Short_Seen_0_v2_ep501_replay_ep501_success.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Short_Seen_0_v2_ep501.json",
+    "gif_sha256": "3ee6ef25f3e591c2878c4c31609b08ed7442eea87279749c8f3e45014b78dfc0",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Pant_Short_Seen_0",
+    "success": false,
+    "mode": "replay",
+    "episode": 502,
+    "gif": "reference_replays/rollout_Pant_Short_Seen_0_v2_ep502_replay_ep502_failure.gif",
+    "result": "reference_replays/rollout_Pant_Short_Seen_0_v2_ep502.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Short_Seen_0_v2_ep502_replay_ep502_failure.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Short_Seen_0_v2_ep502.json",
+    "gif_sha256": "867dc5b4d329828456679b62795a02ebee06ade53b563a8a07897dc960d99bf0",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Pant_Long_Seen_0",
+    "success": true,
+    "mode": "replay",
+    "episode": 750,
+    "gif": "reference_replays/rollout_Pant_Long_Seen_0_replay_ep750_success.gif",
+    "result": "reference_replays/rollout_Pant_Long_Seen_0_replay_ep750.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Long_Seen_0_replay_ep750_success.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Long_Seen_0_replay_ep750.json",
+    "gif_sha256": "42c893653bfb6b539c93c31c537f07b4400586314ffcb81646bee953b90a4675",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  },
+  {
+    "garment": "Pant_Long_Seen_0",
+    "success": false,
+    "mode": "replay",
+    "episode": 751,
+    "gif": "reference_replays/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif",
+    "result": "reference_replays/rollout_Pant_Long_Seen_0_replay_ep751.json",
+    "source_gif": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Long_Seen_0_replay_ep751_failure.gif",
+    "source_result": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/results/rollout_Pant_Long_Seen_0_replay_ep751.json",
+    "gif_sha256": "ab6ee5d1c4c8190abf92a621f2e553b4468aed778450e87a7710239a0d6500ba",
+    "timing": "historical source unchanged; use new policy media for measured simulation timing"
+  }
+]

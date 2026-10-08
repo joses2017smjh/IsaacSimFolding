@@ -1,0 +1,8 @@
+/runtime/
+/smoke/
+/rollouts/
+/datasets/*.npz
+/training/checkpoints/
+/evaluation/
+*.pyc
+__pycache__/

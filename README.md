@@ -1,10 +1,16 @@
 <h1 align="center">Isaac Sim Folding</h1>
 
-## Current status (27 September 2026, after campaign v8)
+## Current status (6 October 2026, after campaign v9)
 
 **Deliverable: the untouched baseline**, the raster fine-tune `bc_smolvla_raster_ft_full` (`model.safetensors` `4a37d4dc…`, pinned `immutable: true` in every campaign manifest). Nine fine-tuned checkpoints from campaigns v2–v8 have been scored on the development rows. None passed its preregistered rule. The confirmatory final set has never been spent.
 
-**Latest: v8, a one-factor anchor diagnostic** ([status](campaigns/20260926-anchor-diagnostic-v8/STATUS.md) · [report](campaigns/20260926-anchor-diagnostic-v8/REPORT.md) · [manifest](campaigns/20260926-anchor-diagnostic-v8/manifest.json)). v7 traced every fine-tune's H50 deficit to a shared early-episode shift and named the behaviour-cloning anchor (12 tops + 4 pants) as the suspect. v8 replaced that anchor with 16 pants demonstrations (8 Pant_Short + 8 Pant_Long) and kept everything else the same:
+**Latest measured outcome: v9 closed on 30 September 2026; the v8 candidate did not reproduce its gain.** All 192 fresh-seed episodes were valid and GPU-pinned. On the primary A40 block, candidate versus baseline settled H10 **6/24 vs 7/24** and H50 **4/24 vs 5/24**. On RTX 8000, H10 was **6/24 vs 9/24** and H50 **3/24 vs 4/24**. Neither preregistered improvement rule passed. The baseline remains the deliverable; the final set remains untouched. See [v9 measured results](campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/results.json) and [status](campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md).
+
+**6 October 2026: runtime control intervention queued.** Compare the immutable baseline with a 10-action execution queue against its shipped 50-action queue. Both settings still predict 50 actions, use the same three RGB views and joint state, and execute the same 600-action budget plus 60-step terminal hold. No checker output guides actions. The bounded design uses one full-episode smoke pair followed by 48 fresh-seed development pairs on the same allocated A40 per pair, with counterbalanced order. The preregistered screen requires five additional settled folds and one-sided exact paired p <= 0.05 across all 48 valid pairs. This is a development screen; held-out generalization and hardware deployment remain unmeasured. No result improvement is claimed before the queued measurements finish.
+
+The [frozen protocol](campaigns/20261006-runtime-horizon/manifest.json), [paired rollout worker](campaigns/20261006-runtime-horizon/scripts/run_pair.py), and [submission ledger](campaigns/20261006-runtime-horizon/ledger/submissions.json) are reviewable in this repository. The authoritative running campaign remains `/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding`; the repository directory is a byte-identical source snapshot with site-specific paths. Smoke job **21601323** gates the 48-pair array **21601324**, and **21601325** writes the JSON summary after the array ends. It uses at most one A40 concurrently and creates no new Markdown or text documents.
+
+**Historical v8: a one-factor anchor diagnostic** ([status](campaigns/20260926-anchor-diagnostic-v8/STATUS.md) · [report](campaigns/20260926-anchor-diagnostic-v8/REPORT.md) · [manifest](campaigns/20260926-anchor-diagnostic-v8/manifest.json)). v7 traced every fine-tune's H50 deficit to a shared early-episode shift and named the behaviour-cloning anchor (12 tops + 4 pants) as the suspect. v8 replaced that anchor with 16 pants demonstrations (8 Pant_Short + 8 Pant_Long) and kept everything else the same:
 - v7's 6,375-label corpus, byte for byte;
 - lr 3.3e-6, batch 4 × grad-accum 8, fp32 master weights, 300 steps;
 - the latest checkpoint that passes the retention guard.
@@ -30,7 +36,7 @@ Per pose (settled / reached / episodes; reached is counted from the per-step geo
 
 **Outcome: not improved.** The development screen failed. Under the preregistration the baseline stays the deliverable and the final set stays unspent. The whole H50 deficit is one row, dev01 H50: baseline 2/2, an1 0/2. v8 used 67 GPU tasks (4.64 GPU-hours). All five stage jobs completed, and nothing needs rerunning.
 
-**How to read the H10 pass.** It is probably a real behavioural difference on these eight rows, but it is not robust:
+**How the earlier v8 H10 pass was interpreted.** The fresh-seed v9 re-measurement did not reproduce it; the following analysis is historical:
 - **It survives stratification.** By row p = 0.012, by pose 0.011, by row × GPU model 0.010 (9/15 vs 1/13). Treating rows as the unit gives 0.047–0.10.
 - **Two P_A rows carry most of it.** dev04 and dev06 supply +4 of the +7 margin, and dropping either one gives p = 0.052.
   - dev04 is robust: the baseline has settled it 0/10, on both GPU models.
@@ -40,7 +46,7 @@ Per pose (settled / reached / episodes; reached is counted from the per-step geo
 - **A rerun would probably fail.** A matched rerun would pass the H10 clause about 35–45% of the time if hardware is ignored, and 18–52% depending on the GPU mix the scheduler assigns. It would pass the full rule 10–20% of the time.
 - **The gain is at the wrong horizon for shipping.** Checkpoints ship at H50: `n_action_steps = 50`, and the challenge loader applies no override. At H50, an1 scores 6/16 vs 8/16.
 
-**Running now: v9, a fresh-seed re-measurement with the GPU model pinned.** It is measurement only: the baseline and an1 run on 48 fresh-seed development rows. The A40 block is primary and the RTX 8000 block is secondary; both are queued behind cluster maintenance. The final set stays untouched and the baseline stays the deliverable. See the [v9 status](campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md) and the [pending tasks and stretch goals](PENDING.md).
+**v9 is complete.** The fresh-seed measurements did not reproduce the v8 gain; see the current result above and the [v9 results](campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/results.json).
 
 **Campaign reports:**
 - [v2](campaigns/20260922-closed-loop-training-v2/REPORT.md): AWR self-imitation
@@ -570,3 +576,10 @@ attempted.
 <a href="docs/PLAN.md">docs/PLAN.md</a><br>
 Environment, assets and scorer © the LeHome Challenge organizers (Apache-2.0).
 Method: <a href="https://ilialarchenko.com/projects/lehome2026/">Ilia Larchenko</a>.</sub>
+
+
+<!-- folding-runtime-result:34c246b0e347e99db81af24659cd5fcf17e35491d6419f81a4c1c41f10bca5e8:begin -->
+
+**Runtime execution-horizon result: No improvement under the preregistered development rule.** H10 settled **16/48** versus H50 **8/48** across 48/48 valid matched pairs. Difference: +8 folds; one-sided exact paired p = 0.0576591. The unchanged baseline weights remain the deliverable. A development-screen pass requires separately preregistered held-out confirmation before promotion; this update establishes no hardware-deployment or generalization result. All results retain the 600-action policy budget and 60-step terminal settling protocol. Source JSON SHA-256: `4a4e7c365ea6a44166dfc27bc080b796b82f693461a5a0596c355de59337ffce`. [Publication receipt](campaigns/20261006-runtime-horizon/analysis/publication_receipt.json). [Measured result JSON](campaigns/20261006-runtime-horizon/analysis/results.json).
+
+<!-- folding-runtime-result:34c246b0e347e99db81af24659cd5fcf17e35491d6419f81a4c1c41f10bca5e8:end -->

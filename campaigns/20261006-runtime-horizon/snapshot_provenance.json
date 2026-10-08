@@ -1,0 +1,20 @@
+{
+  "created_utc": "2026-10-06T09:30:56Z",
+  "purpose": "Reviewable frozen source snapshot; the running workspace campaign and its source pins remain authoritative.",
+  "authoritative_running_campaign": "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding",
+  "manifest_sha256": "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+  "relocation_note": "Absolute cluster paths are preserved. This snapshot is not a second queue or a substitute for source-pinned runtime files.",
+  "copied_file_sha256": {
+    "manifest.json": "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+    "ledger/submissions.json": "aa1c751228cce32d4346ef3e0bfa42fafe04b58d3801ac0b9813c7ddf09966ac",
+    "audit/prior_runtime_horizon.json": "aee740129f96c765abae07d1fefa561d413681cd54759dbc395ab3a1483353ca",
+    "scripts/build_manifest.py": "dafe3eb1a1b7cec72b650496978b897b77c35f43eb704c1142e684c6e94bed37",
+    "scripts/guarded_runner.py": "62e028f36b3c530873cdedc71c4866127e65d049c59bd9de46640a0379d8edac",
+    "scripts/run_pair.py": "1d2618299e4942391a2a12d60b971ee874586a3411e830bf90606776a1ac5bfd",
+    "scripts/submit_campaign.py": "ab7609f01e1aab935f776fcc0fb3a05dd497a2cfd1771f783add24f30fff40a7",
+    "scripts/summarize.py": "df238c1fb355c3ad3c61539d64ef7d02b24b9c3d4707ada9b3f647789bf8a490",
+    "scripts/test_protocol.py": "acc023b51d07611b4de98090dc32b7873d9bb6193d93154b72c2c12c13faf6d7",
+    "slurm/pair.sbatch": "2387a611eb5589dbf84c71422f9bbe5612602fbd04a36edfd83d5218baf94350",
+    "slurm/summarize.sbatch": "a6f98c4a41693f8033b4337853778a57082593f6a6fa9193c96bdaf8e3cfef9b"
+  }
+}

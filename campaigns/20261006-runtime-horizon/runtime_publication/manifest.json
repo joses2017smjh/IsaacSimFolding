@@ -1,0 +1,21 @@
+{
+  "kind": "Bounded result publication; independent of frozen experiment inputs",
+  "upstream_manifest_sha256": "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+  "summary_job_id": "21601325",
+  "dependency": "afterany:21601325",
+  "source_sha256": {
+    "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/runtime_publication/publish_results.py": "a3f2410c01f9539563736de4d18392f4ac883bc15bb7f5b4664d96f871aa2f09",
+    "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/runtime_publication/publish.sbatch": "a2b20c4b7d4189cca39a74cefe03e7554fe014be9499c7e3afd9a1603cf221d8",
+    "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/runtime_publication/test_publication.py": "265dfd6c3bd555d52b1f25799e0ab13fff1fb7d7181da58547517786722c3752"
+  },
+  "existing_docs": [
+    "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/README.md",
+    "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/PENDING.md"
+  ],
+  "budget": {
+    "cpu": 1,
+    "memory_gb": 2,
+    "minutes": 5
+  },
+  "policy": "Verify actual JSON against retained records; pass requires held-out confirmation; no automatic promotion or central resume edits."
+}

@@ -1,0 +1,17 @@
+{
+  "state": "queued",
+  "summary_job_id": "21601325",
+  "dependency": "afterany:21601325",
+  "publication_manifest_sha256": "967d0701fa1cf0f6f25619ba20f869c4a65209670894246632377e34af91221c",
+  "command": [
+    "/apps/slurm/current/bin/sbatch",
+    "--parsable",
+    "--mail-type=NONE",
+    "--dependency=afterany:21601325",
+    "--kill-on-invalid-dep=yes",
+    "--output=/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/runtime_publication/publish-%j.out",
+    "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/runtime_publication/publish.sbatch",
+    "967d0701fa1cf0f6f25619ba20f869c4a65209670894246632377e34af91221c"
+  ],
+  "job_id": "21602163"
+}

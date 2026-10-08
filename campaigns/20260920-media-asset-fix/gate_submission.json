@@ -1,0 +1,23 @@
+{
+  "job_id": "21367674",
+  "submitted_at": "2026-09-20T17:28:05.184524+00:00",
+  "command": [
+    "sbatch",
+    "--parsable",
+    "--chdir=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix",
+    "--output=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/logs/gate-%j.out",
+    "--error=/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/logs/gate-%j.err",
+    "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix/slurm/media.sbatch",
+    "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260920-media-asset-fix",
+    "0"
+  ],
+  "validation": {
+    "robot_asset": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/robots/lerobot/so101_follower_good.usd",
+    "robot_sha256": "af8d2f281cff5c3bd3478fbce9341782979ce042872ca2a9a0638934a5bfa46f",
+    "source_files_checked": 132,
+    "tasks": 1
+  },
+  "replaces_gate": "21360435",
+  "existing_jobs_modified": false,
+  "additional_array_submitted": false
+}

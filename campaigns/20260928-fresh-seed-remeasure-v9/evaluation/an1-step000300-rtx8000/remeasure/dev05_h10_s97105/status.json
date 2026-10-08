@@ -1,0 +1,20 @@
+{
+  "state": "completed",
+  "phase": "remeasure",
+  "task": "dev05_h10_s97105",
+  "policy": "candidate",
+  "run": "rtx8000",
+  "slurm_job_id": "21479696",
+  "slurm_array_task_id": "43",
+  "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+  "started_utc": "2026-09-30T10:39:50Z",
+  "child_pid": 2998721,
+  "returncode": 0,
+  "gpu_model": "Quadro RTX 8000",
+  "success": false,
+  "terminal_success": false,
+  "terminal_conditions": 2,
+  "terminal_conditions_total": 4,
+  "wall_seconds": 270.2668530389201,
+  "completed_utc": "2026-09-30T10:44:21Z"
+}

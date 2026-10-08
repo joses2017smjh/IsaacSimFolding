@@ -1,0 +1,239 @@
+{
+  "created": "2026-09-19",
+  "project_remote": "https://github.com/joses2017smjh/IsaacSimFolding.git",
+  "source_revision": "d6dd94d8b177156d04a76515a224451b5ce70d77",
+  "assets": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets",
+  "checkpoints": {
+    "adapt_s0": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/bhl-robustness-ladder/results/weekend-20260919/fold-adapt-s0/step_001200",
+      "training_seed": 0,
+      "best_step": 1200,
+      "completed_updates": 1500,
+      "sha256": {
+        "fold_training.json": "0640b5503d29ac14257d82f6734c168921dbb8bc3618a0eae1bf81611cfbb8d0",
+        "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+        "model.safetensors": "1b1d5206221f406c0c05e0639fa95c5a9e7b1d49eafad9a62c4622ee80759fb7",
+        "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+        "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+        "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+        "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7"
+      }
+    },
+    "adapt_s1": {
+      "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/bhl-robustness-ladder/results/weekend-20260919/fold-adapt-s1/step_001000",
+      "training_seed": 1,
+      "best_step": 1000,
+      "completed_updates": 1500,
+      "sha256": {
+        "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+        "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+        "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+        "fold_training.json": "87ace9d398a1aa45bacfada3d866edd8e18aad1710035beba380172ea2dba59d",
+        "model.safetensors": "bdabe0393b56e19a38e563a04297213a720a27db95659953563ee9663148c91c",
+        "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+        "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402"
+      }
+    }
+  },
+  "tasks": [
+    {
+      "index": 0,
+      "id": "adapt_s0_Top_Short_Seen_0_pose2",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 2,
+      "match_pose": "-0.03773808:-0.01536524:0.67000002:4.93192530:-7.44048691:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 1,
+      "id": "adapt_s1_Top_Short_Seen_0_pose2",
+      "policy_variant": "adapt_s1",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 2,
+      "match_pose": "-0.03773808:-0.01536524:0.67000002:4.93192530:-7.44048691:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 2,
+      "id": "adapt_s0_Top_Short_Seen_0_pose1",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 1,
+      "match_pose": "-0.05731682:0.01208788:0.67000002:19.47547722:11.97877026:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 3,
+      "id": "adapt_s1_Top_Short_Seen_0_pose1",
+      "policy_variant": "adapt_s1",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 1,
+      "match_pose": "-0.05731682:0.01208788:0.67000002:19.47547722:11.97877026:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 4,
+      "id": "adapt_s0_Top_Long_Seen_0_pose251",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Long/Top_Long_Seen_0",
+      "pose_source_episode": 251,
+      "match_pose": "-0.02816660:-0.00252625:0.73000002:-14.42024517:-9.14563560:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 5,
+      "id": "adapt_s1_Top_Long_Seen_0_pose251",
+      "policy_variant": "adapt_s1",
+      "garment": "Top_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Long/Top_Long_Seen_0",
+      "pose_source_episode": 251,
+      "match_pose": "-0.02816660:-0.00252625:0.73000002:-14.42024517:-9.14563560:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 6,
+      "id": "adapt_s0_Top_Long_Seen_0_pose250",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Long/Top_Long_Seen_0",
+      "pose_source_episode": 250,
+      "match_pose": "0.01989312:-0.00725965:0.73000002:-12.66381931:-8.61334133:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 7,
+      "id": "adapt_s1_Top_Long_Seen_0_pose250",
+      "policy_variant": "adapt_s1",
+      "garment": "Top_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Long/Top_Long_Seen_0",
+      "pose_source_episode": 250,
+      "match_pose": "0.01989312:-0.00725965:0.73000002:-12.66381931:-8.61334133:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 8,
+      "id": "adapt_s0_Pant_Short_Seen_0_pose509",
+      "policy_variant": "adapt_s0",
+      "garment": "Pant_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0",
+      "pose_source_episode": 509,
+      "match_pose": "-0.06561615:-0.01299079:0.67000002:-7.07188272:0.97711235:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 9,
+      "id": "adapt_s1_Pant_Short_Seen_0_pose509",
+      "policy_variant": "adapt_s1",
+      "garment": "Pant_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0",
+      "pose_source_episode": 509,
+      "match_pose": "-0.06561615:-0.01299079:0.67000002:-7.07188272:0.97711235:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 10,
+      "id": "adapt_s0_Pant_Short_Seen_0_pose502",
+      "policy_variant": "adapt_s0",
+      "garment": "Pant_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0",
+      "pose_source_episode": 502,
+      "match_pose": "-0.00709462:-0.02635807:0.67000002:17.95542145:24.21286583:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 11,
+      "id": "adapt_s1_Pant_Short_Seen_0_pose502",
+      "policy_variant": "adapt_s1",
+      "garment": "Pant_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0",
+      "pose_source_episode": 502,
+      "match_pose": "-0.00709462:-0.02635807:0.67000002:17.95542145:24.21286583:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 12,
+      "id": "adapt_s0_Pant_Long_Seen_0_pose750",
+      "policy_variant": "adapt_s0",
+      "garment": "Pant_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Long/Pant_Long_Seen_0",
+      "pose_source_episode": 750,
+      "match_pose": "0.02544118:-0.03557078:0.69999999:0.42989209:-4.29462767:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 13,
+      "id": "adapt_s1_Pant_Long_Seen_0_pose750",
+      "policy_variant": "adapt_s1",
+      "garment": "Pant_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Long/Pant_Long_Seen_0",
+      "pose_source_episode": 750,
+      "match_pose": "0.02544118:-0.03557078:0.69999999:0.42989209:-4.29462767:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 14,
+      "id": "adapt_s0_Pant_Long_Seen_0_pose751",
+      "policy_variant": "adapt_s0",
+      "garment": "Pant_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Long/Pant_Long_Seen_0",
+      "pose_source_episode": 751,
+      "match_pose": "-0.01090963:-0.03112872:0.69999999:-9.92870808:-0.14307769:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    },
+    {
+      "index": 15,
+      "id": "adapt_s1_Pant_Long_Seen_0_pose751",
+      "policy_variant": "adapt_s1",
+      "garment": "Pant_Long_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Pant_Long/Pant_Long_Seen_0",
+      "pose_source_episode": 751,
+      "match_pose": "-0.01090963:-0.03112872:0.69999999:-9.92870808:-0.14307769:90.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)"
+    }
+  ],
+  "existing_jobs_do_not_modify": [
+    "21359573",
+    "21359574",
+    "21359575"
+  ],
+  "scope": "Complementary pinned-pose media episodes, two adaptation seeds, four garment classes. Official 96-episode/checkpoint evaluations already queued separately remain the primary population results. No new training. Same 50-step execution queue as checkpoint. Outcome of each new episode is unknown.",
+  "protocol": "GPU cloth, Storm RGB at all3cameras, seed100, recorded spawn pose +scale.45, settle60,600policy steps, task prompt matches adaptation training. Single garment per process. These are illustrative development poses, not held-out benchmark estimates."
+}

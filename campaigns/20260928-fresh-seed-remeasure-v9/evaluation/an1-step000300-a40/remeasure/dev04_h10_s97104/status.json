@@ -1,0 +1,20 @@
+{
+  "state": "completed",
+  "phase": "remeasure",
+  "task": "dev04_h10_s97104",
+  "policy": "candidate",
+  "run": "a40",
+  "slurm_job_id": "21478311",
+  "slurm_array_task_id": "41",
+  "host": "cn-r-4.hpc.engr.oregonstate.edu",
+  "started_utc": "2026-09-30T08:28:07Z",
+  "child_pid": 2273841,
+  "returncode": 0,
+  "gpu_model": "NVIDIA A40",
+  "success": false,
+  "terminal_success": false,
+  "terminal_conditions": 1,
+  "terminal_conditions_total": 4,
+  "wall_seconds": 248.52122809831053,
+  "completed_utc": "2026-09-30T08:32:15Z"
+}

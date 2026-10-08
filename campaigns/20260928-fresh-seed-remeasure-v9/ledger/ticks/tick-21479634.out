@@ -1,0 +1,3 @@
+[driver 2026-09-30T11:40:36Z] block rtx8000 (secondary) done: H10 6/24 vs 9/24 (p=0.8938); H50 3/24 vs 4/24; complete=True
+[driver 2026-09-30T11:40:52Z] classification: a40 (primary): H10 clause fails; H50 clause fails | rtx8000 (secondary): H10 clause fails; H50 clause fails | not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)
+[driver 2026-09-30T11:40:52Z] campaign complete

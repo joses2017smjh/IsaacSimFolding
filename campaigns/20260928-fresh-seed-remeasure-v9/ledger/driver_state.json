@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-29T03:00:55Z",
+  "stages": {
+    "block:a40": {
+      "job_ids": [
+        "21462341"
+      ],
+      "submitted_utc": "2026-09-29T03:01:12Z",
+      "status": "completed",
+      "gpu_tasks": 96,
+      "array": "0-95",
+      "block": "a40",
+      "finished_utc": "2026-09-30T10:32:41Z",
+      "deviation_checked": true
+    },
+    "block:rtx8000": {
+      "job_ids": [
+        "21462342"
+      ],
+      "submitted_utc": "2026-09-29T03:01:12Z",
+      "status": "completed",
+      "gpu_tasks": 96,
+      "array": "0-95",
+      "block": "rtx8000",
+      "finished_utc": "2026-09-30T11:40:31Z",
+      "deviation_checked": true
+    }
+  },
+  "preflight": {
+    "passed": true,
+    "report": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/audit/verify_sources_launch.json",
+    "utc": "2026-09-29T03:01:12Z",
+    "manifest_sha256": "56a5d72d5d780971aea73d92a1c8fed8aab01d0130feab6a64385c9f6f25c3d2",
+    "problems": []
+  },
+  "blocks": {
+    "a40": {
+      "status": "done",
+      "results": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/block-a40.json",
+      "complete": true,
+      "valid": {
+        "baseline": 48,
+        "candidate": 48
+      },
+      "role": "primary",
+      "h10": {
+        "candidate": "6/24",
+        "baseline": "7/24",
+        "margin": -1,
+        "fisher_one_sided_p": 0.7414587503591981,
+        "row_stratified_exact_p": 0.75512,
+        "row_sign_flip_p": 0.875
+      },
+      "h50": {
+        "candidate": "4/24",
+        "baseline": "5/24",
+        "margin": -1,
+        "dev01": {
+          "baseline": "0/3",
+          "candidate": "0/3",
+          "loss_recurs": false
+        }
+      },
+      "rule": {
+        "h10_clause": false,
+        "h50_clause": false,
+        "all_rows_valid": true,
+        "v5_rule_holds": false
+      },
+      "platforms": [
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-r-4.hpc.engr.oregonstate.edu",
+          "episodes": 35
+        },
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-s-1.hpc.engr.oregonstate.edu",
+          "episodes": 23
+        },
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-r-5.hpc.engr.oregonstate.edu",
+          "episodes": 20
+        },
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-r-2.hpc.engr.oregonstate.edu",
+          "episodes": 10
+        },
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-r-3.hpc.engr.oregonstate.edu",
+          "episodes": 7
+        },
+        {
+          "gpu": "NVIDIA A40",
+          "driver": "615.71.09",
+          "kernel": "5.14.0-687.44.1.el9_8.x86_64",
+          "host": "cn-s-2.hpc.engr.oregonstate.edu",
+          "episodes": 1
+        }
+      ]
+    },
+    "rtx8000": {
+      "status": "done",
+      "results": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/block-rtx8000.json",
+      "complete": true,
+      "valid": {
+        "baseline": 48,
+        "candidate": 48
+      },
+      "role": "secondary",
+      "h10": {
+        "candidate": "6/24",
+        "baseline": "9/24",
+        "margin": -3,
+        "fisher_one_sided_p": 0.8938077238001207,
+        "row_stratified_exact_p": 0.8977770000000002,
+        "row_sign_flip_p": 1.0
+      },
+      "h50": {
+        "candidate": "3/24",
+        "baseline": "4/24",
+        "margin": -1,
+        "dev01": {
+          "baseline": "0/3",
+          "candidate": "1/3",
+          "loss_recurs": false
+        }
+      },
+      "rule": {
+        "h10_clause": false,
+        "h50_clause": false,
+        "all_rows_valid": true,
+        "v5_rule_holds": false
+      },
+      "platforms": [
+        {
+          "gpu": "Quadro RTX 8000",
+          "driver": "595.71.05",
+          "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+          "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+          "episodes": 96
+        }
+      ]
+    }
+  },
+  "retried": {},
+  "deviations": [],
+  "results": {
+    "path": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-fold-repro/campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/results.json",
+    "classification": {
+      "primary_block": "a40",
+      "readings": {
+        "a40": "H10 clause fails; H50 clause fails",
+        "rtx8000": "H10 clause fails; H50 clause fails"
+      },
+      "h10_gain": "not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)",
+      "headline": "a40 (primary): H10 clause fails; H50 clause fails | rtx8000 (secondary): H10 clause fails; H50 clause fails | not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)",
+      "h10_clause_holds_on": [],
+      "measured_blocks": [
+        "a40",
+        "rtx8000"
+      ],
+      "v5_rule_holds_on": [],
+      "interaction": {
+        "blocks": [
+          "a40",
+          "rtx8000"
+        ],
+        "rows": 8,
+        "diff_of_diffs": {
+          "dev00": 0,
+          "dev01": 0,
+          "dev02": 2,
+          "dev03": 0,
+          "dev04": 0,
+          "dev05": 0,
+          "dev06": 0,
+          "dev07": 0
+        },
+        "two_sided_p": 1.0
+      },
+      "deliverable": "baseline (v9 is measurement only)"
+    },
+    "combined": {
+      "h10": {
+        "candidate": 12,
+        "baseline": 16,
+        "n": 48,
+        "block_x_row_stratified_exact_p": 0.877187888775,
+        "note": "descriptive; cannot override the per-block readings"
+      },
+      "h50": {
+        "candidate": 7,
+        "baseline": 9,
+        "n": 48,
+        "block_x_row_stratified_exact_p": 0.79253125,
+        "note": "descriptive; cannot override the per-block readings"
+      },
+      "dev01_h50": {
+        "baseline": "0/6",
+        "candidate": "1/6",
+        "baseline_better_one_sided_p": 1.0,
+        "loss_recurs_in": [],
+        "note": "descriptive, not gated; 3 vs 3 per block cannot reach significance"
+      }
+    },
+    "block_status": {
+      "a40": "done",
+      "rtx8000": "done"
+    }
+  },
+  "final": {
+    "deliverable": {
+      "label": "baseline",
+      "checkpoint": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/outputs/train/bc_smolvla_raster_ft_full",
+      "why": "v9 is measurement only; the deliverable is unchanged by design"
+    },
+    "final_set": "unspent: v9 does not touch the final set",
+    "completed_utc": "2026-09-30T11:40:52Z"
+  },
+  "ticks": {
+    "chain": "21479634",
+    "chain_deps": [
+      "21462342"
+    ],
+    "chain_begin": null,
+    "watchdog": "21479987"
+  },
+  "done": true,
+  "stop_reason": null,
+  "log": [
+    {
+      "utc": "2026-09-29T03:01:12Z",
+      "message": "preflight verify_sources passed=True"
+    },
+    {
+      "utc": "2026-09-29T03:01:12Z",
+      "message": "submitted block:a40 -> 21462341",
+      "gpu_tasks": 96,
+      "sbatch_extra": [
+        "--constraint=a40"
+      ]
+    },
+    {
+      "utc": "2026-09-29T03:01:12Z",
+      "message": "submitted block:rtx8000 -> 21462342",
+      "gpu_tasks": 96,
+      "sbatch_extra": [
+        "--constraint=rtx8000"
+      ]
+    },
+    {
+      "utc": "2026-09-30T10:32:46Z",
+      "message": "block a40 (primary) done: H10 6/24 vs 7/24 (p=0.7415); H50 4/24 vs 5/24; complete=True"
+    },
+    {
+      "utc": "2026-09-30T11:40:36Z",
+      "message": "block rtx8000 (secondary) done: H10 6/24 vs 9/24 (p=0.8938); H50 3/24 vs 4/24; complete=True"
+    },
+    {
+      "utc": "2026-09-30T11:40:52Z",
+      "message": "classification: a40 (primary): H10 clause fails; H50 clause fails | rtx8000 (secondary): H10 clause fails; H50 clause fails | not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)",
+      "v5_rule_holds_on": []
+    },
+    {
+      "utc": "2026-09-30T11:40:52Z",
+      "message": "campaign complete"
+    }
+  ]
+}

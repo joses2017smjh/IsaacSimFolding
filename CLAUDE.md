@@ -16,27 +16,13 @@ is 3.9 GB, `docs/` is 90 MB. Actual source is `src/` (428 KB) + `scripts/`
 Many `.md` files here are **historical records that were true when written**.
 `SESSION_STATUS.md` says so itself. Do not treat an old plan as a to-do list.
 
-**Running now (launched 2026-09-29): v9 fresh-seed, GPU-pinned re-measurement.**
-- **Scope.** Measurement only: no training, the final set untouched, and the
-  baseline stays the deliverable.
-- **Design.** The baseline and v8's an1-step000300 run on 48 fresh-seed dev
-  rows (seeds 97000+) in two interleaved arrays. Each array is pinned to one
-  GPU model:
-  - a40, **primary**: job 21462341;
-  - rtx8000, secondary: job 21462342.
-- **Waiting on hardware.** At launch the A40s were drained for maintenance
-  and the RTX 8000s were full.
-- **Automation.** The driver advances by itself (chain tick plus a 2-hour
-  watchdog).
-- **Deadline and reading.** The deadline is 2026-10-06T00:00Z. The rules are
-  preregistered in `manifest.json` → `protocol`: A40 reading first, an
-  interaction test before any claim of hardware dependence, and power stated
-  in advance (A40 20%, RTX 74% at p1 = 0.45).
+**Latest measured outcome: v9 closed on 30 September 2026; the v8 candidate did not reproduce its gain.** All 192 fresh-seed episodes were valid and GPU-pinned. On the primary A40 block, candidate versus baseline settled H10 **6/24 vs 7/24** and H50 **4/24 vs 5/24**. On RTX 8000, H10 was **6/24 vs 9/24** and H50 **3/24 vs 4/24**. Neither preregistered improvement rule passed. The baseline remains the deliverable; the final set remains untouched. See [v9 measured results](campaigns/20260928-fresh-seed-remeasure-v9/analysis/remeasure/results.json) and [status](campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md).
 
-Live page: `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md`. When both
-blocks are terminal, write `REPORT.md` from `analysis/remeasure/results.json`.
+**6 October 2026: runtime control intervention queued.** Compare the immutable baseline with a 10-action execution queue against its shipped 50-action queue. Both settings still predict 50 actions, use the same three RGB views and joint state, and execute the same 600-action budget plus 60-step terminal hold. No checker output guides actions. The bounded design uses one full-episode smoke pair followed by 48 fresh-seed development pairs on the same allocated A40 per pair, with counterbalanced order. The preregistered screen requires five additional settled folds and one-sided exact paired p <= 0.05 across all 48 valid pairs. This is a development screen; held-out generalization and hardware deployment remain unmeasured. No result improvement is claimed before the queued measurements finish.
 
-**Latest closed outcome (2026-09-27): v8 anchor diagnostic closed — not improved.**
+The [frozen protocol](campaigns/20261006-runtime-horizon/manifest.json), [paired rollout worker](campaigns/20261006-runtime-horizon/scripts/run_pair.py), and [submission ledger](campaigns/20261006-runtime-horizon/ledger/submissions.json) are reviewable in this repository. The authoritative running campaign remains `/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding`; the repository directory is a byte-identical source snapshot with site-specific paths. Smoke job **21601323** gates the 48-pair array **21601324**, and **21601325** writes the JSON summary after the array ends. It uses at most one A40 concurrently and creates no new Markdown or text documents.
+
+**Previous closed outcome (2026-09-27): v8 anchor diagnostic closed — not improved.**
 - **What changed.** Only the BC anchor, replaced with 16 pants demos. Everything else was v7's, unchanged: the corpus, the recipe and the matched evaluation.
 - **Endpoints: SUPPORTED.** The first H50 chunk opens only the right gripper in 0/16 episodes (baseline 2/16), and dev03 lifts 0.117 m by action 150.
 - **Score.** `an1-step000300` passed H10 at 9/16 vs 2/16 (p = 0.012), the first H10 pass in a matched comparison. It failed H50 at 6/16 vs 8/16, and the whole deficit is dev01 H50 (0/2 vs 2/2), a late fold miss.
@@ -88,10 +74,10 @@ covers the AWR negative result.
 
 | Live now | File |
 |---|---|
-| **v9 live status (running)** | `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md` |
+| **v9 completed status** | `campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md` |
 | Pending tasks and stretch goals | `PENDING.md` |
 | v9 design, preregistration and review | `campaigns/20260928-fresh-seed-remeasure-v9/README.md`, `manifest.json`, `analysis/review/prelaunch-review.json` |
-| **Final report (v8) — latest closed outcome, diagnosis** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
+| **Final report (v8) — prior outcome and diagnosis** | `campaigns/20260926-anchor-diagnostic-v8/REPORT.md` |
 | v8 diagnosis (4 lenses × 2 skeptics, synthesis, README fact-check) | `campaigns/20260926-anchor-diagnostic-v8/analysis/diagnosis/diagnosis.json` |
 | Final report (v7) | `campaigns/20260925-depth-qualified-v7/REPORT.md` |
 | Final report (v6) | `campaigns/20260924-pose-balanced-v6/REPORT.md` |

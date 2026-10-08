@@ -1,0 +1,22 @@
+Isaac Sim Folding
+Copyright 2026 Jose Sanchez
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+This work reproduces the method described in "Learning to Fold" (Larchenko,
+2026), first place at the LeHome Challenge 2026, and builds on components that
+carry their own terms:
+
+  LeHome Challenge environment, garment assets and success checker
+    Copyright the LeHome Challenge organizers, Apache-2.0
+    Vendored under external/lehome-challenge/ with its own LICENSE.
+
+  LeRobot (SmolVLA policy, dataset format, training entry points)
+    Copyright The HuggingFace Inc. team, Apache-2.0
+
+  NVIDIA Isaac Sim / Isaac Lab and OpenUSD
+    Used as dependencies under their respective licences; not redistributed here.
+
+The demonstrations, garment meshes and scoring function are the organizers'
+work, not this repository's. Every success reported here is scored by their
+`success_checker_garment_fold`.

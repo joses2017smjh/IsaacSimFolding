@@ -1,0 +1,173 @@
+{
+  "campaign": "20260928-fresh-seed-remeasure-v9",
+  "jobs": [
+    {
+      "job_id": "21462341",
+      "phase": "block:a40",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 96,
+      "submitted_by": "driver",
+      "manifest_commit": "26bd2a14d9c5b47e8d38abab604ab2a6330b21f3",
+      "manifest_sha256": "56a5d72d5d780971aea73d92a1c8fed8aab01d0130feab6a64385c9f6f25c3d2",
+      "submitted_utc": "2026-09-29T03:01:12Z",
+      "state": "completed",
+      "array": "0-95",
+      "sbatch_extra": [
+        "--constraint=a40"
+      ],
+      "block": "a40",
+      "final": {
+        "tasks": 96,
+        "states": {
+          "COMPLETED": 96
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 22853,
+        "gpu_hours": 6.3481,
+        "start": "2026-09-29T17:06:37",
+        "end": "2026-09-30T03:32:30"
+      }
+    },
+    {
+      "job_id": "21462342",
+      "phase": "block:rtx8000",
+      "script": "slurm/matched.sbatch",
+      "gpu_tasks": 96,
+      "submitted_by": "driver",
+      "manifest_commit": "26bd2a14d9c5b47e8d38abab604ab2a6330b21f3",
+      "manifest_sha256": "56a5d72d5d780971aea73d92a1c8fed8aab01d0130feab6a64385c9f6f25c3d2",
+      "submitted_utc": "2026-09-29T03:01:12Z",
+      "state": "completed",
+      "array": "0-95",
+      "sbatch_extra": [
+        "--constraint=rtx8000"
+      ],
+      "block": "rtx8000",
+      "final": {
+        "tasks": 96,
+        "states": {
+          "COMPLETED": 96
+        },
+        "nonzero_exits": [],
+        "elapsed_seconds_total": 26030,
+        "gpu_hours": 7.2306,
+        "start": "2026-09-29T20:59:18",
+        "end": "2026-09-30T04:39:42"
+      }
+    }
+  ],
+  "support_jobs": [
+    {
+      "job_id": "21462343",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21462344",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21463849",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21464888",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21465970",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21466966",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21467931",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21468871",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21473331",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21474876",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21476119",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21477348",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21477721",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21478713",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21479634",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    },
+    {
+      "job_id": "21479987",
+      "name": "lh-v9-tick",
+      "state": "completed",
+      "gpu_hours": 0.0
+    }
+  ],
+  "reconciled": {
+    "by": "scripts/reconcile_ledger.py from sacct",
+    "stage_jobs": 2,
+    "support_jobs": 16,
+    "gpu_hours_total": 13.579,
+    "outcomes": {
+      "completed": 2
+    },
+    "by_iteration_or_stage": {
+      "block": {
+        "jobs": 2,
+        "gpu_tasks": 192,
+        "gpu_hours": 13.5787
+      }
+    }
+  }
+}

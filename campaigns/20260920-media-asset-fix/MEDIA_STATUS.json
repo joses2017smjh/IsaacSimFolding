@@ -1,0 +1,30 @@
+{
+  "generated_utc": "2026-09-20T17:28:42.085511+00:00",
+  "scope": "Illustrative pinned development poses; not the official benchmark",
+  "tasks": [
+    {
+      "index": 0,
+      "id": "adapt_s0_Top_Short_Seen_0_pose2",
+      "policy_variant": "adapt_s0",
+      "garment": "Top_Short_Seen_0",
+      "garment_dir": "/nfs/hpc/share/sanchej7/Humanoid_Lite/lehome-data/Assets/objects/Challenge_Garment/Release/Top_Short/Top_Short_Seen_0",
+      "pose_source_episode": 2,
+      "match_pose": "-0.03773808:-0.01536524:0.67000002:4.93192530:-7.44048691:0.00000000",
+      "seed": 100,
+      "steps": 600,
+      "driver": "policy (no replay actions)",
+      "state": "infrastructure_error",
+      "success": null,
+      "gifs": {},
+      "task": "adapt_s0_Top_Short_Seen_0_pose2",
+      "returncode": 3,
+      "slurm_job_id": "21367674",
+      "slurm_array_task_id": "0",
+      "error": "RuntimeError('simulator exited 3; read rollout.log')"
+    }
+  ],
+  "expected_episodes": 1,
+  "completed_episodes": 0,
+  "successes": 0,
+  "failures": 0
+}

@@ -1,0 +1,51 @@
+{
+  "manifest_sha256": "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+  "created_utc": "2026-10-06T09:13:56Z",
+  "state": "queued",
+  "jobs": {
+    "smoke": {
+      "id": "21601323",
+      "command": [
+        "/apps/slurm/current/bin/sbatch",
+        "--parsable",
+        "--mail-type=NONE",
+        "--job-name=lh-horizon-smoke",
+        "--output=/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/logs/smoke-%j.out",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/slurm/pair.sbatch",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding",
+        "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+        "smoke"
+      ]
+    },
+    "development": {
+      "id": "21601324",
+      "command": [
+        "/apps/slurm/current/bin/sbatch",
+        "--parsable",
+        "--mail-type=NONE",
+        "--job-name=lh-horizon-dev",
+        "--array=0-47%1",
+        "--kill-on-invalid-dep=yes",
+        "--output=/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/logs/pair-%A_%a.out",
+        "--dependency=afterok:21601323",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/slurm/pair.sbatch",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding",
+        "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+        "evaluation"
+      ]
+    },
+    "summary": {
+      "id": "21601325",
+      "command": [
+        "/apps/slurm/current/bin/sbatch",
+        "--parsable",
+        "--mail-type=NONE",
+        "--job-name=lh-horizon-summary",
+        "--output=/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/logs/summary-%j.out",
+        "--dependency=afterany:21601324",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding/slurm/summarize.sbatch",
+        "/nfs/hpc/share/sanchej7/Computer_Vision/project_results_upgrade/folding"
+      ]
+    }
+  }
+}

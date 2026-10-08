@@ -1,0 +1,265 @@
+{
+  "scope": "Post hoc explanatory analysis of immutable v9 baseline; not held-out confirmation and not new experimental evidence. H10 and H50 ran in the same GPU-model block but not consecutively paired on one allocated GPU.",
+  "blocks": {
+    "a40": {
+      "n": 24,
+      "h10_settled": 7,
+      "h50_settled": 5,
+      "h10_only": 6,
+      "h50_only": 4,
+      "paired_exact_p": 0.376953125,
+      "pairs": [
+        {
+          "row": "dev00_h10_s97000",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97001",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97002",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97003",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev04_h10_s97004",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev05_h10_s97005",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev06_h10_s97006",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev07_h10_s97007",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev00_h10_s97100",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97101",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97102",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97103",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev04_h10_s97104",
+          "h10_settled": true,
+          "h50_settled": true
+        },
+        {
+          "row": "dev05_h10_s97105",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev06_h10_s97106",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev07_h10_s97107",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev00_h10_s97200",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97201",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97202",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97203",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev04_h10_s97204",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev05_h10_s97205",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev06_h10_s97206",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev07_h10_s97207",
+          "h10_settled": true,
+          "h50_settled": false
+        }
+      ]
+    },
+    "rtx8000": {
+      "n": 24,
+      "h10_settled": 9,
+      "h50_settled": 4,
+      "h10_only": 8,
+      "h50_only": 3,
+      "paired_exact_p": 0.11328125,
+      "pairs": [
+        {
+          "row": "dev00_h10_s97000",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97001",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97002",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97003",
+          "h10_settled": true,
+          "h50_settled": true
+        },
+        {
+          "row": "dev04_h10_s97004",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev05_h10_s97005",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev06_h10_s97006",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev07_h10_s97007",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev00_h10_s97100",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97101",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97102",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97103",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev04_h10_s97104",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev05_h10_s97105",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev06_h10_s97106",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev07_h10_s97107",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev00_h10_s97200",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev01_h10_s97201",
+          "h10_settled": false,
+          "h50_settled": false
+        },
+        {
+          "row": "dev02_h10_s97202",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev03_h10_s97203",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev04_h10_s97204",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev05_h10_s97205",
+          "h10_settled": false,
+          "h50_settled": true
+        },
+        {
+          "row": "dev06_h10_s97206",
+          "h10_settled": true,
+          "h50_settled": false
+        },
+        {
+          "row": "dev07_h10_s97207",
+          "h10_settled": true,
+          "h50_settled": false
+        }
+      ]
+    }
+  }
+}

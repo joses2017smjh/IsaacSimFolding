@@ -1,0 +1,427 @@
+{
+ "note": "Post hoc: grade v9 (fresh seeds) and v5-v8 (seeds 200-207) under every metric.",
+ "v9_fresh_seeds": {
+  "h10_a40": {
+   "candidate": {
+    "n": 24,
+    "settled": 6.0,
+    "runner": 10.0,
+    "phase27": 9.0,
+    "phase_avg": 8.72,
+    "reach": 10.0
+   },
+   "baseline": {
+    "n": 24,
+    "settled": 7.0,
+    "runner": 8.0,
+    "phase27": 8.0,
+    "phase_avg": 7.54,
+    "reach": 10.0
+   },
+   "p_candidate_better": {
+    "settled": 0.7415,
+    "runner": 0.3831,
+    "phase27": 0.5,
+    "reach": 0.6149
+   },
+   "p_baseline_better": {
+    "settled": 0.5,
+    "runner": 0.8143,
+    "phase27": 0.7266,
+    "reach": 0.6149
+   }
+  },
+  "h10_rtx8000": {
+   "candidate": {
+    "n": 24,
+    "settled": 6.0,
+    "runner": 9.0,
+    "phase27": 5.0,
+    "phase_avg": 5.7,
+    "reach": 11.0
+   },
+   "baseline": {
+    "n": 24,
+    "settled": 9.0,
+    "runner": 10.0,
+    "phase27": 10.0,
+    "phase_avg": 10.02,
+    "reach": 13.0
+   },
+   "p_candidate_better": {
+    "settled": 0.8938,
+    "runner": 0.7222,
+    "phase27": 0.9701,
+    "reach": 0.8066
+   },
+   "p_baseline_better": {
+    "settled": 0.2672,
+    "runner": 0.5,
+    "phase27": 0.1062,
+    "reach": 0.3866
+   }
+  },
+  "h10_pooled": {
+   "candidate": {
+    "n": 48,
+    "settled": 12.0,
+    "runner": 19.0,
+    "phase27": 14.0,
+    "phase_avg": 14.42,
+    "reach": 21.0
+   },
+   "baseline": {
+    "n": 48,
+    "settled": 16.0,
+    "runner": 18.0,
+    "phase27": 18.0,
+    "phase_avg": 17.56,
+    "reach": 23.0
+   },
+   "p_candidate_better": {
+    "settled": 0.8693,
+    "runner": 0.5,
+    "phase27": 0.8605,
+    "reach": 0.7304
+   },
+   "p_baseline_better": {
+    "settled": 0.2505,
+    "runner": 0.6624,
+    "phase27": 0.2582,
+    "reach": 0.4189
+   }
+  },
+  "h50_a40": {
+   "candidate": {
+    "n": 24,
+    "settled": 4.0,
+    "runner": 5.0,
+    "phase27": 5.0,
+    "phase_avg": 5.0,
+    "reach": 5.0
+   },
+   "baseline": {
+    "n": 24,
+    "settled": 5.0,
+    "runner": 9.0,
+    "phase27": 10.0,
+    "phase_avg": 9.28,
+    "reach": 11.0
+   },
+   "p_candidate_better": {
+    "settled": 0.7693,
+    "runner": 0.9446,
+    "phase27": 0.9701,
+    "reach": 0.9848
+   },
+   "p_baseline_better": {
+    "settled": 0.5,
+    "runner": 0.1706,
+    "phase27": 0.1062,
+    "reach": 0.0623
+   }
+  },
+  "h50_rtx8000": {
+   "candidate": {
+    "n": 24,
+    "settled": 3.0,
+    "runner": 5.0,
+    "phase27": 5.0,
+    "phase_avg": 5.0,
+    "reach": 5.0
+   },
+   "baseline": {
+    "n": 24,
+    "settled": 4.0,
+    "runner": 9.0,
+    "phase27": 10.0,
+    "phase_avg": 9.54,
+    "reach": 11.0
+   },
+   "p_candidate_better": {
+    "settled": 0.7921,
+    "runner": 0.9446,
+    "phase27": 0.9701,
+    "reach": 0.9848
+   },
+   "p_baseline_better": {
+    "settled": 0.5,
+    "runner": 0.1706,
+    "phase27": 0.1062,
+    "reach": 0.0623
+   }
+  },
+  "h50_pooled": {
+   "candidate": {
+    "n": 48,
+    "settled": 7.0,
+    "runner": 10.0,
+    "phase27": 10.0,
+    "phase_avg": 10.0,
+    "reach": 10.0
+   },
+   "baseline": {
+    "n": 48,
+    "settled": 9.0,
+    "runner": 18.0,
+    "phase27": 20.0,
+    "phase_avg": 18.82,
+    "reach": 22.0
+   },
+   "p_candidate_better": {
+    "settled": 0.794,
+    "runner": 0.9789,
+    "phase27": 0.9926,
+    "reach": 0.9978
+   },
+   "p_baseline_better": {
+    "settled": 0.3925,
+    "runner": 0.0576,
+    "phase27": 0.0233,
+    "reach": 0.0083
+   }
+  }
+ },
+ "reused_seeds_200_207": {
+  "v5_a2-step000250_h10": {
+   "candidate": {
+    "n": 16,
+    "settled": 8.0,
+    "runner": 9.0,
+    "phase27": 8.0,
+    "phase_avg": 8.78,
+    "reach": 11.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 5.0,
+    "runner": 5.0,
+    "phase27": 3.0,
+    "phase_avg": 3.58,
+    "reach": 5.0
+   },
+   "p_candidate_better": {
+    "settled": 0.2363,
+    "runner": 0.1426,
+    "phase27": 0.0675,
+    "reach": 0.0378
+   },
+   "p_baseline_better": {
+    "settled": 0.9256,
+    "runner": 0.9634,
+    "phase27": 0.9883,
+    "reach": 0.9939
+   }
+  },
+  "v5_a2-step000250_h50": {
+   "candidate": {
+    "n": 16,
+    "settled": 7.0,
+    "runner": 9.0,
+    "phase27": 9.0,
+    "phase_avg": 9.0,
+    "reach": 9.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 7.0,
+    "runner": 7.0,
+    "phase27": 6.0,
+    "phase_avg": 6.36,
+    "reach": 8.0
+   },
+   "p_candidate_better": {
+    "settled": 0.6388,
+    "runner": 0.3622,
+    "phase27": 0.2397,
+    "reach": 0.5
+   },
+   "p_baseline_better": {
+    "settled": 0.6388,
+    "runner": 0.8555,
+    "phase27": 0.9222,
+    "reach": 0.7603
+   }
+  },
+  "v6_pb1-step000200_h10": {
+   "candidate": {
+    "n": 16,
+    "settled": 4.0,
+    "runner": 13.0,
+    "phase27": 9.0,
+    "phase_avg": 8.4,
+    "reach": 14.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 5.0,
+    "runner": 5.0,
+    "phase27": 5.0,
+    "phase_avg": 5.0,
+    "reach": 5.0
+   },
+   "p_candidate_better": {
+    "settled": 0.7834,
+    "runner": 0.0057,
+    "phase27": 0.1426,
+    "reach": 0.0016
+   },
+   "p_baseline_better": {
+    "settled": 0.5,
+    "runner": 0.9995,
+    "phase27": 0.9634,
+    "reach": 0.9999
+   }
+  },
+  "v6_pb1-step000200_h50": {
+   "candidate": {
+    "n": 16,
+    "settled": 8.0,
+    "runner": 10.0,
+    "phase27": 10.0,
+    "phase_avg": 10.0,
+    "reach": 10.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 7.0,
+    "runner": 7.0,
+    "phase27": 6.0,
+    "phase_avg": 6.28,
+    "reach": 7.0
+   },
+   "p_candidate_better": {
+    "settled": 0.5,
+    "runner": 0.2397,
+    "phase27": 0.1445,
+    "reach": 0.2397
+   },
+   "p_baseline_better": {
+    "settled": 0.7603,
+    "runner": 0.9222,
+    "phase27": 0.9622,
+    "reach": 0.9222
+   }
+  },
+  "v7_dq1-step000200_h10": {
+   "candidate": {
+    "n": 16,
+    "settled": 7.0,
+    "runner": 10.0,
+    "phase27": 9.0,
+    "phase_avg": 8.88,
+    "reach": 10.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 3.0,
+    "runner": 4.0,
+    "phase27": 4.0,
+    "phase_avg": 3.92,
+    "reach": 5.0
+   },
+   "p_candidate_better": {
+    "settled": 0.1262,
+    "runner": 0.0366,
+    "phase27": 0.0744,
+    "reach": 0.0778
+   },
+   "p_baseline_better": {
+    "settled": 0.9731,
+    "runner": 0.9943,
+    "phase27": 0.9855,
+    "reach": 0.984
+   }
+  },
+  "v7_dq1-step000200_h50": {
+   "candidate": {
+    "n": 16,
+    "settled": 6.0,
+    "runner": 7.0,
+    "phase27": 7.0,
+    "phase_avg": 7.0,
+    "reach": 7.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 7.0,
+    "runner": 8.0,
+    "phase27": 6.0,
+    "phase_avg": 6.66,
+    "reach": 8.0
+   },
+   "p_candidate_better": {
+    "settled": 0.7637,
+    "runner": 0.7603,
+    "phase27": 0.5,
+    "reach": 0.7603
+   },
+   "p_baseline_better": {
+    "settled": 0.5,
+    "runner": 0.5,
+    "phase27": 0.7637,
+    "reach": 0.5
+   }
+  },
+  "v8_an1-step000300_h10": {
+   "candidate": {
+    "n": 16,
+    "settled": 9.0,
+    "runner": 11.0,
+    "phase27": 10.0,
+    "phase_avg": 10.1,
+    "reach": 11.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 2.0,
+    "runner": 3.0,
+    "phase27": 3.0,
+    "phase_avg": 3.08,
+    "reach": 4.0
+   },
+   "p_candidate_better": {
+    "settled": 0.0117,
+    "runner": 0.0057,
+    "phase27": 0.0145,
+    "reach": 0.016
+   },
+   "p_baseline_better": {
+    "settled": 0.999,
+    "runner": 0.9995,
+    "phase27": 0.9984,
+    "reach": 0.9981
+   }
+  },
+  "v8_an1-step000300_h50": {
+   "candidate": {
+    "n": 16,
+    "settled": 6.0,
+    "runner": 8.0,
+    "phase27": 8.0,
+    "phase_avg": 7.4,
+    "reach": 8.0
+   },
+   "baseline": {
+    "n": 16,
+    "settled": 8.0,
+    "runner": 8.0,
+    "phase27": 6.0,
+    "phase_avg": 6.72,
+    "reach": 8.0
+   },
+   "p_candidate_better": {
+    "settled": 0.8574,
+    "runner": 0.6378,
+    "phase27": 0.3612,
+    "reach": 0.6378
+   },
+   "p_baseline_better": {
+    "settled": 0.3612,
+    "runner": 0.6378,
+    "phase27": 0.8574,
+    "reach": 0.6378
+   }
+  }
+ }
+}

@@ -1,6 +1,6 @@
 # Bimanual Garment Folding in Isaac Sim
 
-An Isaac Sim port and evaluation workflow for camera-driven garment folding: rasterized observations, recovery-supervised flow-matching policies, and independently checked settled folds.
+Use camera observations to control two simulated arms folding garments, then check whether the fold remains correct after settling. I built the Isaac Sim integration and paired evaluation workflow around an upstream vision-language-action model.
 
 [![Historical closed-loop policy fold in Isaac Sim](docs/demo/POLICY_fold_success.gif)](https://jose-sanchez-portfolio-com.vercel.app/projects/isaac-folding/)
 
@@ -14,9 +14,9 @@ A convincing folding clip can hide open-loop replay, a transient checker pass, o
 
 The robot, garment assets, challenge checker, and SmolVLA backbone are upstream components. My contribution is their integration, renderer-domain diagnosis, training adaptations, and reproducible evaluation. [Upstream challenge](https://github.com/lehome-official/lehome-challenge) · [Provenance](NOTICE).
 
-## Result and limits
+## Result: keep the baseline
 
-**Latest completed comparison: v8, September 27, 2026.** The candidate `an1-step000300` and the immutable raster-adapted baseline ran in the same interleaved Slurm arrays.
+**The candidate improved short-horizon folding but failed the release gate at the deployed horizon.** In the latest published completed comparison (v8, September 27, 2026), candidate `an1-step000300` and the raster-adapted baseline ran in the same interleaved Slurm arrays.
 
 - **H10 settled folds:** candidate 9/16; baseline 2/16; one-sided Fisher p = 0.0117.
 - **H50 settled folds:** candidate 6/16; baseline 8/16. The preregistered non-regression gate failed.
@@ -55,12 +55,24 @@ git clone https://github.com/joses2017smjh/IsaacSimFolding.git
 cd IsaacSimFolding
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python tests/test_pure.py
+PYTHONPATH=src .venv/bin/python tests/test_pure.py
 ```
 
 The test runner covers labels, calibration, weighting, provenance, evaluation parsing, and model heads. It does not validate live cloth physics or the LeRobot interface. [CPU CI](.github/workflows/tests.yml).
 
 GPU rollouts additionally need the challenge assets, pinned Isaac Sim 5.1 / LeRobot environment, Apptainer, and Slurm. Each campaign's driver owns submissions and verifies source hashes; campaign ledgers record outcomes. See [container](container/lehome.def), [campaign setup](campaigns/20260926-anchor-diagnostic-v8/README.md), and [media gate](docs/MEDIA_GATE_2026-09-20.md). No universal GPU quickstart is claimed.
+
+## Project layout and execution
+
+| Path | Purpose |
+|---|---|
+| [CPU modules](src/lehome_fold/) | Labels, weighting, evaluation parsing, and model heads. |
+| [Tests](tests/test_pure.py) | Simulator-free regression checks. |
+| [Campaigns](campaigns/) | Pinned training and rollout drivers, manifests, and scored ledgers. |
+| [Container](container/lehome.def) | Cluster simulator environment. |
+| [Demo evidence](docs/MEDIA_GATE_2026-09-20.md) | Recording provenance and historical success/failure labels. |
+
+This is a simulation research workflow, deployed through campaign drivers on Slurm; it is not a hosted service or a physical folding robot.
 
 ## Stack
 

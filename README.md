@@ -6,7 +6,7 @@ Use camera observations to control two simulated arms folding garments, then che
 
 *Historical raster-adapted policy on one selected short-pants pose. The challenge checker passed during the episode; this clip does not establish a stable final fold or the latest fine-tune's performance.*
 
-[Case study](https://jose-sanchez-portfolio-com.vercel.app/projects/isaac-folding/) · [Latest completed study](campaigns/20260926-anchor-diagnostic-v8/REPORT.md) · [Recorded policy failures](docs/MEDIA_GATE_2026-09-20.md)
+[Case study](https://jose-sanchez-portfolio-com.vercel.app/projects/isaac-folding/) · [Latest completed study](docs/RUNTIME_HORIZON_2026-10-06.md) · [Recorded policy failures](docs/MEDIA_GATE_2026-09-20.md)
 
 ## Problem and contribution
 
@@ -16,16 +16,27 @@ The robot, garment assets, challenge checker, and SmolVLA backbone are upstream 
 
 ## Result: keep the baseline
 
-**The candidate improved short-horizon folding but failed the release gate at the deployed horizon.** In the latest published completed comparison (v8, September 27, 2026), candidate `an1-step000300` and the raster-adapted baseline ran in the same interleaved Slurm arrays.
+**The latest runtime screen failed its promotion gate.** On October 6, 2026, the same baseline weights were evaluated at H10 and H50 in **48 matched pairs (96 valid episodes)** on NVIDIA A40 GPUs. H10 replans after ten actions; H50 executes the full predicted 50-action chunk and remains the shipped configuration.
 
-- **H10 settled folds:** candidate 9/16; baseline 2/16; one-sided Fisher p = 0.0117.
-- **H50 settled folds:** candidate 6/16; baseline 8/16. The preregistered non-regression gate failed.
-- **Validity:** 64/64 episodes completed 600 policy actions plus a 60-step settle. Retention, reload, and fit checks passed.
-- **Decision:** retain the baseline. No fine-tune has passed the full screen; the confirmatory final set remains unspent.
+- **Settled folds:** H10 **16/48**; H50 **8/48**, after 600 policy actions plus 60 settling steps.
+- **Paired test:** 14 H10-only wins and 6 H50-only wins; one-sided exact p = **0.0577**, above the registered 0.05 threshold.
+- **Decision:** retain the baseline. Eight reused development poses and six fresh seeds per pose do not establish held-out generalization.
 
-H10 replans every 10 actions of a 50-action chunk; H50 executes the full chunk and is the shipped configuration. The short-horizon result is a development finding, not an improved deployed policy. The eight poses are reused across studies, repeats share seeds, and GPU model changes outcomes. The planned final set also overlaps a development pose and does not cover every pose cluster.
+[Recorded results, protocol, and audit](docs/RUNTIME_HORIZON_2026-10-06.md). This is a runtime comparison with unchanged weights. The separate [September 27 v8 fine-tune](campaigns/20260926-anchor-diagnostic-v8/REPORT.md) scored candidate versus baseline at H10 **9/16 vs 2/16**, but H50 **6/16 vs 8/16** failed non-regression. Neither study justified promotion or spending the final set.
 
-[Report and caveats](campaigns/20260926-anchor-diagnostic-v8/REPORT.md) · [Scored ledger](campaigns/20260926-anchor-diagnostic-v8/ledger/driver_state.json) · [Manifest](campaigns/20260926-anchor-diagnostic-v8/manifest.json). The [v9 hardware-pinned remeasurement](campaigns/20260928-fresh-seed-remeasure-v9/STATUS.md) has no published outcome in the audited snapshot; its last status update is September 29.
+## Visual evidence
+
+### Historical policy camera input
+
+![Wrist-camera view during a historical raster-adapted policy rollout](docs/demo/policy_wrist_success.gif)
+
+*Policy input during the historical selected rollout. This is not a recording of the October runtime comparison, and a transient checker pass does not establish a settled final fold.*
+
+### Recorded adaptation failure
+
+[![Adapted policy on a short top, with wrist and overhead camera views](docs/demo/adapt-s0-failure.gif)](docs/MEDIA_GATE_2026-09-20.md)
+
+*September 20: the adapted seed-0 policy completed 600 actions and 601 validated render calls, but did not fold this development garment. This is a different checkpoint and pose from the hero clip.*
 
 ## How it works
 
@@ -40,7 +51,7 @@ H10 replans every 10 actions of a 50-action chunk; H50 executes the full chunk a
 ## Engineering decisions
 
 - **Storm observations:** bypass the Isaac Sim 5.1 RTX crash on the cluster; diagnose and adapt to the renderer gap instead of attributing it to control.
-- **fp32 master weights:** repair an AdamW update that changed only 12.9% of bf16 expert weights over 300 steps. [Optimizer diagnosis](campaigns/20260923-recovery-supervision-v3/REPORT.md).
+- **fp32 master weights:** preserve update precision during fine-tuning. A direct stored-weight audit corrects the older 12.9% movement claim to **11.53%** for v3 step 300; weight movement is separate from folding success. [Corrected audit](docs/RUNTIME_HORIZON_2026-10-06.md#corrected-optimizer-measurement).
 - **Matched evaluation:** avoid pooling favorable baselines across campaigns. Source hashes, checkpoint hashes, manifests, and a restartable job ledger make each comparison inspectable.
 - **Anchor diagnostic:** changing the BC anchor removed a shared early-H50 behavior shift, but also changed capture source and selected training step. Composition alone is not isolated.
 

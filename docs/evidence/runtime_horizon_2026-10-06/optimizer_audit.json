@@ -1,0 +1,15 @@
+{
+  "definition": "All lm_expert tensors BF16 in the immutable baseline, compared as exact 16-bit stored values against v3 attempt1 step300. Read-only byte comparison; no training or inference.",
+  "bf16_expert_weights": 96607440,
+  "changed_weights": 11142825,
+  "changed_fraction": 0.11534127185235422,
+  "v3_report_stated_fraction": 0.129,
+  "v3_optimizer_review_stated_fraction_rounded": 0.1154,
+  "v4_reloaded_changed_fraction": 0.5936144980138176,
+  "audited_date": "2026-10-14",
+  "source_audit_sha256": "cbacdc92c95ad87851ae7c4cc39e4a37a319728fefa4c4a669f923129120e6b5",
+  "baseline": "bc_smolvla_raster_ft_full/model.safetensors",
+  "target": "campaigns/20260923-recovery-supervision-v3/training/a1/checkpoints/step_000300/model.safetensors",
+  "v4_source": "campaigns/20260923-recovery-supervision-v4/audit/fit_gate_a2-step000250.json",
+  "limitation": "The v3 and v4 checkpoints are different training runs/steps; changed fractions are not an isolated causal optimizer comparison."
+}

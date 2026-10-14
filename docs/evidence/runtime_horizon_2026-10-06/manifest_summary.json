@@ -1,0 +1,705 @@
+{
+  "schema_version": 1,
+  "campaign": "20261006-folding-runtime-horizon",
+  "created_utc": "2026-10-06T08:18:11Z",
+  "question": "Does deploying the immutable baseline with 10-action replanning improve settled folds over its shipped 50-action execution queue?",
+  "intervention": {
+    "control_n_action_steps": 50,
+    "candidate_n_action_steps": 10,
+    "prediction_chunk_size": 50,
+    "weights_changed": false,
+    "policy_inputs": "three rasterized RGB views and twelve observed robot joints",
+    "checker_used_for_control": false
+  },
+  "repo_commit": "1866ee2ce6d9c7d70c939e1d1400eb6f6ebbe527",
+  "gpu": {
+    "constraint": "a40",
+    "required_name": "NVIDIA A40",
+    "partition": "ampere",
+    "concurrency": 1,
+    "design": "Both arms of each pair execute consecutively on the same allocated GPU. Order is counterbalanced by pose and replicate."
+  },
+  "protocol": {
+    "primary_metric": "terminal_success after 600 policy actions plus 60 fixed hold-settle physics steps",
+    "primary_test": "one-sided exact paired McNemar across 48 matched pairs",
+    "improvement_rule": "all 48 pairs valid AND candidate wins at least 5 additional settled folds AND one-sided paired p <= 0.05",
+    "secondary": "reached versus settled, per-pose counts, control latency and policy plan counts; descriptive only",
+    "promotion": "A development screen cannot establish held-out generalization. No automatic checkpoint replacement or final-set execution.",
+    "invalid_policy": "Infrastructure failures are missing data, not failed folds; no outcome-driven retries.",
+    "stop_rule": "One full-episode smoke pair, then exactly 48 development pairs; no extra seeds, no retries, no checkpoint search.",
+    "scope": "Pant_Short on the eight reused development poses; rasterized simulator results only; no hardware deployment claim."
+  },
+  "seeds": {
+    "files_scanned": 1706,
+    "files_skipped": 0,
+    "distinct_prior_seeds": 207,
+    "rule": "98000 + 100*replicate + development pose; smoke=97900; same seed for both runtime horizons"
+  },
+  "source_manifest_sha256": "5b29da9f8deb14cc65c587e286df0d72da5b81d7b91909b5ca0f98f8c91db98b",
+  "baseline_checkpoint": {
+    "name": "bc_smolvla_raster_ft_full",
+    "sha256": {
+      "config.json": "c3bb4092d4afa9670389d7043c6c0ef9474edff2cd64cdc7281c49c063cdf402",
+      "finetune.json": "27ccbc58f8942ee8729d1c4f35aeadd5b73c1cfe6277756721c4d43bcca7b9ef",
+      "model.safetensors": "4a37d4dce3d96e392044ba86295220467513e70ca37f8458edc855edb238ba77",
+      "policy_postprocessor.json": "293bd851e37ae71678b45c7e540240815d90fd01fe674833b1d29b8ab1ae9ad2",
+      "policy_postprocessor_step_0_unnormalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+      "policy_preprocessor.json": "a610fe412e0b6978ab2da6c9f65515ec64c975a42bbb7995ddb97b545f75376b",
+      "policy_preprocessor_step_5_normalizer_processor.safetensors": "3cdd19eb98f8c6426dbd4fa258435d928bef31a9b829aab5bd77192e5ad93eb7",
+      "train_config.json": "e4a9782f17c1552eb8aedc87433674b85c9353730f8cbd1097cecdb419fa73df"
+    }
+  },
+  "source_inventory": [
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/dummy_docker_policy/policy.py",
+      "sha256": "636fb532ab08247c75af4d82470439b951240c7393fa854c7cc398a2ec1565e5"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/dummy_docker_policy/server.py",
+      "sha256": "82781cbc18dcbaf03284aa9aa193b37310695724f51afb8b53353885a9452cfc"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/dataset.py",
+      "sha256": "5f99afbc3aacaea990fb2ec9419908395225773edc979d08157eb734b3cd54cd"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/dataset_sim.py",
+      "sha256": "e7029241322378a50a6a1a5b78f16665dfccd685a1a4768b586ca9d8e3500e7b"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval.py",
+      "sha256": "ab10e509bc97c77b4703d3ed99ecfc8dcd8cb2c755d1900676b6038d93fbd684"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/__init__.py",
+      "sha256": "d51c1d63156d39e574f1016ab1ab6a3c4926979408a091656e7fd1162f3d400b"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/_g0_policies.py",
+      "sha256": "9d7d8e33ce5c2466b3292abc4bc5d51eacf33dca1fe325cef9ce6f8cda73c9eb"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/_stage_policies.py",
+      "sha256": "4d24a9cb122fed8c7fb00f20b60112ce05a5dedfd74cafa840bdd4249001c15c"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/base_policy.py",
+      "sha256": "c43061da5ab7a2ded2d7416f0ea4f0786eeab77e2bff37d5855f3e0942101f47"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/docker_policy.py",
+      "sha256": "5c375b06c7073d88216edf1d8b1a2d83822186da80acd44685cedd2029f2271d"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/example_participant_policy.py",
+      "sha256": "d23df5cc0c48600f115482b78845b67d55669e7c6310e654003048de33904404"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/lerobot_policy.py",
+      "sha256": "09f8a010c00984a4341adbb78957cb6f010fb1e368802960deda793fdbcf67f6"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/eval_policy/registry.py",
+      "sha256": "129bbf060c903185bd112e3b74aa5248ff5620be1e7e0e3990f273f9737f05b7"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/__init__.py",
+      "sha256": "94f982cd15f8ed35f49b06c69bf3c0baf253d2c88a2d794ba46f2c94a3ac4d5e"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/common.py",
+      "sha256": "3a1781fb4c2da3aa42174d9ac3ffc8d45b2f32579f14baa90b170b802d084f7b"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/dataset_inspection.py",
+      "sha256": "1e11809a4ea0caeb1317e9053c2065847a524943186d640c99c419f1fe38205c"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/dataset_processing.py",
+      "sha256": "bff443d931b0df0794d104bdf75b0608720e56f2b55d3bc0ec8cf049d40f49f0"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/dataset_record.py",
+      "sha256": "a53ccb52bf73612acd5abe3f9ef2609a1295ef2c33c854a02d5e8cc6c11f7d10"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/dataset_replay.py",
+      "sha256": "6a62e28bbf4cf89a2371cc1ab6885b61dbfdb80328cc1777575dd8e120a633d1"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/eval_utils.py",
+      "sha256": "3e61805092ae28823ec1808928f49956632dea05ca35f3340c80c0d922ed60b9"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/evaluation.py",
+      "sha256": "67b2dc63e0f8f82c49054da30a76a4b2a1ebd297e0e7c3c058a6173f8aef6031"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/parser.py",
+      "sha256": "8e847c9ff28c653388a6da234fdcc0b154e4497346ba544ada61570ce2506650"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/process_parquet_to_pc.py",
+      "sha256": "e80a6d9e79c3afcd09fea8a6cd3024d3926f90cc77694ebe65533240e32b303c"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/scripts/utils/remove_depth_column.py",
+      "sha256": "deca2d459240b98afb5780dc1a0dd7fcb62763be05ae2cda8e8eb35e6c07aa53"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/__init__.py",
+      "sha256": "8eb94dee60386bb87c8e7c310c7317489cc36314f253a439de598f03e3f7e949"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/object/Garment.py",
+      "sha256": "41d359f02fb170f4159bb1305c3b698a2dfca3f882879e276508f4308fbe0527"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/object/__init__.py",
+      "sha256": "5ab82aef0e42416a2bec1f57fca74b689129e34006c859b6038d23c1c158bfc4"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/object/utils.py",
+      "sha256": "516ec9cefc0bd0824222b719da1fdd7840fa9cbae36b2023df49332a2b5c2c76"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/robots/lerobot.py",
+      "sha256": "3e91e4adf52ef6db9077cad2fea9e7c9ba169075241b8b5a1fbe821b6a578dcf"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/assets/scenes/bedroom.py",
+      "sha256": "0951c0a63d66148fbd05bad5d08c32bb4509506665a944e12b0c94dc1983ad23"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/__init__.py",
+      "sha256": "94fe59747c7174e08d1a71c3effd78cf61ddb27f2d1522d813e9ac0b450466a3"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/action_process.py",
+      "sha256": "6b5f0021bee3a23588396d20d7593186ed341d1a4c23562c24297067ec1dd71d"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/device_base.py",
+      "sha256": "aa766c7d72a3dbdc5e9087b3726660eb32987d1fa09c6202d78e7e45843070b9"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/keyboard/__init__.py",
+      "sha256": "772893e67d7d6c32e6d151e716e47998b096333498c2fec66b2ec892a197ffc8"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/keyboard/bi_keyboard.py",
+      "sha256": "fb887268f2098705c8b84faeb636939e347f5eeb6464edfd2a27c4ea54ccb54a"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/keyboard/se3_keyboard.py",
+      "sha256": "c4ef5ebd308db0848ba104c5a5839177356de54467dbc46d64d487543e71f875"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/__init__.py",
+      "sha256": "5fb85f546ed6b3197b296886fdd61eb7c2b163706606ce45c894f11cecb4abc5"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/bi_so101_leader.py",
+      "sha256": "7c889564f69bc42a72e4b45943b9d0e0236513013e7364d533c9bc9ca994e922"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/errors.py",
+      "sha256": "91a7c7a2356d358f4d1d1194ea03a70d8acc90fa9daf031bea4a34843b960491"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/__init__.py",
+      "sha256": "c37c7400bd62867912076dd0733c6a65018534efb60012a04c1b5a9aff6dfa9e"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/feetech/__init__.py",
+      "sha256": "975d5ca1e32a689e9826e0c639bc628976939aec7d55190a0d7a59bc8d83c139"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/feetech/encoding_utils.py",
+      "sha256": "6665b6ebbd6b755f885ef3338bdd48a29f01d94fc2e0564564808054006d5091"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/feetech/feetech.py",
+      "sha256": "1865006e9da62801cc52ea769b6104c30f834c1e132e4a521c101064857a01fc"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/feetech/tables.py",
+      "sha256": "385047f5ca9de0e81a59a8e3151517405fd874d43451880cbf54e80587a35758"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/motors/motors_bus.py",
+      "sha256": "1f081bdac9b1148d5b010b5bb347ce91255fee81b52e5fd0c966e8cff5a0e4f8"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/common/utils.py",
+      "sha256": "e02e511fa9903926980865a3cb694c4c56eb9692c4c78830e08fa1fd137d486e"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/devices/lerobot/so101_leader.py",
+      "sha256": "1e52aef6459a22a13a1f01345fcf17da1adb9391904c1cab38d11ce3d10cb3ce"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/tasks/__init__.py",
+      "sha256": "098fcc6bb68a96b995f3dc47aa377afb9d5e1da108a4e404a754b70e3bcca9eb"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/__init__.py",
+      "sha256": "bfdb048fde3bbe1178f3c0816093bed604644c26256fbb41a2a5701ed06cd649"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/challenge_garment_loader.py",
+      "sha256": "72ce1a12bafe013424180f695e999ab890254b4d57774008a87b82594c2a90ba"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/garment_bi_cfg_v2.py",
+      "sha256": "60a31883bdfe52ab859b67dd1c7b316ab95ce78235296df43fe9da42dc1992ed"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/tasks/bedroom/garment_bi_v2.py",
+      "sha256": "9bb438b73d0be2c8394f7d3a2f2349ecbaa33b09f73421cfc88a5918980d4c8f"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/__init__.py",
+      "sha256": "f3ce5d16ddd339496fb711185ec2a760bdddb6a2a2dca996f866568f64da3a21"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/bimanual_ik_solver.py",
+      "sha256": "7230525c4388618c618e416ff13b9192e653f29ffc9b2dbcf0b7f955721d16f3"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/constant.py",
+      "sha256": "3214166468adc5f2ac1753857846a21a8e9a64226a7a5cf701c34a71413a92d4"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/depth_to_pointcloud.py",
+      "sha256": "f0cdfe9b579cca1943a949fa561103ea7fbe6e55bbf5e330d76ba3a279f6d4ef"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/ee_pose_utils.py",
+      "sha256": "db49d600a0002835bb3866438ab0bea78658470b89aa8f2e4a4e815cf328bfd3"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/env_utils.py",
+      "sha256": "4b2f57920c2200b0e97f5f667b528c23ca1147624f208252f917cf74f6b50120"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/general_assets.py",
+      "sha256": "ac6c343c674e2f015bae2d29b2882d7adb0080ce575e1cd79c76904c0acd78c8"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/kinematics.py",
+      "sha256": "4a5c378c4c2752a53a652819137ae7cfefd2a7812b8467d7f0479fc8156a78cd"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/logger.py",
+      "sha256": "24c0a0ca35ca7082f24ad092783182308558bfa945a215d43987a03e999098f0"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/random_position.py",
+      "sha256": "89d3d8d6ffc8839fe76b36de531f695ec2f982f1bc3a94ec3edba40b62ccb110"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/record.py",
+      "sha256": "5dbee502c327917faf46bac9d993de4243f305b10ecb0381ae1d55d10f1f4460"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/robot_utils.py",
+      "sha256": "4daaf8ef93f730b07318f32099a30e85579bd8674b0aac296c7c8c503eaac297"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/lehome/utils/success_checker_chanllege.py",
+      "sha256": "cf17ffb9e015160e9fe9b1ed273870f1cabf0222a4864fc0cd56e642ed792862"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/external/lehome-challenge/source/lehome/setup.py",
+      "sha256": "fc92a6f638ce6d6eaeddb8a376979eed6c250117e4da76b8da7ffc5045c847aa"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/__init__.py",
+      "sha256": "340ca1d763fc7c252fbad26cbd9d4ac0098d0e0dc705770738023041ab97d077"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/awr.py",
+      "sha256": "9ad4f608c9133413ba07c767444ff372a356cb227a11750b85306e06932e0be5"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/behavior_telemetry.py",
+      "sha256": "52ef2e26d3a6e4e047f32507ac45ed5fd83bd3f20d1c45a0b7b6583e5b188125"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/calibration.py",
+      "sha256": "e0dc5dfe14db72339c17ec024290b318c4ad1f51c625aac05ea88436ce8d6b4d"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/ckpt.py",
+      "sha256": "3606310228a3ad837cfc05955a026a037d577eb6a923ab8d65eebf3395dadd6e"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/eval_kwargs.py",
+      "sha256": "1265e708ec790a2975375232af956343851902416f5eb5bea0f1a9c8b4780dd7"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/eval_log.py",
+      "sha256": "87e7e3a2ebb2008a102e0ed53da6fca856825ae0d9b7ebe1583cef4c60de55fb"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/folding_geometry.py",
+      "sha256": "994e2595c525e85795594efbfdeabe432d32943842120c561a52786ecadd4123"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/labels.py",
+      "sha256": "42a10e536043d6bb87afb87b537e7c1122503ba2fd1f0296e48bde0401fee632"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/policy_media.py",
+      "sha256": "b87670cf785ae7671af6ee6e3042cfe80cabf7388bbd35a3193440a9bf6eba07"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/policy_wrap.py",
+      "sha256": "0e977131ad046c378d71c49d21d6841b37eed3570af057e559a80a379daf92e1"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/recap.py",
+      "sha256": "f0d3eed70019a9656d880c806334b11ed6144356fdb13230a396cd8062f10ea8"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/splits.py",
+      "sha256": "46aef9bbabb65ef6c2e5eff94fd7bec71b480b8971fb4093f8a8a207d2404ea7"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_camera.py",
+      "sha256": "86733fe8b942053d9821a395720dd06e0c9933837e2faa57ebea1c4206d6b7aa"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_eval.py",
+      "sha256": "a9ff6e54e1d5fbd724c7e5446609d3cf7818659d60948b232c4902bfea5c5ec0"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/storm_obs.py",
+      "sha256": "e7893063ea37f25fe30948ad239234e1e7a5d167072b4cb21dbc096cf565f7c0"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/strict_observer.py",
+      "sha256": "270ca70ca33990b942838983bdcffba19f341a80e99ca6b0e6cbd3c8e404e3af"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/switch_trace.py",
+      "sha256": "1ccfd7b78c419cfe05ba7675e434a30d65961ce1017facda391090e6a601fb30"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/thompson.py",
+      "sha256": "6d4f248f6ea47d7f544ddbd72fe2a96c6bb0c375213f23a5159ae146469c083a"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260921-horizon-pilot/src/lehome_fold/value_head.py",
+      "sha256": "148af05ab50c374904250205f8f80e60765a5a39b990f88ab087921c9a3141f8"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/analysis.py",
+      "sha256": "cabb3fab255752a92cbfa0fa71949aa577071c3c214357be721fa49b652bb3ef"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/build_manifest.py",
+      "sha256": "4c7c9182d869852248e74fa72b45d22235762fbe40f8a477dc9e3e7c23c40e67"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/driver.py",
+      "sha256": "04e477da1521ab38680f19e02ebf3f6a8ad317e721ff89c0ae1ffddc5b466231"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/endpoints.py",
+      "sha256": "53f47059078d88095d006fd357ddad6c68cdb5f1ab821880a6296aae996694de"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/reconcile_ledger.py",
+      "sha256": "9448bd12dec2852576ed5cf94d2df83cafdca52ef487eb1cb005bfd8740b95b6"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/render/asset_paths.py",
+      "sha256": "6fd2a2f8626c19aaba792ae9bda20325656a9708c00789e90ce5540827f6d819"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/render/policy_rollout51.py",
+      "sha256": "d9d644f7e0f7fcf7771f2939013fdfe262e0aa28040e0f15ba1fe32d4164ec1f"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/render/rollout_audit_utils.py",
+      "sha256": "1cfbf9df55db4f5c2640d2a41c92be7d76859d41dd555144db3adca3a6947e25"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/run_matched_task.py",
+      "sha256": "c473ce1e6b8cef229bd239ae876b554d94b06fa5e3e49a56c738c5ea9efbf0b7"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/scripts/verify_sources.py",
+      "sha256": "f5372b5864f2e80832a38e25b8fe34a3d5bb9a9a2d2a4401eb750bfeb6dfdd2c"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/slurm/_common.sh",
+      "sha256": "b01a21d3cdca618b94bdd0e6ad03dd7a3be0f84e1fb20130d9087ff422f440a1"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/slurm/matched.sbatch",
+      "sha256": "7219d87d4a76f8bf0e5ec1430d1b44ca6807affaef19d18102651ca9b4153c8b"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/slurm/tick.sbatch",
+      "sha256": "a299298208be44fcc8aaf885bd0f875e547939af45a7fd3236c43651387c9e25"
+    },
+    {
+      "root": "folding_source",
+      "file": "campaigns/20260928-fresh-seed-remeasure-v9/tests/test_v9.py",
+      "sha256": "b433efa1cff5f1bd1234d01ef5af8f65c77d4768b0579aaf92282e314ef3dae2"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/__init__.py",
+      "sha256": "340ca1d763fc7c252fbad26cbd9d4ac0098d0e0dc705770738023041ab97d077"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/awr.py",
+      "sha256": "8de659a3c068c08eb0de6d1397460b151425ca346f379eac03ee36e8387c677e"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/calibration.py",
+      "sha256": "e0dc5dfe14db72339c17ec024290b318c4ad1f51c625aac05ea88436ce8d6b4d"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/ckpt.py",
+      "sha256": "3606310228a3ad837cfc05955a026a037d577eb6a923ab8d65eebf3395dadd6e"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/eval_kwargs.py",
+      "sha256": "1265e708ec790a2975375232af956343851902416f5eb5bea0f1a9c8b4780dd7"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/eval_log.py",
+      "sha256": "87e7e3a2ebb2008a102e0ed53da6fca856825ae0d9b7ebe1583cef4c60de55fb"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/labels.py",
+      "sha256": "42a10e536043d6bb87afb87b537e7c1122503ba2fd1f0296e48bde0401fee632"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/policy_wrap.py",
+      "sha256": "0e977131ad046c378d71c49d21d6841b37eed3570af057e559a80a379daf92e1"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/recap.py",
+      "sha256": "f0d3eed70019a9656d880c806334b11ed6144356fdb13230a396cd8062f10ea8"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/splits.py",
+      "sha256": "46aef9bbabb65ef6c2e5eff94fd7bec71b480b8971fb4093f8a8a207d2404ea7"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/storm_camera.py",
+      "sha256": "86733fe8b942053d9821a395720dd06e0c9933837e2faa57ebea1c4206d6b7aa"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/storm_eval.py",
+      "sha256": "a9ff6e54e1d5fbd724c7e5446609d3cf7818659d60948b232c4902bfea5c5ec0"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/storm_obs.py",
+      "sha256": "e7893063ea37f25fe30948ad239234e1e7a5d167072b4cb21dbc096cf565f7c0"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/thompson.py",
+      "sha256": "6d4f248f6ea47d7f544ddbd72fe2a96c6bb0c375213f23a5159ae146469c083a"
+    },
+    {
+      "root": "folding_source",
+      "file": "src/lehome_fold/value_head.py",
+      "sha256": "148af05ab50c374904250205f8f80e60765a5a39b990f88ab087921c9a3141f8"
+    },
+    {
+      "root": "external_assets",
+      "file": "Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_0/PS_049_obj_exp.json",
+      "sha256": "a4cd96325f9e2c3628744c99977e71a707fc22c76d6b6c7a58bc6c57a06b41fa"
+    },
+    {
+      "root": "external_assets",
+      "file": "Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_3/PS_050_obj_exp.json",
+      "sha256": "8d06c6ffa46f90a45409ec8c44bd1a1a29f6139713978a721cb7f7208f18b1fb"
+    },
+    {
+      "root": "external_assets",
+      "file": "Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_7/PS_M1_089_obj_exp.json",
+      "sha256": "9e917c919cdd5267dfdc2ad14068bf19527c03c2e224ea6e9a098189b59ba3cd"
+    },
+    {
+      "root": "external_assets",
+      "file": "Assets/objects/Challenge_Garment/Release/Pant_Short/Pant_Short_Seen_9/PS_Short047_obj_exp.json",
+      "sha256": "0139ab5e6594c1f0b48df28d6462158768fefaee88721007fb69ed9992927604"
+    },
+    {
+      "root": "external_assets",
+      "file": "Datasets/example/four_types_merged/meta/garment_info.json",
+      "sha256": "0c3a3eea8bfeed866fabf3d0efdfc8b53d5da98ed07278becb24a1bb9fadf794"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/build_manifest.py",
+      "sha256": "dafe3eb1a1b7cec72b650496978b897b77c35f43eb704c1142e684c6e94bed37"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/guarded_runner.py",
+      "sha256": "62e028f36b3c530873cdedc71c4866127e65d049c59bd9de46640a0379d8edac"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/run_pair.py",
+      "sha256": "1d2618299e4942391a2a12d60b971ee874586a3411e830bf90606776a1ac5bfd"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/submit_campaign.py",
+      "sha256": "ab7609f01e1aab935f776fcc0fb3a05dd497a2cfd1771f783add24f30fff40a7"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/summarize.py",
+      "sha256": "df238c1fb355c3ad3c61539d64ef7d02b24b9c3d4707ada9b3f647789bf8a490"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "scripts/test_protocol.py",
+      "sha256": "acc023b51d07611b4de98090dc32b7873d9bb6193d93154b72c2c12c13faf6d7"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "slurm/pair.sbatch",
+      "sha256": "2387a611eb5589dbf84c71422f9bbe5612602fbd04a36edfd83d5218baf94350"
+    },
+    {
+      "root": "runtime_campaign",
+      "file": "slurm/summarize.sbatch",
+      "sha256": "a6f98c4a41693f8033b4337853778a57082593f6a6fa9193c96bdaf8e3cfef9b"
+    }
+  ],
+  "scope": "Manifest excerpt. External assets, environments, checkpoint files and raw images are not bundled; this is evidence publication, not a portable rerun package.",
+  "source_roots": {
+    "folding_source": "Frozen folding repository at repo_commit; inventory is not a complete source bundle.",
+    "runtime_campaign": "October 6 runtime-horizon campaign scripts and Slurm files.",
+    "external_assets": "External garment asset and dataset metadata, not bundled."
+  }
+}

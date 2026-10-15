@@ -3,12 +3,12 @@
 <!-- driver:status:begin -->
 | | |
 |---|---|
-| **Active job** | `21462341` block:a40, `21462342` block:rtx8000 |
-| **Current result** | preflight passed; a40: queued or running; rtx8000: queued or running |
-| **Limitation / blocker** | block:a40: 0 running, pending (PENDING ReqNodeNotAvail, May be reserved for other job); block:rtx8000: 0 running, pending (PENDING BadConstraints) |
-| **Next automatic action** | driver advances when a waited job ends (2-hour watchdog) |
+| **Active job** | none — campaign complete |
+| **Current result** | preflight passed; a40 [primary] (done): H10 6/24 vs 7/24 (p=0.741), H50 4/24 vs 5/24; rtx8000 [secondary] (done): H10 6/24 vs 9/24 (p=0.894), H50 3/24 vs 4/24; a40 (primary): H10 clause fails; H50 clause fails | rtx8000 (secondary): H10 clause fails; H50 clause fails | not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%); deliverable unchanged: baseline |
+| **Limitation / blocker** | none |
+| **Next automatic action** | none — campaign complete; see analysis/remeasure/results.json |
 
-_Updated 2026-09-29T15:03:54Z by scripts/driver.py._
+_Updated 2026-09-30T13:07:00Z by scripts/driver.py._
 <!-- driver:status:end -->
 
 ## Record
@@ -81,3 +81,10 @@ Four lenses, each checked by a skeptic, plus a synthesis
   as specified.
 - rtx8000 passes `sbatch --test-only`, and ampere+a40 is accepted and
   queues.
+
+
+### 2026-10-06 — closure recorded in existing documents
+
+**Latest measured outcome: v9 closed on 30 September 2026; the v8 candidate did not reproduce its gain.** All 192 fresh-seed episodes were valid and GPU-pinned. On the primary A40 block, candidate versus baseline settled H10 **6/24 vs 7/24** and H50 **4/24 vs 5/24**. On RTX 8000, H10 was **6/24 vs 9/24** and H50 **3/24 vs 4/24**. Neither preregistered improvement rule passed. The baseline remains the deliverable; the final set remains untouched. See [v9 measured results](analysis/remeasure/results.json).
+
+The an1 checkpoint line is closed under the preregistered reading. Runtime execution-horizon tuning is a separate intervention using unchanged baseline weights; its [measured result](../../docs/RUNTIME_HORIZON_2026-10-06.md) does not change the v9 verdict. No new `REPORT.md` was created, following the user's instruction to update only existing Markdown or text documents.

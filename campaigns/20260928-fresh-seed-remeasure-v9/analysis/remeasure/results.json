@@ -1,0 +1,5198 @@
+{
+ "blocks": {
+  "a40": {
+   "block": "a40",
+   "role": "primary",
+   "gpu_name": "NVIDIA A40",
+   "rows": 48,
+   "valid": {
+    "baseline": 48,
+    "candidate": 48
+   },
+   "manifest_digests": [
+    "56a5d72d5d780971aea73d92a1c8fed8aab01d0130feab6a64385c9f6f25c3d2"
+   ],
+   "complete": true,
+   "invalid": {
+    "baseline": {},
+    "candidate": {}
+   },
+   "platforms": [
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-r-4.hpc.engr.oregonstate.edu",
+     "episodes": 35
+    },
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-s-1.hpc.engr.oregonstate.edu",
+     "episodes": 23
+    },
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-r-5.hpc.engr.oregonstate.edu",
+     "episodes": 20
+    },
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-r-2.hpc.engr.oregonstate.edu",
+     "episodes": 10
+    },
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-r-3.hpc.engr.oregonstate.edu",
+     "episodes": 7
+    },
+    {
+     "gpu": "NVIDIA A40",
+     "driver": "615.71.09",
+     "kernel": "5.14.0-687.44.1.el9_8.x86_64",
+     "host": "cn-s-2.hpc.engr.oregonstate.edu",
+     "episodes": 1
+    }
+   ],
+   "h10": {
+    "candidate": "6/24",
+    "baseline": "7/24",
+    "margin": -1,
+    "reached": {
+     "candidate": "10/24",
+     "baseline": "10/24"
+    },
+    "fisher_one_sided_p": 0.7414587503591981,
+    "n_paired": 24,
+    "row_stratified_exact_p": 0.75512,
+    "cluster_stratified_exact_p": 0.7486400042235211,
+    "row_sign_flip_p": 0.875,
+    "per_row_diff": {
+     "dev00": 0,
+     "dev01": 0,
+     "dev02": 1,
+     "dev03": -1,
+     "dev04": 0,
+     "dev05": 0,
+     "dev06": 0,
+     "dev07": -1
+    },
+    "paired_mcnemar": {
+     "candidate_only": 4,
+     "baseline_only": 5,
+     "one_sided_p": 0.74609375
+    },
+    "per_cluster_settled_reached_n": {
+     "P_A": {
+      "candidate": "1/4/9",
+      "baseline": "1/3/9"
+     },
+     "P_B": {
+      "candidate": "1/1/6",
+      "baseline": "2/2/6"
+     },
+     "P_C": {
+      "candidate": "4/5/9",
+      "baseline": "4/5/9"
+     }
+    },
+    "per_row": {
+     "dev00_h10_s97000": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.45,
+        -0.055,
+        0.075,
+        5.938
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 189,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.009,
+        3.333,
+        2.269,
+        6.04
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97001": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -6.438,
+        3.932,
+        4.502,
+        5.945
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -3.898,
+        3.311,
+        5.133,
+        5.786
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97002": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 86,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.044,
+        -1.181,
+        1.997,
+        7.086
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 189,
+       "conditions_passed": 4,
+       "margins_cm": [
+        2.964,
+        1.461,
+        2.805,
+        7.023
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97003": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 203,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.423,
+        8.129,
+        2.689,
+        6.211
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 146,
+       "conditions_passed": 4,
+       "margins_cm": [
+        3.602,
+        7.566,
+        6.692,
+        6.175
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97004": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.651,
+        -3.837,
+        5.523,
+        5.999
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.609,
+        -3.901,
+        5.536,
+        6.029
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97005": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.773,
+        -4.873,
+        5.426,
+        6.196
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.45,
+        -6.09,
+        4.198,
+        0.472
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97006": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.387,
+        -1.643,
+        4.639,
+        5.693
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.727,
+        -0.197,
+        3.128,
+        5.777
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97007": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 257,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.694,
+        3.979,
+        6.191,
+        6.521
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.651,
+        -4.67,
+        4.527,
+        6.223
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h10_s97100": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -4.742,
+        1.124,
+        -0.023,
+        6.006
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -5.426,
+        -0.172,
+        -1.768,
+        5.397
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97101": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.51,
+        -6.478,
+        5.644,
+        5.876
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.51,
+        -6.477,
+        5.642,
+        5.875
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97102": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 124,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.596,
+        0.768,
+        5.3,
+        7.352
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 487,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.073,
+        2.76,
+        2.664,
+        5.835
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97103": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.158,
+        -8.641,
+        0.77,
+        6.346
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.295,
+        -6.449,
+        5.949,
+        6.06
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97104": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 286,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.788,
+        5.908,
+        4.788,
+        6.124
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.616,
+        -9.877,
+        -8.061,
+        6.037
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97105": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 401,
+       "conditions_passed": 4,
+       "margins_cm": [
+        5.643,
+        3.119,
+        5.586,
+        6.288
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 478,
+       "conditions_passed": 3,
+       "margins_cm": [
+        2.786,
+        -0.055,
+        3.549,
+        6.385
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97106": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.169,
+        -6.788,
+        5.167,
+        6.437
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 220,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.049,
+        0.851,
+        4.611,
+        5.763
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97107": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        6.861,
+        -6.42,
+        -3.255,
+        4.879
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 169,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.133,
+        3.321,
+        5.32,
+        6.216
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h10_s97200": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 126,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.695,
+        -5.276,
+        5.469,
+        5.94
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 593,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.553,
+        2.433,
+        5.29,
+        5.605
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97201": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -6.8,
+        1.264,
+        5.463,
+        5.956
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.552,
+        -6.347,
+        5.303,
+        5.878
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97202": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        3.082,
+        -3.796,
+        -4.216,
+        7.394
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.374,
+        -6.078,
+        7.401,
+        6.866
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97203": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 257,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.279,
+        2.875,
+        6.143,
+        4.476
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.299,
+        -1.852,
+        2.196,
+        6.074
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97204": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.006,
+        -2.297,
+        4.074,
+        5.638
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 468,
+       "conditions_passed": 4,
+       "margins_cm": [
+        3.407,
+        6.704,
+        4.992,
+        5.663
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97205": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -2.654,
+        1.014,
+        4.129,
+        5.962
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-3.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 153,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.292,
+        1.352,
+        4.911,
+        6.359
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97206": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 292,
+       "conditions_passed": 3,
+       "margins_cm": [
+        5.81,
+        -0.675,
+        6.466,
+        5.945
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.388,
+        -1.038,
+        5.4,
+        6.102
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97207": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 306,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.292,
+        2.148,
+        4.908,
+        6.022
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.146,
+        -4.286,
+        6.346,
+        5.894
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     }
+    },
+    "clause_margin_ge_4_and_p_lt_0.05": false
+   },
+   "h50": {
+    "candidate": "4/24",
+    "baseline": "5/24",
+    "margin": -1,
+    "reached": {
+     "candidate": "5/24",
+     "baseline": "11/24"
+    },
+    "fisher_one_sided_p": 0.7693016014771726,
+    "n_paired": 24,
+    "row_stratified_exact_p": 0.7693749999999999,
+    "cluster_stratified_exact_p": 0.7645957848379992,
+    "row_sign_flip_p": 0.8125,
+    "per_row_diff": {
+     "dev00": 1,
+     "dev01": 0,
+     "dev02": 1,
+     "dev03": 0,
+     "dev04": -1,
+     "dev05": -1,
+     "dev06": -1,
+     "dev07": 0
+    },
+    "paired_mcnemar": {
+     "candidate_only": 3,
+     "baseline_only": 4,
+     "one_sided_p": 0.7734375
+    },
+    "per_cluster_settled_reached_n": {
+     "P_A": {
+      "candidate": "1/1/9",
+      "baseline": "2/6/9"
+     },
+     "P_B": {
+      "candidate": "1/2/6",
+      "baseline": "1/1/6"
+     },
+     "P_C": {
+      "candidate": "2/2/9",
+      "baseline": "2/4/9"
+     }
+    },
+    "per_row": {
+     "dev00_h50_s97000": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 123,
+       "conditions_passed": 2,
+       "margins_cm": [
+        2.388,
+        -13.65,
+        -0.645,
+        6.076
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0945,
+        "drag_actions": [
+         193
+        ],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -5.277,
+        -16.174,
+        -13.092,
+        5.699
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0767,
+        "drag_actions": [
+         181
+        ],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97001": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -3.424,
+        2.748,
+        4.082,
+        5.87
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0922,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.258,
+        -2.891,
+        4.17,
+        5.608
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0866,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97002": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 104,
+       "conditions_passed": 2,
+       "margins_cm": [
+        8.108,
+        -8.665,
+        -1.442,
+        0.239
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1141,
+        "drag_actions": [],
+        "ebl_actions": [
+         75
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 106,
+       "conditions_passed": 4,
+       "margins_cm": [
+        2.867,
+        1.874,
+        1.016,
+        1.118
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1032,
+        "drag_actions": [],
+        "ebl_actions": [
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97003": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        0.155,
+        -5.319,
+        -4.119,
+        6.009
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0072,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 118,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.111,
+        6.57,
+        7.28,
+        4.154
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-s-1.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1144,
+        "drag_actions": [],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97004": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 127,
+       "conditions_passed": 1,
+       "margins_cm": [
+        1.215,
+        -0.461,
+        -12.654,
+        -17.124
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1137,
+        "drag_actions": [
+         194
+        ],
+        "ebl_actions": [
+         95
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.736,
+        -16.846,
+        -15.608,
+        5.458
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "615.71.09",
+       "host": "cn-s-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0833,
+        "drag_actions": [
+         192
+        ],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97005": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 405,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.693,
+        0.932,
+        5.003,
+        6.249
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0057,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -0.572,
+        -9.323,
+        -8.171,
+        6.019
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.098,
+        "drag_actions": [
+         193
+        ],
+        "ebl_actions": [
+         95,
+         99
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97006": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.429,
+        -6.422,
+        2.902,
+        5.698
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0076,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.69,
+        -8.935,
+        4.653,
+        6.493
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.06,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97007": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.556,
+        -7.73,
+        5.987,
+        3.346
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0875,
+        "drag_actions": [],
+        "ebl_actions": [
+         84,
+         91
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.138,
+        -5.919,
+        5.344,
+        4.526
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1172,
+        "drag_actions": [],
+        "ebl_actions": [
+         83,
+         89
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h50_s97100": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -5.667,
+        4.598,
+        5.297,
+        5.913
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.1123,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 105,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.666,
+        5.35,
+        4.504,
+        6.15
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1065,
+        "drag_actions": [],
+        "ebl_actions": [
+         75,
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97101": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.32,
+        -6.943,
+        4.753,
+        5.296
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0923,
+        "drag_actions": [],
+        "ebl_actions": [
+         69,
+         83
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        7.112,
+        -2.36,
+        1.156,
+        -2.515
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0874,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97102": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 455,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.226,
+        -1.51,
+        3.761,
+        1.698
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0981,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.829,
+        4.467,
+        0.792,
+        -2.303
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1054,
+        "drag_actions": [],
+        "ebl_actions": [
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97103": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 429,
+       "conditions_passed": 4,
+       "margins_cm": [
+        3.69,
+        5.856,
+        0.917,
+        5.696
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0971,
+        "drag_actions": [],
+        "ebl_actions": [
+         91,
+         92
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.467,
+        1.846,
+        -0.732,
+        5.991
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.0593,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97104": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 286,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.927,
+        3.256,
+        3.935,
+        5.923
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0285,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.649,
+        -20.439,
+        -19.877,
+        6.06
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0843,
+        "drag_actions": [
+         156
+        ],
+        "ebl_actions": [
+         73
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97105": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.621,
+        -1.684,
+        1.581,
+        5.472
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1062,
+        "drag_actions": [
+         178
+        ],
+        "ebl_actions": [
+         86,
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        5.7,
+        -10.39,
+        -0.06,
+        4.226
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1164,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97106": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 99,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.623,
+        4.55,
+        6.538,
+        5.984
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0776,
+        "drag_actions": [],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        5.891,
+        -2.622,
+        0.513,
+        -0.273
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0968,
+        "drag_actions": [],
+        "ebl_actions": [
+         84
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97107": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -0.059,
+        -12.413,
+        -9.422,
+        5.958
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-5.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0278,
+        "drag_actions": [
+         229
+        ],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.427,
+        -5.663,
+        4.846,
+        3.091
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1047,
+        "drag_actions": [],
+        "ebl_actions": [
+         91,
+         93
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h50_s97200": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -1.43,
+        -23.031,
+        -10.488,
+        3.552
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0821,
+        "drag_actions": [
+         168
+        ],
+        "ebl_actions": [
+         84,
+         95
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -6.534,
+        -10.34,
+        -9.536,
+        5.219
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0896,
+        "drag_actions": [
+         165
+        ],
+        "ebl_actions": [
+         68,
+         77,
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97201": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.163,
+        -16.228,
+        -13.456,
+        6.1
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.079,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         81,
+         93,
+         96
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 117,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.254,
+        -0.943,
+        2.227,
+        6.018
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1252,
+        "drag_actions": [],
+        "ebl_actions": [
+         70,
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97202": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        2.947,
+        0.377,
+        -1.128,
+        7.083
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.01,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        0.645,
+        -15.738,
+        -14.106,
+        5.751
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0866,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         74,
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97203": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -0.124,
+        6.597,
+        -3.543,
+        -0.862
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.1041,
+        "drag_actions": [],
+        "ebl_actions": [
+         88,
+         95,
+         97,
+         98,
+         101
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.567,
+        -6.05,
+        3.297,
+        6.705
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0736,
+        "drag_actions": [],
+        "ebl_actions": [
+         84
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97204": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 126,
+       "conditions_passed": 2,
+       "margins_cm": [
+        1.401,
+        2.613,
+        -9.029,
+        -12.234
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1208,
+        "drag_actions": [
+         185
+        ],
+        "ebl_actions": [
+         91,
+         94
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        1.011,
+        -15.519,
+        -15.952,
+        6.279
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.072,
+        "drag_actions": [
+         183
+        ],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97205": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 97,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.823,
+        4.122,
+        4.537,
+        5.765
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1082,
+        "drag_actions": [],
+        "ebl_actions": [
+         65
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 100,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.001,
+        5.684,
+        5.243,
+        6.009
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1005,
+        "drag_actions": [],
+        "ebl_actions": [
+         65
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97206": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 120,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.425,
+        -1.275,
+        2.103,
+        6.21
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0815,
+        "drag_actions": [],
+        "ebl_actions": [
+         86,
+         88
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.096,
+        -4.836,
+        6.456,
+        6.0
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0619,
+        "drag_actions": [],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97207": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.284,
+        -4.269,
+        6.022,
+        5.822
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-2.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0933,
+        "drag_actions": [],
+        "ebl_actions": [
+         101
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.501,
+        -8.026,
+        5.484,
+        5.385
+       ],
+       "gpu_model": "NVIDIA A40",
+       "driver": "595.71.05",
+       "host": "cn-r-4.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.1038,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     }
+    },
+    "clause_candidate_ge_baseline": false,
+    "behaviour": {
+     "baseline": {
+      "right_only_chunk1": 7,
+      "both_open_chunk1": 10,
+      "episodes": 24,
+      "drag_by_row": {
+       "dev00": 2,
+       "dev01": 1,
+       "dev04": 2,
+       "dev05": 1,
+       "dev07": 1
+      },
+      "ebl_by_row": {
+       "dev00": 3,
+       "dev01": 3,
+       "dev02": 2,
+       "dev03": 2,
+       "dev04": 2,
+       "dev05": 2,
+       "dev06": 2,
+       "dev07": 2
+      },
+      "dev03_early_lift_m": [
+       0.0072,
+       0.0971,
+       0.1041
+      ]
+     },
+     "candidate": {
+      "right_only_chunk1": 5,
+      "both_open_chunk1": 14,
+      "episodes": 24,
+      "drag_by_row": {
+       "dev00": 2,
+       "dev02": 1,
+       "dev04": 3,
+       "dev05": 2
+      },
+      "ebl_by_row": {
+       "dev00": 3,
+       "dev01": 3,
+       "dev02": 3,
+       "dev03": 2,
+       "dev04": 2,
+       "dev05": 3,
+       "dev06": 2,
+       "dev07": 3
+      },
+      "dev03_early_lift_m": [
+       0.1144,
+       0.0593,
+       0.0736
+      ]
+     }
+    },
+    "dev01": {
+     "baseline": "0/3",
+     "candidate": "0/3",
+     "loss_recurs": false
+    },
+    "p_b_settled": {
+     "dev01": {
+      "baseline": 0,
+      "candidate": 0
+     },
+     "dev03": {
+      "baseline": 1,
+      "candidate": 1
+     }
+    }
+   },
+   "rule": {
+    "h10_clause": false,
+    "h50_clause": false,
+    "all_rows_valid": true,
+    "v5_rule_holds": false
+   }
+  },
+  "rtx8000": {
+   "block": "rtx8000",
+   "role": "secondary",
+   "gpu_name": "Quadro RTX 8000",
+   "rows": 48,
+   "valid": {
+    "baseline": 48,
+    "candidate": 48
+   },
+   "manifest_digests": [
+    "56a5d72d5d780971aea73d92a1c8fed8aab01d0130feab6a64385c9f6f25c3d2"
+   ],
+   "complete": true,
+   "invalid": {
+    "baseline": {},
+    "candidate": {}
+   },
+   "platforms": [
+    {
+     "gpu": "Quadro RTX 8000",
+     "driver": "595.71.05",
+     "kernel": "5.14.0-611.55.1.el9_7.x86_64",
+     "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+     "episodes": 96
+    }
+   ],
+   "h10": {
+    "candidate": "6/24",
+    "baseline": "9/24",
+    "margin": -3,
+    "reached": {
+     "candidate": "11/24",
+     "baseline": "13/24"
+    },
+    "fisher_one_sided_p": 0.8938077238001207,
+    "n_paired": 24,
+    "row_stratified_exact_p": 0.8977770000000002,
+    "cluster_stratified_exact_p": 0.894552372760929,
+    "row_sign_flip_p": 1.0,
+    "per_row_diff": {
+     "dev00": 0,
+     "dev01": 0,
+     "dev02": -1,
+     "dev03": -1,
+     "dev04": 0,
+     "dev05": 0,
+     "dev06": 0,
+     "dev07": -1
+    },
+    "paired_mcnemar": {
+     "candidate_only": 5,
+     "baseline_only": 8,
+     "one_sided_p": 0.8665771484375
+    },
+    "per_cluster_settled_reached_n": {
+     "P_A": {
+      "candidate": "2/6/9",
+      "baseline": "2/5/9"
+     },
+     "P_B": {
+      "candidate": "1/2/6",
+      "baseline": "2/2/6"
+     },
+     "P_C": {
+      "candidate": "3/3/9",
+      "baseline": "5/6/9"
+     }
+    },
+    "per_row": {
+     "dev00_h10_s97000": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 453,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.499,
+        -0.303,
+        0.357,
+        6.032
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 187,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.492,
+        3.518,
+        2.331,
+        5.896
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97001": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -6.393,
+        3.703,
+        4.266,
+        5.927
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -4.463,
+        3.384,
+        4.157,
+        5.674
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97002": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 99,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.119,
+        -1.467,
+        0.921,
+        7.337
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 191,
+       "conditions_passed": 4,
+       "margins_cm": [
+        2.26,
+        3.922,
+        4.851,
+        7.211
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97003": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 199,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.877,
+        5.512,
+        4.868,
+        6.115
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 162,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.112,
+        -6.453,
+        1.892,
+        6.087
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97004": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.636,
+        -3.98,
+        5.501,
+        6.035
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.581,
+        -3.839,
+        5.524,
+        6.025
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97005": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.773,
+        -4.873,
+        5.426,
+        6.196
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.434,
+        -5.449,
+        3.63,
+        5.051
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97006": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.792,
+        -1.079,
+        5.224,
+        6.007
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 348,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.651,
+        1.954,
+        6.183,
+        5.921
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97007": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 257,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.139,
+        4.685,
+        5.215,
+        6.448
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.045,
+        -4.538,
+        4.933,
+        5.997
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h10_s97100": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -4.673,
+        -0.622,
+        3.011,
+        5.993
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -3.974,
+        1.029,
+        -0.807,
+        5.309
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97101": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.51,
+        -6.477,
+        5.642,
+        5.875
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.51,
+        -6.477,
+        5.642,
+        5.875
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97102": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 124,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.065,
+        1.05,
+        6.272,
+        7.05
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -1.106,
+        0.228,
+        4.682,
+        6.222
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97103": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        2.949,
+        -7.067,
+        4.02,
+        4.967
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.271,
+        -6.908,
+        5.298,
+        6.056
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97104": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 305,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -3.073,
+        -3.089,
+        5.373,
+        4.527
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 558,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.873,
+        3.088,
+        5.329,
+        6.363
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97105": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 400,
+       "conditions_passed": 4,
+       "margins_cm": [
+        5.617,
+        2.969,
+        5.244,
+        6.299
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -1.579,
+        -4.479,
+        2.697,
+        6.176
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97106": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.29,
+        -6.728,
+        5.134,
+        6.428
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 222,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.111,
+        -1.154,
+        5.274,
+        6.037
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97107": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        3.049,
+        -3.206,
+        5.158,
+        5.729
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 168,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.746,
+        3.133,
+        4.712,
+        6.084
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h10_s97200": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 125,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.419,
+        -4.933,
+        4.098,
+        6.009
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 593,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -3.06,
+        1.616,
+        3.368,
+        5.498
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h10_s97201": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -5.739,
+        3.041,
+        5.466,
+        5.87
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -6.558,
+        -6.189,
+        5.399,
+        5.871
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h10_s97202": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 558,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.359,
+        0.926,
+        0.357,
+        7.15
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.376,
+        -6.047,
+        7.509,
+        6.852
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h10_s97203": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 254,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.325,
+        6.53,
+        6.818,
+        5.531
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 593,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.09,
+        5.101,
+        3.106,
+        6.119
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h10_s97204": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 528,
+       "conditions_passed": 4,
+       "margins_cm": [
+        1.237,
+        0.552,
+        4.336,
+        4.802
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 469,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.815,
+        6.323,
+        5.253,
+        4.723
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h10_s97205": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -2.533,
+        2.524,
+        3.615,
+        6.013
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 153,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.738,
+        1.63,
+        5.091,
+        6.331
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h10_s97206": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 293,
+       "conditions_passed": 4,
+       "margins_cm": [
+        5.137,
+        0.602,
+        2.645,
+        6.082
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.449,
+        -0.714,
+        4.35,
+        6.042
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h10_s97207": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 307,
+       "conditions_passed": 4,
+       "margins_cm": [
+        0.358,
+        3.347,
+        5.096,
+        6.113
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.146,
+        -4.286,
+        6.346,
+        5.894
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": null,
+       "state": "completed",
+       "error": null
+      }
+     }
+    },
+    "clause_margin_ge_4_and_p_lt_0.05": false
+   },
+   "h50": {
+    "candidate": "3/24",
+    "baseline": "4/24",
+    "margin": -1,
+    "reached": {
+     "candidate": "5/24",
+     "baseline": "11/24"
+    },
+    "fisher_one_sided_p": 0.7920996206498433,
+    "n_paired": 24,
+    "row_stratified_exact_p": 0.7899999999999998,
+    "cluster_stratified_exact_p": 0.7895564642969487,
+    "row_sign_flip_p": 0.75,
+    "per_row_diff": {
+     "dev00": 1,
+     "dev01": 1,
+     "dev02": 0,
+     "dev03": 0,
+     "dev04": -1,
+     "dev05": -2,
+     "dev06": 0,
+     "dev07": 0
+    },
+    "paired_mcnemar": {
+     "candidate_only": 2,
+     "baseline_only": 3,
+     "one_sided_p": 0.8125
+    },
+    "per_cluster_settled_reached_n": {
+     "P_A": {
+      "candidate": "1/1/9",
+      "baseline": "1/6/9"
+     },
+     "P_B": {
+      "candidate": "2/2/6",
+      "baseline": "1/2/6"
+     },
+     "P_C": {
+      "candidate": "0/2/9",
+      "baseline": "2/3/9"
+     }
+    },
+    "per_row": {
+     "dev00_h50_s97000": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 121,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.696,
+        -15.444,
+        2.843,
+        6.36
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0943,
+        "drag_actions": [
+         193
+        ],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -5.891,
+        -16.984,
+        -16.899,
+        5.205
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.075,
+        "drag_actions": [
+         181
+        ],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97001": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -3.095,
+        2.467,
+        2.454,
+        5.272
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0939,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -4.936,
+        -6.799,
+        6.021,
+        5.684
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0865,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97002": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 104,
+       "conditions_passed": 2,
+       "margins_cm": [
+        0.093,
+        -3.163,
+        2.281,
+        -10.451
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1148,
+        "drag_actions": [
+         159
+        ],
+        "ebl_actions": [
+         75
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 106,
+       "conditions_passed": 2,
+       "margins_cm": [
+        1.693,
+        -0.388,
+        6.145,
+        -2.695
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1023,
+        "drag_actions": [],
+        "ebl_actions": [
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97003": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 429,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.882,
+        3.973,
+        5.147,
+        5.747
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0072,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 118,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.899,
+        6.642,
+        7.424,
+        4.903
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1139,
+        "drag_actions": [],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97004": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 131,
+       "conditions_passed": 1,
+       "margins_cm": [
+        0.558,
+        -3.619,
+        -4.648,
+        -11.61
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1103,
+        "drag_actions": [
+         194
+        ],
+        "ebl_actions": [
+         90,
+         95
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.747,
+        -18.756,
+        -16.629,
+        5.494
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0839,
+        "drag_actions": [
+         192
+        ],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97005": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 404,
+       "conditions_passed": 4,
+       "margins_cm": [
+        5.658,
+        1.48,
+        5.028,
+        6.172
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0057,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        2.127,
+        -3.314,
+        0.174,
+        6.047
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0967,
+        "drag_actions": [
+         193
+        ],
+        "ebl_actions": [
+         95,
+         99
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97006": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.544,
+        -5.873,
+        3.742,
+        5.558
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0076,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        1.076,
+        -4.442,
+        2.705,
+        6.357
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.055,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97007": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        3.197,
+        -6.016,
+        3.589,
+        5.159
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0875,
+        "drag_actions": [],
+        "ebl_actions": [
+         84,
+         91
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        4.217,
+        -6.223,
+        4.89,
+        4.369
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1183,
+        "drag_actions": [],
+        "ebl_actions": [
+         83,
+         89
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h50_s97100": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -5.091,
+        5.305,
+        4.503,
+        5.946
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.1119,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 101,
+       "conditions_passed": 4,
+       "margins_cm": [
+        4.836,
+        4.883,
+        5.197,
+        5.684
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1059,
+        "drag_actions": [],
+        "ebl_actions": [
+         75,
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97101": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -2.135,
+        -6.996,
+        3.559,
+        5.547
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0891,
+        "drag_actions": [],
+        "ebl_actions": [
+         69,
+         83
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.479,
+        2.708,
+        1.725,
+        -0.295
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0875,
+        "drag_actions": [],
+        "ebl_actions": [
+         87
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97102": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        3.657,
+        -0.561,
+        -0.547,
+        -1.658
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.102,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        5.164,
+        2.66,
+        0.255,
+        -6.72
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0987,
+        "drag_actions": [],
+        "ebl_actions": [
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97103": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 430,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.604,
+        3.515,
+        5.768,
+        5.822
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0991,
+        "drag_actions": [],
+        "ebl_actions": [
+         91,
+         92
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.135,
+        4.985,
+        2.223,
+        6.085
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.0576,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97104": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 284,
+       "conditions_passed": 4,
+       "margins_cm": [
+        6.395,
+        3.024,
+        2.449,
+        5.97
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0269,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -2.642,
+        -20.096,
+        -19.351,
+        6.068
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0756,
+        "drag_actions": [
+         156
+        ],
+        "ebl_actions": [
+         73
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97105": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        2.849,
+        -5.171,
+        -4.698,
+        4.399
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1064,
+        "drag_actions": [
+         178
+        ],
+        "ebl_actions": [
+         86,
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        3.162,
+        -9.554,
+        -4.28,
+        4.16
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1167,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97106": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 99,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.043,
+        4.678,
+        6.555,
+        6.127
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0774,
+        "drag_actions": [],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        6.184,
+        -1.349,
+        0.473,
+        0.417
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0966,
+        "drag_actions": [],
+        "ebl_actions": [
+         85
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97107": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.124,
+        -3.531,
+        6.243,
+        5.449
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0345,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        3.607,
+        -5.524,
+        5.954,
+        2.442
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.1053,
+        "drag_actions": [],
+        "ebl_actions": [
+         91,
+         93
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev00_h50_s97200": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        4.878,
+        -22.045,
+        -19.366,
+        5.426
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0831,
+        "drag_actions": [
+         168
+        ],
+        "ebl_actions": [
+         84,
+         95
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -7.065,
+        -18.099,
+        -15.203,
+        5.039
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0925,
+        "drag_actions": [
+         165
+        ],
+        "ebl_actions": [
+         68,
+         77,
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev01_h50_s97201": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 1,
+       "margins_cm": [
+        -3.221,
+        -18.017,
+        -16.533,
+        6.246
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0792,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         81,
+         93,
+         96
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 117,
+       "conditions_passed": 4,
+       "margins_cm": [
+        3.326,
+        0.024,
+        0.376,
+        5.961
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.127,
+        "drag_actions": [],
+        "ebl_actions": [
+         70,
+         77
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev02_h50_s97202": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        3.151,
+        0.087,
+        -1.107,
+        7.082
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0102,
+        "drag_actions": [],
+        "ebl_actions": []
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        0.776,
+        -16.683,
+        -16.354,
+        5.52
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.0858,
+        "drag_actions": [
+         177
+        ],
+        "ebl_actions": [
+         74,
+         80
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev03_h50_s97203": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.242,
+        -7.361,
+        4.664,
+        0.704
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.1042,
+        "drag_actions": [],
+        "ebl_actions": [
+         88,
+         95,
+         98,
+         101
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.065,
+        -5.592,
+        1.837,
+        6.413
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "right",
+        "early_lift_m": 0.0734,
+        "drag_actions": [],
+        "ebl_actions": [
+         84
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev04_h50_s97204": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 127,
+       "conditions_passed": 2,
+       "margins_cm": [
+        2.234,
+        1.699,
+        -8.709,
+        -12.886
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.126,
+        "drag_actions": [
+         185
+        ],
+        "ebl_actions": [
+         91,
+         94
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        0.806,
+        -15.528,
+        -15.974,
+        5.997
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "left",
+        "early_lift_m": 0.0751,
+        "drag_actions": [
+         183
+        ],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev05_h50_s97205": {
+      "baseline": {
+       "valid": true,
+       "settled": true,
+       "reached": true,
+       "first_reach_action": 97,
+       "conditions_passed": 4,
+       "margins_cm": [
+        7.034,
+        3.954,
+        4.731,
+        5.886
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1102,
+        "drag_actions": [],
+        "ebl_actions": [
+         65
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 101,
+       "conditions_passed": 3,
+       "margins_cm": [
+        -0.112,
+        4.259,
+        5.514,
+        5.977
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "both",
+        "early_lift_m": 0.1012,
+        "drag_actions": [],
+        "ebl_actions": [
+         65
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev06_h50_s97206": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": true,
+       "first_reach_action": 120,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.277,
+        -2.531,
+        5.604,
+        6.368
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.085,
+        "drag_actions": [],
+        "ebl_actions": [
+         86,
+         88
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 2,
+       "margins_cm": [
+        -0.093,
+        -4.816,
+        6.499,
+        6.012
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0585,
+        "drag_actions": [],
+        "ebl_actions": [
+         90
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     },
+     "dev07_h50_s97207": {
+      "baseline": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.309,
+        -4.292,
+        6.011,
+        5.849
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0923,
+        "drag_actions": [],
+        "ebl_actions": [
+         101
+        ]
+       },
+       "state": "completed",
+       "error": null
+      },
+      "candidate": {
+       "valid": true,
+       "settled": false,
+       "reached": false,
+       "first_reach_action": null,
+       "conditions_passed": 3,
+       "margins_cm": [
+        0.127,
+        -6.434,
+        3.487,
+        5.548
+       ],
+       "gpu_model": "Quadro RTX 8000",
+       "driver": "595.71.05",
+       "host": "cn-gpu7.hpc.engr.oregonstate.edu",
+       "behaviour": {
+        "chunk1": "neither",
+        "early_lift_m": 0.0924,
+        "drag_actions": [],
+        "ebl_actions": [
+         82
+        ]
+       },
+       "state": "completed",
+       "error": null
+      }
+     }
+    },
+    "clause_candidate_ge_baseline": false,
+    "behaviour": {
+     "baseline": {
+      "right_only_chunk1": 7,
+      "both_open_chunk1": 10,
+      "episodes": 24,
+      "drag_by_row": {
+       "dev00": 2,
+       "dev01": 1,
+       "dev02": 1,
+       "dev04": 2,
+       "dev05": 1
+      },
+      "ebl_by_row": {
+       "dev00": 3,
+       "dev01": 3,
+       "dev02": 2,
+       "dev03": 2,
+       "dev04": 2,
+       "dev05": 2,
+       "dev06": 2,
+       "dev07": 2
+      },
+      "dev03_early_lift_m": [
+       0.0072,
+       0.0991,
+       0.1042
+      ]
+     },
+     "candidate": {
+      "right_only_chunk1": 5,
+      "both_open_chunk1": 14,
+      "episodes": 24,
+      "drag_by_row": {
+       "dev00": 2,
+       "dev02": 1,
+       "dev04": 3,
+       "dev05": 2
+      },
+      "ebl_by_row": {
+       "dev00": 3,
+       "dev01": 3,
+       "dev02": 3,
+       "dev03": 2,
+       "dev04": 2,
+       "dev05": 3,
+       "dev06": 2,
+       "dev07": 3
+      },
+      "dev03_early_lift_m": [
+       0.1139,
+       0.0576,
+       0.0734
+      ]
+     }
+    },
+    "dev01": {
+     "baseline": "0/3",
+     "candidate": "1/3",
+     "loss_recurs": false
+    },
+    "p_b_settled": {
+     "dev01": {
+      "baseline": 0,
+      "candidate": 1
+     },
+     "dev03": {
+      "baseline": 1,
+      "candidate": 1
+     }
+    }
+   },
+   "rule": {
+    "h10_clause": false,
+    "h50_clause": false,
+    "all_rows_valid": true,
+    "v5_rule_holds": false
+   }
+  }
+ },
+ "classification": {
+  "primary_block": "a40",
+  "readings": {
+   "a40": "H10 clause fails; H50 clause fails",
+   "rtx8000": "H10 clause fails; H50 clause fails"
+  },
+  "h10_gain": "not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)",
+  "headline": "a40 (primary): H10 clause fails; H50 clause fails | rtx8000 (secondary): H10 clause fails; H50 clause fails | not replicated at this power (power at p1=0.45: a40 20%, rtx8000 74%)",
+  "h10_clause_holds_on": [],
+  "measured_blocks": [
+   "a40",
+   "rtx8000"
+  ],
+  "v5_rule_holds_on": [],
+  "interaction": {
+   "blocks": [
+    "a40",
+    "rtx8000"
+   ],
+   "rows": 8,
+   "diff_of_diffs": {
+    "dev00": 0,
+    "dev01": 0,
+    "dev02": 2,
+    "dev03": 0,
+    "dev04": 0,
+    "dev05": 0,
+    "dev06": 0,
+    "dev07": 0
+   },
+   "two_sided_p": 1.0
+  },
+  "deliverable": "baseline (v9 is measurement only)"
+ },
+ "combined": {
+  "h10": {
+   "candidate": 12,
+   "baseline": 16,
+   "n": 48,
+   "block_x_row_stratified_exact_p": 0.877187888775,
+   "note": "descriptive; cannot override the per-block readings"
+  },
+  "h50": {
+   "candidate": 7,
+   "baseline": 9,
+   "n": 48,
+   "block_x_row_stratified_exact_p": 0.79253125,
+   "note": "descriptive; cannot override the per-block readings"
+  },
+  "dev01_h50": {
+   "baseline": "0/6",
+   "candidate": "1/6",
+   "baseline_better_one_sided_p": 1.0,
+   "loss_recurs_in": [],
+   "note": "descriptive, not gated; 3 vs 3 per block cannot reach significance"
+  }
+ },
+ "cross_block": {
+  "baseline": {
+   "dev00_h10": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev00_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev01_h10": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev01_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev02_h10": {
+    "a40": "1/3",
+    "rtx8000": "2/3"
+   },
+   "dev02_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev03_h10": {
+    "a40": "2/3",
+    "rtx8000": "2/3"
+   },
+   "dev03_h50": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev04_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev04_h50": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev05_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev05_h50": {
+    "a40": "2/3",
+    "rtx8000": "2/3"
+   },
+   "dev06_h10": {
+    "a40": "0/3",
+    "rtx8000": "1/3"
+   },
+   "dev06_h50": {
+    "a40": "1/3",
+    "rtx8000": "0/3"
+   },
+   "dev07_h10": {
+    "a40": "2/3",
+    "rtx8000": "2/3"
+   },
+   "dev07_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   }
+  },
+  "candidate": {
+   "dev00_h10": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev00_h50": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev01_h10": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev01_h50": {
+    "a40": "0/3",
+    "rtx8000": "1/3"
+   },
+   "dev02_h10": {
+    "a40": "2/3",
+    "rtx8000": "1/3"
+   },
+   "dev02_h50": {
+    "a40": "1/3",
+    "rtx8000": "0/3"
+   },
+   "dev03_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev03_h50": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev04_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev04_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev05_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev05_h50": {
+    "a40": "1/3",
+    "rtx8000": "0/3"
+   },
+   "dev06_h10": {
+    "a40": "0/3",
+    "rtx8000": "1/3"
+   },
+   "dev06_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   },
+   "dev07_h10": {
+    "a40": "1/3",
+    "rtx8000": "1/3"
+   },
+   "dev07_h50": {
+    "a40": "0/3",
+    "rtx8000": "0/3"
+   }
+  }
+ }
+}

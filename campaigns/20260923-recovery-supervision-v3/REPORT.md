@@ -42,7 +42,7 @@ review (`analysis/attempt2-review.json`, 4 independent lenses + synthesis).
 **The review's central discovery — a real optimizer defect, verified from
 raw checkpoint bytes:** the trainer built AdamW directly on bf16 expert
 weights with bf16 Adam state and no fp32 master copy. At lr 1e-5 most
-updates round to zero: only **12.9% of the 96.6M bf16 expert weights changed
+updates round to zero: only **11.5% of the 96.6M bf16 expert weights changed
 at all** in attempt 1's 300 steps — the same share as the raster fine-tune
 that produced the baseline, whose learning went through its fp32 vision
 tower — and every RMSNorm gain was untouched. Every fine-tune in v2 and v3
@@ -50,6 +50,13 @@ attempt 1 effectively trained ~3.3M of the recorded 99.9M parameters. The
 review also showed the offline-fit "regression" was largely a self-sample
 artifact (86% of sampled labels are the baseline's own draws at identical
 observations) and exonerated the data pipeline entirely.
+
+**6 October 2026 correction:** a fresh exact-byte comparison found
+11,142,825 of 96,607,440 BF16 expert weights changed (11.5341%). The
+earlier 12.9% figure was a reporting error; the optimizer review
+and checkpoint bytes agree on 11.5%. The retained [byte audit](../../docs/evidence/runtime_horizon_2026-10-06/optimizer_audit.json)
+records the paths, counts and comparison definition. This correction
+does not change the campaign's performance verdict.
 
 **Attempt 2** (fp32 master weights — repair, not the factor — plus one
 factor: effective batch 4→32 by gradient accumulation; dataset, steps, lr,

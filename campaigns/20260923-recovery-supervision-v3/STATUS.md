@@ -71,10 +71,15 @@ overturned my working "noise-dominated optimisation" diagnosis and found the
 real defect: **the trainer built AdamW directly on bf16 expert weights with
 bf16 optimizer state** — at lr 1e-5, 88.5% of the 96.6M expert weights and
 every RMSNorm gain could not move (verified from raw checkpoint bytes: only
-12.9% of bf16 weights changed at all in 300 steps, the same share as the
+11.5% of bf16 weights changed at all in 300 steps, the same share as the
 raster fine-tune, whose learning went through its fp32 vision tower). The
 offline-fit "regression" was largely a self-sample metric artifact, and label
 alignment/data integrity were verified clean.
+
+_Correction, 6 October 2026: an exact-byte comparison found 11,142,825 of
+96,607,440 BF16 expert weights changed (11.53%). The 12.9% first written
+here was a reporting error; see the
+[byte audit](../../docs/evidence/runtime_horizon_2026-10-06/optimizer_audit.json)._
 
 Pending driver ticks 21401952 and 21401704 are cancelled while the repair is
 committed and the manifest refrozen: the driver's 120-minute plan deadline is
